@@ -850,6 +850,213 @@ footer a:hover {
     padding: 45px 20px;
   }
 }
+  
+/* ===== STATISTIQUES ===== */
+
+.stats-section {
+  padding: 75px 20px;
+  background: #f8f4fb;
+}
+
+.section-heading-wrap {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 40px;
+}
+
+.section-label {
+  color: #712A90;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.section-heading {
+  color: #302038;
+  font-size: 34px;
+  margin: 12px 0;
+}
+
+.section-description {
+  color: #716879;
+  line-height: 1.7;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  max-width: 1100px;
+  margin: auto;
+}
+
+.stat-card {
+  background: #fff;
+  padding: 30px 15px;
+  text-align: center;
+  border-radius: 18px;
+  box-shadow: 0 5px 22px rgba(60, 30, 75, .07);
+}
+
+.stat-icon {
+  display: block;
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+
+.stat-card strong {
+  display: block;
+  color: #712A90;
+  font-size: 34px;
+  font-weight: 800;
+}
+
+.stat-card p {
+  color: #716879;
+  margin: 9px 0 0;
+  font-size: 14px;
+}
+
+.stats-status {
+  text-align: center;
+  color: #81768a;
+  font-size: 12px;
+  margin-top: 22px;
+}
+
+/* ===== TÉMOIGNAGES ===== */
+
+.testimonials-section {
+  padding: 80px 20px;
+  background: #fff;
+}
+
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  max-width: 1100px;
+  margin: auto;
+}
+
+.testimonial-card {
+  background: #fff;
+  border: 1px solid #eee5f2;
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 5px 22px rgba(60, 30, 75, .05);
+}
+
+.testimonial-stars {
+  color: #e8b95c;
+  font-size: 21px;
+  letter-spacing: 3px;
+}
+
+.testimonial-quote {
+  color: #574c60;
+  font-size: 15px;
+  line-height: 1.8;
+  min-height: 110px;
+}
+
+.testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-top: 1px solid #eee5f2;
+  padding-top: 18px;
+}
+
+.testimonial-avatar {
+  width: 43px;
+  height: 43px;
+  background: #f3eafa;
+  color: #712A90;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+}
+
+.testimonial-author strong,
+.testimonial-author span {
+  display: block;
+}
+
+.testimonial-author strong {
+  color: #35233f;
+  font-size: 14px;
+}
+
+.testimonial-author span {
+  color: #8a8190;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.testimonial-cta {
+  max-width: 750px;
+  margin: 50px auto 0;
+  padding: 35px 25px;
+  text-align: center;
+  background: #f3eafa;
+  border-radius: 20px;
+}
+
+.testimonial-cta h3 {
+  color: #54206d;
+  font-size: 23px;
+  margin-top: 0;
+}
+
+.testimonial-cta p {
+  color: #716879;
+  line-height: 1.7;
+}
+
+.testimonial-button {
+  display: inline-block;
+  margin-top: 12px;
+  background: #712A90;
+  color: #fff;
+  padding: 14px 25px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 850px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .testimonials-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 550px) {
+  .section-heading {
+    font-size: 27px;
+  }
+
+  .testimonials-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-card {
+    padding: 24px 10px;
+  }
+
+  .stat-card strong {
+    font-size: 28px;
+  }
+}
+
 </style>
 </head>
 
@@ -956,6 +1163,123 @@ const ORGANIZER_URL = "organisateur.html";
       <div class="floating-check">✓ Participation confirmée</div>
 
     </div>
+  </div>
+</section>
+
+<section class="stats-section" id="statistiques">
+  <div class="container">
+    <div class="section-heading-wrap">
+      <span class="section-label">NOTRE COMMUNAUTÉ</span>
+      <h2 class="section-heading">Fête & Cadeaux en chiffres</h2>
+      <p class="section-description">
+        Une communauté qui grandit autour du partage, des événements
+        et des belles attentions.
+      </p>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-icon">🎉</span>
+        <strong id="statEvents">—</strong>
+        <p>Événements créés</p>
+      </div>
+
+      <div class="stat-card">
+        <span class="stat-icon">👥</span>
+        <strong id="statGuests">—</strong>
+        <p>Invités enregistrés</p>
+      </div>
+
+      <div class="stat-card">
+        <span class="stat-icon">🎁</span>
+        <strong id="statReservations">—</strong>
+        <p>Cadeaux réservés</p>
+      </div>
+
+      <div class="stat-card">
+        <span class="stat-icon">💌</span>
+        <strong id="statAttendance">—</strong>
+        <p>Présences confirmées</p>
+      </div>
+    </div>
+
+    <p class="stats-status" id="statsStatus" aria-live="polite"></p>
+  </div>
+</section>
+
+<section class="testimonials-section" id="temoignages">
+  <div class="container">
+
+    <div class="section-heading-wrap">
+      <span class="section-label">EXPÉRIENCES ET SOUVENIRS</span>
+      <h2 class="section-heading">Ils partagent leur expérience</h2>
+      <p class="section-description">
+        Chaque événement est une occasion de créer de beaux souvenirs.
+        Découvrez les expériences de notre communauté.
+      </p>
+    </div>
+
+    <div class="testimonials-grid">
+
+      <article class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-quote">
+          « Racontez ici comment Fête & Cadeaux vous a aidé
+          à organiser votre événement et à gérer les cadeaux. »
+        </p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">O</div>
+          <div>
+            <strong>Nom de l'organisateur</strong>
+            <span>Organisateur d'événement</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-quote">
+          « Partagez ici votre expérience en tant qu'invité :
+          confirmation de présence, choix et réservation de cadeau. »
+        </p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">I</div>
+          <div>
+            <strong>Nom de l'invité</strong>
+            <span>Invité à un événement</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-quote">
+          « Décrivez ici ce qui a rendu votre expérience
+          particulièrement agréable et pratique. »
+        </p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">P</div>
+          <div>
+            <strong>Nom du participant</strong>
+            <span>Participant à un événement</span>
+          </div>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="testimonial-cta">
+      <h3>Vous avez utilisé Fête & Cadeaux ?</h3>
+      <p>
+        Votre expérience peut aider d'autres personnes à organiser
+        leurs plus beaux événements.
+      </p>
+      <a href="mailto:CONTACT_A_REMPLACER"
+         class="testimonial-button">
+        Partager mon expérience
+      </a>
+    </div>
+
   </div>
 </section>
 
