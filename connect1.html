@@ -448,6 +448,52 @@ button:disabled {
   margin: 12px 0;
 }
 
+/* Organisation des deux grandes box */
+
+.main-event-box {
+  padding: 0;
+  overflow: hidden;
+}
+
+.main-event-box .event-hero {
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.main-info {
+  padding: 25px 28px;
+  border-bottom: 1px solid var(--border);
+}
+
+.invitation-message {
+  padding: 25px 28px;
+}
+
+.additional-info-box {
+  margin-top: 30px;
+}
+
+.extra-detail {
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.extra-detail h3 {
+  color: var(--primary);
+  margin: 0 0 12px;
+}
+
+@media(max-width: 600px) {
+  .main-info {
+    padding: 22px 17px;
+  }
+
+  .invitation-message {
+    padding: 22px 17px;
+  }
+}
+
 </style>
 </head>
 
@@ -463,24 +509,28 @@ button:disabled {
     <p>Nous récupérons les informations de votre événement.</p>
   </div>
 
-  <div id="eventPage" class="hidden">
+  
+<div id="eventPage" class="hidden">
 
-    <section class="event-hero">
+  <!-- BOX 1 : INFORMATIONS ESSENTIELLES -->
+  <section class="content-section main-event-box">
+
+    <div class="event-hero">
       <div class="hero-icon">🎉</div>
       <div class="event-type" id="eventType">ÉVÉNEMENT</div>
       <h1 id="eventName">Bienvenue à la fête !</h1>
       <p id="eventHeroDescription">
         Vous êtes chaleureusement invité à partager ce moment spécial.
       </p>
-    </section>
+    </div>
 
-    <section class="content-section">
+    <div class="main-info">
       <h2 class="section-title">💜 À l'honneur</h2>
       <div id="peopleContainer" class="people-grid"></div>
-    </section>
+    </div>
 
-    <section class="content-section">
-      <h2 class="section-title">📅 Informations sur l'événement</h2>
+    <div class="main-info">
+      <h2 class="section-title">📅 Les informations essentielles</h2>
 
       <div class="info-grid">
 
@@ -508,79 +558,94 @@ button:disabled {
           </div>
         </div>
 
-        <div class="info-item">
-          <div class="info-icon">🗺️</div>
-          <div>
-            <strong>Adresse</strong>
-            <span id="eventAddress">Non précisée</span>
-          </div>
-        </div>
-
-        <div class="info-item">
-          <div class="info-icon">🏙️</div>
-          <div>
-            <strong>Ville</strong>
-            <span id="eventCity">Non précisée</span>
-          </div>
-        </div>
-
-        <div class="info-item">
-          <div class="info-icon">🌎</div>
-          <div>
-            <strong>Pays</strong>
-            <span id="eventCountry">Non précisé</span>
-          </div>
-        </div>
-
       </div>
-    </section>
+    </div>
 
-    <section id="descriptionSection" class="content-section hidden">
-      <h2 class="section-title">📝 À propos de cette fête</h2>
-      <p id="eventDescription" class="event-description"></p>
-    </section>
-
-    <section id="themeSection" class="content-section hidden">
-      <h2 class="section-title">🎨 Thème de l'événement</h2>
-      <div id="eventTheme" class="theme-box"></div>
-    </section>
-
-    <section class="content-section invitation-message">
+    <div class="invitation-message">
       <h2>❤️ Votre présence compte !</h2>
       <p>
         Nous sommes heureux de vous compter parmi les invités.
         Merci de partager ce moment de joie, de bonheur et de convivialité
         avec nous.
       </p>
+    </div>
+
+  </section>
+
+  <!-- FORMULAIRE D'IDENTIFICATION -->
+  <section class="login-card">
+    <h2>🎁 Accéder à la liste des cadeaux</h2>
+    <p class="subtitle">
+      Entrez votre nom et prénom pour vous identifier
+      et découvrir les cadeaux que vous pouvez réserver.
+    </p>
+
+    <form id="loginForm">
+      <label for="guestName">Votre nom et prénom</label>
+
+      <input
+        type="text"
+        id="guestName"
+        placeholder="Ex. : Jean Dupont"
+        autocomplete="name"
+        required
+      >
+
+      <button type="submit" id="loginButton">
+        Accéder à la liste des cadeaux →
+      </button>
+
+      <div class="error" id="errorMessage"></div>
+    </form>
+  </section>
+
+  <!-- BOX 2 : INFORMATIONS COMPLÉMENTAIRES -->
+  <section class="content-section additional-info-box">
+
+    <h2 class="section-title">ℹ️ Informations complémentaires</h2>
+
+    <div class="info-grid">
+
+      <div class="info-item">
+        <div class="info-icon">🗺️</div>
+        <div>
+          <strong>Adresse complète</strong>
+          <span id="eventAddress">Non précisée</span>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <div class="info-icon">🏙️</div>
+        <div>
+          <strong>Ville</strong>
+          <span id="eventCity">Non précisée</span>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <div class="info-icon">🌎</div>
+        <div>
+          <strong>Pays</strong>
+          <span id="eventCountry">Non précisé</span>
+        </div>
+      </div>
+
+    </div>
+
+    <section id="descriptionSection" class="extra-detail hidden">
+      <h3>📝 À propos de cette fête</h3>
+      <p id="eventDescription" class="event-description"></p>
     </section>
 
-    <section class="login-card">
-      <h2>🎁 Accéder à la liste des cadeaux</h2>
-      <p class="subtitle">
-        Entrez votre nom et prénom pour vous identifier
-        et découvrir les cadeaux que vous pouvez réserver.
-      </p>
-
-      <form id="loginForm">
-        <label for="guestName">Votre nom et prénom</label>
-
-        <input
-          type="text"
-          id="guestName"
-          placeholder="Ex. : Jean Dupont"
-          autocomplete="name"
-          required
-        >
-
-        <button type="submit" id="loginButton">
-          Accéder à la liste des cadeaux →
-        </button>
-
-        <div class="error" id="errorMessage"></div>
-      </form>
+    <section id="themeSection" class="extra-detail hidden">
+      <h3>🎨 Thème de l'événement</h3>
+      <div id="eventTheme" class="theme-box"></div>
     </section>
 
-  </div>
+  </section>
+
+</div>
+
 
   <div id="eventError" class="loading hidden">
     <div style="font-size:42px">😕</div>
