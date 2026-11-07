@@ -1255,7 +1255,9 @@ function initializeLogin() {
       submitButton.disabled = true;
       submitButton.textContent = "Vérification...";
     }
-
+console.log("Nom saisi :", name);
+console.log("Identifiant de fête :", feteId);
+console.log("URL actuelle :", window.location.href);
     try {
 
       const result = await jsonpRequest({
