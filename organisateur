@@ -1,0 +1,757 @@
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Espace organisateur | Gestion des cadeaux</title>
+
+<style>
+:root {
+  --green: #729c12;
+  --light-green: #e5f0d7;
+  --dark: #28321c;
+  --gray: #f5f7f2;
+  --red: #d9534f;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f7f9f4;
+  color: var(--dark);
+}
+
+header {
+  background: var(--green);
+  color: white;
+  padding: 22px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 22px;
+}
+
+header span {
+  font-size: 13px;
+}
+
+.container {
+  max-width: 1150px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+.welcome {
+  margin-bottom: 25px;
+}
+
+.welcome h2 {
+  margin: 0 0 8px;
+}
+
+.welcome p {
+  color: #777;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.stat-card {
+  background: white;
+  padding: 22px;
+  border-radius: 13px;
+  box-shadow: 0 3px 12px rgba(0,0,0,.05);
+}
+
+.stat-card small {
+  color: #777;
+}
+
+.stat-card strong {
+  display: block;
+  font-size: 30px;
+  color: var(--green);
+  margin-top: 10px;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+  align-items: start;
+}
+
+.panel {
+  background: white;
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 3px 12px rgba(0,0,0,.05);
+  min-width: 0;
+}
+
+.panel h3 {
+  margin: 0 0 20px;
+  font-size: 19px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+label {
+  display: block;
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #dce3d4;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+}
+
+input:focus, textarea:focus {
+  border-color: var(--green);
+}
+
+textarea {
+  min-height: 75px;
+  resize: vertical;
+}
+
+.btn {
+  border: none;
+  background: var(--green);
+  color: white;
+  padding: 12px 17px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn:hover {
+  opacity: .9;
+}
+
+.btn-danger {
+  background: var(--red);
+  padding: 8px 11px;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.list {
+  margin-top: 25px;
+}
+
+.list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.item-info {
+  min-width: 0;
+  flex: 1;
+}
+
+.item-info strong {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.item-info small {
+  display: block;
+  color: #888;
+  margin-top: 5px;
+  line-height: 1.4;
+}
+
+.gift-quantity {
+  display: inline-block;
+  color: var(--green);
+  font-size: 12px;
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+.photo-upload {
+  border: 2px dashed #c8d9ad;
+  background: #f8fbf4;
+  padding: 22px 15px;
+  text-align: center;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.photo-upload .upload-icon {
+  font-size: 32px;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.photo-upload p {
+  color: #777;
+  font-size: 13px;
+  margin: 5px 0 0;
+}
+
+.photo-upload input {
+  display: none;
+}
+
+.photo-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 13px;
+}
+
+.photo-item {
+  position: relative;
+  width: 90px;
+  height: 90px;
+}
+
+.photo-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 9px;
+  border: 1px solid #ddd;
+}
+
+.remove-photo {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  width: 23px;
+  height: 23px;
+  border: none;
+  border-radius: 50%;
+  background: var(--red);
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.gift-photos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 10px;
+}
+
+.gift-photos img {
+  width: 65px;
+  height: 65px;
+  object-fit: cover;
+  border-radius: 7px;
+}
+
+.empty {
+  text-align: center;
+  padding: 20px;
+  color: #999;
+  font-size: 14px;
+}
+
+.notice {
+  background: var(--light-green);
+  border-radius: 10px;
+  padding: 15px;
+  margin-top: 25px;
+  font-size: 13px;
+  color: #526d26;
+  line-height: 1.6;
+}
+
+@media(max-width: 750px) {
+  .columns {
+    grid-template-columns: 1fr;
+  }
+
+  header {
+    padding: 20px;
+  }
+
+  .panel {
+    padding: 18px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>🎁 Espace organisateur</h1>
+  <span>Administration de la fête</span>
+</header>
+
+<main class="container">
+
+  <section class="welcome">
+    <h2>Tableau de bord</h2>
+    <p>Ajoutez vos invités et préparez votre catalogue de cadeaux.</p>
+  </section>
+
+  <section class="stats">
+    <div class="stat-card">
+      <small>Invités enregistrés</small>
+      <strong id="guestCount">0</strong>
+    </div>
+
+    <div class="stat-card">
+      <small>Types de cadeaux</small>
+      <strong id="giftCount">0</strong>
+    </div>
+
+    <div class="stat-card">
+      <small>Quantité totale</small>
+      <strong id="totalGiftCount">0</strong>
+    </div>
+  </section>
+
+  <div class="columns">
+
+    <!-- GESTION DES INVITÉS -->
+    <section class="panel">
+
+      <h3>👥 Ajouter un invité</h3>
+
+      <form id="guestForm">
+        <div class="form-group">
+          <label for="guestName">Nom et prénom</label>
+          <input
+            type="text"
+            id="guestName"
+            placeholder="Ex. : Jean Dupont"
+            required
+          >
+        </div>
+
+        <button class="btn" type="submit">
+          + Ajouter l'invité
+        </button>
+      </form>
+
+      <div class="list">
+        <h3>Liste des invités</h3>
+        <div id="guestList"></div>
+      </div>
+
+    </section>
+
+    <!-- GESTION DES CADEAUX -->
+    <section class="panel">
+
+      <h3>🎁 Ajouter un cadeau</h3>
+
+      <form id="giftForm">
+
+        <div class="form-group">
+          <label for="giftName">Nom du cadeau</label>
+          <input
+            type="text"
+            id="giftName"
+            placeholder="Ex. : Poussette"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="giftDescription">Description</label>
+          <textarea
+            id="giftDescription"
+            placeholder="Décrivez le cadeau..."
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="giftQuantity">Quantité disponible</label>
+          <input
+            type="number"
+            id="giftQuantity"
+            min="1"
+            value="1"
+            required
+          >
+        </div>
+
+        <!-- AJOUT DES PHOTOS -->
+        <div class="form-group">
+          <label>Photos du cadeau</label>
+
+          <label class="photo-upload" for="giftPhotos">
+            <span class="upload-icon">📸</span>
+            <strong>Ajouter des photos</strong>
+            <p>Cliquez ici pour sélectionner une ou plusieurs images.</p>
+            <p>Formats acceptés : JPG, PNG, WEBP</p>
+          </label>
+
+          <input
+            type="file"
+            id="giftPhotos"
+            accept="image/jpeg,image/png,image/webp"
+            multiple
+          >
+
+          <div id="photoPreview" class="photo-preview"></div>
+        </div>
+
+        <button class="btn" type="submit" id="saveGiftButton">
+          + Enregistrer le cadeau
+        </button>
+
+      </form>
+
+      <div class="list">
+        <h3>Liste des cadeaux</h3>
+        <div id="giftList"></div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="notice">
+    💡 Version de démonstration : les données sont conservées dans
+    le navigateur de cet appareil. Pour partager les listes et les
+    photos avec les invités, il faudra connecter une base de données
+    et un service de stockage des images.
+  </div>
+
+</main>
+
+<script>
+let guests = JSON.parse(localStorage.getItem("partyGuests") || "[]");
+let gifts = JSON.parse(localStorage.getItem("partyGifts") || "[]");
+
+let selectedPhotos = [];
+
+function saveData() {
+  try {
+    localStorage.setItem("partyGuests", JSON.stringify(guests));
+    localStorage.setItem("partyGifts", JSON.stringify(gifts));
+    return true;
+  } catch (error) {
+    alert("Stockage insuffisant. Réduisez le nombre ou la taille des photos.");
+    return false;
+  }
+}
+
+// APERÇU ET SÉLECTION DES PHOTOS
+const photoInput = document.getElementById("giftPhotos");
+const photoPreview = document.getElementById("photoPreview");
+
+photoInput.addEventListener("change", async function() {
+
+  const files = Array.from(this.files);
+  const maxSize = 2 * 1024 * 1024;
+
+  for (const file of files) {
+
+    if (!file.type.match(/^image\/(jpeg|png|webp)$/)) {
+      alert("Format non accepté : " + file.name);
+      continue;
+    }
+
+    if (file.size > maxSize) {
+      alert(file.name + " dépasse 2 Mo. Choisissez une image plus légère.");
+      continue;
+    }
+
+    try {
+      const data = await compressImage(file);
+
+      selectedPhotos.push(data);
+      displayPhotoPreview();
+
+    } catch (error) {
+      alert("Impossible de lire " + file.name);
+    }
+  }
+
+  // Permet de sélectionner à nouveau le même fichier.
+  this.value = "";
+});
+
+// COMPRESSER LES IMAGES POUR LIMITER LE STOCKAGE
+function compressImage(file) {
+  return new Promise((resolve, reject) => {
+
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+      const img = new Image();
+
+      img.onload = function() {
+
+        const maxDimension = 1000;
+        const ratio = Math.min(
+          1,
+          maxDimension / Math.max(img.width, img.height)
+        );
+
+        const canvas = document.createElement("canvas");
+
+        canvas.width = Math.round(img.width * ratio);
+        canvas.height = Math.round(img.height * ratio);
+
+        const context = canvas.getContext("2d");
+
+        context.drawImage(
+          img,
+          0,
+          0,
+          canvas.width,
+          canvas.height
+        );
+
+        resolve(canvas.toDataURL("image/jpeg", 0.72));
+      };
+
+      img.onerror = reject;
+      img.src = event.target.result;
+    };
+
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+// AFFICHER L'APERÇU
+function displayPhotoPreview() {
+
+  photoPreview.innerHTML = selectedPhotos.map((photo, index) => `
+    <div class="photo-item">
+      <img src="${photo}" alt="Photo sélectionnée">
+      <button
+        type="button"
+        class="remove-photo"
+        onclick="removePhoto(${index})">
+        ×
+      </button>
+    </div>
+  `).join("");
+}
+
+// RETIRER UNE PHOTO AVANT ENREGISTREMENT
+function removePhoto(index) {
+  selectedPhotos.splice(index, 1);
+  displayPhotoPreview();
+}
+
+// AJOUTER UN INVITÉ
+document.getElementById("guestForm").addEventListener("submit", function(e) {
+
+  e.preventDefault();
+
+  const name = document.getElementById("guestName").value.trim();
+
+  if (!name) return;
+
+  const exists = guests.some(
+    guest => guest.name.toLowerCase() === name.toLowerCase()
+  );
+
+  if (exists) {
+    alert("Cet invité est déjà enregistré.");
+    return;
+  }
+
+  guests.push({
+    id: Date.now(),
+    name: name
+  });
+
+  if (!saveData()) {
+    guests.pop();
+    return;
+  }
+
+  this.reset();
+  displayData();
+});
+
+// AJOUTER UN CADEAU AVEC SES PHOTOS
+document.getElementById("giftForm").addEventListener("submit", function(e) {
+
+  e.preventDefault();
+
+  const name = document.getElementById("giftName").value.trim();
+  const description = document.getElementById("giftDescription").value.trim();
+  const quantity = parseInt(
+    document.getElementById("giftQuantity").value,
+    10
+  );
+
+  if (!name || !Number.isInteger(quantity) || quantity < 1) {
+    alert("Veuillez renseigner un nom et une quantité valide.");
+    return;
+  }
+
+  const gift = {
+    id: Date.now(),
+    name: name,
+    description: description,
+    quantity: quantity,
+    photos: [...selectedPhotos]
+  };
+
+  gifts.push(gift);
+
+  if (!saveData()) {
+    gifts.pop();
+    return;
+  }
+
+  this.reset();
+  selectedPhotos = [];
+  displayPhotoPreview();
+
+  document.getElementById("giftQuantity").value = 1;
+
+  displayData();
+
+  alert("Cadeau enregistré avec succès !");
+});
+
+// SUPPRIMER UN INVITÉ
+function deleteGuest(id) {
+
+  if (!confirm("Voulez-vous supprimer cet invité ?")) return;
+
+  const oldGuests = guests;
+  guests = guests.filter(guest => guest.id !== id);
+
+  if (!saveData()) {
+    guests = oldGuests;
+    return;
+  }
+
+  displayData();
+}
+
+// SUPPRIMER UN CADEAU
+function deleteGift(id) {
+
+  if (!confirm("Voulez-vous supprimer ce cadeau ?")) return;
+
+  const oldGifts = gifts;
+  gifts = gifts.filter(gift => gift.id !== id);
+
+  if (!saveData()) {
+    gifts = oldGifts;
+    return;
+  }
+
+  displayData();
+}
+
+// PROTECTION DU HTML
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[char]);
+}
+
+// AFFICHAGE DES LISTES
+function displayData() {
+
+  const guestList = document.getElementById("guestList");
+  const giftList = document.getElementById("giftList");
+
+  guestList.innerHTML = guests.length
+    ? guests.map(guest => `
+      <div class="list-item">
+        <div class="item-info">
+          <strong>${escapeHTML(guest.name)}</strong>
+        </div>
+
+        <button class="btn btn-danger"
+          onclick="deleteGuest(${guest.id})">
+          Supprimer
+        </button>
+      </div>
+    `).join("")
+    : '<div class="empty">Aucun invité enregistré.</div>';
+
+  giftList.innerHTML = gifts.length
+    ? gifts.map(gift => `
+      <div class="list-item">
+        <div class="item-info">
+
+          <strong>${escapeHTML(gift.name)}</strong>
+
+          <small>
+            ${escapeHTML(gift.description || "Aucune description")}
+          </small>
+
+          <span class="gift-quantity">
+            Quantité : ${gift.quantity}
+          </span>
+
+          <div class="gift-photos">
+            ${(gift.photos || []).map(photo => `
+              <img src="${photo}" alt="Photo du cadeau">
+            `).join("")}
+          </div>
+
+        </div>
+
+        <button class="btn btn-danger"
+          onclick="deleteGift(${gift.id})">
+          Supprimer
+        </button>
+      </div>
+    `).join("")
+    : '<div class="empty">Aucun cadeau enregistré.</div>';
+
+  document.getElementById("guestCount").textContent = guests.length;
+  document.getElementById("giftCount").textContent = gifts.length;
+
+  document.getElementById("totalGiftCount").textContent =
+    gifts.reduce((total, gift) => total + Number(gift.quantity), 0);
+}
+
+displayData();
+</script>
+
+</body>
+</html>
