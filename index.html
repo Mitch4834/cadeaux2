@@ -191,14 +191,25 @@ button:disabled {
 </div>
 
 
+
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbxJrkdTw0hLK089uw9Kdd1_Cb-RO1PkHnnE27vih8-ssbLFiXkNFD3jU0AUeXMgKbjo_A/exec";
+
+// Récupérer l'identifiant de la fête depuis l'URL
+const urlParams = new URLSearchParams(window.location.search);
+const feteId = urlParams.get("fete_id");
 
 document.getElementById("loginForm").addEventListener("submit", function(e) {
   e.preventDefault();
 
   const name = document.getElementById("guestName").value.trim();
   const error = document.getElementById("errorMessage");
+
+  if (!feteId) {
+    error.textContent = "Identifiant de fête introuvable. Vérifiez votre lien d'invitation.";
+    error.style.display = "block";
+    return;
+  }
 
   if (!name) {
     error.textContent = "Veuillez saisir votre nom.";
@@ -208,7 +219,6 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
 
   error.style.display = "none";
 
-  // Empêcher plusieurs connexions simultanées
   const button = this.querySelector('button[type="submit"]');
   if (button) button.disabled = true;
 
@@ -234,17 +244,27 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
     error.style.display = "block";
   }, 15000);
 
-  // Réception de la réponse du backend
   window[callbackName] = function(result) {
     nettoyer();
 
     if (result && result.success) {
+
       // Enregistrer les informations de l'invité
       sessionStorage.setItem("guestName", result.guest.name);
       sessionStorage.setItem("guestId", result.guest.id);
 
-      // Redirection après validation
-      window.location.href = "https://mitch4834.github.io/cadeaux2/espacecadeau.html";
+      // Enregistrer l'identifiant de la fête
+      sessionStorage.setItem("feteId", feteId);
+
+      // Redirection avec les deux identifiants dans l'URL
+      const destination = new URL(
+        "https://mitch4834.github.io/cadeaux2/espacecadeau.html"
+      );
+
+      destination.searchParams.set("invite_id", result.guest.id);
+      destination.searchParams.set("fete_id", feteId);
+
+      window.location.href = destination.toString();
 
     } else {
       error.textContent =
@@ -262,17 +282,17 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
     error.style.display = "block";
   };
 
-  // Envoyer la demande au backend
+  // Envoyer la demande au backend avec l'identifiant de la fête
   script.src =
     API_URL +
     "?action=login" +
     "&name=" + encodeURIComponent(name) +
+    "&fete_id=" + encodeURIComponent(feteId) +
     "&callback=" + callbackName;
 
   document.body.appendChild(script);
 });
 </script>
-
 
 </body>
 </html>
