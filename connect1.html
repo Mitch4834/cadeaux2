@@ -332,6 +332,44 @@ button:disabled {
     padding: 26px 20px;
   }
 }
+  .attendance-section {
+  background: #f3eafa;
+  padding: 25px;
+  border-radius: 15px;
+  text-align: center;
+  margin: 25px 0;
+}
+
+.attendance-section h2 {
+  color: #712A90;
+}
+
+.attendance-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.attendance-buttons button {
+  border: none;
+  border-radius: 8px;
+  padding: 13px 20px;
+  background: #712A90;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.attendance-buttons button:hover {
+  opacity: 0.85;
+}
+
+#attendanceMessage {
+  margin-top: 15px;
+  font-weight: bold;
+}
 </style>
 </head>
 
@@ -437,7 +475,22 @@ button:disabled {
         avec nous.
       </p>
     </section>
+<section class="attendance-section">
+  <h2>💌 Serez-vous présent(e) ?</h2>
+  <p>Merci de confirmer votre participation à cet événement.</p>
 
+  <div class="attendance-buttons">
+    <button type="button" onclick="confirmAttendance('OUI')">
+      ✅ Oui, je serai présent(e)
+    </button>
+
+    <button type="button" onclick="confirmAttendance('NON')">
+      ❌ Non, je ne pourrai pas venir
+    </button>
+  </div>
+
+  <p id="attendanceMessage"></p>
+</section>
     <section class="login-card">
       <h2>🎁 Accéder à la liste des cadeaux</h2>
       <p class="subtitle">
@@ -694,7 +747,36 @@ getElement("loginForm").addEventListener("submit", function(e) {
   const script = document.createElement("script");
 
   let finished = false;
+function confirmAttendance(response) {
+  const message = document.getElementById("attendanceMessage");
+  const guestId = sessionStorage.getItem("guestId");
+  const feteId = new URLSearchParams(window.location.search).get("fete_id");
 
+  if (!guestId || !feteId) {
+    message.textContent =
+      "Veuillez d'abord vous connecter avec votre nom d'invité.";
+    return;
+  }
+
+  message.textContent = "Enregistrement de votre réponse...";
+
+  api({
+    action: "confirmAttendance",
+    invite_id: guestId,
+    fete_id: feteId,
+    confirmation: response
+  }).then(result => {
+    if (result.success) {
+      message.textContent = response === "OUI"
+        ? "Merci ! Votre présence a été confirmée. 🎉"
+        : "Votre réponse a bien été enregistrée. Merci de nous avoir informés.";
+    } else {
+      message.textContent = result.message || "Une erreur est survenue.";
+    }
+  }).catch(error => {
+    message.textContent = "Impossible d'enregistrer votre réponse. Réessayez.";
+  });
+}
   function cleanup() {
     if (finished) return;
     finished = true;
