@@ -718,7 +718,7 @@ function renderSelectedEvent() {
 
   if (active) {
 
-    const link = new URL("index.html", window.location.href);
+    const link = new URL("connect1.html", window.location.href);
     link.searchParams.set("fete_id", selectedEvent.id);
 
     $("eventLink").textContent = link.toString();
