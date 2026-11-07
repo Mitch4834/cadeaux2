@@ -332,44 +332,123 @@ button:disabled {
     padding: 26px 20px;
   }
 }
-  .attendance-section {
-  background: #f3eafa;
-  padding: 25px;
-  border-radius: 15px;
-  text-align: center;
-  margin: 25px 0;
+ 
+.attendance-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(30, 15, 40, .72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  overflow-y: auto;
 }
 
-.attendance-section h2 {
-  color: #712A90;
+.attendance-modal.hidden {
+  display: none !important;
+}
+
+.attendance-box {
+  width: 100%;
+  max-width: 470px;
+  background: white;
+  border-radius: 22px;
+  padding: 30px 25px;
+  text-align: center;
+  box-shadow: 0 15px 50px rgba(0,0,0,.2);
+  animation: attendanceAppear .3s ease;
+}
+
+@keyframes attendanceAppear {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.attendance-icon {
+  font-size: 45px;
+  margin-bottom: 10px;
+}
+
+.attendance-box h2 {
+  color: var(--primary);
+  margin: 0 0 15px;
+  font-size: 25px;
+}
+
+.attendance-box p {
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.attendance-question {
+  font-weight: bold;
+  color: var(--dark) !important;
+  margin: 22px 0 15px;
 }
 
 .attendance-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  flex-wrap: wrap;
-  margin-top: 20px;
+  display: grid;
+  gap: 12px;
 }
 
 .attendance-buttons button {
-  border: none;
-  border-radius: 8px;
-  padding: 13px 20px;
-  background: #712A90;
-  color: white;
-  cursor: pointer;
-  font-weight: bold;
+  width: 100%;
+  padding: 15px;
+  border-radius: 10px;
+  font-size: 14px;
 }
 
-.attendance-buttons button:hover {
-  opacity: 0.85;
+.attendance-buttons .attendance-yes {
+  background: #27864B;
+}
+
+.attendance-buttons .attendance-no {
+  background: #A63D45;
+}
+
+.attendance-box textarea {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  resize: vertical;
+  margin-top: 10px;
+}
+
+.attendance-box label {
+  text-align: left;
+  margin-top: 20px;
+}
+
+.gift-note {
+  background: var(--primary-light);
+  color: var(--primary);
+  padding: 13px;
+  border-radius: 10px;
+  font-size: 13px;
+  line-height: 1.6;
+  margin-top: 13px;
+}
+
+.attendance-submit {
+  margin-top: 15px;
 }
 
 #attendanceMessage {
-  margin-top: 15px;
+  font-size: 13px;
   font-weight: bold;
+  margin: 12px 0;
 }
+
 </style>
 </head>
 
@@ -475,22 +554,7 @@ button:disabled {
         avec nous.
       </p>
     </section>
-<section class="attendance-section">
-  <h2>💌 Serez-vous présent(e) ?</h2>
-  <p>Merci de confirmer votre participation à cet événement.</p>
 
-  <div class="attendance-buttons">
-    <button type="button" onclick="confirmAttendance('OUI')">
-      ✅ Oui, je serai présent(e)
-    </button>
-
-    <button type="button" onclick="confirmAttendance('NON')">
-      ❌ Non, je ne pourrai pas venir
-    </button>
-  </div>
-
-  <p id="attendanceMessage"></p>
-</section>
     <section class="login-card">
       <h2>🎁 Accéder à la liste des cadeaux</h2>
       <p class="subtitle">
@@ -526,6 +590,65 @@ button:disabled {
       Nous ne pouvons pas afficher les informations de cette fête.
     </p>
   </div>
+
+<!-- POP-UP DE CONFIRMATION DE PRESENCE -->
+<div id="attendanceModal" class="attendance-modal hidden">
+  <div class="attendance-box">
+
+    <div class="attendance-icon">💌</div>
+
+    <h2>Votre participation</h2>
+
+    <p id="attendanceGreeting">
+      Nous sommes heureux de vous compter parmi nos invités !
+    </p>
+
+    <p class="attendance-question">
+      Serez-vous présent(e) à cet événement ?
+    </p>
+
+    <div class="attendance-buttons">
+      <button type="button"
+        class="attendance-yes"
+        onclick="selectAttendance('OUI')">
+        ✅ Oui, je serai présent(e)
+      </button>
+
+      <button type="button"
+        class="attendance-no"
+        onclick="selectAttendance('NON')">
+        ❌ Non, je ne pourrai pas venir
+      </button>
+    </div>
+
+    <div id="absenceReasonContainer" class="hidden">
+      <label for="absenceReason">
+        Quel est le motif de votre absence ?
+      </label>
+
+      <textarea
+        id="absenceReason"
+        placeholder="Expliquez brièvement le motif de votre absence..."
+        rows="4"></textarea>
+
+      <div class="gift-note">
+        🎁 Même si vous ne pouvez pas assister à l'événement,
+        vous pouvez toujours réserver et envoyer un cadeau !
+      </div>
+    </div>
+
+    <p id="attendanceMessage"></p>
+
+    <button
+      type="button"
+      id="attendanceSubmit"
+      class="attendance-submit hidden"
+      onclick="submitAttendance()">
+      Confirmer ma réponse
+    </button>
+
+  </div>
+</div>
 
   <div class="footer">
     Organisé avec ❤️ grâce à Fête & Cadeaux
@@ -720,6 +843,139 @@ function loadPublicEvent() {
     "?action=publicEvent" +
     "&fete_id=" + encodeURIComponent(feteId) +
     "&callback=" + encodeURIComponent(callbackName);
+
+  document.body.appendChild(script);
+}
+
+/* CONFIRMATION DE PRESENCE */
+
+let selectedAttendance = "";
+
+function openAttendanceModal(guestName) {
+  getElement("attendanceGreeting").textContent =
+    "Bonjour " + guestName +
+    " ! Nous sommes heureux de vous compter parmi nos invités.";
+
+  getElement("attendanceModal").classList.remove("hidden");
+}
+
+function selectAttendance(response) {
+  selectedAttendance = response;
+
+  const reasonContainer =
+    getElement("absenceReasonContainer");
+
+  const submitButton =
+    getElement("attendanceSubmit");
+
+  const message =
+    getElement("attendanceMessage");
+
+  message.textContent = "";
+
+  if (response === "NON") {
+    reasonContainer.classList.remove("hidden");
+  } else {
+    reasonContainer.classList.add("hidden");
+    getElement("absenceReason").value = "";
+  }
+
+  submitButton.classList.remove("hidden");
+}
+
+function submitAttendance() {
+  const guestId = sessionStorage.getItem("guestId");
+  const currentFeteId = sessionStorage.getItem("feteId");
+
+  const reason = getElement("absenceReason").value.trim();
+  const message = getElement("attendanceMessage");
+  const submitButton = getElement("attendanceSubmit");
+
+  if (!guestId || !currentFeteId) {
+    message.textContent = "Votre session a expiré. Veuillez vous reconnecter.";
+    return;
+  }
+
+  if (!selectedAttendance) {
+    message.textContent = "Veuillez choisir une réponse.";
+    return;
+  }
+
+  if (selectedAttendance === "NON" && !reason) {
+    message.textContent = "Veuillez préciser le motif de votre absence.";
+    getElement("absenceReason").focus();
+    return;
+  }
+
+  submitButton.disabled = true;
+  submitButton.textContent = "Enregistrement en cours...";
+  message.textContent = "";
+
+  const callbackName = "attendanceCallback_" + Date.now();
+  const script = document.createElement("script");
+
+  let finished = false;
+
+  function cleanup() {
+    if (finished) return;
+    finished = true;
+    clearTimeout(timeout);
+    delete window[callbackName];
+    script.remove();
+  }
+
+  const timeout = setTimeout(function() {
+    cleanup();
+    submitButton.disabled = false;
+    submitButton.textContent = "Réessayer";
+    message.textContent =
+      "Le serveur ne répond pas. Veuillez réessayer.";
+  }, 15000);
+
+  window[callbackName] = function(result) {
+    cleanup();
+
+   
+if (result && result.success && result.guest) {
+
+  sessionStorage.setItem("guestName", result.guest.name);
+  sessionStorage.setItem("guestId", result.guest.id);
+  sessionStorage.setItem("feteId", feteId);
+
+  // Afficher le pop-up après identification de l'invité.
+  openAttendanceModal(result.guest.name);
+
+}
+, 1200);
+
+    } else {
+      submitButton.disabled = false;
+      submitButton.textContent = "Réessayer";
+
+      message.textContent =
+        result && result.message
+          ? result.message
+          : "Impossible d'enregistrer votre réponse.";
+    }
+  };
+
+  script.onerror = function() {
+    cleanup();
+    submitButton.disabled = false;
+    submitButton.textContent = "Réessayer";
+    message.textContent = "Impossible de contacter le serveur.";
+  };
+
+  const params = new URLSearchParams({
+    action: "confirmAttendance",
+    invite_id: guestId,
+    fete_id: currentFeteId,
+    confirmation: selectedAttendance,
+    motif_absence: selectedAttendance === "NON" ? reason : "",
+    callback: callbackName
+  });
+
+  script.src = API_URL + "?" + params.toString();
 
   document.body.appendChild(script);
 }
