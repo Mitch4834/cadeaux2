@@ -1,22 +1,23 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bienvenue à la fête</title>
+
+<title>Votre invitation | Fête & Cadeaux</title>
 
 <style>
-
 :root {
   --primary: #712A90;
   --primary-hover: #8D4EAA;
-  --primary-light: #B58AC8;
-  --light: #F0E5F5;
+  --primary-light: #F3EAFA;
   --background: #FAF7FC;
   --dark: #35213D;
   --text: #6F6474;
   --white: #FFFFFF;
   --border: #E5D8EC;
+  --gold: #E8B95C;
 }
 
 * {
@@ -25,55 +26,224 @@
 
 body {
   margin: 0;
-  min-height: 100vh;
   font-family: Arial, sans-serif;
-  background: linear-gradient(
-    135deg,
-    var(--light),
-    var(--background)
-  );
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
+  background: var(--background);
+  color: var(--dark);
 }
 
-.login-card {
-  width: 100%;
-  max-width: 430px;
-  background: var(--white);
-  padding: 40px 30px;
-  border-radius: 22px;
+.page {
+  max-width: 1050px;
+  margin: 35px auto;
+  padding: 0 18px 40px;
+}
+
+.brand {
   text-align: center;
-  box-shadow: 0 12px 35px rgba(113, 42, 144, 0.10);
-  border: 1px solid rgba(113, 42, 144, 0.06);
+  color: var(--primary);
+  font-size: 14px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  margin-bottom: 22px;
 }
 
-.illustration {
-  font-size: 65px;
+.event-hero {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #712A90, #9A60B2);
+  color: white;
+  border-radius: 25px;
+  padding: 55px 25px;
+  text-align: center;
+  box-shadow: 0 12px 35px rgba(113,42,144,.16);
+}
+
+.hero-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.event-type {
+  display: inline-block;
+  background: rgba(255,255,255,.18);
+  border: 1px solid rgba(255,255,255,.35);
+  border-radius: 30px;
+  padding: 8px 17px;
+  font-size: 13px;
   margin-bottom: 15px;
 }
 
-h1 {
-  color: var(--dark);
-  font-size: 26px;
-  margin: 0 0 12px;
+.event-hero h1 {
+  font-size: clamp(28px, 5vw, 43px);
+  margin: 5px 0 12px;
 }
 
-.subtitle {
+.event-hero p {
+  max-width: 650px;
+  margin: auto;
+  line-height: 1.7;
+  opacity: .94;
+}
+
+.content-section {
+  margin-top: 30px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px;
+  box-shadow: 0 6px 22px rgba(60,30,75,.04);
+}
+
+.section-title {
+  color: var(--primary);
+  font-size: 22px;
+  margin: 0 0 20px;
+}
+
+.people-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 18px;
+}
+
+.person-card {
+  text-align: center;
+  background: var(--background);
+  border-radius: 16px;
+  padding: 22px 15px;
+}
+
+.person-photo {
+  width: 105px;
+  height: 105px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--primary-light);
+  border: 4px solid white;
+  box-shadow: 0 3px 12px rgba(0,0,0,.10);
+}
+
+.person-placeholder {
+  width: 105px;
+  height: 105px;
+  margin: auto;
+  border-radius: 50%;
+  background: var(--primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 42px;
+}
+
+.person-card h3 {
+  margin: 12px 0 5px;
+  color: var(--dark);
+}
+
+.person-role {
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.person-description {
   color: var(--text);
-  font-size: 15px;
+  font-size: 13px;
   line-height: 1.6;
-  margin-bottom: 28px;
+  margin-top: 10px;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  padding: 17px;
+  background: var(--background);
+  border-radius: 13px;
+}
+
+.info-icon {
+  font-size: 25px;
+}
+
+.info-item strong {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--dark);
+}
+
+.info-item span {
+  display: block;
+  color: var(--text);
+  line-height: 1.5;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.event-description {
+  color: var(--text);
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+.theme-box {
+  background: var(--primary-light);
+  padding: 17px;
+  border-radius: 12px;
+  color: var(--primary);
+  line-height: 1.6;
+}
+
+.invitation-message {
+  text-align: center;
+  background: linear-gradient(135deg, #F3EAFA, #FAF7FC);
+}
+
+.invitation-message h2 {
+  color: var(--primary);
+  margin-top: 0;
+}
+
+.invitation-message p {
+  color: var(--text);
+  line-height: 1.8;
+}
+
+.login-card {
+  max-width: 520px;
+  margin: 30px auto 0;
+  padding: 32px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: 0 8px 28px rgba(113,42,144,.08);
+}
+
+.login-card h2 {
+  text-align: center;
+  color: var(--primary);
+  margin-top: 0;
+}
+
+.login-card .subtitle {
+  text-align: center;
+  color: var(--text);
+  line-height: 1.6;
+  font-size: 14px;
+  margin-bottom: 25px;
 }
 
 label {
   display: block;
-  text-align: left;
+  color: var(--dark);
   font-size: 14px;
   font-weight: bold;
   margin-bottom: 9px;
-  color: var(--dark);
 }
 
 input {
@@ -83,13 +253,12 @@ input {
   border-radius: 10px;
   font-size: 16px;
   outline: none;
-  margin-bottom: 18px;
-  transition: 0.2s ease;
+  margin-bottom: 17px;
 }
 
 input:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(113, 42, 144, 0.12);
+  box-shadow: 0 0 0 3px rgba(113,42,144,.12);
 }
 
 button {
@@ -98,165 +267,458 @@ button {
   border: none;
   border-radius: 10px;
   background: var(--primary);
-  color: var(--white);
+  color: white;
   font-size: 15px;
   font-weight: bold;
   cursor: pointer;
-  transition: 0.2s ease;
+  transition: .2s;
 }
 
 button:hover {
   background: var(--primary-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(113, 42, 144, 0.18);
 }
 
 button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
+  opacity: .6;
+  cursor: wait;
 }
 
 .error {
+  display: none;
   color: #C0392B;
   font-size: 13px;
   margin-top: 12px;
-  display: none;
+  line-height: 1.5;
+}
+
+.loading,
+.empty-message {
+  text-align: center;
+  padding: 45px 20px;
+  color: var(--text);
+  line-height: 1.7;
 }
 
 .footer {
-  margin-top: 25px;
-  font-size: 13px;
+  text-align: center;
   color: #999;
+  font-size: 13px;
+  margin-top: 30px;
 }
 
-@media (max-width: 480px) {
-  .login-card {
-    padding: 32px 22px;
+.hidden {
+  display: none !important;
+}
+
+@media(max-width: 600px) {
+  .page {
+    margin-top: 15px;
+  }
+
+  .event-hero {
+    padding: 40px 20px;
     border-radius: 18px;
   }
 
-  h1 {
-    font-size: 24px;
+  .content-section {
+    padding: 22px 17px;
   }
 
-  .illustration {
-    font-size: 58px;
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .login-card {
+    padding: 26px 20px;
   }
 }
-
 </style>
 </head>
 
 <body>
 
-<div class="login-card">
+<main class="page">
 
-  <div class="illustration">🎁</div>
+  <div class="brand">🎁 FÊTE & CADEAUX</div>
 
-  <h1>Bienvenue à la fête !</h1>
-
-  <p class="subtitle">
-    Nous sommes heureux de vous compter parmi nos invités.
-    Entrez votre nom pour découvrir la liste des cadeaux
-    et choisir celui que vous souhaitez apporter.
-  </p>
-
-  <form id="loginForm">
-
-    <label for="guestName">Votre nom et prénom</label>
-
-    <input
-      type="text"
-      id="guestName"
-      placeholder="Ex. : Jean Dupont"
-      autocomplete="name"
-      required
-    >
-
-    <button type="submit">
-      Accéder à la liste des cadeaux →
-    </button>
-
-    <div class="error" id="errorMessage">
-      Veuillez entrer votre nom pour continuer.
-    </div>
-
-  </form>
-
-  <div class="footer">
-    Merci de partager ce moment spécial avec nous ❤️
+  <div id="loadingEvent" class="loading">
+    <div style="font-size:38px">🎉</div>
+    <h2>Préparation de votre invitation...</h2>
+    <p>Nous récupérons les informations de votre événement.</p>
   </div>
 
-</div>
+  <div id="eventPage" class="hidden">
 
+    <section class="event-hero">
+      <div class="hero-icon">🎉</div>
+      <div class="event-type" id="eventType">ÉVÉNEMENT</div>
+      <h1 id="eventName">Bienvenue à la fête !</h1>
+      <p id="eventHeroDescription">
+        Vous êtes chaleureusement invité à partager ce moment spécial.
+      </p>
+    </section>
 
+    <section class="content-section">
+      <h2 class="section-title">💜 À l'honneur</h2>
+      <div id="peopleContainer" class="people-grid"></div>
+    </section>
+
+    <section class="content-section">
+      <h2 class="section-title">📅 Informations sur l'événement</h2>
+
+      <div class="info-grid">
+
+        <div class="info-item">
+          <div class="info-icon">📅</div>
+          <div>
+            <strong>Date</strong>
+            <span id="eventDate">Non précisée</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-icon">🕒</div>
+          <div>
+            <strong>Heure</strong>
+            <span id="eventTime">Non précisée</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-icon">📍</div>
+          <div>
+            <strong>Lieu</strong>
+            <span id="eventVenue">Non précisé</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-icon">🗺️</div>
+          <div>
+            <strong>Adresse</strong>
+            <span id="eventAddress">Non précisée</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-icon">🏙️</div>
+          <div>
+            <strong>Ville</strong>
+            <span id="eventCity">Non précisée</span>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-icon">🌎</div>
+          <div>
+            <strong>Pays</strong>
+            <span id="eventCountry">Non précisé</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="descriptionSection" class="content-section hidden">
+      <h2 class="section-title">📝 À propos de cette fête</h2>
+      <p id="eventDescription" class="event-description"></p>
+    </section>
+
+    <section id="themeSection" class="content-section hidden">
+      <h2 class="section-title">🎨 Thème de l'événement</h2>
+      <div id="eventTheme" class="theme-box"></div>
+    </section>
+
+    <section class="content-section invitation-message">
+      <h2>❤️ Votre présence compte !</h2>
+      <p>
+        Nous sommes heureux de vous compter parmi les invités.
+        Merci de partager ce moment de joie, de bonheur et de convivialité
+        avec nous.
+      </p>
+    </section>
+
+    <section class="login-card">
+      <h2>🎁 Accéder à la liste des cadeaux</h2>
+      <p class="subtitle">
+        Entrez votre nom et prénom pour vous identifier
+        et découvrir les cadeaux que vous pouvez réserver.
+      </p>
+
+      <form id="loginForm">
+        <label for="guestName">Votre nom et prénom</label>
+
+        <input
+          type="text"
+          id="guestName"
+          placeholder="Ex. : Jean Dupont"
+          autocomplete="name"
+          required
+        >
+
+        <button type="submit" id="loginButton">
+          Accéder à la liste des cadeaux →
+        </button>
+
+        <div class="error" id="errorMessage"></div>
+      </form>
+    </section>
+
+  </div>
+
+  <div id="eventError" class="loading hidden">
+    <div style="font-size:42px">😕</div>
+    <h2>Invitation indisponible</h2>
+    <p id="eventErrorMessage">
+      Nous ne pouvons pas afficher les informations de cette fête.
+    </p>
+  </div>
+
+  <div class="footer">
+    Organisé avec ❤️ grâce à Fête & Cadeaux
+  </div>
+
+</main>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbxJrkdTw0hLK089uw9Kdd1_Cb-RO1PkHnnE27vih8-ssbLFiXkNFD3jU0AUeXMgKbjo_A/exec";
+const API_URL =
+  "https://script.google.com/macros/s/AKfycby2yWt2DfcjL7sxpHs8LaW9E1Z152gbk4WpwSQ69pxU_r42c9HurNyfULPF4VKK2xFo/exec";
 
-// Récupérer l'identifiant de la fête depuis l'URL
 const urlParams = new URLSearchParams(window.location.search);
 const feteId = urlParams.get("fete_id");
 
-document.getElementById("loginForm").addEventListener("submit", function(e) {
-  e.preventDefault();
+function getElement(id) {
+  return document.getElementById(id);
+}
 
-  const name = document.getElementById("guestName").value.trim();
-  const error = document.getElementById("errorMessage");
+function setText(id, value, fallback) {
+  getElement(id).textContent = value || fallback || "Non précisé";
+}
 
-  if (!feteId) {
-    error.textContent = "Identifiant de fête introuvable. Vérifiez votre lien d'invitation.";
-    error.style.display = "block";
+function showEventError(message) {
+  getElement("loadingEvent").classList.add("hidden");
+  getElement("eventPage").classList.add("hidden");
+  getElement("eventError").classList.remove("hidden");
+  setText("eventErrorMessage", message, "Cette invitation est indisponible.");
+}
+
+function formatEventDate(value) {
+  if (!value) return "Non précisée";
+
+  // Accepte une date ISO ou une date déjà formatée.
+  const date = new Date(value);
+
+  if (isNaN(date.getTime())) {
+    return value;
+  }
+
+  return new Intl.DateTimeFormat("fr-FR", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC"
+  }).format(date);
+}
+
+function createPersonCard(person) {
+  const card = document.createElement("article");
+  card.className = "person-card";
+
+  if (person.photo) {
+    const img = document.createElement("img");
+    img.className = "person-photo";
+    img.src = person.photo;
+    img.alt = "Photo de " + (person.prenom || "la personne à l'honneur");
+    img.loading = "lazy";
+
+    img.onerror = function() {
+      const placeholder = document.createElement("div");
+      placeholder.className = "person-placeholder";
+      placeholder.textContent = "🎂";
+      img.replaceWith(placeholder);
+    };
+
+    card.appendChild(img);
+  } else {
+    const placeholder = document.createElement("div");
+    placeholder.className = "person-placeholder";
+    placeholder.textContent = "🎂";
+    card.appendChild(placeholder);
+  }
+
+  const name = document.createElement("h3");
+  name.textContent = [person.prenom, person.nom].filter(Boolean).join(" ") ||
+    "Personne à l'honneur";
+  card.appendChild(name);
+
+  if (person.role) {
+    const role = document.createElement("div");
+    role.className = "person-role";
+    role.textContent = person.role;
+    card.appendChild(role);
+  }
+
+  if (person.description) {
+    const description = document.createElement("p");
+    description.className = "person-description";
+    description.textContent = person.description;
+    card.appendChild(description);
+  }
+
+  return card;
+}
+
+function displayEvent(result) {
+  if (!result || !result.success || !result.event) {
+    showEventError(
+      result && result.message
+        ? result.message
+        : "Les informations de cette fête sont introuvables."
+    );
     return;
   }
 
-  if (!name) {
-    error.textContent = "Veuillez saisir votre nom.";
+  const event = result.event;
+  const people = Array.isArray(result.people) ? result.people : [];
+
+  setText("eventType", event.type, "ÉVÉNEMENT");
+  setText("eventName", event.name, "Bienvenue à la fête !");
+  setText(
+    "eventHeroDescription",
+    event.description,
+    "Vous êtes chaleureusement invité à partager ce moment spécial."
+  );
+
+  setText("eventDate", formatEventDate(event.date));
+  setText("eventTime", event.time);
+  setText("eventVenue", event.venue);
+  setText("eventAddress", event.address);
+  setText("eventCity", event.city);
+  setText("eventCountry", event.country);
+
+  const peopleContainer = getElement("peopleContainer");
+  peopleContainer.replaceChildren();
+
+  if (people.length) {
+    people.forEach(person => {
+      peopleContainer.appendChild(createPersonCard(person));
+    });
+  } else {
+    const empty = document.createElement("p");
+    empty.className = "empty-message";
+    empty.textContent =
+      "Les informations des personnes à l'honneur seront bientôt disponibles.";
+    peopleContainer.appendChild(empty);
+  }
+
+  if (event.description) {
+    getElement("eventDescription").textContent = event.description;
+    getElement("descriptionSection").classList.remove("hidden");
+  }
+
+  if (event.theme) {
+    getElement("eventTheme").textContent = event.theme;
+    getElement("themeSection").classList.remove("hidden");
+  }
+
+  getElement("loadingEvent").classList.add("hidden");
+  getElement("eventPage").classList.remove("hidden");
+}
+
+function loadPublicEvent() {
+  if (!feteId) {
+    showEventError(
+      "Identifiant de fête introuvable. Vérifiez votre lien d'invitation."
+    );
+    return;
+  }
+
+  const callbackName = "eventCallback_" + Date.now();
+  const script = document.createElement("script");
+
+  let finished = false;
+
+  function cleanup() {
+    if (finished) return;
+    finished = true;
+    clearTimeout(timeout);
+    delete window[callbackName];
+    script.remove();
+  }
+
+  const timeout = setTimeout(function() {
+    cleanup();
+    showEventError("Le serveur ne répond pas. Veuillez réessayer.");
+  }, 15000);
+
+  window[callbackName] = function(result) {
+    cleanup();
+    displayEvent(result);
+  };
+
+  script.onerror = function() {
+    cleanup();
+    showEventError("Impossible de contacter le serveur.");
+  };
+
+  script.src =
+    API_URL +
+    "?action=publicEvent" +
+    "&fete_id=" + encodeURIComponent(feteId) +
+    "&callback=" + encodeURIComponent(callbackName);
+
+  document.body.appendChild(script);
+}
+
+/* CONNEXION DE L'INVITÉ */
+
+getElement("loginForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const name = getElement("guestName").value.trim();
+  const error = getElement("errorMessage");
+  const button = getElement("loginButton");
+
+  if (!feteId || !name) {
+    error.textContent = "Veuillez saisir votre nom et vérifier votre invitation.";
     error.style.display = "block";
     return;
   }
 
   error.style.display = "none";
-
-  const button = this.querySelector('button[type="submit"]');
-  if (button) button.disabled = true;
+  button.disabled = true;
+  button.textContent = "Connexion en cours...";
 
   const callbackName = "loginCallback_" + Date.now();
   const script = document.createElement("script");
 
-  let termine = false;
+  let finished = false;
 
-  function nettoyer() {
-    if (termine) return;
-    termine = true;
-
+  function cleanup() {
+    if (finished) return;
+    finished = true;
     clearTimeout(timeout);
     delete window[callbackName];
     script.remove();
-
-    if (button) button.disabled = false;
+    button.disabled = false;
+    button.textContent = "Accéder à la liste des cadeaux →";
   }
 
   const timeout = setTimeout(function() {
-    nettoyer();
+    cleanup();
     error.textContent = "Le serveur ne répond pas. Veuillez réessayer.";
     error.style.display = "block";
   }, 15000);
 
   window[callbackName] = function(result) {
-    nettoyer();
+    cleanup();
 
-    if (result && result.success) {
-
-      // Enregistrer les informations de l'invité
+    if (result && result.success && result.guest) {
       sessionStorage.setItem("guestName", result.guest.name);
       sessionStorage.setItem("guestId", result.guest.id);
-
-      // Enregistrer l'identifiant de la fête
       sessionStorage.setItem("feteId", feteId);
 
-      // Redirection avec les deux identifiants dans l'URL
       const destination = new URL(
         "https://mitch4834.github.io/cadeaux2/espacecadeau.html"
       );
@@ -265,35 +727,36 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
       destination.searchParams.set("fete_id", feteId);
 
       window.location.href = destination.toString();
-
     } else {
       error.textContent =
         result && result.message
           ? result.message
-          : "Connexion impossible. Veuillez réessayer.";
+          : "Connexion impossible. Vérifiez le nom saisi.";
 
       error.style.display = "block";
     }
   };
 
   script.onerror = function() {
-    nettoyer();
+    cleanup();
     error.textContent = "Impossible de contacter le serveur.";
     error.style.display = "block";
   };
 
-  // Envoyer la demande au backend avec l'identifiant de la fête
   script.src =
     API_URL +
     "?action=login" +
     "&name=" + encodeURIComponent(name) +
     "&fete_id=" + encodeURIComponent(feteId) +
-    "&callback=" + callbackName;
+    "&callback=" + encodeURIComponent(callbackName);
 
   document.body.appendChild(script);
 });
+
+loadPublicEvent();
 </script>
 
 </body>
 </html>
+
 
