@@ -1,0 +1,180 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bienvenue à la fête</title>
+
+<style>
+:root {
+  --green: #729c12;
+  --light-green: #e5f0d7;
+  --dark: #28321c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #e5f0d7, #f8faf5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 430px;
+  background: white;
+  padding: 40px 30px;
+  border-radius: 22px;
+  text-align: center;
+  box-shadow: 0 12px 35px rgba(0,0,0,.09);
+}
+
+.illustration {
+  font-size: 65px;
+  margin-bottom: 15px;
+}
+
+h1 {
+  color: var(--dark);
+  font-size: 26px;
+  margin: 0 0 12px;
+}
+
+.subtitle {
+  color: #777;
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+
+label {
+  display: block;
+  text-align: left;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 9px;
+  color: var(--dark);
+}
+
+input {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #dce4d1;
+  border-radius: 10px;
+  font-size: 16px;
+  outline: none;
+  margin-bottom: 18px;
+}
+
+input:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(114,156,18,.12);
+}
+
+button {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 10px;
+  background: var(--green);
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: .2s;
+}
+
+button:hover {
+  opacity: .9;
+  transform: translateY(-2px);
+}
+
+.error {
+  color: #c0392b;
+  font-size: 13px;
+  margin-top: 12px;
+  display: none;
+}
+
+.footer {
+  margin-top: 25px;
+  font-size: 13px;
+  color: #999;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="login-card">
+
+  <div class="illustration">🎁</div>
+
+  <h1>Bienvenue à la fête !</h1>
+
+  <p class="subtitle">
+    Nous sommes heureux de vous compter parmi nos invités.
+    Entrez votre nom pour découvrir la liste des cadeaux
+    et choisir celui que vous souhaitez apporter.
+  </p>
+
+  <form id="loginForm">
+
+    <label for="guestName">Votre nom et prénom</label>
+
+    <input
+      type="text"
+      id="guestName"
+      placeholder="Ex. : Jean Dupont"
+      autocomplete="name"
+      required
+    >
+
+    <button type="submit">
+      Accéder à la liste des cadeaux →
+    </button>
+
+    <div class="error" id="errorMessage">
+      Veuillez entrer votre nom pour continuer.
+    </div>
+
+  </form>
+
+  <div class="footer">
+    Merci de partager ce moment spécial avec nous ❤️
+  </div>
+
+</div>
+
+<script>
+document.getElementById("loginForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const name = document.getElementById("guestName").value.trim();
+  const error = document.getElementById("errorMessage");
+
+  if (!name) {
+    error.style.display = "block";
+    return;
+  }
+
+  // Mémoriser le nom de l'invité dans le navigateur
+  sessionStorage.setItem("guestName", name);
+
+  // Redirection vers la page de cadeaux
+  window.location.href = "cadeaux.html";
+});
+</script>
+
+</body>
+</html>
