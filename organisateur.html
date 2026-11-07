@@ -267,6 +267,54 @@ textarea{min-height:76px;resize:vertical}
             Copier le lien
           </button>
         </div>
+        <section class="panel">
+  <h3>📊 Rapport de l'événement</h3>
+
+  <p class="muted">
+    Suivi des confirmations de participation et des réservations de cadeaux.
+  </p>
+
+  <div class="stats">
+
+    <div class="stat-card">
+      <small>Invités inscrits</small>
+      <strong id="reportGuests">0</strong>
+    </div>
+
+    <div class="stat-card">
+      <small>Présences confirmées</small>
+      <strong id="reportConfirmed">0</strong>
+    </div>
+
+    <div class="stat-card">
+      <small>En attente</small>
+      <strong id="reportPending">0</strong>
+    </div>
+
+    <div class="stat-card">
+      <small>Absences annoncées</small>
+      <strong id="reportDeclined">0</strong>
+    </div>
+
+    <div class="stat-card">
+      <small>Cadeaux disponibles dans la liste</small>
+      <strong id="reportGifts">0</strong>
+    </div>
+
+    <div class="stat-card">
+      <small>Réservations effectuées</small>
+      <strong id="reportReservations">0</strong>
+    </div>
+
+  </div>
+
+  <div id="reportStatus" class="status"></div>
+
+  <button class="btn btn-secondary" type="button"
+    id="refreshReport">
+    Actualiser le rapport
+  </button>
+</section>
       </section>
 
       <section class="panel">
