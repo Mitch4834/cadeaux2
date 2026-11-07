@@ -1747,7 +1747,76 @@ const ORGANIZER_URL = "organisateur.html";
 
   </div>
 </footer>
+<script>
+const STATS_API_URL = "https://script.google.com/macros/s/AKfycbzwdi4Bo2HFJ-mUIrg1X1yNWoHptBW13ojt3ucjrfs6q0a9meGMc5RoUuYCCId3_pC3/exec";
 
+function loadPublicStats() {
+  const callback = "publicStatsCallback_" + Date.now();
+  const script = document.createElement("script");
+
+  const status = document.getElementById("statsStatus");
+
+  let timeout;
+
+  function cleanup() {
+    clearTimeout(timeout);
+    delete window[callback];
+
+    if (script.parentNode) {
+      script.parentNode.removeChild(script);
+    }
+  }
+
+  window[callback] = function(result) {
+    cleanup();
+
+    if (!result || !result.success || !result.stats) {
+      status.textContent =
+        "Les statistiques sont momentanément indisponibles.";
+      return;
+    }
+
+    const stats = result.stats;
+
+    document.getElementById("statEvents").textContent =
+      Number(stats.total_events || 0).toLocaleString("fr-FR");
+
+    document.getElementById("statGuests").textContent =
+      Number(stats.total_guests || 0).toLocaleString("fr-FR");
+
+    document.getElementById("statReservations").textContent =
+      Number(stats.total_reservations || 0).toLocaleString("fr-FR");
+
+    document.getElementById("statAttendance").textContent =
+      Number(stats.confirmed_attendance || 0).toLocaleString("fr-FR");
+
+    status.textContent = "Statistiques actualisées automatiquement.";
+  };
+
+  const params = new URLSearchParams({
+    action: "publicStats",
+    callback: callback
+  });
+
+  script.src = STATS_API_URL + "?" + params.toString();
+
+  script.onerror = function() {
+    cleanup();
+    status.textContent =
+      "Impossible de charger les statistiques pour le moment.";
+  };
+
+  timeout = setTimeout(function() {
+    cleanup();
+    status.textContent =
+      "Les statistiques seront bientôt disponibles.";
+  }, 12000);
+
+  document.body.appendChild(script);
+}
+
+loadPublicStats();
+</script>
 <script>
 document.getElementById("year").textContent = new Date().getFullYear();
 
@@ -1755,7 +1824,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
 document.querySelectorAll(".organizer-link").forEach(link => {
   link.href = ORGANIZER_URL;
 });
-</script>
+
 
 </body>
 </html>
