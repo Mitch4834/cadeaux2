@@ -264,9 +264,26 @@ footer {
 </footer>
 
 <script>
-// Liste de démonstration des cadeaux.
-// taken: true signifie que le cadeau est déjà choisi.
-const gifts = [
+
+/**
+ * PLATEFORME DE RESERVATION DE CADEAUX
+ * FRONTEND PREPARE POUR GOOGLE APPS SCRIPT
+ */
+
+// =====================================
+// CONFIGURATION
+// =====================================
+
+const API_URL = "https://script.google.com/macros/s/AKfycbxqoQ-eySZQRe4yME3jMXbIDXRBu_gQysR4XCx85NCQUMLt-m3ISxJFr87sFEQAtxqMLg/exec";
+
+const CONFIG = {
+  TIMEOUT: 15000,
+  REFRESH_AFTER_RESERVATION: true
+};
+
+// Cadeaux de démonstration pour référence
+// Le serveur sera la source réelle des cadeaux.
+const DEMO_GIFTS = [
   {
     id: 1,
     name: "Poussette",
@@ -325,54 +342,288 @@ const gifts = [
   }
 ];
 
+// =====================================
+// SESSION INVITE
+// =====================================
+
+const guestId = sessionStorage.getItem("guestId");
+const guestName = sessionStorage.getItem("guestName");
+
 const grid = document.getElementById("giftGrid");
 const confirmation = document.getElementById("confirmation");
 
-function displayGifts() {
-  grid.innerHTML = gifts.map(gift => `
-    <article class="gift-card ${gift.taken ? "taken" : ""}">
-      <div class="gift-image">${gift.emoji}</div>
+let gifts = [];
+let reservationEnCours = false;
 
-      <div class="gift-content">
-        <span class="gift-status">
-          ${gift.taken ? "Déjà choisi" : "Disponible"}
-        </span>
-
-        <h3>${gift.name}</h3>
-        <p>${gift.description}</p>
-
-        <button
-          ${gift.taken ? "disabled" : ""}
-          onclick="chooseGift(${gift.id})">
-          ${gift.taken ? "Cadeau réservé" : "Je choisis ce cadeau"}
-        </button>
-      </div>
-    </article>
-  `).join("");
+// Vérification de la session
+if (!guestId || !guestName) {
+  window.location.href = "index.html";
 }
 
-function chooseGift(id) {
-  const gift = gifts.find(item => item.id === id);
+// =====================================
+// AFFICHAGE DES MESSAGES
+// =====================================
+
+function showMessage(message, type = "success") {
+  confirmation.style.display = "block";
+  confirmation.textContent = message;
+
+  confirmation.style.background =
+    type === "error" ? "#FDECEC" : "#F0E5F5";
+
+  confirmation.style.borderColor =
+    type === "error" ? "#E5A5A5" : "#B58AC8";
+
+  confirmation.style.color =
+    type === "error" ? "#A52A2A" : "#35213D";
+}
+
+// =====================================
+// COMMUNICATION JSONP
+// =====================================
+
+function apiRequest(params) {
+  return new Promise((resolve, reject) => {
+
+    const callbackName =
+      "giftCallback_" + Date.now() + "_" +
+      Math.random().toString(36).slice(2);
+
+    const script = document.createElement("script");
+
+    let termine = false;
+
+    const timeout = setTimeout(() => {
+      nettoyer();
+      reject(new Error("Le serveur ne répond pas."));
+    }, CONFIG.TIMEOUT);
+
+    function nettoyer() {
+      if (termine) return;
+
+      termine = true;
+
+      clearTimeout(timeout);
+      delete window[callbackName];
+      script.remove();
+    }
+
+    window[callbackName] = function(result) {
+      nettoyer();
+
+      if (!result) {
+        reject(new Error("Réponse invalide du serveur."));
+        return;
+      }
+
+      resolve(result);
+    };
+
+    script.onerror = function() {
+      nettoyer();
+      reject(new Error("Impossible de contacter le serveur."));
+    };
+
+    const query = new URLSearchParams({
+      ...params,
+      callback: callbackName
+    });
+
+    script.src = API_URL + "?" + query.toString();
+
+    document.body.appendChild(script);
+  });
+}
+
+// =====================================
+// CHARGEMENT DES CADEAUX
+// =====================================
+
+async function loadGifts() {
+
+  grid.innerHTML = "<p>Chargement des cadeaux...</p>";
+
+  try {
+
+    const result = await apiRequest({
+      action: "gifts"
+    });
+
+    if (!result.success) {
+      throw new Error(
+        result.message || "Impossible de charger les cadeaux."
+      );
+    }
+
+    if (!Array.isArray(result.gifts)) {
+      throw new Error("Format de données incorrect.");
+    }
+
+    gifts = result.gifts;
+
+    displayGifts();
+
+  } catch (error) {
+
+    grid.innerHTML = "";
+
+    showMessage(error.message, "error");
+
+    const retry = document.createElement("button");
+    retry.textContent = "Réessayer";
+    retry.addEventListener("click", loadGifts);
+
+    grid.appendChild(retry);
+  }
+}
+
+// =====================================
+// AFFICHAGE DES CARTES
+// =====================================
+
+function displayGifts() {
+
+  grid.innerHTML = "";
+
+  if (!gifts.length) {
+    grid.textContent = "Aucun cadeau disponible pour le moment.";
+    return;
+  }
+
+  gifts.forEach(gift => {
+
+    const card = document.createElement("article");
+    card.className = "gift-card" + (
+      gift.taken ? " taken" : ""
+    );
+
+    const image = document.createElement("div");
+    image.className = "gift-image";
+    image.textContent = gift.emoji || "🎁";
+
+    const content = document.createElement("div");
+    content.className = "gift-content";
+
+    const status = document.createElement("span");
+    status.className = "gift-status";
+    status.textContent = gift.taken
+      ? "Déjà choisi"
+      : "Disponible";
+
+    const title = document.createElement("h3");
+    title.textContent = gift.name;
+
+    const description = document.createElement("p");
+    description.textContent = gift.description || "";
+
+    const button = document.createElement("button");
+
+    button.textContent = gift.taken
+      ? "Cadeau réservé"
+      : "Je choisis ce cadeau";
+
+    button.disabled = gift.taken || reservationEnCours;
+
+    button.addEventListener("click", () => {
+      chooseGift(gift.id);
+    });
+
+    content.append(
+      status,
+      title,
+      description,
+      button
+    );
+
+    card.append(image, content);
+
+    grid.appendChild(card);
+  });
+}
+
+// =====================================
+// RESERVATION D'UN CADEAU
+// =====================================
+
+async function chooseGift(id) {
+
+  if (reservationEnCours) return;
+
+  const gift = gifts.find(item =>
+    String(item.id) === String(id)
+  );
 
   if (!gift || gift.taken) return;
 
   const confirmChoice = confirm(
+    `Bonjour ${guestName} !\n\n` +
     `Confirmez-vous votre choix : ${gift.name} ?`
   );
 
   if (!confirmChoice) return;
 
-  gift.taken = true;
-
-  confirmation.style.display = "block";
-  confirmation.innerHTML =
-    `🎉 Vous avez choisi : <strong>${gift.name}</strong>.<br>
-    Merci pour votre participation !`;
+  reservationEnCours = true;
 
   displayGifts();
+
+  showMessage("Enregistrement de votre réservation...");
+
+  try {
+
+    const result = await apiRequest({
+      action: "reserve",
+      gift_id: gift.id,
+      guest_id: guestId
+    });
+
+    if (!result.success) {
+
+      throw new Error(
+        result.message || "La réservation n'a pas abouti."
+      );
+    }
+
+    showMessage(
+      `🎉 Félicitations ${guestName} ! Vous avez réservé : ${gift.name}. Merci pour votre participation !`
+    );
+
+    // Recharger les disponibilités depuis le serveur
+    if (CONFIG.REFRESH_AFTER_RESERVATION) {
+      await loadGifts();
+    }
+
+  } catch (error) {
+
+    showMessage(error.message, "error");
+
+    // Actualiser les disponibilités en cas de conflit
+    try {
+      const result = await apiRequest({
+        action: "gifts"
+      });
+
+      if (result.success && Array.isArray(result.gifts)) {
+        gifts = result.gifts;
+        displayGifts();
+      }
+
+    } catch (refreshError) {
+      console.error(refreshError);
+    }
+
+  } finally {
+
+    reservationEnCours = false;
+    displayGifts();
+  }
 }
 
-displayGifts();
+// =====================================
+// INITIALISATION
+// =====================================
+
+loadGifts();
+
 </script>
 
 </body>
