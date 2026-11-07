@@ -3,755 +3,1024 @@
 
 
 
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Espace organisateur | Gestion des cadeaux</title>
-
+<title>Espace organisateur | Gestion des événements</title>
 <style>
-:root {
-  --green: #729c12;
-  --light-green: #e5f0d7;
-  --dark: #28321c;
-  --gray: #f5f7f2;
-  --red: #d9534f;
+:root{
+  --primary:#712a90;--primary-hover:#8540a3;--primary-light:#f1e8f6;
+  --bg:#faf7fc;--dark:#35213d;--muted:#786d7d;--border:#e5d8ec;
+  --white:#fff;--red:#c83d52;--green:#23845b;
 }
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f7f9f4;
-  color: var(--dark);
-}
-
-header {
-  background: var(--green);
-  color: white;
-  padding: 22px 30px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-header h1 {
-  margin: 0;
-  font-size: 22px;
-}
-
-header span {
-  font-size: 13px;
-}
-
-.container {
-  max-width: 1150px;
-  margin: 30px auto;
-  padding: 0 20px;
-}
-
-.welcome {
-  margin-bottom: 25px;
-}
-
-.welcome h2 {
-  margin: 0 0 8px;
-}
-
-.welcome p {
-  color: #777;
-  margin: 0;
-  line-height: 1.5;
-}
-
-.stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 18px;
-  margin-bottom: 28px;
-}
-
-.stat-card {
-  background: white;
-  padding: 22px;
-  border-radius: 13px;
-  box-shadow: 0 3px 12px rgba(0,0,0,.05);
-}
-
-.stat-card small {
-  color: #777;
-}
-
-.stat-card strong {
-  display: block;
-  font-size: 30px;
-  color: var(--green);
-  margin-top: 10px;
-}
-
-.columns {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 22px;
-  align-items: start;
-}
-
-.panel {
-  background: white;
-  border-radius: 14px;
-  padding: 24px;
-  box-shadow: 0 3px 12px rgba(0,0,0,.05);
-  min-width: 0;
-}
-
-.panel h3 {
-  margin: 0 0 20px;
-  font-size: 19px;
-}
-
-.form-group {
-  margin-bottom: 16px;
-}
-
-label {
-  display: block;
-  font-size: 13px;
-  font-weight: bold;
-  margin-bottom: 8px;
-}
-
-input, textarea {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #dce3d4;
-  border-radius: 8px;
-  font-family: inherit;
-  font-size: 14px;
-  outline: none;
-}
-
-input:focus, textarea:focus {
-  border-color: var(--green);
-}
-
-textarea {
-  min-height: 75px;
-  resize: vertical;
-}
-
-.btn {
-  border: none;
-  background: var(--green);
-  color: white;
-  padding: 12px 17px;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.btn:hover {
-  opacity: .9;
-}
-
-.btn-danger {
-  background: var(--red);
-  padding: 8px 11px;
-  font-size: 12px;
-  flex-shrink: 0;
-}
-
-.list {
-  margin-top: 25px;
-}
-
-.list-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  padding: 15px 0;
-  border-bottom: 1px solid #eee;
-}
-
-.item-info {
-  min-width: 0;
-  flex: 1;
-}
-
-.item-info strong {
-  display: block;
-  overflow-wrap: anywhere;
-}
-
-.item-info small {
-  display: block;
-  color: #888;
-  margin-top: 5px;
-  line-height: 1.4;
-}
-
-.gift-quantity {
-  display: inline-block;
-  color: var(--green);
-  font-size: 12px;
-  font-weight: bold;
-  margin-top: 8px;
-}
-
-.photo-upload {
-  border: 2px dashed #c8d9ad;
-  background: #f8fbf4;
-  padding: 22px 15px;
-  text-align: center;
-  border-radius: 12px;
-  cursor: pointer;
-}
-
-.photo-upload .upload-icon {
-  font-size: 32px;
-  display: block;
-  margin-bottom: 8px;
-}
-
-.photo-upload p {
-  color: #777;
-  font-size: 13px;
-  margin: 5px 0 0;
-}
-
-.photo-upload input {
-  display: none;
-}
-
-.photo-preview {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 13px;
-}
-
-.photo-item {
-  position: relative;
-  width: 90px;
-  height: 90px;
-}
-
-.photo-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 9px;
-  border: 1px solid #ddd;
-}
-
-.remove-photo {
-  position: absolute;
-  top: -7px;
-  right: -7px;
-  width: 23px;
-  height: 23px;
-  border: none;
-  border-radius: 50%;
-  background: var(--red);
-  color: white;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.gift-photos {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-  margin-top: 10px;
-}
-
-.gift-photos img {
-  width: 65px;
-  height: 65px;
-  object-fit: cover;
-  border-radius: 7px;
-}
-
-.empty {
-  text-align: center;
-  padding: 20px;
-  color: #999;
-  font-size: 14px;
-}
-
-.notice {
-  background: var(--light-green);
-  border-radius: 10px;
-  padding: 15px;
-  margin-top: 25px;
-  font-size: 13px;
-  color: #526d26;
-  line-height: 1.6;
-}
-
-@media(max-width: 750px) {
-  .columns {
-    grid-template-columns: 1fr;
-  }
-
-  header {
-    padding: 20px;
-  }
-
-  .panel {
-    padding: 18px;
-  }
-}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--dark)}
+header{background:var(--primary);color:#fff;padding:20px 5%;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+header h1{font-size:21px;margin:0}
+header span{font-size:13px;opacity:.9}
+.container{max-width:1200px;margin:28px auto;padding:0 18px}
+.welcome{margin-bottom:22px}
+.welcome h2{margin:0 0 7px}
+.welcome p{color:var(--muted);margin:0;line-height:1.5}
+.panel,.stat-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:21px;box-shadow:0 3px 14px rgba(53,33,61,.045)}
+.panel h3{margin:0 0 17px;font-size:18px}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:20px 0}
+.stat-card small{color:var(--muted)}
+.stat-card strong{display:block;font-size:29px;color:var(--primary);margin-top:8px}
+.layout{display:grid;grid-template-columns:minmax(280px,.8fr) minmax(0,1.6fr);gap:18px;align-items:start}
+.stack{display:grid;gap:18px}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.form-group{margin-bottom:13px;min-width:0}
+label{display:block;font-size:13px;font-weight:700;margin-bottom:7px}
+input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--dark);font:14px Arial;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(113,42,144,.09)}
+textarea{min-height:76px;resize:vertical}
+.btn{border:0;border-radius:8px;background:var(--primary);color:#fff;padding:11px 15px;font-weight:700;cursor:pointer}
+.btn:hover{background:var(--primary-hover)}
+.btn:disabled{opacity:.55;cursor:wait}
+.btn-secondary{background:var(--primary-light);color:var(--primary)}
+.btn-danger{background:#fbecef;color:var(--red);padding:8px 10px;font-size:12px}
+.btn-small{padding:7px 10px;font-size:12px}
+.event-list,.item-list{display:grid;gap:9px;margin-top:13px}
+.event-option{border:1px solid var(--border);border-radius:10px;padding:12px;cursor:pointer;background:#fff;text-align:left;color:var(--dark);width:100%}
+.event-option.active{border:2px solid var(--primary);background:var(--primary-light)}
+.event-option strong,.event-option small{display:block}
+.event-option small{color:var(--muted);margin-top:5px}
+.item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid #f0eaf3}
+.item:last-child{border-bottom:0}
+.item-info{min-width:0;flex:1}
+.item-info strong{display:block;overflow-wrap:anywhere}
+.item-info small{display:block;color:var(--muted);margin-top:4px;line-height:1.4;overflow-wrap:anywhere}
+.muted{color:var(--muted);font-size:13px}
+.hidden{display:none!important}
+.notice{background:var(--primary-light);color:#58306a;padding:13px 15px;border-radius:10px;font-size:13px;line-height:1.55;margin-top:18px}
+.status{padding:10px 12px;border-radius:8px;margin:12px 0;font-size:13px;display:none}
+.status.ok{display:block;background:#e9f6ef;color:#216844}
+.status.error{display:block;background:#fff0f1;color:#a32c40}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.person-row{border:1px solid var(--border);padding:12px;border-radius:10px;margin-bottom:10px}
+.person-row h4{margin:0 0 10px;font-size:14px}
+.badge{display:inline-block;border-radius:20px;padding:4px 8px;background:var(--primary-light);color:var(--primary);font-size:11px;font-weight:700}
+@media(max-width:850px){.layout{grid-template-columns:1fr}}
+@media(max-width:560px){.stats{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}header{padding:18px}.panel{padding:16px}}
 </style>
 </head>
-
 <body>
 
 <header>
   <h1>🎁 Espace organisateur</h1>
-  <span>Administration de la fête</span>
+  <span>Gestion de vos événements et listes de cadeaux</span>
 </header>
 
 <main class="container">
 
   <section class="welcome">
     <h2>Tableau de bord</h2>
-    <p>Ajoutez vos invités et préparez votre catalogue de cadeaux.</p>
+    <p>Créez plusieurs événements et gérez séparément leurs personnes à l'honneur, invités et cadeaux.</p>
   </section>
+
+  <div id="globalStatus" class="status"></div>
 
   <section class="stats">
     <div class="stat-card">
-      <small>Invités enregistrés</small>
+      <small>Événements créés</small>
+      <strong id="eventCount">0</strong>
+    </div>
+    <div class="stat-card">
+      <small>Invités dans l'événement sélectionné</small>
       <strong id="guestCount">0</strong>
     </div>
-
     <div class="stat-card">
-      <small>Types de cadeaux</small>
+      <small>Cadeaux dans l'événement sélectionné</small>
       <strong id="giftCount">0</strong>
-    </div>
-
-    <div class="stat-card">
-      <small>Quantité totale</small>
-      <strong id="totalGiftCount">0</strong>
     </div>
   </section>
 
-  <div class="columns">
+  <div class="layout">
 
-    <!-- GESTION DES INVITÉS -->
-    <section class="panel">
+    <div class="stack">
 
-      <h3>👥 Ajouter un invité</h3>
+      <section class="panel">
+        <h3>➕ Créer un événement</h3>
 
-      <form id="guestForm">
-        <div class="form-group">
-          <label for="guestName">Nom et prénom</label>
-          <input
-            type="text"
-            id="guestName"
-            placeholder="Ex. : Jean Dupont"
-            required
-          >
+        <form id="eventForm">
+
+          <div class="form-group">
+            <label for="eventName">Nom de l'événement *</label>
+            <input id="eventName" required placeholder="Ex. Mariage de Jean et Marie">
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="eventType">Type d'événement *</label>
+              <select id="eventType" required>
+                <option value="">Choisir</option>
+                <option>Anniversaire</option>
+                <option>Mariage</option>
+                <option>Fiançailles</option>
+                <option>Baptême</option>
+                <option>Baby shower</option>
+                <option>Communion</option>
+                <option>Remise de diplôme</option>
+                <option>Autre</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="eventDate">Date</label>
+              <input id="eventDate" type="date">
+            </div>
+
+            <div class="form-group">
+              <label for="eventTime">Heure</label>
+              <input id="eventTime" type="time">
+            </div>
+
+            <div class="form-group">
+              <label for="eventTheme">Thème</label>
+              <input id="eventTheme" placeholder="Ex. Princesse">
+            </div>
+
+            <div class="form-group">
+              <label for="eventPlace">Lieu</label>
+              <input id="eventPlace" placeholder="Nom de la salle">
+            </div>
+
+            <div class="form-group">
+              <label for="eventCity">Ville</label>
+              <input id="eventCity" placeholder="Ville">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="eventAddress">Adresse</label>
+            <input id="eventAddress">
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="eventCountry">Pays</label>
+              <input id="eventCountry" placeholder="Haïti">
+            </div>
+
+            <div class="form-group">
+              <label for="eventDeadline">Date limite de réservation</label>
+              <input id="eventDeadline" type="date">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="eventDescription">Description</label>
+            <textarea id="eventDescription" placeholder="Présentez votre événement..."></textarea>
+          </div>
+
+          <h4>Personne(s) à l'honneur</h4>
+          <p class="muted">
+            Ajoutez une personne pour un anniversaire ou un baptême,
+            deux personnes ou plus pour un mariage, des fiançailles, etc.
+          </p>
+
+          <div id="peopleContainer"></div>
+
+          <button type="button" class="btn btn-secondary btn-small" id="addPersonBtn">
+            + Ajouter une personne
+          </button>
+
+          <hr style="border:0;border-top:1px solid var(--border);margin:17px 0">
+
+          <h4>Coordonnées de l'organisateur</h4>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="organizerName">Nom</label>
+              <input id="organizerName">
+            </div>
+
+            <div class="form-group">
+              <label for="organizerPhone">Téléphone</label>
+              <input id="organizerPhone">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="organizerEmail">Email</label>
+            <input id="organizerEmail" type="email">
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="eventVisibility">Visibilité des réservations</label>
+              <select id="eventVisibility">
+                <option value="publique">Publique</option>
+                <option value="privee">Privée</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="purchaseMode">Mode d'achat</label>
+              <select id="purchaseMode">
+                <option value="reservation">Réservation seule</option>
+                <option value="achat">Achat sur la plateforme</option>
+                <option value="les deux">Les deux</option>
+              </select>
+            </div>
+          </div>
+
+          <button class="btn" type="submit" id="createEventBtn">
+            Créer l'événement
+          </button>
+
+        </form>
+      </section>
+
+      <section class="panel">
+        <div class="section-head">
+          <h3>📅 Mes événements</h3>
+          <span class="badge" id="selectedBadge">Aucun sélectionné</span>
         </div>
 
-        <button class="btn" type="submit">
-          + Ajouter l'invité
-        </button>
-      </form>
+        <div id="eventList" class="event-list">
+          <div class="muted">Chargement...</div>
+        </div>
+      </section>
 
-      <div class="list">
-        <h3>Liste des invités</h3>
-        <div id="guestList"></div>
-      </div>
+    </div>
 
-    </section>
+    <div class="stack">
 
-    <!-- GESTION DES CADEAUX -->
-    <section class="panel">
-
-      <h3>🎁 Ajouter un cadeau</h3>
-
-      <form id="giftForm">
-
-        <div class="form-group">
-          <label for="giftName">Nom du cadeau</label>
-          <input
-            type="text"
-            id="giftName"
-            placeholder="Ex. : Poussette"
-            required
-          >
+      <section class="panel">
+        <div class="section-head">
+          <h3>Gestion de l'événement</h3>
+          <span id="currentEventType" class="badge">Sélectionnez une fête</span>
         </div>
 
-        <div class="form-group">
-          <label for="giftDescription">Description</label>
-          <textarea
-            id="giftDescription"
-            placeholder="Décrivez le cadeau..."
-          ></textarea>
+        <p id="currentEventName" class="muted">
+          Choisissez un événement dans la liste pour gérer ses invités et ses cadeaux.
+        </p>
+
+        <div id="eventLinkBox" class="notice hidden">
+          <strong>Lien d'invitation de cet événement</strong>
+          <p id="eventLink" style="overflow-wrap:anywhere"></p>
+          <button class="btn btn-secondary btn-small" id="copyEventLink" type="button">
+            Copier le lien
+          </button>
         </div>
+      </section>
 
-        <div class="form-group">
-          <label for="giftQuantity">Quantité disponible</label>
-          <input
-            type="number"
-            id="giftQuantity"
-            min="1"
-            value="1"
-            required
-          >
+      <section class="panel">
+        <h3>👥 Ajouter un invité</h3>
+
+        <form id="guestForm">
+          <div class="form-group">
+            <label for="guestName">Nom et prénom *</label>
+            <input id="guestName" required placeholder="Ex. Jean Dupont">
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="guestPhone">Téléphone</label>
+              <input id="guestPhone" type="tel">
+            </div>
+
+            <div class="form-group">
+              <label for="guestEmail">Email</label>
+              <input id="guestEmail" type="email">
+            </div>
+          </div>
+
+          <button class="btn" type="submit" id="addGuestBtn">
+            Ajouter l'invité
+          </button>
+        </form>
+
+        <div id="guestStatus" class="status"></div>
+        <div class="item-list" id="guestList">
+          <div class="muted">Aucun événement sélectionné.</div>
         </div>
+      </section>
 
-        <!-- AJOUT DES PHOTOS -->
-        <div class="form-group">
-          <label>Photos du cadeau</label>
+      <section class="panel">
+        <h3>🎁 Ajouter un cadeau</h3>
 
-          <label class="photo-upload" for="giftPhotos">
-            <span class="upload-icon">📸</span>
-            <strong>Ajouter des photos</strong>
-            <p>Cliquez ici pour sélectionner une ou plusieurs images.</p>
-            <p>Formats acceptés : JPG, PNG, WEBP</p>
-          </label>
+        <form id="giftForm">
+          <div class="form-group">
+            <label for="giftName">Nom du cadeau *</label>
+            <input id="giftName" required placeholder="Ex. Poussette">
+          </div>
 
-          <input
-            type="file"
-            id="giftPhotos"
-            accept="image/jpeg,image/png,image/webp"
-            multiple
-          >
+          <div class="form-group">
+            <label for="giftDescription">Description</label>
+            <textarea id="giftDescription" placeholder="Décrivez le cadeau..."></textarea>
+          </div>
 
-          <div id="photoPreview" class="photo-preview"></div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="giftQuantity">Quantité</label>
+              <input id="giftQuantity" type="number" min="1" value="1">
+            </div>
+
+            <div class="form-group">
+              <label for="giftPrice">Prix indicatif</label>
+              <input id="giftPrice" type="number" min="0" step="0.01" placeholder="Facultatif">
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="giftEmoji">Emoji</label>
+              <input id="giftEmoji" value="🎁" maxlength="8">
+            </div>
+
+            <div class="form-group">
+              <label for="giftImage">URL de l'image</label>
+              <input id="giftImage" type="url" placeholder="https://...">
+            </div>
+          </div>
+
+          <button class="btn" type="submit" id="addGiftBtn">
+            Enregistrer le cadeau
+          </button>
+        </form>
+
+        <p class="muted">
+          Pour cette version, les images doivent être hébergées en ligne
+          et ajoutées avec leur URL. Les fichiers sélectionnés dans ton ancien
+          formulaire restaient uniquement dans le navigateur ; ils ne pouvaient
+          pas être partagés avec les invités.
+        </p>
+
+        <div id="giftStatus" class="status"></div>
+        <div class="item-list" id="giftList">
+          <div class="muted">Aucun événement sélectionné.</div>
         </div>
+      </section>
 
-        <button class="btn" type="submit" id="saveGiftButton">
-          + Enregistrer le cadeau
-        </button>
-
-      </form>
-
-      <div class="list">
-        <h3>Liste des cadeaux</h3>
-        <div id="giftList"></div>
-      </div>
-
-    </section>
-
+    </div>
   </div>
 
   <div class="notice">
-    💡 Version de démonstration : les données sont conservées dans
-    le navigateur de cet appareil. Pour partager les listes et les
-    photos avec les invités, il faudra connecter une base de données
-    et un service de stockage des images.
+    Chaque événement possède son propre identifiant. Les invités et cadeaux
+    sont enregistrés avec cet identifiant dans Google Sheets : les listes
+    restent donc séparées d'une fête à l'autre.
   </div>
 
 </main>
 
 <script>
-let guests = JSON.parse(localStorage.getItem("partyGuests") || "[]");
-let gifts = JSON.parse(localStorage.getItem("partyGifts") || "[]");
+const API_URL = "https://script.google.com/macros/s/AKfycbxJrkdTw0hLK089uw9Kdd1_Cb-RO1PkHnnE27vih8-ssbLFiXkNFD3jU0AUeXMgKbjo_A/exec";
 
-let selectedPhotos = [];
+let events = [];
+let selectedEventId = null;
+let selectedEvent = null;
 
-function saveData() {
-  try {
-    localStorage.setItem("partyGuests", JSON.stringify(guests));
-    localStorage.setItem("partyGifts", JSON.stringify(gifts));
-    return true;
-  } catch (error) {
-    alert("Stockage insuffisant. Réduisez le nombre ou la taille des photos.");
-    return false;
-  }
+const $ = id => document.getElementById(id);
+
+function showStatus(id, message, type="ok") {
+  const el = $(id);
+  el.textContent = message;
+  el.className = "status " + type;
 }
 
-// APERÇU ET SÉLECTION DES PHOTOS
-const photoInput = document.getElementById("giftPhotos");
-const photoPreview = document.getElementById("photoPreview");
+function hideStatus(id) {
+  $(id).className = "status";
+  $(id).textContent = "";
+}
 
-photoInput.addEventListener("change", async function() {
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  })[c]);
+}
 
-  const files = Array.from(this.files);
-  const maxSize = 2 * 1024 * 1024;
-
-  for (const file of files) {
-
-    if (!file.type.match(/^image\/(jpeg|png|webp)$/)) {
-      alert("Format non accepté : " + file.name);
-      continue;
-    }
-
-    if (file.size > maxSize) {
-      alert(file.name + " dépasse 2 Mo. Choisissez une image plus légère.");
-      continue;
-    }
-
-    try {
-      const data = await compressImage(file);
-
-      selectedPhotos.push(data);
-      displayPhotoPreview();
-
-    } catch (error) {
-      alert("Impossible de lire " + file.name);
-    }
-  }
-
-  // Permet de sélectionner à nouveau le même fichier.
-  this.value = "";
-});
-
-// COMPRESSER LES IMAGES POUR LIMITER LE STOCKAGE
-function compressImage(file) {
+function api(params) {
   return new Promise((resolve, reject) => {
 
-    const reader = new FileReader();
+    const callback = "organizerCb_" + Date.now() + "_" +
+      Math.floor(Math.random()*100000);
 
-    reader.onload = function(event) {
-      const img = new Image();
+    const script = document.createElement("script");
+    let finished = false;
 
-      img.onload = function() {
-
-        const maxDimension = 1000;
-        const ratio = Math.min(
-          1,
-          maxDimension / Math.max(img.width, img.height)
-        );
-
-        const canvas = document.createElement("canvas");
-
-        canvas.width = Math.round(img.width * ratio);
-        canvas.height = Math.round(img.height * ratio);
-
-        const context = canvas.getContext("2d");
-
-        context.drawImage(
-          img,
-          0,
-          0,
-          canvas.width,
-          canvas.height
-        );
-
-        resolve(canvas.toDataURL("image/jpeg", 0.72));
-      };
-
-      img.onerror = reject;
-      img.src = event.target.result;
+    const cleanup = () => {
+      if (finished) return;
+      finished = true;
+      clearTimeout(timer);
+      delete window[callback];
+      script.remove();
     };
 
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
+    const timer = setTimeout(() => {
+      cleanup();
+      reject(new Error("Le serveur ne répond pas. Réessayez."));
+    }, 20000);
+
+    window[callback] = data => {
+      cleanup();
+
+      if (data && data.success) {
+        resolve(data);
+      } else {
+        reject(new Error(data?.message || "Une erreur est survenue."));
+      }
+    };
+
+    script.onerror = () => {
+      cleanup();
+      reject(new Error("Impossible de contacter le serveur."));
+    };
+
+    const query = new URLSearchParams({
+      ...params,
+      callback
+    }).toString();
+
+    script.src = API_URL + "?" + query;
+    document.body.appendChild(script);
   });
 }
 
-// AFFICHER L'APERÇU
-function displayPhotoPreview() {
+function addPersonRow(person = {}) {
+  const wrapper = document.createElement("div");
+  wrapper.className = "person-row";
 
-  photoPreview.innerHTML = selectedPhotos.map((photo, index) => `
-    <div class="photo-item">
-      <img src="${photo}" alt="Photo sélectionnée">
-      <button
-        type="button"
-        class="remove-photo"
-        onclick="removePhoto(${index})">
-        ×
+  wrapper.innerHTML = `
+    <div class="section-head">
+      <h4>Personne à l'honneur</h4>
+      <button type="button" class="btn btn-danger btn-small remove-person">
+        Retirer
       </button>
     </div>
-  `).join("");
-}
 
-// RETIRER UNE PHOTO AVANT ENREGISTREMENT
-function removePhoto(index) {
-  selectedPhotos.splice(index, 1);
-  displayPhotoPreview();
-}
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Prénom</label>
+        <input class="person-first" value="${escapeHTML(person.firstName || "")}">
+      </div>
 
-// AJOUTER UN INVITÉ
-document.getElementById("guestForm").addEventListener("submit", function(e) {
+      <div class="form-group">
+        <label>Nom</label>
+        <input class="person-last" value="${escapeHTML(person.lastName || "")}">
+      </div>
 
-  e.preventDefault();
+      <div class="form-group">
+        <label>Rôle</label>
+        <input class="person-role"
+          placeholder="Marié(e), enfant baptisé..."
+          value="${escapeHTML(person.role || "")}">
+      </div>
 
-  const name = document.getElementById("guestName").value.trim();
+      <div class="form-group">
+        <label>Date de naissance</label>
+        <input class="person-birth" type="date"
+          value="${escapeHTML(person.birthDate || "")}">
+      </div>
+    </div>
 
-  if (!name) return;
+    <div class="form-group">
+      <label>Description (facultatif)</label>
+      <input class="person-description"
+        value="${escapeHTML(person.description || "")}">
+    </div>
+  `;
 
-  const exists = guests.some(
-    guest => guest.name.toLowerCase() === name.toLowerCase()
-  );
-
-  if (exists) {
-    alert("Cet invité est déjà enregistré.");
-    return;
-  }
-
-  guests.push({
-    id: Date.now(),
-    name: name
+  wrapper.querySelector(".remove-person").addEventListener("click", () => {
+    wrapper.remove();
   });
 
-  if (!saveData()) {
-    guests.pop();
-    return;
+  $("peopleContainer").appendChild(wrapper);
+}
+
+function collectPeople() {
+  return [...$("peopleContainer").querySelectorAll(".person-row")]
+    .map(row => {
+
+      const birthDate = row.querySelector(".person-birth").value;
+      let age = "";
+
+      if (birthDate) {
+        const birth = new Date(birthDate + "T00:00:00");
+        const now = new Date();
+
+        age = now.getFullYear() - birth.getFullYear();
+
+        if (
+          now.getMonth() < birth.getMonth() ||
+          (
+            now.getMonth() === birth.getMonth() &&
+            now.getDate() < birth.getDate()
+          )
+        ) {
+          age--;
+        }
+      }
+
+      return {
+        firstName: row.querySelector(".person-first").value.trim(),
+        lastName: row.querySelector(".person-last").value.trim(),
+        role: row.querySelector(".person-role").value.trim(),
+        birthDate,
+        age: age === "" ? "" : age,
+        description: row.querySelector(".person-description").value.trim()
+      };
+
+    })
+    .filter(p => p.firstName || p.lastName);
+}
+
+async function loadEvents() {
+
+  const result = await api({action:"events"});
+
+  events = result.events || [];
+
+  $("eventCount").textContent = events.length;
+
+  renderEvents();
+
+  if (selectedEventId && events.some(e => e.id === selectedEventId)) {
+
+    selectedEvent = events.find(e => e.id === selectedEventId);
+    await selectEvent(selectedEventId, false);
+
+  } else if (events.length) {
+
+    await selectEvent(events[0].id, false);
+
+  } else {
+
+    selectedEventId = null;
+    selectedEvent = null;
+    renderSelectedEvent();
+
+  }
+}
+
+function renderEvents() {
+
+  $("eventList").innerHTML = events.length
+    ? events.map(e => `
+      <button type="button"
+        class="event-option ${e.id === selectedEventId ? "active" : ""}"
+        data-id="${escapeHTML(e.id)}">
+
+        <strong>${escapeHTML(e.name)}</strong>
+
+        <small>
+          ${escapeHTML(e.type)}
+          ${e.date ? " · " + escapeHTML(e.date) : ""}
+        </small>
+
+        <small>ID : ${escapeHTML(e.id)}</small>
+
+      </button>
+    `).join("")
+    : `<div class="muted">
+        Aucun événement créé. Utilisez le formulaire ci-dessus.
+       </div>`;
+
+  $("eventList").querySelectorAll("[data-id]").forEach(btn => {
+    btn.addEventListener("click", () => selectEvent(btn.dataset.id));
+  });
+}
+
+async function selectEvent(id, reload=true) {
+
+  selectedEventId = id;
+  selectedEvent = events.find(e => e.id === id) || null;
+
+  renderEvents();
+  renderSelectedEvent();
+
+  if (!selectedEvent) return;
+
+  try {
+
+    const [guestResult, giftResult] = await Promise.all([
+      api({action:"guests", event_id:id}),
+      api({action:"gifts", event_id:id})
+    ]);
+
+    renderGuests(guestResult.guests || []);
+    renderGifts(giftResult.gifts || []);
+
+  } catch (err) {
+
+    showStatus("globalStatus", err.message, "error");
+
+  }
+}
+
+function renderSelectedEvent() {
+
+  const active = !!selectedEvent;
+
+  $("currentEventName").textContent = active
+    ? `${selectedEvent.name} — ${selectedEvent.id}`
+    : "Choisissez un événement pour gérer ses invités et ses cadeaux.";
+
+  $("currentEventType").textContent = active
+    ? selectedEvent.type
+    : "Aucun événement";
+
+  $("selectedBadge").textContent = active
+    ? "Événement sélectionné"
+    : "Aucun sélectionné";
+
+  $("eventLinkBox").classList.toggle("hidden", !active);
+
+  if (active) {
+
+    const link = new URL("index.html", window.location.href);
+    link.searchParams.set("fete_id", selectedEvent.id);
+
+    $("eventLink").textContent = link.toString();
+
+  } else {
+
+    $("eventLink").textContent = "";
+
   }
 
-  this.reset();
-  displayData();
-});
+  ["guestForm","giftForm"].forEach(id => {
+    [...$(id).elements].forEach(el => {
+      el.disabled = !active;
+    });
+  });
 
-// AJOUTER UN CADEAU AVEC SES PHOTOS
-document.getElementById("giftForm").addEventListener("submit", function(e) {
+  if (!active) {
+
+    $("guestList").innerHTML =
+      `<div class="muted">Aucun événement sélectionné.</div>`;
+
+    $("giftList").innerHTML =
+      `<div class="muted">Aucun événement sélectionné.</div>`;
+
+    $("guestCount").textContent = "0";
+    $("giftCount").textContent = "0";
+
+  }
+}
+
+function renderGuests(guests) {
+
+  $("guestCount").textContent = guests.length;
+
+  $("guestList").innerHTML = guests.length
+    ? guests.map(g => `
+      <div class="item">
+
+        <div class="item-info">
+          <strong>${escapeHTML(g.name)}</strong>
+
+          <small>
+            ${escapeHTML(g.phone || "")}
+            ${g.email ? " · " + escapeHTML(g.email) : ""}
+          </small>
+
+          <small>ID invité : ${escapeHTML(g.id)}</small>
+        </div>
+
+        <button class="btn btn-danger"
+          type="button"
+          data-delete-guest="${escapeHTML(g.id)}">
+          Désactiver
+        </button>
+
+      </div>
+    `).join("")
+    : `<div class="muted">
+        Aucun invité enregistré pour cette fête.
+       </div>`;
+
+  $("guestList").querySelectorAll("[data-delete-guest]").forEach(btn => {
+
+    btn.addEventListener("click", async () => {
+
+      if (!confirm("Désactiver cet invité ?")) return;
+
+      try {
+
+        await api({
+          action:"deleteGuest",
+          event_id:selectedEventId,
+          id:btn.dataset.deleteGuest
+        });
+
+        await refreshSelected();
+
+      } catch(e) {
+
+        showStatus("guestStatus", e.message, "error");
+
+      }
+
+    });
+
+  });
+}
+
+function renderGifts(gifts) {
+
+  $("giftCount").textContent = gifts.length;
+
+  $("giftList").innerHTML = gifts.length
+    ? gifts.map(g => `
+      <div class="item">
+
+        <div class="item-info">
+
+          <strong>
+            ${escapeHTML(g.emoji)} ${escapeHTML(g.name)}
+          </strong>
+
+          <small>
+            ${escapeHTML(g.description || "Aucune description")}
+          </small>
+
+          <small>
+            Quantité : ${g.quantity}
+            · Réservés : ${g.reserved}
+            · Restants : ${g.remaining}
+          </small>
+
+          ${g.price
+            ? `<small>Prix indicatif : ${escapeHTML(g.price)}</small>`
+            : ""}
+
+          ${g.image
+            ? `<small>
+                <a href="${escapeHTML(g.image)}"
+                  target="_blank" rel="noopener">
+                  Voir l'image
+                </a>
+              </small>`
+            : ""}
+
+        </div>
+
+        <button class="btn btn-danger"
+          type="button"
+          data-delete-gift="${escapeHTML(g.id)}">
+          Désactiver
+        </button>
+
+      </div>
+    `).join("")
+    : `<div class="muted">
+        Aucun cadeau enregistré pour cette fête.
+       </div>`;
+
+  $("giftList").querySelectorAll("[data-delete-gift]").forEach(btn => {
+
+    btn.addEventListener("click", async () => {
+
+      if (!confirm("Désactiver ce cadeau ?")) return;
+
+      try {
+
+        await api({
+          action:"deleteGift",
+          event_id:selectedEventId,
+          id:btn.dataset.deleteGift
+        });
+
+        await refreshSelected();
+
+      } catch(e) {
+
+        showStatus("giftStatus", e.message, "error");
+
+      }
+
+    });
+
+  });
+}
+
+async function refreshSelected() {
+
+  if (!selectedEventId) return;
+
+  const [a,b] = await Promise.all([
+    api({action:"guests", event_id:selectedEventId}),
+    api({action:"gifts", event_id:selectedEventId})
+  ]);
+
+  renderGuests(a.guests || []);
+  renderGifts(b.gifts || []);
+}
+
+$("addPersonBtn").addEventListener("click", () => addPersonRow());
+
+addPersonRow();
+
+$("eventForm").addEventListener("submit", async e => {
 
   e.preventDefault();
 
-  const name = document.getElementById("giftName").value.trim();
-  const description = document.getElementById("giftDescription").value.trim();
-  const quantity = parseInt(
-    document.getElementById("giftQuantity").value,
-    10
-  );
+  const btn = $("createEventBtn");
+  btn.disabled = true;
 
-  if (!name || !Number.isInteger(quantity) || quantity < 1) {
-    alert("Veuillez renseigner un nom et une quantité valide.");
-    return;
+  try {
+
+    const payload = {
+      action:"createEvent",
+
+      name:$("eventName").value.trim(),
+      type:$("eventType").value,
+      date:$("eventDate").value,
+      time:$("eventTime").value,
+      theme:$("eventTheme").value.trim(),
+      place:$("eventPlace").value.trim(),
+      address:$("eventAddress").value.trim(),
+      city:$("eventCity").value.trim(),
+      country:$("eventCountry").value.trim(),
+      deadline:$("eventDeadline").value,
+      description:$("eventDescription").value.trim(),
+      organizer:$("organizerName").value.trim(),
+      phone:$("organizerPhone").value.trim(),
+      email:$("organizerEmail").value.trim(),
+      visibility:$("eventVisibility").value,
+      purchaseMode:$("purchaseMode").value,
+      color:"#712A90",
+      people:JSON.stringify(collectPeople())
+    };
+
+    const result = await api(payload);
+
+    $("eventForm").reset();
+    $("peopleContainer").innerHTML = "";
+
+    addPersonRow();
+
+    await loadEvents();
+    await selectEvent(result.event.id);
+
+    showStatus(
+      "globalStatus",
+      "Événement créé : " + result.event.name,
+      "ok"
+    );
+
+  } catch(err) {
+
+    showStatus("globalStatus", err.message, "error");
+
+  } finally {
+
+    btn.disabled = false;
+
   }
 
-  const gift = {
-    id: Date.now(),
-    name: name,
-    description: description,
-    quantity: quantity,
-    photos: [...selectedPhotos]
-  };
-
-  gifts.push(gift);
-
-  if (!saveData()) {
-    gifts.pop();
-    return;
-  }
-
-  this.reset();
-  selectedPhotos = [];
-  displayPhotoPreview();
-
-  document.getElementById("giftQuantity").value = 1;
-
-  displayData();
-
-  alert("Cadeau enregistré avec succès !");
 });
 
-// SUPPRIMER UN INVITÉ
-function deleteGuest(id) {
+$("guestForm").addEventListener("submit", async e => {
 
-  if (!confirm("Voulez-vous supprimer cet invité ?")) return;
+  e.preventDefault();
 
-  const oldGuests = guests;
-  guests = guests.filter(guest => guest.id !== id);
-
-  if (!saveData()) {
-    guests = oldGuests;
-    return;
+  if (!selectedEventId) {
+    return showStatus(
+      "guestStatus",
+      "Sélectionnez d'abord un événement.",
+      "error"
+    );
   }
 
-  displayData();
-}
+  const btn = $("addGuestBtn");
+  btn.disabled = true;
 
-// SUPPRIMER UN CADEAU
-function deleteGift(id) {
+  try {
 
-  if (!confirm("Voulez-vous supprimer ce cadeau ?")) return;
+    await api({
+      action:"addGuest",
+      event_id:selectedEventId,
+      name:$("guestName").value.trim(),
+      phone:$("guestPhone").value.trim(),
+      email:$("guestEmail").value.trim()
+    });
 
-  const oldGifts = gifts;
-  gifts = gifts.filter(gift => gift.id !== id);
+    $("guestForm").reset();
 
-  if (!saveData()) {
-    gifts = oldGifts;
-    return;
+    await refreshSelected();
+
+    showStatus(
+      "guestStatus",
+      "Invité ajouté à cet événement.",
+      "ok"
+    );
+
+  } catch(err) {
+
+    showStatus("guestStatus", err.message, "error");
+
+  } finally {
+
+    btn.disabled = false;
+
   }
 
-  displayData();
-}
+});
 
-// PROTECTION DU HTML
-function escapeHTML(value) {
-  return String(value).replace(/[&<>"']/g, char => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;"
-  })[char]);
-}
+$("giftForm").addEventListener("submit", async e => {
 
-// AFFICHAGE DES LISTES
-function displayData() {
+  e.preventDefault();
 
-  const guestList = document.getElementById("guestList");
-  const giftList = document.getElementById("giftList");
+  if (!selectedEventId) {
+    return showStatus(
+      "giftStatus",
+      "Sélectionnez d'abord un événement.",
+      "error"
+    );
+  }
 
-  guestList.innerHTML = guests.length
-    ? guests.map(guest => `
-      <div class="list-item">
-        <div class="item-info">
-          <strong>${escapeHTML(guest.name)}</strong>
-        </div>
+  const btn = $("addGiftBtn");
+  btn.disabled = true;
 
-        <button class="btn btn-danger"
-          onclick="deleteGuest(${guest.id})">
-          Supprimer
-        </button>
-      </div>
-    `).join("")
-    : '<div class="empty">Aucun invité enregistré.</div>';
+  try {
 
-  giftList.innerHTML = gifts.length
-    ? gifts.map(gift => `
-      <div class="list-item">
-        <div class="item-info">
+    await api({
+      action:"addGift",
+      event_id:selectedEventId,
+      name:$("giftName").value.trim(),
+      description:$("giftDescription").value.trim(),
+      quantity:$("giftQuantity").value,
+      price:$("giftPrice").value,
+      emoji:$("giftEmoji").value.trim(),
+      image:$("giftImage").value.trim()
+    });
 
-          <strong>${escapeHTML(gift.name)}</strong>
+    $("giftForm").reset();
 
-          <small>
-            ${escapeHTML(gift.description || "Aucune description")}
-          </small>
+    $("giftQuantity").value = 1;
+    $("giftEmoji").value = "🎁";
 
-          <span class="gift-quantity">
-            Quantité : ${gift.quantity}
-          </span>
+    await refreshSelected();
 
-          <div class="gift-photos">
-            ${(gift.photos || []).map(photo => `
-              <img src="${photo}" alt="Photo du cadeau">
-            `).join("")}
-          </div>
+    showStatus(
+      "giftStatus",
+      "Cadeau ajouté à cet événement.",
+      "ok"
+    );
 
-        </div>
+  } catch(err) {
 
-        <button class="btn btn-danger"
-          onclick="deleteGift(${gift.id})">
-          Supprimer
-        </button>
-      </div>
-    `).join("")
-    : '<div class="empty">Aucun cadeau enregistré.</div>';
+    showStatus("giftStatus", err.message, "error");
 
-  document.getElementById("guestCount").textContent = guests.length;
-  document.getElementById("giftCount").textContent = gifts.length;
+  } finally {
 
-  document.getElementById("totalGiftCount").textContent =
-    gifts.reduce((total, gift) => total + Number(gift.quantity), 0);
-}
+    btn.disabled = false;
 
-displayData();
+  }
+
+});
+
+$("copyEventLink").addEventListener("click", async () => {
+
+  const text = $("eventLink").textContent;
+
+  try {
+
+    await navigator.clipboard.writeText(text);
+
+    showStatus("globalStatus", "Lien copié.", "ok");
+
+  } catch(e) {
+
+    showStatus(
+      "globalStatus",
+      "Copiez manuellement le lien affiché.",
+      "error"
+    );
+
+  }
+
+});
+
+(async function init() {
+
+  try {
+
+    await api({action:"health"});
+    await loadEvents();
+
+  } catch(err) {
+
+    showStatus(
+      "globalStatus",
+      err.message + " Vérifiez l'URL de l'API et le déploiement Apps Script.",
+      "error"
+    );
+
+  }
+
+})();
+
 </script>
-
 </body>
 </html>
