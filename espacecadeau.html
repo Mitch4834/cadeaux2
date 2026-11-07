@@ -6,12 +6,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ma liste de cadeaux</title>
 
+
 <style>
 :root {
-  --green: #729c12;
-  --light-green: #e5f0d7;
-  --dark: #28321c;
-  --muted: #777;
+  --primary: #712A90;
+  --primary-hover: #8D4EAA;
+  --primary-light: #B58AC8;
+  --light: #F0E5F5;
+  --background: #FAF7FC;
+  --dark: #35213D;
+  --muted: #786D7D;
+  --white: #FFFFFF;
+  --border: #E5D8EC;
 }
 
 * {
@@ -21,13 +27,13 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #f8faf5;
-  color: #28321c;
+  background: var(--background);
+  color: var(--dark);
 }
 
 header {
-  background: var(--green);
-  color: white;
+  background: linear-gradient(135deg, #712A90, #8D4EAA);
+  color: var(--white);
   text-align: center;
   padding: 45px 20px;
 }
@@ -56,6 +62,7 @@ header p {
 .intro h2 {
   font-size: 25px;
   margin-bottom: 10px;
+  color: var(--dark);
 }
 
 .intro p {
@@ -82,11 +89,11 @@ header p {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: var(--green);
+  background: var(--primary);
 }
 
 .dot.unavailable {
-  background: #aaa;
+  background: #AAA;
 }
 
 .gift-grid {
@@ -96,21 +103,22 @@ header p {
 }
 
 .gift-card {
-  background: white;
+  background: var(--white);
   border-radius: 15px;
   overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0,0,0,.07);
-  border: 1px solid #edf0e8;
+  box-shadow: 0 4px 15px rgba(113,42,144,.07);
+  border: 1px solid var(--border);
   transition: .2s;
 }
 
 .gift-card:hover:not(.taken) {
   transform: translateY(-4px);
+  box-shadow: 0 8px 22px rgba(113,42,144,.13);
 }
 
 .gift-image {
   height: 175px;
-  background: var(--light-green);
+  background: var(--light);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -124,6 +132,7 @@ header p {
 .gift-content h3 {
   margin: 0 0 8px;
   font-size: 18px;
+  color: var(--dark);
 }
 
 .gift-content p {
@@ -137,8 +146,8 @@ header p {
   display: inline-block;
   font-size: 12px;
   font-weight: bold;
-  color: var(--green);
-  background: var(--light-green);
+  color: var(--primary);
+  background: var(--light);
   border-radius: 20px;
   padding: 6px 10px;
   margin-bottom: 12px;
@@ -147,17 +156,23 @@ header p {
 button {
   width: 100%;
   border: none;
-  background: var(--green);
-  color: white;
+  background: var(--primary);
+  color: var(--white);
   padding: 12px;
   border-radius: 8px;
   font-size: 14px;
   font-weight: bold;
   cursor: pointer;
+  transition: .2s ease;
 }
 
 button:hover {
-  opacity: .9;
+  background: var(--primary-hover);
+}
+
+button:disabled {
+  opacity: .6;
+  cursor: not-allowed;
 }
 
 .gift-card.taken {
@@ -168,7 +183,7 @@ button:hover {
 
 .gift-card.taken .gift-status {
   color: #555;
-  background: #e5e5e5;
+  background: #E5E5E5;
 }
 
 .gift-card.taken button {
@@ -178,9 +193,9 @@ button:hover {
 
 .confirmation {
   display: none;
-  background: var(--light-green);
-  border: 1px solid #cbdcb2;
-  color: #40551d;
+  background: var(--light);
+  border: 1px solid var(--primary-light);
+  color: var(--dark);
   padding: 18px;
   border-radius: 12px;
   text-align: center;
@@ -191,16 +206,29 @@ button:hover {
 footer {
   text-align: center;
   padding: 30px 15px;
-  color: #888;
+  color: var(--muted);
   font-size: 13px;
 }
 
 @media(max-width: 500px) {
+  header {
+    padding: 35px 18px;
+  }
+
   header h1 {
     font-size: 24px;
   }
+
+  .container {
+    margin: 25px auto;
+  }
+
+  .gift-grid {
+    grid-template-columns: 1fr;
+  }
 }
 </style>
+
 </head>
 
 <body>
