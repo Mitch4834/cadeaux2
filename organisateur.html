@@ -654,6 +654,7 @@ async function selectEvent(id, reload=true) {
 
     renderGuests(guestResult.guests || []);
     renderGifts(giftResult.gifts || []);
+    await loadEventReport();
 
   } catch (err) {
 
@@ -848,7 +849,36 @@ function renderGifts(gifts) {
 
   });
 }
+async function loadEventReport() {
 
+  if (!selectedEventId) return;
+
+  try {
+
+    const result = await api({
+      action: "report",
+      event_id: selectedEventId
+    });
+
+    const r = result.report;
+
+    $("reportGuests").textContent = r.total_guests;
+    $("reportConfirmed").textContent = r.confirmed_attendance;
+    $("reportPending").textContent = r.pending_attendance;
+    $("reportDeclined").textContent = r.declined_attendance;
+    $("reportGifts").textContent = r.total_gifts;
+    $("reportReservations").textContent = r.total_reservations;
+
+    hideStatus("reportStatus");
+
+  } catch (error) {
+
+    showStatus("reportStatus", error.message, "error");
+
+  }
+}
+
+$("refreshReport").addEventListener("click", loadEventReport);
 async function refreshSelected() {
 
   if (!selectedEventId) return;
@@ -860,6 +890,7 @@ async function refreshSelected() {
 
   renderGuests(a.guests || []);
   renderGifts(b.gifts || []);
+  await loadEventReport();
 }
 
 $("addPersonBtn").addEventListener("click", () => addPersonRow());
@@ -1054,6 +1085,7 @@ $("copyEventLink").addEventListener("click", async () => {
 
     await api({action:"health"});
     await loadEvents();
+    await loadEventReport();
 
   } catch(err) {
 
