@@ -1,0 +1,351 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ma liste de cadeaux</title>
+
+<style>
+:root {
+  --green: #729c12;
+  --light-green: #e5f0d7;
+  --dark: #28321c;
+  --muted: #777;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f8faf5;
+  color: #28321c;
+}
+
+header {
+  background: var(--green);
+  color: white;
+  text-align: center;
+  padding: 45px 20px;
+}
+
+header h1 {
+  margin: 0 0 12px;
+  font-size: 30px;
+}
+
+header p {
+  margin: 0;
+  font-size: 16px;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 35px auto;
+  padding: 0 18px;
+}
+
+.intro {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.intro h2 {
+  font-size: 25px;
+  margin-bottom: 10px;
+}
+
+.intro p {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.legend {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin: 25px 0;
+  font-size: 14px;
+}
+
+.legend span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--green);
+}
+
+.dot.unavailable {
+  background: #aaa;
+}
+
+.gift-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 22px;
+}
+
+.gift-card {
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,.07);
+  border: 1px solid #edf0e8;
+  transition: .2s;
+}
+
+.gift-card:hover:not(.taken) {
+  transform: translateY(-4px);
+}
+
+.gift-image {
+  height: 175px;
+  background: var(--light-green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 75px;
+}
+
+.gift-content {
+  padding: 18px;
+}
+
+.gift-content h3 {
+  margin: 0 0 8px;
+  font-size: 18px;
+}
+
+.gift-content p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 40px;
+}
+
+.gift-status {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: bold;
+  color: var(--green);
+  background: var(--light-green);
+  border-radius: 20px;
+  padding: 6px 10px;
+  margin-bottom: 12px;
+}
+
+button {
+  width: 100%;
+  border: none;
+  background: var(--green);
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: .9;
+}
+
+.gift-card.taken {
+  opacity: .48;
+  filter: grayscale(1);
+  pointer-events: none;
+}
+
+.gift-card.taken .gift-status {
+  color: #555;
+  background: #e5e5e5;
+}
+
+.gift-card.taken button {
+  background: #999;
+  cursor: not-allowed;
+}
+
+.confirmation {
+  display: none;
+  background: var(--light-green);
+  border: 1px solid #cbdcb2;
+  color: #40551d;
+  padding: 18px;
+  border-radius: 12px;
+  text-align: center;
+  margin: 25px 0;
+  line-height: 1.5;
+}
+
+footer {
+  text-align: center;
+  padding: 30px 15px;
+  color: #888;
+  font-size: 13px;
+}
+
+@media(max-width: 500px) {
+  header h1 {
+    font-size: 24px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>🎉 Une belle fête se prépare !</h1>
+  <p>Choisissez un cadeau pour faire plaisir à notre petit trésor.</p>
+</header>
+
+<main class="container">
+
+  <section class="intro">
+    <h2>Notre liste de cadeaux 🎁</h2>
+    <p>
+      Parcourez les cadeaux proposés et choisissez celui que vous
+      souhaitez apporter. Les cadeaux déjà choisis sont grisés.
+    </p>
+  </section>
+
+  <div class="legend">
+    <span><i class="dot"></i> Disponible</span>
+    <span><i class="dot unavailable"></i> Déjà choisi</span>
+  </div>
+
+  <div id="confirmation" class="confirmation"></div>
+
+  <section class="gift-grid" id="giftGrid"></section>
+
+</main>
+
+<footer>
+  Merci de participer à cette belle journée ❤️
+</footer>
+
+<script>
+// Liste de démonstration des cadeaux.
+// taken: true signifie que le cadeau est déjà choisi.
+const gifts = [
+  {
+    id: 1,
+    name: "Poussette",
+    description: "Une poussette confortable pour les promenades.",
+    emoji: "🛒",
+    taken: true
+  },
+  {
+    id: 2,
+    name: "Vêtements pour bébé",
+    description: "Un joli ensemble de vêtements.",
+    emoji: "👕",
+    taken: false
+  },
+  {
+    id: 3,
+    name: "Chaussures",
+    description: "Une paire de petites chaussures.",
+    emoji: "👟",
+    taken: false
+  },
+  {
+    id: 4,
+    name: "Jouets éducatifs",
+    description: "Des jouets pour apprendre en s'amusant.",
+    emoji: "🧸",
+    taken: true
+  },
+  {
+    id: 5,
+    name: "Baignoire pour bébé",
+    description: "Une petite baignoire pratique.",
+    emoji: "🛁",
+    taken: false
+  },
+  {
+    id: 6,
+    name: "Sac à langer",
+    description: "Un sac pour transporter les affaires de bébé.",
+    emoji: "👜",
+    taken: false
+  },
+  {
+    id: 7,
+    name: "Couverture",
+    description: "Une couverture douce et confortable.",
+    emoji: "🧺",
+    taken: false
+  },
+  {
+    id: 8,
+    name: "Chaise haute",
+    description: "Une chaise pour les repas de bébé.",
+    emoji: "🪑",
+    taken: true
+  }
+];
+
+const grid = document.getElementById("giftGrid");
+const confirmation = document.getElementById("confirmation");
+
+function displayGifts() {
+  grid.innerHTML = gifts.map(gift => `
+    <article class="gift-card ${gift.taken ? "taken" : ""}">
+      <div class="gift-image">${gift.emoji}</div>
+
+      <div class="gift-content">
+        <span class="gift-status">
+          ${gift.taken ? "Déjà choisi" : "Disponible"}
+        </span>
+
+        <h3>${gift.name}</h3>
+        <p>${gift.description}</p>
+
+        <button
+          ${gift.taken ? "disabled" : ""}
+          onclick="chooseGift(${gift.id})">
+          ${gift.taken ? "Cadeau réservé" : "Je choisis ce cadeau"}
+        </button>
+      </div>
+    </article>
+  `).join("");
+}
+
+function chooseGift(id) {
+  const gift = gifts.find(item => item.id === id);
+
+  if (!gift || gift.taken) return;
+
+  const confirmChoice = confirm(
+    `Confirmez-vous votre choix : ${gift.name} ?`
+  );
+
+  if (!confirmChoice) return;
+
+  gift.taken = true;
+
+  confirmation.style.display = "block";
+  confirmation.innerHTML =
+    `🎉 Vous avez choisi : <strong>${gift.name}</strong>.<br>
+    Merci pour votre participation !`;
+
+  displayGifts();
+}
+
+displayGifts();
+</script>
+
+</body>
+</html>
