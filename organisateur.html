@@ -491,6 +491,7 @@ function api(params) {
   });
 }
 
+
 function addPersonRow(person = {}) {
   const wrapper = document.createElement("div");
   wrapper.className = "person-row";
@@ -506,12 +507,14 @@ function addPersonRow(person = {}) {
     <div class="form-grid">
       <div class="form-group">
         <label>Prénom</label>
-        <input class="person-first" value="${escapeHTML(person.firstName || "")}">
+        <input class="person-first"
+          value="${escapeHTML(person.firstName || "")}">
       </div>
 
       <div class="form-group">
         <label>Nom</label>
-        <input class="person-last" value="${escapeHTML(person.lastName || "")}">
+        <input class="person-last"
+          value="${escapeHTML(person.lastName || "")}">
       </div>
 
       <div class="form-group">
@@ -529,11 +532,43 @@ function addPersonRow(person = {}) {
     </div>
 
     <div class="form-group">
+      <label>Photo de la personne à l'honneur</label>
+      <input class="person-photo" type="file" accept="image/*">
+
+      <div class="person-photo-preview" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="form-group">
       <label>Description (facultatif)</label>
       <input class="person-description"
         value="${escapeHTML(person.description || "")}">
     </div>
   `;
+
+  const photoInput = wrapper.querySelector(".person-photo");
+  const preview = wrapper.querySelector(".person-photo-preview");
+
+  photoInput.addEventListener("change", () => {
+    preview.innerHTML = "";
+
+    const file = photoInput.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      alert("Veuillez sélectionner une image.");
+      photoInput.value = "";
+      return;
+    }
+
+    const image = document.createElement("img");
+    image.src = URL.createObjectURL(file);
+    image.style.width = "120px";
+    image.style.height = "120px";
+    image.style.objectFit = "cover";
+    image.style.borderRadius = "12px";
+
+    preview.appendChild(image);
+  });
 
   wrapper.querySelector(".remove-person").addEventListener("click", () => {
     wrapper.remove();
