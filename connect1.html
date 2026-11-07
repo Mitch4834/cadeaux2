@@ -712,19 +712,28 @@ function hideElement(id) {
 }
 
 function showEventError(message) {
+
+  const loading = getElement("loadingEvent");
+  const eventPage = getElement("eventPage");
   const error = getElement("eventError");
+  const errorMessage = getElement("eventErrorMessage");
+
+  if (loading) {
+    loading.classList.add("hidden");
+  }
+
+  if (eventPage) {
+    eventPage.classList.add("hidden");
+  }
+
+  if (errorMessage) {
+    errorMessage.textContent = message;
+  }
 
   if (error) {
-    error.textContent = message;
-    error.style.display = "block";
-  }
-
-  const eventPage = getElement("eventPage");
-  if (eventPage) {
-    eventPage.style.display = "none";
+    error.classList.remove("hidden");
   }
 }
-
 function formatEventDate(dateValue) {
   if (!dateValue) return "";
 
@@ -811,13 +820,26 @@ function createPersonCard(person) {
   card.className = "person-card";
 
   if (person.photo) {
+
     const image = document.createElement("img");
 
     image.src = person.photo;
     image.alt = person.prenom || "Personne à l'honneur";
     image.className = "person-photo";
 
+    image.onerror = function() {
+      image.remove();
+    };
+
     card.appendChild(image);
+
+  } else {
+
+    const placeholder = document.createElement("div");
+    placeholder.className = "person-placeholder";
+    placeholder.textContent = "🎂";
+
+    card.appendChild(placeholder);
   }
 
   const name = document.createElement("h3");
@@ -829,6 +851,7 @@ function createPersonCard(person) {
 
   if (person.role) {
     const role = document.createElement("p");
+    role.className = "person-role";
     role.textContent = person.role;
     card.appendChild(role);
   }
@@ -841,13 +864,13 @@ function createPersonCard(person) {
 
   if (person.description) {
     const description = document.createElement("p");
+    description.className = "person-description";
     description.textContent = person.description;
     card.appendChild(description);
   }
 
   return card;
 }
-
 
 // =====================================================
 // 5. AFFICHAGE DES INFORMATIONS DE L'ÉVÉNEMENT
@@ -856,7 +879,9 @@ function createPersonCard(person) {
 function displayEvent(data) {
 
   if (!data || !data.event) {
-    showEventError("Les informations de cet événement sont indisponibles.");
+    showEventError(
+      "Les informations de cet événement sont indisponibles."
+    );
     return;
   }
 
@@ -866,66 +891,62 @@ function displayEvent(data) {
 
   // Informations principales
   setText("eventName", event.name);
-  setText("eventTitle", event.name);
   setText("eventType", event.type);
+  setText("eventHeroDescription", event.description);
 
-  setText("eventDate", formatEventDate(event.date));
-  setText("eventTime", event.time);
+  // Informations pratiques
+  setText("eventDate", formatEventDate(event.date) || "Non précisée");
+  setText("eventTime", event.time || "Non précisée");
+  setText("eventVenue", event.venue || "Non précisé");
+  setText("eventAddress", event.address || "Non précisée");
+  setText("eventCity", event.city || "Non précisée");
+  setText("eventCountry", event.country || "Non précisé");
 
-  setText("eventDescription", event.description);
-  setText("eventTheme", event.theme);
+  // Description
+  const descriptionSection = getElement("descriptionSection");
 
-  // Lieu
-  setText("eventVenue", event.venue);
-  setText("eventAddress", event.address);
-  setText("eventCity", event.city);
-  setText("eventCountry", event.country);
+  if (event.description) {
+    setText("eventDescription", event.description);
+    descriptionSection.classList.remove("hidden");
+  } else {
+    descriptionSection.classList.add("hidden");
+  }
 
-  // Localisation complète
-  const location = [
-    event.venue,
-    event.address,
-    event.city,
-    event.country
-  ].filter(Boolean).join(", ");
+  // Thème
+  const themeSection = getElement("themeSection");
 
-  setText("eventLocation", location);
+  if (event.theme) {
+    setText("eventTheme", event.theme);
+    themeSection.classList.remove("hidden");
+  } else {
+    themeSection.classList.add("hidden");
+  }
 
   // Personnes à l'honneur
-  const peopleContainer =
-    getElement("peopleContainer") ||
-    getElement("personsContainer") ||
-    getElement("honoredPeople");
+  const peopleContainer = getElement("peopleContainer");
 
-  if (peopleContainer) {
+  peopleContainer.innerHTML = "";
 
-    peopleContainer.innerHTML = "";
+  if (Array.isArray(data.people) && data.people.length > 0) {
 
-    if (Array.isArray(data.people) && data.people.length > 0) {
+    data.people.forEach(function(person) {
+      peopleContainer.appendChild(createPersonCard(person));
+    });
 
-      data.people.forEach(function(person) {
-        peopleContainer.appendChild(createPersonCard(person));
-      });
-
-    } else {
-      peopleContainer.textContent = "";
-    }
+  } else {
+    peopleContainer.innerHTML =
+      '<p class="empty-message">Aucune personne renseignée.</p>';
   }
 
-  // Afficher la page
-  const eventPage = getElement("eventPage");
+  // Masquer le chargement
+  getElement("loadingEvent").classList.add("hidden");
 
-  if (eventPage) {
-    eventPage.style.display = "block";
-  }
+  // Afficher l'événement
+  getElement("eventPage").classList.remove("hidden");
 
-  const error = getElement("eventError");
-
-  if (error) {
-    error.style.display = "none";
-  }
+  // Masquer les erreurs
+  getElement("eventError").classList.add("hidden");
 }
-
 
 // =====================================================
 // 6. CHARGEMENT PUBLIC DE L'ÉVÉNEMENT
