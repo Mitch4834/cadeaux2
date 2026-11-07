@@ -1274,10 +1274,13 @@ const ORGANIZER_URL = "organisateur.html";
         Votre expérience peut aider d'autres personnes à organiser
         leurs plus beaux événements.
       </p>
-      <a href="mailto:CONTACT_A_REMPLACER"
-         class="testimonial-button">
-        Partager mon expérience
-      </a>
+      
+<button type="button"
+        class="testimonial-button"
+        onclick="openTestimonialModal()">
+  ✍️ Partager mon expérience
+</button>
+
     </div>
 
   </div>
@@ -1825,6 +1828,98 @@ document.querySelectorAll(".organizer-link").forEach(link => {
   link.href = ORGANIZER_URL;
 });
 
+
+<div id="testimonialModal" class="testimonial-modal">
+  <div class="testimonial-modal-content">
+
+    <button class="testimonial-close"
+            type="button"
+            onclick="closeTestimonialModal()"
+            aria-label="Fermer">
+      &times;
+    </button>
+
+    <div class="testimonial-modal-header">
+      <span>💜 Votre expérience compte</span>
+      <h2>Partagez votre témoignage</h2>
+      <p>Aidez notre communauté à découvrir Fête & Cadeaux.</p>
+    </div>
+
+    <form id="testimonialForm">
+
+      <label for="testimonialName">Votre nom</label>
+      <input id="testimonialName"
+             type="text"
+             maxlength="80"
+             placeholder="Votre prénom et nom"
+             required>
+
+      <label for="testimonialRole">Vous êtes</label>
+      <select id="testimonialRole" required>
+        <option value="">Choisir votre profil</option>
+        <option value="Organisateur">Organisateur</option>
+        <option value="Invité">Invité</option>
+      </select>
+
+      <label for="testimonialEvent">Type d'événement</label>
+      <select id="testimonialEvent" required>
+        <option value="">Choisir un événement</option>
+        <option value="Mariage">Mariage</option>
+        <option value="Fiançailles">Fiançailles</option>
+        <option value="Anniversaire">Anniversaire</option>
+        <option value="Baby shower">Baby shower</option>
+        <option value="Baptême">Baptême</option>
+        <option value="Graduation">Graduation</option>
+        <option value="Autre">Autre</option>
+      </select>
+
+      <label>Votre note</label>
+      <div class="rating-stars">
+        <input type="radio" name="testimonialRating"
+               id="star5" value="5" required>
+        <label for="star5">★</label>
+
+        <input type="radio" name="testimonialRating"
+               id="star4" value="4">
+        <label for="star4">★</label>
+
+        <input type="radio" name="testimonialRating"
+               id="star3" value="3">
+        <label for="star3">★</label>
+
+        <input type="radio" name="testimonialRating"
+               id="star2" value="2">
+        <label for="star2">★</label>
+
+        <input type="radio" name="testimonialRating"
+               id="star1" value="1">
+        <label for="star1">★</label>
+      </div>
+
+      <label for="testimonialComment">Votre témoignage</label>
+      <textarea id="testimonialComment"
+                rows="5"
+                maxlength="1000"
+                placeholder="Racontez-nous votre expérience..."
+                required></textarea>
+
+      <label class="testimonial-consent">
+        <input type="checkbox" id="testimonialConsent" required>
+        J'accepte que mon témoignage soit publié sur Fête & Cadeaux
+        après validation.
+      </label>
+
+      <p id="testimonialMessage" aria-live="polite"></p>
+
+      <button type="submit"
+              id="testimonialSubmit"
+              class="testimonial-submit">
+        Envoyer mon témoignage
+      </button>
+
+    </form>
+  </div>
+</div>
 
 </body>
 </html>
