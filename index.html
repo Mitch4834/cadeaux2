@@ -156,7 +156,10 @@ button:hover {
 
 </div>
 
+
 <script>
+const API_URL = "COLLE_ICI_URL_DE_TON_APPLICATION_WEB";
+
 document.getElementById("loginForm").addEventListener("submit", function(e) {
   e.preventDefault();
 
@@ -164,17 +167,78 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
   const error = document.getElementById("errorMessage");
 
   if (!name) {
+    error.textContent = "Veuillez saisir votre nom.";
     error.style.display = "block";
     return;
   }
 
-  // Mémoriser le nom de l'invité dans le navigateur
-  sessionStorage.setItem("guestName", name);
+  error.style.display = "none";
 
-  // Redirection vers la page de cadeaux
-  window.location.href = "cadeaux.html";
+  // Empêcher plusieurs connexions simultanées
+  const button = this.querySelector('button[type="submit"]');
+  if (button) button.disabled = true;
+
+  const callbackName = "loginCallback_" + Date.now();
+  const script = document.createElement("script");
+
+  let termine = false;
+
+  function nettoyer() {
+    if (termine) return;
+    termine = true;
+
+    clearTimeout(timeout);
+    delete window[callbackName];
+    script.remove();
+
+    if (button) button.disabled = false;
+  }
+
+  const timeout = setTimeout(function() {
+    nettoyer();
+    error.textContent = "Le serveur ne répond pas. Veuillez réessayer.";
+    error.style.display = "block";
+  }, 15000);
+
+  // Réception de la réponse du backend
+  window[callbackName] = function(result) {
+    nettoyer();
+
+    if (result && result.success) {
+      // Enregistrer les informations de l'invité
+      sessionStorage.setItem("guestName", result.guest.name);
+      sessionStorage.setItem("guestId", result.guest.id);
+
+      // Redirection après validation
+      window.location.href = "cadeaux.html";
+
+    } else {
+      error.textContent =
+        result && result.message
+          ? result.message
+          : "Connexion impossible. Veuillez réessayer.";
+
+      error.style.display = "block";
+    }
+  };
+
+  script.onerror = function() {
+    nettoyer();
+    error.textContent = "Impossible de contacter le serveur.";
+    error.style.display = "block";
+  };
+
+  // Envoyer la demande au backend
+  script.src =
+    API_URL +
+    "?action=login" +
+    "&name=" + encodeURIComponent(name) +
+    "&callback=" + callbackName;
+
+  document.body.appendChild(script);
 });
 </script>
+
 
 </body>
 </html>
