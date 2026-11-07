@@ -1,84 +1,487 @@
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Espace organisateur | Gestion des événements</title>
+<title>Espace organisateur | Fête & Cadeaux</title>
+
 <style>
 :root{
-  --primary:#712a90;--primary-hover:#8540a3;--primary-light:#f1e8f6;
-  --bg:#faf7fc;--dark:#35213d;--muted:#786d7d;--border:#e5d8ec;
-  --white:#fff;--red:#c83d52;--green:#23845b;
+  --primary:#712a90;
+  --primary-hover:#8540a3;
+  --primary-light:#f1e8f6;
+  --bg:#faf7fc;
+  --dark:#35213d;
+  --muted:#786d7d;
+  --border:#e5d8ec;
+  --white:#fff;
+  --red:#c83d52;
+  --green:#23845b;
 }
+
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--dark)}
-header{background:var(--primary);color:#fff;padding:20px 5%;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:var(--bg);
+  color:var(--dark);
+}
+
+header{
+  background:var(--primary);
+  color:white;
+  padding:20px 5%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
 header h1{font-size:21px;margin:0}
 header span{font-size:13px;opacity:.9}
-.container{max-width:1200px;margin:28px auto;padding:0 18px}
+
+.container{
+  max-width:1250px;
+  margin:28px auto;
+  padding:0 18px;
+}
+
 .welcome{margin-bottom:22px}
 .welcome h2{margin:0 0 7px}
 .welcome p{color:var(--muted);margin:0;line-height:1.5}
-.panel,.stat-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:21px;box-shadow:0 3px 14px rgba(53,33,61,.045)}
+
+.panel,.stat-card{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:15px;
+  padding:21px;
+  box-shadow:0 3px 14px rgba(53,33,61,.045);
+}
+
 .panel h3{margin:0 0 17px;font-size:18px}
-.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:20px 0}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:14px;
+  margin:20px 0;
+}
+
 .stat-card small{color:var(--muted)}
-.stat-card strong{display:block;font-size:29px;color:var(--primary);margin-top:8px}
-.layout{display:grid;grid-template-columns:minmax(280px,.8fr) minmax(0,1.6fr);gap:18px;align-items:start}
+.stat-card strong{
+  display:block;
+  font-size:29px;
+  color:var(--primary);
+  margin-top:8px;
+}
+
+.layout{
+  display:grid;
+  grid-template-columns:minmax(280px,.8fr) minmax(0,1.6fr);
+  gap:18px;
+  align-items:start;
+}
+
 .stack{display:grid;gap:18px}
-.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+
 .form-group{margin-bottom:13px;min-width:0}
-label{display:block;font-size:13px;font-weight:700;margin-bottom:7px}
-input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--border);border-radius:8px;background:#fff;color:var(--dark);font:14px Arial;outline:none}
-input:focus,select:focus,textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(113,42,144,.09)}
-textarea{min-height:76px;resize:vertical}
-.btn{border:0;border-radius:8px;background:var(--primary);color:#fff;padding:11px 15px;font-weight:700;cursor:pointer}
+
+label{
+  display:block;
+  font-size:13px;
+  font-weight:700;
+  margin-bottom:7px;
+}
+
+input,select,textarea{
+  width:100%;
+  padding:12px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  background:white;
+  color:var(--dark);
+  font:14px Arial;
+  outline:none;
+}
+
+input:focus,select:focus,textarea:focus{
+  border-color:var(--primary);
+  box-shadow:0 0 0 3px rgba(113,42,144,.09);
+}
+
+textarea{min-height:85px;resize:vertical}
+
+button{font-family:inherit}
+
+.btn{
+  border:0;
+  border-radius:9px;
+  background:var(--primary);
+  color:white;
+  padding:12px 16px;
+  font-weight:700;
+  cursor:pointer;
+  transition:.2s;
+}
+
 .btn:hover{background:var(--primary-hover)}
 .btn:disabled{opacity:.55;cursor:wait}
-.btn-secondary{background:var(--primary-light);color:var(--primary)}
-.btn-danger{background:#fbecef;color:var(--red);padding:8px 10px;font-size:12px}
-.btn-small{padding:7px 10px;font-size:12px}
+
+.btn-secondary{
+  background:var(--primary-light);
+  color:var(--primary);
+}
+
+.btn-secondary:hover{background:#e8d9f0}
+
+.btn-danger{
+  background:#fbecef;
+  color:var(--red);
+  padding:8px 10px;
+  font-size:12px;
+}
+
+.btn-small{padding:8px 11px;font-size:12px}
+
+.hidden{display:none!important}
+
+.muted{color:var(--muted);font-size:13px;line-height:1.5}
+
+.notice{
+  background:var(--primary-light);
+  color:#58306a;
+  padding:13px 15px;
+  border-radius:10px;
+  font-size:13px;
+  line-height:1.55;
+  margin-top:18px;
+}
+
+.status{
+  padding:11px 13px;
+  border-radius:9px;
+  margin:12px 0;
+  font-size:13px;
+  display:none;
+}
+
+.status.ok{display:block;background:#e9f6ef;color:#216844}
+.status.error{display:block;background:#fff0f1;color:#a32c40}
+
+.section-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.badge{
+  display:inline-block;
+  border-radius:20px;
+  padding:5px 9px;
+  background:var(--primary-light);
+  color:var(--primary);
+  font-size:11px;
+  font-weight:700;
+}
+
 .event-list,.item-list{display:grid;gap:9px;margin-top:13px}
-.event-option{border:1px solid var(--border);border-radius:10px;padding:12px;cursor:pointer;background:#fff;text-align:left;color:var(--dark);width:100%}
-.event-option.active{border:2px solid var(--primary);background:var(--primary-light)}
+
+.event-option{
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:12px;
+  cursor:pointer;
+  background:white;
+  text-align:left;
+  color:var(--dark);
+  width:100%;
+}
+
+.event-option.active{
+  border:2px solid var(--primary);
+  background:var(--primary-light);
+}
+
 .event-option strong,.event-option small{display:block}
 .event-option small{color:var(--muted);margin-top:5px}
-.item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid #f0eaf3}
+
+.item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:12px 0;
+  border-bottom:1px solid #f0eaf3;
+}
+
 .item:last-child{border-bottom:0}
 .item-info{min-width:0;flex:1}
 .item-info strong{display:block;overflow-wrap:anywhere}
-.item-info small{display:block;color:var(--muted);margin-top:4px;line-height:1.4;overflow-wrap:anywhere}
-.muted{color:var(--muted);font-size:13px}
-.hidden{display:none!important}
-.notice{background:var(--primary-light);color:#58306a;padding:13px 15px;border-radius:10px;font-size:13px;line-height:1.55;margin-top:18px}
-.status{padding:10px 12px;border-radius:8px;margin:12px 0;font-size:13px;display:none}
-.status.ok{display:block;background:#e9f6ef;color:#216844}
-.status.error{display:block;background:#fff0f1;color:#a32c40}
-.section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-.person-row{border:1px solid var(--border);padding:12px;border-radius:10px;margin-bottom:10px}
+.item-info small{
+  display:block;
+  color:var(--muted);
+  margin-top:4px;
+  line-height:1.4;
+  overflow-wrap:anywhere;
+}
+
+/* ASSISTANT DE CREATION */
+
+.wizard-panel{overflow:hidden}
+
+.wizard-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:17px;
+}
+
+.wizard-brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.wizard-icon{
+  width:42px;
+  height:42px;
+  border-radius:12px;
+  display:grid;
+  place-items:center;
+  background:var(--primary-light);
+  font-size:22px;
+}
+
+.wizard-progress{
+  height:7px;
+  background:#eee7f1;
+  border-radius:20px;
+  overflow:hidden;
+  margin:12px 0 8px;
+}
+
+.wizard-progress-bar{
+  height:100%;
+  width:0;
+  background:var(--primary);
+  border-radius:20px;
+  transition:width .3s ease;
+}
+
+.wizard-step-label{
+  color:var(--muted);
+  font-size:12px;
+}
+
+.wizard-content{padding:12px 0 5px}
+
+.wizard-content h2{
+  font-size:23px;
+  line-height:1.3;
+  margin:12px 0 8px;
+}
+
+.wizard-description{
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.6;
+  margin-bottom:23px;
+}
+
+.wizard-actions{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-top:25px;
+}
+
+.wizard-actions .btn{min-width:115px}
+
+.event-type-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+
+.type-card{
+  border:1px solid var(--border);
+  background:white;
+  border-radius:12px;
+  padding:15px 12px;
+  cursor:pointer;
+  text-align:left;
+  transition:.2s;
+  color:var(--dark);
+}
+
+.type-card:hover{border-color:var(--primary)}
+
+.type-card.selected{
+  border:2px solid var(--primary);
+  background:var(--primary-light);
+}
+
+.type-card .type-emoji{
+  font-size:25px;
+  display:block;
+  margin-bottom:8px;
+}
+
+.type-card strong{font-size:13px}
+
+.palette-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+
+.palette-card{
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:12px;
+  cursor:pointer;
+  background:white;
+  text-align:left;
+  color:var(--dark);
+}
+
+.palette-card.selected{
+  border:2px solid var(--primary);
+  background:var(--primary-light);
+}
+
+.palette-colors{display:flex;gap:5px;margin-bottom:9px}
+
+.palette-colors span{
+  height:25px;
+  flex:1;
+  border-radius:6px;
+}
+
+.palette-card strong{font-size:12px}
+
+.color-custom{
+  margin-top:15px;
+  padding:14px;
+  border:1px solid var(--border);
+  border-radius:12px;
+}
+
+.color-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:12px;
+}
+
+.color-row:last-child{margin-bottom:0}
+
+.color-row label{margin:0}
+
+.color-row input[type="color"]{
+  width:48px;
+  height:36px;
+  padding:3px;
+  cursor:pointer;
+}
+
+.preview-event{
+  border-radius:14px;
+  overflow:hidden;
+  border:1px solid var(--border);
+  background:white;
+}
+
+.preview-banner{
+  padding:25px 18px;
+  text-align:center;
+  color:white;
+  background:var(--primary);
+}
+
+.preview-banner small{opacity:.9}
+.preview-banner h3{margin:9px 0;font-size:22px}
+
+.preview-body{
+  padding:18px;
+  text-align:center;
+}
+
+.preview-body p{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.5;
+}
+
+.preview-button{
+  display:inline-block;
+  background:var(--primary);
+  color:white;
+  border-radius:8px;
+  padding:10px 18px;
+  font-size:12px;
+  font-weight:bold;
+}
+
+.person-row{
+  border:1px solid var(--border);
+  padding:13px;
+  border-radius:10px;
+  margin-bottom:10px;
+}
+
 .person-row h4{margin:0 0 10px;font-size:14px}
-.badge{display:inline-block;border-radius:20px;padding:4px 8px;background:var(--primary-light);color:var(--primary);font-size:11px;font-weight:700}
-@media(max-width:850px){.layout{grid-template-columns:1fr}}
-@media(max-width:560px){.stats{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}header{padding:18px}.panel{padding:16px}}
+
+.review-item{
+  padding:12px 0;
+  border-bottom:1px solid #f0eaf3;
+}
+
+.review-item:last-child{border-bottom:0}
+.review-item small{display:block;color:var(--muted);margin-bottom:4px}
+.review-item strong{font-size:14px;overflow-wrap:anywhere}
+
+@media(max-width:850px){
+  .layout{grid-template-columns:1fr}
+}
+
+@media(max-width:560px){
+  .stats{grid-template-columns:1fr}
+  .form-grid{grid-template-columns:1fr}
+  header{padding:18px}
+  .panel{padding:16px}
+  .event-type-grid,.palette-grid{grid-template-columns:1fr 1fr}
+  .wizard-content h2{font-size:21px}
+  .wizard-actions .btn{min-width:0}
+}
 </style>
 </head>
+
 <body>
 
 <header>
-  <h1>🎁 Espace organisateur</h1>
-  <span>Gestion de vos événements et listes de cadeaux</span>
+  <h1>🎁 Fête & Cadeaux</h1>
+  <span>Votre espace organisateur</span>
 </header>
 
 <main class="container">
 
   <section class="welcome">
-    <h2>Tableau de bord</h2>
-    <p>Créez plusieurs événements et gérez séparément leurs personnes à l'honneur, invités et cadeaux.</p>
+    <h2>Bienvenue dans votre espace organisateur</h2>
+    <p>Créez votre événement, personnalisez votre invitation et gérez les cadeaux de vos invités.</p>
   </section>
 
   <div id="globalStatus" class="status"></div>
@@ -100,139 +503,43 @@ textarea{min-height:76px;resize:vertical}
 
   <div class="layout">
 
+    <!-- COLONNE GAUCHE -->
+
     <div class="stack">
 
-      <section class="panel">
-        <h3>➕ Créer un événement</h3>
+      <section class="panel wizard-panel">
 
-        <form id="eventForm">
-
-          <div class="form-group">
-            <label for="eventName">Nom de l'événement *</label>
-            <input id="eventName" required placeholder="Ex. Mariage de Jean et Marie">
-          </div>
-
-          <div class="form-grid">
-            <div class="form-group">
-              <label for="eventType">Type d'événement *</label>
-              <select id="eventType" required>
-                <option value="">Choisir</option>
-                <option>Anniversaire</option>
-                <option>Mariage</option>
-                <option>Fiançailles</option>
-                <option>Baptême</option>
-                <option>Baby shower</option>
-                <option>Communion</option>
-                <option>Remise de diplôme</option>
-                <option>Autre</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="eventDate">Date</label>
-              <input id="eventDate" type="date">
-            </div>
-
-            <div class="form-group">
-              <label for="eventTime">Heure</label>
-              <input id="eventTime" type="time">
-            </div>
-
-            <div class="form-group">
-              <label for="eventTheme">Thème</label>
-              <input id="eventTheme" placeholder="Ex. Princesse">
-            </div>
-
-            <div class="form-group">
-              <label for="eventPlace">Lieu</label>
-              <input id="eventPlace" placeholder="Nom de la salle">
-            </div>
-
-            <div class="form-group">
-              <label for="eventCity">Ville</label>
-              <input id="eventCity" placeholder="Ville">
+        <div class="wizard-top">
+          <div class="wizard-brand">
+            <div class="wizard-icon">✨</div>
+            <div>
+              <strong>Assistant événementiel</strong>
+              <div class="muted">Construisons votre événement ensemble</div>
             </div>
           </div>
+          <span class="badge" id="wizardStepBadge">Étape 1</span>
+        </div>
 
-          <div class="form-group">
-            <label for="eventAddress">Adresse</label>
-            <input id="eventAddress">
-          </div>
+        <div class="wizard-progress">
+          <div class="wizard-progress-bar" id="wizardProgress"></div>
+        </div>
 
-          <div class="form-grid">
-            <div class="form-group">
-              <label for="eventCountry">Pays</label>
-              <input id="eventCountry" placeholder="Haïti">
-            </div>
+        <div class="wizard-step-label" id="wizardProgressText">
+          Commençons par quelques questions.
+        </div>
 
-            <div class="form-group">
-              <label for="eventDeadline">Date limite de réservation</label>
-              <input id="eventDeadline" type="date">
-            </div>
-          </div>
+        <div class="wizard-content" id="wizardContent"></div>
 
-          <div class="form-group">
-            <label for="eventDescription">Description</label>
-            <textarea id="eventDescription" placeholder="Présentez votre événement..."></textarea>
-          </div>
-
-          <h4>Personne(s) à l'honneur</h4>
-          <p class="muted">
-            Ajoutez une personne pour un anniversaire ou un baptême,
-            deux personnes ou plus pour un mariage, des fiançailles, etc.
-          </p>
-
-          <div id="peopleContainer"></div>
-
-          <button type="button" class="btn btn-secondary btn-small" id="addPersonBtn">
-            + Ajouter une personne
+        <div class="wizard-actions">
+          <button type="button" class="btn btn-secondary" id="wizardBack">
+            ← Retour
           </button>
 
-          <hr style="border:0;border-top:1px solid var(--border);margin:17px 0">
-
-          <h4>Coordonnées de l'organisateur</h4>
-
-          <div class="form-grid">
-            <div class="form-group">
-              <label for="organizerName">Nom</label>
-              <input id="organizerName">
-            </div>
-
-            <div class="form-group">
-              <label for="organizerPhone">Téléphone</label>
-              <input id="organizerPhone">
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="organizerEmail">Email</label>
-            <input id="organizerEmail" type="email">
-          </div>
-
-          <div class="form-grid">
-            <div class="form-group">
-              <label for="eventVisibility">Visibilité des réservations</label>
-              <select id="eventVisibility">
-                <option value="publique">Publique</option>
-                <option value="privee">Privée</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="purchaseMode">Mode d'achat</label>
-              <select id="purchaseMode">
-                <option value="reservation">Réservation seule</option>
-                <option value="achat">Achat sur la plateforme</option>
-                <option value="les deux">Les deux</option>
-              </select>
-            </div>
-          </div>
-
-          <button class="btn" type="submit" id="createEventBtn">
-            Créer l'événement
+          <button type="button" class="btn" id="wizardNext">
+            Continuer →
           </button>
+        </div>
 
-        </form>
       </section>
 
       <section class="panel">
@@ -248,9 +555,12 @@ textarea{min-height:76px;resize:vertical}
 
     </div>
 
+    <!-- COLONNE DROITE -->
+
     <div class="stack">
 
       <section class="panel">
+
         <div class="section-head">
           <h3>Gestion de l'événement</h3>
           <span id="currentEventType" class="badge">Sélectionnez une fête</span>
@@ -267,54 +577,48 @@ textarea{min-height:76px;resize:vertical}
             Copier le lien
           </button>
         </div>
-        <section class="panel">
-  <h3>📊 Rapport de l'événement</h3>
 
-  <p class="muted">
-    Suivi des confirmations de participation et des réservations de cadeaux.
-  </p>
+        <section class="panel" style="margin-top:18px">
+          <h3>📊 Rapport de l'événement</h3>
 
-  <div class="stats">
+          <p class="muted">
+            Suivi des confirmations de participation et des réservations de cadeaux.
+          </p>
 
-    <div class="stat-card">
-      <small>Invités inscrits</small>
-      <strong id="reportGuests">0</strong>
-    </div>
+          <div class="stats">
+            <div class="stat-card">
+              <small>Invités inscrits</small>
+              <strong id="reportGuests">0</strong>
+            </div>
+            <div class="stat-card">
+              <small>Présences confirmées</small>
+              <strong id="reportConfirmed">0</strong>
+            </div>
+            <div class="stat-card">
+              <small>En attente</small>
+              <strong id="reportPending">0</strong>
+            </div>
+            <div class="stat-card">
+              <small>Absences annoncées</small>
+              <strong id="reportDeclined">0</strong>
+            </div>
+            <div class="stat-card">
+              <small>Cadeaux disponibles dans la liste</small>
+              <strong id="reportGifts">0</strong>
+            </div>
+            <div class="stat-card">
+              <small>Réservations effectuées</small>
+              <strong id="reportReservations">0</strong>
+            </div>
+          </div>
 
-    <div class="stat-card">
-      <small>Présences confirmées</small>
-      <strong id="reportConfirmed">0</strong>
-    </div>
+          <div id="reportStatus" class="status"></div>
 
-    <div class="stat-card">
-      <small>En attente</small>
-      <strong id="reportPending">0</strong>
-    </div>
+          <button class="btn btn-secondary" type="button" id="refreshReport">
+            Actualiser le rapport
+          </button>
+        </section>
 
-    <div class="stat-card">
-      <small>Absences annoncées</small>
-      <strong id="reportDeclined">0</strong>
-    </div>
-
-    <div class="stat-card">
-      <small>Cadeaux disponibles dans la liste</small>
-      <strong id="reportGifts">0</strong>
-    </div>
-
-    <div class="stat-card">
-      <small>Réservations effectuées</small>
-      <strong id="reportReservations">0</strong>
-    </div>
-
-  </div>
-
-  <div id="reportStatus" class="status"></div>
-
-  <button class="btn btn-secondary" type="button"
-    id="refreshReport">
-    Actualiser le rapport
-  </button>
-</section>
       </section>
 
       <section class="panel">
@@ -353,6 +657,7 @@ textarea{min-height:76px;resize:vertical}
         <h3>🎁 Ajouter un cadeau</h3>
 
         <form id="giftForm">
+
           <div class="form-group">
             <label for="giftName">Nom du cadeau *</label>
             <input id="giftName" required placeholder="Ex. Poussette">
@@ -393,8 +698,7 @@ textarea{min-height:76px;resize:vertical}
         </form>
 
         <p class="muted">
-          les images doivent être hébergées en ligne
-          et ajoutées avec leur URL. 
+          Les images doivent être hébergées en ligne et ajoutées avec leur URL.
         </p>
 
         <div id="giftStatus" class="status"></div>
@@ -407,15 +711,19 @@ textarea{min-height:76px;resize:vertical}
   </div>
 
   <div class="notice">
-    Chaque événement possède son propre identifiant. Les invités et cadeaux
+    Chaque événement possède son propre identifiant. Les invités et les cadeaux
     sont enregistrés avec cet identifiant dans Google Sheets : les listes
-    restent donc séparées d'une fête à l'autre.
+    restent séparées d'une fête à l'autre.
   </div>
 
 </main>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbzwdi4Bo2HFJ-mUIrg1X1yNWoHptBW13ojt3ucjrfs6q0a9meGMc5RoUuYCCId3_pC3/exec";
+/* =====================================================
+   CONFIGURATION API
+===================================================== */
+
+const API_URL = "https://script.google.com/macros/s/AKfycbzwdi4Bo2HFJ-mUIrg1XyNWoHptBW13ojt3ucjrfs6q0a9meGMc5RoUuYCCId3_pC3/exec";
 
 let events = [];
 let selectedEventId = null;
@@ -491,130 +799,851 @@ function api(params) {
   });
 }
 
+/* =====================================================
+   ASSISTANT DE CREATION
+===================================================== */
 
-function addPersonRow(person = {}) {
-  const wrapper = document.createElement("div");
-  wrapper.className = "person-row";
+const palettes = [
+  {
+    id:"violet",
+    name:"Élégance violette",
+    primary:"#712A90",
+    secondary:"#F1E8F6",
+    text:"#35213D",
+    background:"#FAF7FC"
+  },
+  {
+    id:"sage",
+    name:"Mariage naturel",
+    primary:"#71866B",
+    secondary:"#E9E1D2",
+    text:"#344336",
+    background:"#FAF9F4"
+  },
+  {
+    id:"rose",
+    name:"Douceur romantique",
+    primary:"#C66F88",
+    secondary:"#F8E6EC",
+    text:"#573541",
+    background:"#FFFAFC"
+  },
+  {
+    id:"blue",
+    name:"Bleu céleste",
+    primary:"#5489B2",
+    secondary:"#E4F0F8",
+    text:"#29445A",
+    background:"#F7FBFE"
+  },
+  {
+    id:"gold",
+    name:"Prestige doré",
+    primary:"#A77B32",
+    secondary:"#F4EBD8",
+    text:"#493A24",
+    background:"#FCFAF5"
+  },
+  {
+    id:"coral",
+    name:"Fête colorée",
+    primary:"#E87961",
+    secondary:"#FCE9E2",
+    text:"#58372F",
+    background:"#FFFAF7"
+  }
+];
 
-  wrapper.innerHTML = `
-    <div class="section-head">
-      <h4>Personne à l'honneur</h4>
-      <button type="button" class="btn btn-danger btn-small remove-person">
-        Retirer
+const eventTypes = [
+  {name:"Anniversaire",emoji:"🎂"},
+  {name:"Mariage",emoji:"💍"},
+  {name:"Fiançailles",emoji:"❤️"},
+  {name:"Baby shower",emoji:"🍼"},
+  {name:"Baptême",emoji:"🕊️"},
+  {name:"Communion",emoji:"✨"},
+  {name:"Remise de diplôme",emoji:"🎓"},
+  {name:"Autre",emoji:"🎉"}
+];
+
+const wizard = {
+  step:0,
+  total:8,
+  people:[{
+    firstName:"",
+    lastName:"",
+    role:"",
+    birthDate:"",
+    description:""
+  }],
+  data:{
+    name:"",
+    type:"",
+    date:"",
+    time:"",
+    theme:"",
+    place:"",
+    address:"",
+    city:"",
+    country:"Haïti",
+    deadline:"",
+    description:"",
+    organizer:"",
+    phone:"",
+    email:"",
+    visibility:"publique",
+    purchaseMode:"reservation",
+    color:"#712A90",
+    secondaryColor:"#F1E8F6",
+    textColor:"#35213D",
+    backgroundColor:"#FAF7FC",
+    palette:"violet"
+  }
+};
+
+function setField(key,value){
+  wizard.data[key] = value;
+}
+
+function updateWizardTheme(){
+  document.documentElement.style.setProperty("--primary",wizard.data.color);
+  document.documentElement.style.setProperty("--primary-light",wizard.data.secondaryColor);
+  document.documentElement.style.setProperty("--dark",wizard.data.textColor);
+  document.documentElement.style.setProperty("--bg",wizard.data.backgroundColor);
+}
+
+function updatePalette(paletteId){
+  const palette = palettes.find(p => p.id === paletteId);
+  if(!palette) return;
+
+  wizard.data.palette = palette.id;
+  wizard.data.color = palette.primary;
+  wizard.data.secondaryColor = palette.secondary;
+  wizard.data.textColor = palette.text;
+  wizard.data.backgroundColor = palette.background;
+
+  updateWizardTheme();
+  renderWizard();
+}
+
+function renderWizard(){
+
+  const content = $("wizardContent");
+  const d = wizard.data;
+
+  $("wizardStepBadge").textContent =
+    wizard.step === 0 ? "Bienvenue" : `Étape ${wizard.step} sur ${wizard.total}`;
+
+  $("wizardProgress").style.width =
+    (wizard.step / wizard.total * 100) + "%";
+
+  $("wizardProgressText").textContent =
+    wizard.step === 0
+      ? "Votre événement commence ici."
+      : `Vous avancez dans la création de votre événement.`;
+
+  $("wizardBack").style.visibility =
+    wizard.step === 0 ? "hidden" : "visible";
+
+  $("wizardNext").textContent =
+    wizard.step === wizard.total ? "Créer mon événement 🎉" :
+    wizard.step === 0 ? "Commençons →" : "Continuer →";
+
+  if(wizard.step === 0){
+    content.innerHTML = `
+      <h2>Bonjour ! Quel événement souhaitez-vous organiser ?</h2>
+      <p class="wizard-description">
+        Je vais vous accompagner étape par étape pour créer un espace
+        personnalisé où vos invités pourront confirmer leur présence
+        et choisir les cadeaux qu'ils souhaitent vous offrir.
+      </p>
+
+      <div class="notice">
+        <strong>En quelques minutes, votre événement sera prêt.</strong>
+        <br>Vous pourrez ensuite gérer vos invités, vos cadeaux et votre invitation.
+      </div>
+
+      <div style="margin-top:22px">
+        <strong>Commençons ensemble !</strong>
+      </div>
+    `;
+  }
+
+  else if(wizard.step === 1){
+    content.innerHTML = `
+      <h2>Quel événement préparez-vous ?</h2>
+      <p class="wizard-description">
+        Choisissez le type de célébration que vous souhaitez organiser.
+      </p>
+
+      <div class="event-type-grid">
+        ${eventTypes.map(t => `
+          <button type="button"
+            class="type-card ${d.type===t.name?"selected":""}"
+            data-type="${escapeHTML(t.name)}">
+            <span class="type-emoji">${t.emoji}</span>
+            <strong>${escapeHTML(t.name)}</strong>
+          </button>
+        `).join("")}
+      </div>
+
+      <div class="form-group" style="margin-top:20px">
+        <label>Comment souhaitez-vous appeler votre événement ? *</label>
+        <input id="wizName"
+          value="${escapeHTML(d.name)}"
+          placeholder="Ex. Anniversaire de Sarah">
+      </div>
+    `;
+
+    content.querySelectorAll("[data-type]").forEach(btn => {
+      btn.addEventListener("click",() => {
+        d.type = btn.dataset.type;
+        renderWizard();
+      });
+    });
+
+    $("wizName").addEventListener("input",e => setField("name",e.target.value));
+  }
+
+  else if(wizard.step === 2){
+    content.innerHTML = `
+      <h2>Quand aura lieu votre événement ?</h2>
+      <p class="wizard-description">
+        Indiquez la date et l'heure prévues. Vous pourrez aussi fixer
+        une date limite pour les réservations de cadeaux.
+      </p>
+
+      <div class="form-group">
+        <label>Date de l'événement</label>
+        <input id="wizDate" type="date" value="${escapeHTML(d.date)}">
+      </div>
+
+      <div class="form-group">
+        <label>Heure de l'événement</label>
+        <input id="wizTime" type="time" value="${escapeHTML(d.time)}">
+      </div>
+
+      <div class="form-group">
+        <label>Date limite de réservation des cadeaux</label>
+        <input id="wizDeadline" type="date" value="${escapeHTML(d.deadline)}">
+        <small class="muted">Cette date peut être laissée vide.</small>
+      </div>
+    `;
+
+    $("wizDate").addEventListener("change",e=>setField("date",e.target.value));
+    $("wizTime").addEventListener("change",e=>setField("time",e.target.value));
+    $("wizDeadline").addEventListener("change",e=>setField("deadline",e.target.value));
+  }
+
+  else if(wizard.step === 3){
+    content.innerHTML = `
+      <h2>Où se déroulera votre événement ?</h2>
+      <p class="wizard-description">
+        Donnez à vos invités les informations nécessaires pour vous retrouver.
+      </p>
+
+      <div class="form-group">
+        <label>Nom du lieu</label>
+        <input id="wizPlace" value="${escapeHTML(d.place)}"
+          placeholder="Ex. Hôtel Montana">
+      </div>
+
+      <div class="form-group">
+        <label>Adresse</label>
+        <input id="wizAddress" value="${escapeHTML(d.address)}"
+          placeholder="Adresse complète">
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Ville</label>
+          <input id="wizCity" value="${escapeHTML(d.city)}"
+            placeholder="Ex. Port-au-Prince">
+        </div>
+
+        <div class="form-group">
+          <label>Pays</label>
+          <input id="wizCountry" value="${escapeHTML(d.country)}"
+            placeholder="Haïti">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Un message pour présenter votre événement</label>
+        <textarea id="wizDescription"
+          placeholder="Quelques mots pour accueillir vos invités...">${escapeHTML(d.description)}</textarea>
+      </div>
+    `;
+
+    ["Place","Address","City","Country","Description"].forEach(key=>{
+      const field = $("wiz"+key);
+      const dataKey = key.charAt(0).toLowerCase()+key.slice(1);
+      field.addEventListener("input",e=>setField(dataKey,e.target.value));
+    });
+  }
+
+  else if(wizard.step === 4){
+    content.innerHTML = `
+      <h2>Qui souhaitez-vous mettre à l'honneur ?</h2>
+      <p class="wizard-description">
+        Ajoutez les personnes célébrées. Vous pouvez ajouter une personne,
+        un couple ou plusieurs personnes.
+      </p>
+
+      <div id="wizardPeople"></div>
+
+      <button type="button" class="btn btn-secondary btn-small"
+        id="wizardAddPerson">
+        + Ajouter une personne
       </button>
-    </div>
+    `;
 
-    <div class="form-grid">
+    renderWizardPeople();
+  }
+
+  else if(wizard.step === 5){
+    content.innerHTML = `
+      <h2>Quelle ambiance souhaitez-vous créer ?</h2>
+      <p class="wizard-description">
+        Choisissez les couleurs qui accompagneront votre invitation
+        et l'expérience de vos invités.
+      </p>
+
+      <div class="palette-grid">
+        ${palettes.map(p=>`
+          <button type="button"
+            class="palette-card ${d.palette===p.id?"selected":""}"
+            data-palette="${p.id}">
+            <div class="palette-colors">
+              <span style="background:${p.primary}"></span>
+              <span style="background:${p.secondary}"></span>
+              <span style="background:${p.text}"></span>
+              <span style="background:${p.background};border:1px solid #ddd"></span>
+            </div>
+            <strong>${escapeHTML(p.name)}</strong>
+          </button>
+        `).join("")}
+      </div>
+
+      <div class="color-custom">
+        <strong>Personnaliser mes couleurs</strong>
+        <p class="muted">Modifiez les couleurs selon vos préférences.</p>
+
+        <div class="color-row">
+          <label>Couleur principale</label>
+          <input type="color" id="wizPrimary" value="${d.color}">
+        </div>
+
+        <div class="color-row">
+          <label>Couleur secondaire</label>
+          <input type="color" id="wizSecondary" value="${d.secondaryColor}">
+        </div>
+
+        <div class="color-row">
+          <label>Couleur du texte</label>
+          <input type="color" id="wizText" value="${d.textColor}">
+        </div>
+
+        <div class="color-row">
+          <label>Couleur de fond</label>
+          <input type="color" id="wizBackground" value="${d.backgroundColor}">
+        </div>
+      </div>
+
+      <div style="margin-top:18px">
+        <strong>Aperçu de votre invitation</strong>
+        <div class="preview-event" style="margin-top:10px">
+          <div class="preview-banner" id="themePreviewBanner">
+            <small>VOUS ÊTES INVITÉ(E)</small>
+            <h3>${escapeHTML(d.name || "Votre événement")}</h3>
+            <small>${escapeHTML(d.type || "Votre célébration")}</small>
+          </div>
+          <div class="preview-body" id="themePreviewBody">
+            <p>Nous serions heureux de partager ce moment avec vous.</p>
+            <span class="preview-button" id="themePreviewButton">Voir l'invitation</span>
+          </div>
+        </div>
+      </div>
+    `;
+
+    content.querySelectorAll("[data-palette]").forEach(btn=>{
+      btn.addEventListener("click",()=>updatePalette(btn.dataset.palette));
+    });
+
+    $("wizPrimary").addEventListener("input",e=>{
+      d.color=e.target.value;
+      d.palette="custom";
+      updateWizardTheme();
+      updatePalettePreview();
+    });
+
+    $("wizSecondary").addEventListener("input",e=>{
+      d.secondaryColor=e.target.value;
+      d.palette="custom";
+      updateWizardTheme();
+      updatePalettePreview();
+    });
+
+    $("wizText").addEventListener("input",e=>{
+      d.textColor=e.target.value;
+      d.palette="custom";
+      updateWizardTheme();
+      updatePalettePreview();
+    });
+
+    $("wizBackground").addEventListener("input",e=>{
+      d.backgroundColor=e.target.value;
+      d.palette="custom";
+      updateWizardTheme();
+      updatePalettePreview();
+    });
+
+    updatePalettePreview();
+  }
+
+  else if(wizard.step === 6){
+    content.innerHTML = `
+      <h2>Comment souhaitez-vous gérer les cadeaux ?</h2>
+      <p class="wizard-description">
+        Choisissez la manière dont vos invités pourront participer à votre événement.
+      </p>
+
       <div class="form-group">
-        <label>Prénom</label>
-        <input class="person-first"
-          value="${escapeHTML(person.firstName || "")}">
+        <label>Mode de participation</label>
+        <select id="wizPurchase">
+          <option value="reservation" ${d.purchaseMode==="reservation"?"selected":""}>
+            Réservation seule
+          </option>
+          <option value="achat" ${d.purchaseMode==="achat"?"selected":""}>
+            Achat sur la plateforme
+          </option>
+          <option value="les deux" ${d.purchaseMode==="les deux"?"selected":""}>
+            Réservation et achat
+          </option>
+        </select>
       </div>
 
       <div class="form-group">
-        <label>Nom</label>
-        <input class="person-last"
-          value="${escapeHTML(person.lastName || "")}">
+        <label>Visibilité des réservations</label>
+        <select id="wizVisibility">
+          <option value="publique" ${d.visibility==="publique"?"selected":""}>
+            Publique : les invités peuvent voir les réservations
+          </option>
+          <option value="privee" ${d.visibility==="privee"?"selected":""}>
+            Privée : les réservations restent confidentielles
+          </option>
+        </select>
+      </div>
+
+      <div class="notice">
+        <strong>À savoir</strong><br>
+        Vous pourrez ajouter vos cadeaux depuis votre tableau de bord
+        après la création de l'événement.
+      </div>
+    `;
+
+    $("wizPurchase").addEventListener("change",e=>setField("purchaseMode",e.target.value));
+    $("wizVisibility").addEventListener("change",e=>setField("visibility",e.target.value));
+  }
+
+  else if(wizard.step === 7){
+    content.innerHTML = `
+      <h2>Comment pouvons-nous vous contacter ?</h2>
+      <p class="wizard-description">
+        Ces informations permettront de vous identifier comme organisateur.
+      </p>
+
+      <div class="form-group">
+        <label>Votre nom</label>
+        <input id="wizOrganizer" value="${escapeHTML(d.organizer)}"
+          placeholder="Votre nom et prénom">
       </div>
 
       <div class="form-group">
-        <label>Rôle</label>
-        <input class="person-role"
-          placeholder="Marié(e), enfant baptisé..."
-          value="${escapeHTML(person.role || "")}">
+        <label>Téléphone</label>
+        <input id="wizPhone" type="tel" value="${escapeHTML(d.phone)}"
+          placeholder="Votre numéro de téléphone">
       </div>
 
       <div class="form-group">
-        <label>Date de naissance</label>
-        <input class="person-birth" type="date"
-          value="${escapeHTML(person.birthDate || "")}">
+        <label>Adresse email</label>
+        <input id="wizEmail" type="email" value="${escapeHTML(d.email)}"
+          placeholder="vous@exemple.com">
+      </div>
+    `;
+
+    $("wizOrganizer").addEventListener("input",e=>setField("organizer",e.target.value));
+    $("wizPhone").addEventListener("input",e=>setField("phone",e.target.value));
+    $("wizEmail").addEventListener("input",e=>setField("email",e.target.value));
+  }
+
+  else if(wizard.step === 8){
+    content.innerHTML = `
+      <h2>Votre événement est presque prêt ! 🎉</h2>
+      <p class="wizard-description">
+        Vérifiez les informations avant de créer votre espace événementiel.
+      </p>
+
+      <div class="preview-event" style="margin-bottom:18px">
+        <div class="preview-banner" style="background:${d.color}">
+          <small>VOTRE ÉVÉNEMENT</small>
+          <h3>${escapeHTML(d.name)}</h3>
+          <small>${escapeHTML(d.type)}</small>
+        </div>
+        <div class="preview-body" style="background:${d.backgroundColor};color:${d.textColor}">
+          <p>${escapeHTML(d.date || "Date à définir")}</p>
+          <p>${escapeHTML(d.place || "Lieu à définir")}</p>
+        </div>
+      </div>
+
+      <div class="review-item">
+        <small>Événement</small>
+        <strong>${escapeHTML(d.name)} — ${escapeHTML(d.type)}</strong>
+      </div>
+
+      <div class="review-item">
+        <small>Date et heure</small>
+        <strong>${escapeHTML(d.date || "Non renseignée")} ${escapeHTML(d.time || "")}</strong>
+      </div>
+
+      <div class="review-item">
+        <small>Lieu</small>
+        <strong>${escapeHTML([d.place,d.city,d.country].filter(Boolean).join(", ") || "Non renseigné")}</strong>
+      </div>
+
+      <div class="review-item">
+        <small>Personnes à l'honneur</small>
+        <strong>${escapeHTML(wizard.people.filter(p=>p.firstName||p.lastName).map(p=>(p.firstName+" "+p.lastName).trim()).join(", ") || "Non renseignées")}</strong>
+      </div>
+
+      <div class="review-item">
+        <small>Gestion des cadeaux</small>
+        <strong>${escapeHTML(d.purchaseMode)} · ${escapeHTML(d.visibility)}</strong>
+      </div>
+
+      <div class="review-item">
+        <small>Organisateur</small>
+        <strong>${escapeHTML(d.organizer || "Non renseigné")} ${d.phone ? "· "+escapeHTML(d.phone) : ""}</strong>
+      </div>
+
+      <div class="notice">
+        En cliquant sur « Créer mon événement », votre espace sera enregistré.
+        Vous pourrez ensuite ajouter vos invités et votre liste de cadeaux.
+      </div>
+    `;
+  }
+}
+
+/* =====================================================
+   PERSONNES A L'HONNEUR
+===================================================== */
+
+function renderWizardPeople(){
+
+  const container = $("wizardPeople");
+
+  container.innerHTML = wizard.people.map((p,index)=>`
+    <div class="person-row" data-person-index="${index}">
+      <div class="section-head">
+        <h4>Personne ${index+1}</h4>
+        ${wizard.people.length>1
+          ? `<button type="button" class="btn btn-danger btn-small"
+               data-remove-person="${index}">Retirer</button>`
+          : ""}
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Prénom</label>
+          <input data-person-field="firstName"
+            value="${escapeHTML(p.firstName)}"
+            placeholder="Prénom">
+        </div>
+
+        <div class="form-group">
+          <label>Nom</label>
+          <input data-person-field="lastName"
+            value="${escapeHTML(p.lastName)}"
+            placeholder="Nom">
+        </div>
+
+        <div class="form-group">
+          <label>Rôle</label>
+          <input data-person-field="role"
+            value="${escapeHTML(p.role)}"
+            placeholder="Ex. Mariée, enfant célébré...">
+        </div>
+
+        <div class="form-group">
+          <label>Date de naissance</label>
+          <input type="date" data-person-field="birthDate"
+            value="${escapeHTML(p.birthDate)}">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Description facultative</label>
+        <input data-person-field="description"
+          value="${escapeHTML(p.description)}"
+          placeholder="Quelques mots sur cette personne">
       </div>
     </div>
+  `).join("");
 
-    <div class="form-group">
-      <label>Photo de la personne à l'honneur</label>
-      <input class="person-photo" type="file" accept="image/*">
+  container.querySelectorAll("[data-person-index]").forEach(row=>{
+    const index = Number(row.dataset.personIndex);
 
-      <div class="person-photo-preview" style="margin-top:10px;"></div>
-    </div>
+    row.querySelectorAll("[data-person-field]").forEach(input=>{
+      input.addEventListener("input",()=>{
+        wizard.people[index][input.dataset.personField] = input.value;
+      });
+    });
+  });
 
-    <div class="form-group">
-      <label>Description (facultatif)</label>
-      <input class="person-description"
-        value="${escapeHTML(person.description || "")}">
-    </div>
-  `;
+  container.querySelectorAll("[data-remove-person]").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      wizard.people.splice(Number(btn.dataset.removePerson),1);
+      renderWizardPeople();
+    });
+  });
 
-  const photoInput = wrapper.querySelector(".person-photo");
-  const preview = wrapper.querySelector(".person-photo-preview");
+  $("wizardAddPerson").addEventListener("click",()=>{
+    wizard.people.push({
+      firstName:"",
+      lastName:"",
+      role:"",
+      birthDate:"",
+      description:""
+    });
+    renderWizardPeople();
+  });
+}
 
-  photoInput.addEventListener("change", () => {
-    preview.innerHTML = "";
+function updatePalettePreview(){
+  const banner = $("themePreviewBanner");
+  const body = $("themePreviewBody");
+  const button = $("themePreviewButton");
 
-    const file = photoInput.files[0];
-    if (!file) return;
+  if(!banner || !body || !button) return;
 
-    if (!file.type.startsWith("image/")) {
-      alert("Veuillez sélectionner une image.");
-      photoInput.value = "";
-      return;
+  banner.style.background = wizard.data.color;
+  body.style.background = wizard.data.backgroundColor;
+  body.style.color = wizard.data.textColor;
+  button.style.background = wizard.data.color;
+  button.style.color = "#FFFFFF";
+}
+
+function validateWizardStep(){
+
+  const d = wizard.data;
+
+  if(wizard.step===1){
+    if(!d.type){
+      alert("Veuillez choisir le type de votre événement.");
+      return false;
     }
 
-    const image = document.createElement("img");
-    image.src = URL.createObjectURL(file);
-    image.style.width = "120px";
-    image.style.height = "120px";
-    image.style.objectFit = "cover";
-    image.style.borderRadius = "12px";
+    if(!d.name.trim()){
+      alert("Veuillez donner un nom à votre événement.");
+      return false;
+    }
+  }
 
-    preview.appendChild(image);
-  });
+  if(wizard.step===4){
+    const validPeople = wizard.people.filter(p=>p.firstName.trim() || p.lastName.trim());
 
-  wrapper.querySelector(".remove-person").addEventListener("click", () => {
-    wrapper.remove();
-  });
+    if(!validPeople.length){
+      alert("Veuillez indiquer au moins une personne à l'honneur.");
+      return false;
+    }
+  }
 
-  $("peopleContainer").appendChild(wrapper);
+  if(wizard.step===7 && d.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email)){
+    alert("Veuillez saisir une adresse email valide.");
+    return false;
+  }
+
+  return true;
 }
 
-function collectPeople() {
-  return [...$("peopleContainer").querySelectorAll(".person-row")]
-    .map(row => {
+function nextWizardStep(){
 
-      const birthDate = row.querySelector(".person-birth").value;
-      let age = "";
+  if(!validateWizardStep()) return;
 
-      if (birthDate) {
-        const birth = new Date(birthDate + "T00:00:00");
-        const now = new Date();
+  if(wizard.step < wizard.total){
+    wizard.step++;
+    renderWizard();
+    return;
+  }
 
-        age = now.getFullYear() - birth.getFullYear();
-
-        if (
-          now.getMonth() < birth.getMonth() ||
-          (
-            now.getMonth() === birth.getMonth() &&
-            now.getDate() < birth.getDate()
-          )
-        ) {
-          age--;
-        }
-      }
-
-      return {
-        firstName: row.querySelector(".person-first").value.trim(),
-        lastName: row.querySelector(".person-last").value.trim(),
-        role: row.querySelector(".person-role").value.trim(),
-        birthDate,
-        age: age === "" ? "" : age,
-        description: row.querySelector(".person-description").value.trim()
-      };
-
-    })
-    .filter(p => p.firstName || p.lastName);
+  createEventFromWizard();
 }
 
-async function loadEvents() {
+function previousWizardStep(){
+
+  if(wizard.step>0){
+    wizard.step--;
+    renderWizard();
+  }
+}
+
+$("wizardNext").addEventListener("click",nextWizardStep);
+$("wizardBack").addEventListener("click",previousWizardStep);
+
+/* =====================================================
+   CREATION DE L'EVENEMENT
+===================================================== */
+
+function calculateAge(birthDate){
+
+  if(!birthDate) return "";
+
+  const birth = new Date(birthDate+"T00:00:00");
+  const now = new Date();
+
+  let age = now.getFullYear()-birth.getFullYear();
+
+  if(
+    now.getMonth()<birth.getMonth() ||
+    (
+      now.getMonth()===birth.getMonth() &&
+      now.getDate()<birth.getDate()
+    )
+  ){
+    age--;
+  }
+
+  return age;
+}
+
+function collectWizardPeople(){
+
+  return wizard.people
+    .map(p=>({
+      firstName:p.firstName.trim(),
+      lastName:p.lastName.trim(),
+      role:p.role.trim(),
+      birthDate:p.birthDate,
+      age:calculateAge(p.birthDate),
+      description:p.description.trim()
+    }))
+    .filter(p=>p.firstName || p.lastName);
+}
+
+async function createEventFromWizard(){
+
+  const btn = $("wizardNext");
+  btn.disabled = true;
+  btn.textContent = "Création en cours...";
+
+  const d = wizard.data;
+
+  try{
+
+    const payload = {
+      action:"createEvent",
+
+      name:d.name.trim(),
+      type:d.type,
+      date:d.date,
+      time:d.time,
+      theme:d.theme,
+      place:d.place,
+      address:d.address,
+      city:d.city,
+      country:d.country,
+      deadline:d.deadline,
+      description:d.description,
+
+      organizer:d.organizer,
+      phone:d.phone,
+      email:d.email,
+
+      visibility:d.visibility,
+      purchaseMode:d.purchaseMode,
+
+      // Le backend actuel reçoit déjà le champ color.
+      color:d.color,
+
+      people:JSON.stringify(collectWizardPeople())
+    };
+
+    const result = await api(payload);
+
+    showStatus(
+      "globalStatus",
+      "Félicitations ! Votre événement a été créé avec succès.",
+      "ok"
+    );
+
+    wizard.step = 0;
+
+    await loadEvents();
+
+    if(result.event && result.event.id){
+      await selectEvent(result.event.id);
+    }
+
+    resetWizard();
+
+    window.scrollTo({top:0,behavior:"smooth"});
+
+  }catch(err){
+
+    showStatus("globalStatus",err.message,"error");
+
+  }finally{
+
+    btn.disabled = false;
+    renderWizard();
+
+  }
+}
+
+function resetWizard(){
+
+  wizard.step=0;
+
+  wizard.people=[{
+    firstName:"",
+    lastName:"",
+    role:"",
+    birthDate:"",
+    description:""
+  }];
+
+  wizard.data={
+    name:"",
+    type:"",
+    date:"",
+    time:"",
+    theme:"",
+    place:"",
+    address:"",
+    city:"",
+    country:"Haïti",
+    deadline:"",
+    description:"",
+    organizer:"",
+    phone:"",
+    email:"",
+    visibility:"publique",
+    purchaseMode:"reservation",
+    color:"#712A90",
+    secondaryColor:"#F1E8F6",
+    textColor:"#35213D",
+    backgroundColor:"#FAF7FC",
+    palette:"violet"
+  };
+
+  updateWizardTheme();
+  renderWizard();
+}
+
+/* =====================================================
+   CHARGEMENT DES EVENEMENTS
+===================================================== */
+
+async function loadEvents(){
 
   const result = await api({action:"events"});
 
@@ -624,147 +1653,138 @@ async function loadEvents() {
 
   renderEvents();
 
-  if (selectedEventId && events.some(e => e.id === selectedEventId)) {
-
-    selectedEvent = events.find(e => e.id === selectedEventId);
-    await selectEvent(selectedEventId, false);
-
-  } else if (events.length) {
-
-    await selectEvent(events[0].id, false);
-
-  } else {
-
-    selectedEventId = null;
-    selectedEvent = null;
+  if(selectedEventId && events.some(e=>e.id===selectedEventId)){
+    selectedEvent = events.find(e=>e.id===selectedEventId);
+    await selectEvent(selectedEventId,false);
+  }
+  else if(events.length){
+    await selectEvent(events[0].id,false);
+  }
+  else{
+    selectedEventId=null;
+    selectedEvent=null;
     renderSelectedEvent();
-
   }
 }
 
-function renderEvents() {
+function renderEvents(){
 
   $("eventList").innerHTML = events.length
-    ? events.map(e => `
+    ? events.map(e=>`
       <button type="button"
-        class="event-option ${e.id === selectedEventId ? "active" : ""}"
+        class="event-option ${e.id===selectedEventId?"active":""}"
         data-id="${escapeHTML(e.id)}">
 
         <strong>${escapeHTML(e.name)}</strong>
 
         <small>
           ${escapeHTML(e.type)}
-          ${e.date ? " · " + escapeHTML(e.date) : ""}
+          ${e.date?" · "+escapeHTML(e.date):""}
         </small>
 
         <small>ID : ${escapeHTML(e.id)}</small>
-
       </button>
     `).join("")
-    : `<div class="muted">
-        Aucun événement créé. Utilisez le formulaire ci-dessus.
-       </div>`;
+    : `<div class="muted">Aucun événement créé.</div>`;
 
-  $("eventList").querySelectorAll("[data-id]").forEach(btn => {
-    btn.addEventListener("click", () => selectEvent(btn.dataset.id));
+  $("eventList").querySelectorAll("[data-id]").forEach(btn=>{
+    btn.addEventListener("click",()=>selectEvent(btn.dataset.id));
   });
 }
 
-async function selectEvent(id, reload=true) {
+async function selectEvent(id){
 
-  selectedEventId = id;
-  selectedEvent = events.find(e => e.id === id) || null;
+  selectedEventId=id;
+  selectedEvent=events.find(e=>e.id===id)||null;
 
   renderEvents();
   renderSelectedEvent();
 
-  if (!selectedEvent) return;
+  if(!selectedEvent) return;
 
-  try {
+  try{
 
-    const [guestResult, giftResult] = await Promise.all([
-      api({action:"guests", event_id:id}),
-      api({action:"gifts", event_id:id})
+    const [guestResult,giftResult]=await Promise.all([
+      api({action:"guests",event_id:id}),
+      api({action:"gifts",event_id:id})
     ]);
 
-    renderGuests(guestResult.guests || []);
-    renderGifts(giftResult.gifts || []);
+    renderGuests(guestResult.guests||[]);
+    renderGifts(giftResult.gifts||[]);
+
     await loadEventReport();
 
-  } catch (err) {
+  }catch(err){
 
-    showStatus("globalStatus", err.message, "error");
+    showStatus("globalStatus",err.message,"error");
 
   }
 }
 
-function renderSelectedEvent() {
+function renderSelectedEvent(){
 
-  const active = !!selectedEvent;
+  const active=!!selectedEvent;
 
-  $("currentEventName").textContent = active
+  $("currentEventName").textContent=active
     ? `${selectedEvent.name} — ${selectedEvent.id}`
     : "Choisissez un événement pour gérer ses invités et ses cadeaux.";
 
-  $("currentEventType").textContent = active
+  $("currentEventType").textContent=active
     ? selectedEvent.type
     : "Aucun événement";
 
-  $("selectedBadge").textContent = active
+  $("selectedBadge").textContent=active
     ? "Événement sélectionné"
     : "Aucun sélectionné";
 
-  $("eventLinkBox").classList.toggle("hidden", !active);
+  $("eventLinkBox").classList.toggle("hidden",!active);
 
-  if (active) {
+  if(active){
 
-    const link = new URL("connect1.html", window.location.href);
-    link.searchParams.set("fete_id", selectedEvent.id);
+    const link=new URL("connect1.html",window.location.href);
+    link.searchParams.set("fete_id",selectedEvent.id);
 
-    $("eventLink").textContent = link.toString();
+    $("eventLink").textContent=link.toString();
 
-  } else {
+  }else{
 
-    $("eventLink").textContent = "";
+    $("eventLink").textContent="";
 
   }
 
-  ["guestForm","giftForm"].forEach(id => {
-    [...$(id).elements].forEach(el => {
-      el.disabled = !active;
+  ["guestForm","giftForm"].forEach(id=>{
+    [...$(id).elements].forEach(el=>{
+      el.disabled=!active;
     });
   });
 
-  if (!active) {
+  if(!active){
 
-    $("guestList").innerHTML =
-      `<div class="muted">Aucun événement sélectionné.</div>`;
+    $("guestList").innerHTML='<div class="muted">Aucun événement sélectionné.</div>';
+    $("giftList").innerHTML='<div class="muted">Aucun événement sélectionné.</div>';
 
-    $("giftList").innerHTML =
-      `<div class="muted">Aucun événement sélectionné.</div>`;
-
-    $("guestCount").textContent = "0";
-    $("giftCount").textContent = "0";
-
+    $("guestCount").textContent="0";
+    $("giftCount").textContent="0";
   }
 }
 
-function renderGuests(guests) {
+/* =====================================================
+   INVITES
+===================================================== */
 
-  $("guestCount").textContent = guests.length;
+function renderGuests(guests){
 
-  $("guestList").innerHTML = guests.length
-    ? guests.map(g => `
+  $("guestCount").textContent=guests.length;
+
+  $("guestList").innerHTML=guests.length
+    ? guests.map(g=>`
       <div class="item">
-
         <div class="item-info">
           <strong>${escapeHTML(g.name)}</strong>
-
           <small>
-            ${escapeHTML(g.phone || "")}
-            ${g.email ? " · " + escapeHTML(g.email) : ""}
+            ${escapeHTML(g.phone||"")}
+            ${g.email?" · "+escapeHTML(g.email):""}
           </small>
-
           <small>ID invité : ${escapeHTML(g.id)}</small>
         </div>
 
@@ -773,20 +1793,16 @@ function renderGuests(guests) {
           data-delete-guest="${escapeHTML(g.id)}">
           Désactiver
         </button>
-
       </div>
     `).join("")
-    : `<div class="muted">
-        Aucun invité enregistré pour cette fête.
-       </div>`;
+    : '<div class="muted">Aucun invité enregistré pour cette fête.</div>';
 
-  $("guestList").querySelectorAll("[data-delete-guest]").forEach(btn => {
+  $("guestList").querySelectorAll("[data-delete-guest]").forEach(btn=>{
+    btn.addEventListener("click",async()=>{
 
-    btn.addEventListener("click", async () => {
+      if(!confirm("Désactiver cet invité ?")) return;
 
-      if (!confirm("Désactiver cet invité ?")) return;
-
-      try {
+      try{
 
         await api({
           action:"deleteGuest",
@@ -796,34 +1812,31 @@ function renderGuests(guests) {
 
         await refreshSelected();
 
-      } catch(e) {
+      }catch(e){
 
-        showStatus("guestStatus", e.message, "error");
+        showStatus("guestStatus",e.message,"error");
 
       }
-
     });
-
   });
 }
 
-function renderGifts(gifts) {
+/* =====================================================
+   CADEAUX
+===================================================== */
 
-  $("giftCount").textContent = gifts.length;
+function renderGifts(gifts){
 
-  $("giftList").innerHTML = gifts.length
-    ? gifts.map(g => `
+  $("giftCount").textContent=gifts.length;
+
+  $("giftList").innerHTML=gifts.length
+    ? gifts.map(g=>`
       <div class="item">
-
         <div class="item-info">
 
-          <strong>
-            ${escapeHTML(g.emoji)} ${escapeHTML(g.name)}
-          </strong>
+          <strong>${escapeHTML(g.emoji)} ${escapeHTML(g.name)}</strong>
 
-          <small>
-            ${escapeHTML(g.description || "Aucune description")}
-          </small>
+          <small>${escapeHTML(g.description||"Aucune description")}</small>
 
           <small>
             Quantité : ${g.quantity}
@@ -831,18 +1844,13 @@ function renderGifts(gifts) {
             · Restants : ${g.remaining}
           </small>
 
-          ${g.price
-            ? `<small>Prix indicatif : ${escapeHTML(g.price)}</small>`
-            : ""}
+          ${g.price?`<small>Prix indicatif : ${escapeHTML(g.price)}</small>`:""}
 
-          ${g.image
-            ? `<small>
-                <a href="${escapeHTML(g.image)}"
-                  target="_blank" rel="noopener">
-                  Voir l'image
-                </a>
-              </small>`
-            : ""}
+          ${g.image?`
+            <small>
+              <a href="${escapeHTML(g.image)}"
+                target="_blank" rel="noopener">Voir l'image</a>
+            </small>`:""}
 
         </div>
 
@@ -851,20 +1859,16 @@ function renderGifts(gifts) {
           data-delete-gift="${escapeHTML(g.id)}">
           Désactiver
         </button>
-
       </div>
     `).join("")
-    : `<div class="muted">
-        Aucun cadeau enregistré pour cette fête.
-       </div>`;
+    : '<div class="muted">Aucun cadeau enregistré pour cette fête.</div>';
 
-  $("giftList").querySelectorAll("[data-delete-gift]").forEach(btn => {
+  $("giftList").querySelectorAll("[data-delete-gift]").forEach(btn=>{
+    btn.addEventListener("click",async()=>{
 
-    btn.addEventListener("click", async () => {
+      if(!confirm("Désactiver ce cadeau ?")) return;
 
-      if (!confirm("Désactiver ce cadeau ?")) return;
-
-      try {
+      try{
 
         await api({
           action:"deleteGift",
@@ -874,140 +1878,81 @@ function renderGifts(gifts) {
 
         await refreshSelected();
 
-      } catch(e) {
+      }catch(e){
 
-        showStatus("giftStatus", e.message, "error");
+        showStatus("giftStatus",e.message,"error");
 
       }
-
     });
-
   });
 }
-async function loadEventReport() {
 
-  if (!selectedEventId) return;
+/* =====================================================
+   RAPPORT
+===================================================== */
 
-  try {
+async function loadEventReport(){
 
-    const result = await api({
-      action: "report",
-      event_id: selectedEventId
+  if(!selectedEventId) return;
+
+  try{
+
+    const result=await api({
+      action:"report",
+      event_id:selectedEventId
     });
 
-    const r = result.report;
+    const r=result.report;
 
-    $("reportGuests").textContent = r.total_guests;
-    $("reportConfirmed").textContent = r.confirmed_attendance;
-    $("reportPending").textContent = r.pending_attendance;
-    $("reportDeclined").textContent = r.declined_attendance;
-    $("reportGifts").textContent = r.total_gifts;
-    $("reportReservations").textContent = r.total_reservations;
+    $("reportGuests").textContent=r.total_guests;
+    $("reportConfirmed").textContent=r.confirmed_attendance;
+    $("reportPending").textContent=r.pending_attendance;
+    $("reportDeclined").textContent=r.declined_attendance;
+    $("reportGifts").textContent=r.total_gifts;
+    $("reportReservations").textContent=r.total_reservations;
 
     hideStatus("reportStatus");
 
-  } catch (error) {
+  }catch(error){
 
-    showStatus("reportStatus", error.message, "error");
+    showStatus("reportStatus",error.message,"error");
 
   }
 }
 
-$("refreshReport").addEventListener("click", loadEventReport);
-async function refreshSelected() {
+$("refreshReport").addEventListener("click",loadEventReport);
 
-  if (!selectedEventId) return;
+async function refreshSelected(){
 
-  const [a,b] = await Promise.all([
-    api({action:"guests", event_id:selectedEventId}),
-    api({action:"gifts", event_id:selectedEventId})
+  if(!selectedEventId) return;
+
+  const [a,b]=await Promise.all([
+    api({action:"guests",event_id:selectedEventId}),
+    api({action:"gifts",event_id:selectedEventId})
   ]);
 
-  renderGuests(a.guests || []);
-  renderGifts(b.gifts || []);
+  renderGuests(a.guests||[]);
+  renderGifts(b.gifts||[]);
+
   await loadEventReport();
 }
 
-$("addPersonBtn").addEventListener("click", () => addPersonRow());
+/* =====================================================
+   AJOUT D'UN INVITE
+===================================================== */
 
-addPersonRow();
-
-$("eventForm").addEventListener("submit", async e => {
-
-  e.preventDefault();
-
-  const btn = $("createEventBtn");
-  btn.disabled = true;
-
-  try {
-
-    const payload = {
-      action:"createEvent",
-
-      name:$("eventName").value.trim(),
-      type:$("eventType").value,
-      date:$("eventDate").value,
-      time:$("eventTime").value,
-      theme:$("eventTheme").value.trim(),
-      place:$("eventPlace").value.trim(),
-      address:$("eventAddress").value.trim(),
-      city:$("eventCity").value.trim(),
-      country:$("eventCountry").value.trim(),
-      deadline:$("eventDeadline").value,
-      description:$("eventDescription").value.trim(),
-      organizer:$("organizerName").value.trim(),
-      phone:$("organizerPhone").value.trim(),
-      email:$("organizerEmail").value.trim(),
-      visibility:$("eventVisibility").value,
-      purchaseMode:$("purchaseMode").value,
-      color:"#712A90",
-      people:JSON.stringify(collectPeople())
-    };
-
-    const result = await api(payload);
-
-    $("eventForm").reset();
-    $("peopleContainer").innerHTML = "";
-
-    addPersonRow();
-
-    await loadEvents();
-    await selectEvent(result.event.id);
-
-    showStatus(
-      "globalStatus",
-      "Événement créé : " + result.event.name,
-      "ok"
-    );
-
-  } catch(err) {
-
-    showStatus("globalStatus", err.message, "error");
-
-  } finally {
-
-    btn.disabled = false;
-
-  }
-
-});
-
-$("guestForm").addEventListener("submit", async e => {
+$("guestForm").addEventListener("submit",async e=>{
 
   e.preventDefault();
 
-  if (!selectedEventId) {
-    return showStatus(
-      "guestStatus",
-      "Sélectionnez d'abord un événement.",
-      "error"
-    );
+  if(!selectedEventId){
+    return showStatus("guestStatus","Sélectionnez d'abord un événement.","error");
   }
 
-  const btn = $("addGuestBtn");
-  btn.disabled = true;
+  const btn=$("addGuestBtn");
+  btn.disabled=true;
 
-  try {
+  try{
 
     await api({
       action:"addGuest",
@@ -1021,40 +1966,35 @@ $("guestForm").addEventListener("submit", async e => {
 
     await refreshSelected();
 
-    showStatus(
-      "guestStatus",
-      "Invité ajouté à cet événement.",
-      "ok"
-    );
+    showStatus("guestStatus","Invité ajouté à cet événement.","ok");
 
-  } catch(err) {
+  }catch(err){
 
-    showStatus("guestStatus", err.message, "error");
+    showStatus("guestStatus",err.message,"error");
 
-  } finally {
+  }finally{
 
-    btn.disabled = false;
+    btn.disabled=false;
 
   }
-
 });
 
-$("giftForm").addEventListener("submit", async e => {
+/* =====================================================
+   AJOUT D'UN CADEAU
+===================================================== */
+
+$("giftForm").addEventListener("submit",async e=>{
 
   e.preventDefault();
 
-  if (!selectedEventId) {
-    return showStatus(
-      "giftStatus",
-      "Sélectionnez d'abord un événement.",
-      "error"
-    );
+  if(!selectedEventId){
+    return showStatus("giftStatus","Sélectionnez d'abord un événement.","error");
   }
 
-  const btn = $("addGiftBtn");
-  btn.disabled = true;
+  const btn=$("addGiftBtn");
+  btn.disabled=true;
 
-  try {
+  try{
 
     await api({
       action:"addGift",
@@ -1069,71 +2009,70 @@ $("giftForm").addEventListener("submit", async e => {
 
     $("giftForm").reset();
 
-    $("giftQuantity").value = 1;
-    $("giftEmoji").value = "🎁";
+    $("giftQuantity").value=1;
+    $("giftEmoji").value="🎁";
 
     await refreshSelected();
 
-    showStatus(
-      "giftStatus",
-      "Cadeau ajouté à cet événement.",
-      "ok"
-    );
+    showStatus("giftStatus","Cadeau ajouté à cet événement.","ok");
 
-  } catch(err) {
+  }catch(err){
 
-    showStatus("giftStatus", err.message, "error");
+    showStatus("giftStatus",err.message,"error");
 
-  } finally {
+  }finally{
 
-    btn.disabled = false;
+    btn.disabled=false;
 
   }
-
 });
 
-$("copyEventLink").addEventListener("click", async () => {
+/* =====================================================
+   COPIER LE LIEN
+===================================================== */
 
-  const text = $("eventLink").textContent;
+$("copyEventLink").addEventListener("click",async()=>{
 
-  try {
+  const text=$("eventLink").textContent;
+
+  try{
 
     await navigator.clipboard.writeText(text);
 
-    showStatus("globalStatus", "Lien copié.", "ok");
+    showStatus("globalStatus","Lien copié.","ok");
 
-  } catch(e) {
+  }catch(e){
 
-    showStatus(
-      "globalStatus",
-      "Copiez manuellement le lien affiché.",
-      "error"
-    );
+    showStatus("globalStatus","Copiez manuellement le lien affiché.","error");
 
   }
-
 });
 
-(async function init() {
+/* =====================================================
+   INITIALISATION
+===================================================== */
 
-  try {
+(async function init(){
+
+  renderWizard();
+
+  try{
 
     await api({action:"health"});
     await loadEvents();
-    await loadEventReport();
 
-  } catch(err) {
+  }catch(err){
 
     showStatus(
       "globalStatus",
-      err.message + " Vérifiez l'URL de l'API et le déploiement Apps Script.",
+      err.message+" Vérifiez l'URL de l'API et le déploiement Apps Script.",
       "error"
     );
 
   }
 
 })();
-
 </script>
+
 </body>
 </html>
