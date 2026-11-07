@@ -655,89 +655,192 @@ button:disabled {
   </div>
 
 </main>
-
 <script>
-const API_URL =
-  "https://script.google.com/macros/s/AKfycby2yWt2DfcjL7sxpHs8LaW9E1Z152gbk4WpwSQ69pxU_r42c9HurNyfULPF4VKK2xFo/exec";
+/*******************************************************
+ * FÊTE & CADEAUX — FRONTEND INVITATION
+ * Chargement événement
+ * Connexion invité
+ * Confirmation de présence
+ * Motif d'absence
+ * Redirection vers les cadeaux
+ *******************************************************/
 
-const urlParams = new URLSearchParams(window.location.search);
-const feteId = urlParams.get("fete_id");
+// =====================================================
+// 1. CONFIGURATION
+// =====================================================
+
+const API_URL = "https://script.google.com/macros/s/AKfycby2yWt2DfcjL7sxpHs8LaW9E1Z152gbk4WpwSQ69pxU_r42c9HurNyfULPF4VKK2xFo/exec";
+
+const GIFT_PAGE_URL =
+  "https://mitch4834.github.io/cadeaux2/espacecadeau.html";
+
+const params = new URLSearchParams(window.location.search);
+const feteId = params.get("fete_id");
+
+let selectedAttendance = "";
+let currentEvent = null;
+
+
+// =====================================================
+// 2. OUTILS GÉNÉRAUX
+// =====================================================
 
 function getElement(id) {
   return document.getElementById(id);
 }
 
-function setText(id, value, fallback) {
-  getElement(id).textContent = value || fallback || "Non précisé";
+function setText(id, value) {
+  const element = getElement(id);
+  if (element) {
+    element.textContent = value || "";
+  }
+}
+
+function showElement(id) {
+  const element = getElement(id);
+  if (element) {
+    element.classList.remove("hidden");
+    element.style.display = "";
+  }
+}
+
+function hideElement(id) {
+  const element = getElement(id);
+  if (element) {
+    element.classList.add("hidden");
+  }
 }
 
 function showEventError(message) {
-  getElement("loadingEvent").classList.add("hidden");
-  getElement("eventPage").classList.add("hidden");
-  getElement("eventError").classList.remove("hidden");
-  setText("eventErrorMessage", message, "Cette invitation est indisponible.");
-}
+  const error = getElement("eventError");
 
-function formatEventDate(value) {
-  if (!value) return "Non précisée";
-
-  // Accepte une date ISO ou une date déjà formatée.
-  const date = new Date(value);
-
-  if (isNaN(date.getTime())) {
-    return value;
+  if (error) {
+    error.textContent = message;
+    error.style.display = "block";
   }
 
-  return new Intl.DateTimeFormat("fr-FR", {
+  const eventPage = getElement("eventPage");
+  if (eventPage) {
+    eventPage.style.display = "none";
+  }
+}
+
+function formatEventDate(dateValue) {
+  if (!dateValue) return "";
+
+  const date = new Date(dateValue);
+
+  if (isNaN(date.getTime())) {
+    return dateValue;
+  }
+
+  return date.toLocaleDateString("fr-FR", {
     weekday: "long",
     day: "numeric",
     month: "long",
-    year: "numeric",
-    timeZone: "UTC"
-  }).format(date);
+    year: "numeric"
+  });
 }
 
+
+// =====================================================
+// 3. COMMUNICATION AVEC GOOGLE APPS SCRIPT (JSONP)
+// =====================================================
+
+function jsonpRequest(requestParams, timeoutDuration = 15000) {
+
+  return new Promise(function(resolve, reject) {
+
+    const callbackName =
+      "doctinovaCallback_" +
+      Date.now() +
+      "_" +
+      Math.floor(Math.random() * 100000);
+
+    const script = document.createElement("script");
+
+    let completed = false;
+
+    const params = new URLSearchParams(requestParams);
+    params.set("callback", callbackName);
+
+    let timeout;
+
+    function cleanup() {
+      if (completed) return;
+
+      completed = true;
+
+      clearTimeout(timeout);
+
+      delete window[callbackName];
+
+      script.remove();
+    }
+
+    timeout = setTimeout(function() {
+      cleanup();
+      reject(new Error("Le serveur ne répond pas."));
+    }, timeoutDuration);
+
+    window[callbackName] = function(result) {
+      cleanup();
+      resolve(result);
+    };
+
+    script.onerror = function() {
+      cleanup();
+      reject(new Error("Impossible de contacter le serveur."));
+    };
+
+    script.src = API_URL + "?" + params.toString();
+
+    document.body.appendChild(script);
+
+  });
+}
+
+
+// =====================================================
+// 4. AFFICHAGE DES PERSONNES À L'HONNEUR
+// =====================================================
+
 function createPersonCard(person) {
-  const card = document.createElement("article");
+
+  const card = document.createElement("div");
   card.className = "person-card";
 
   if (person.photo) {
-    const img = document.createElement("img");
-    img.className = "person-photo";
-    img.src = person.photo;
-    img.alt = "Photo de " + (person.prenom || "la personne à l'honneur");
-    img.loading = "lazy";
+    const image = document.createElement("img");
 
-    img.onerror = function() {
-      const placeholder = document.createElement("div");
-      placeholder.className = "person-placeholder";
-      placeholder.textContent = "🎂";
-      img.replaceWith(placeholder);
-    };
+    image.src = person.photo;
+    image.alt = person.prenom || "Personne à l'honneur";
+    image.className = "person-photo";
 
-    card.appendChild(img);
-  } else {
-    const placeholder = document.createElement("div");
-    placeholder.className = "person-placeholder";
-    placeholder.textContent = "🎂";
-    card.appendChild(placeholder);
+    card.appendChild(image);
   }
 
   const name = document.createElement("h3");
-  name.textContent = [person.prenom, person.nom].filter(Boolean).join(" ") ||
-    "Personne à l'honneur";
+
+  name.textContent =
+    [person.prenom, person.nom].filter(Boolean).join(" ");
+
   card.appendChild(name);
 
   if (person.role) {
-    const role = document.createElement("div");
-    role.className = "person-role";
+    const role = document.createElement("p");
     role.textContent = person.role;
     card.appendChild(role);
   }
 
+  if (person.age) {
+    const age = document.createElement("p");
+    age.textContent = person.age + " ans";
+    card.appendChild(age);
+  }
+
   if (person.description) {
     const description = document.createElement("p");
-    description.className = "person-description";
     description.textContent = person.description;
     card.appendChild(description);
   }
@@ -745,353 +848,469 @@ function createPersonCard(person) {
   return card;
 }
 
-function displayEvent(result) {
-  if (!result || !result.success || !result.event) {
-    showEventError(
-      result && result.message
-        ? result.message
-        : "Les informations de cette fête sont introuvables."
-    );
+
+// =====================================================
+// 5. AFFICHAGE DES INFORMATIONS DE L'ÉVÉNEMENT
+// =====================================================
+
+function displayEvent(data) {
+
+  if (!data || !data.event) {
+    showEventError("Les informations de cet événement sont indisponibles.");
     return;
   }
 
-  const event = result.event;
-  const people = Array.isArray(result.people) ? result.people : [];
+  currentEvent = data.event;
 
-  setText("eventType", event.type, "ÉVÉNEMENT");
-  setText("eventName", event.name, "Bienvenue à la fête !");
-  setText(
-    "eventHeroDescription",
-    event.description,
-    "Vous êtes chaleureusement invité à partager ce moment spécial."
-  );
+  const event = data.event;
+
+  // Informations principales
+  setText("eventName", event.name);
+  setText("eventTitle", event.name);
+  setText("eventType", event.type);
 
   setText("eventDate", formatEventDate(event.date));
   setText("eventTime", event.time);
+
+  setText("eventDescription", event.description);
+  setText("eventTheme", event.theme);
+
+  // Lieu
   setText("eventVenue", event.venue);
   setText("eventAddress", event.address);
   setText("eventCity", event.city);
   setText("eventCountry", event.country);
 
-  const peopleContainer = getElement("peopleContainer");
-  peopleContainer.replaceChildren();
+  // Localisation complète
+  const location = [
+    event.venue,
+    event.address,
+    event.city,
+    event.country
+  ].filter(Boolean).join(", ");
 
-  if (people.length) {
-    people.forEach(person => {
-      peopleContainer.appendChild(createPersonCard(person));
-    });
-  } else {
-    const empty = document.createElement("p");
-    empty.className = "empty-message";
-    empty.textContent =
-      "Les informations des personnes à l'honneur seront bientôt disponibles.";
-    peopleContainer.appendChild(empty);
+  setText("eventLocation", location);
+
+  // Personnes à l'honneur
+  const peopleContainer =
+    getElement("peopleContainer") ||
+    getElement("personsContainer") ||
+    getElement("honoredPeople");
+
+  if (peopleContainer) {
+
+    peopleContainer.innerHTML = "";
+
+    if (Array.isArray(data.people) && data.people.length > 0) {
+
+      data.people.forEach(function(person) {
+        peopleContainer.appendChild(createPersonCard(person));
+      });
+
+    } else {
+      peopleContainer.textContent = "";
+    }
   }
 
-  if (event.description) {
-    getElement("eventDescription").textContent = event.description;
-    getElement("descriptionSection").classList.remove("hidden");
+  // Afficher la page
+  const eventPage = getElement("eventPage");
+
+  if (eventPage) {
+    eventPage.style.display = "block";
   }
 
-  if (event.theme) {
-    getElement("eventTheme").textContent = event.theme;
-    getElement("themeSection").classList.remove("hidden");
-  }
+  const error = getElement("eventError");
 
-  getElement("loadingEvent").classList.add("hidden");
-  getElement("eventPage").classList.remove("hidden");
+  if (error) {
+    error.style.display = "none";
+  }
 }
 
-function loadPublicEvent() {
+
+// =====================================================
+// 6. CHARGEMENT PUBLIC DE L'ÉVÉNEMENT
+// =====================================================
+
+async function loadPublicEvent() {
+
   if (!feteId) {
-    showEventError(
-      "Identifiant de fête introuvable. Vérifiez votre lien d'invitation."
-    );
+    showEventError("Identifiant de fête manquant dans le lien d'invitation.");
     return;
   }
 
-  const callbackName = "eventCallback_" + Date.now();
-  const script = document.createElement("script");
+  try {
 
-  let finished = false;
+    const result = await jsonpRequest({
+      action: "publicEvent",
+      fete_id: feteId
+    });
 
-  function cleanup() {
-    if (finished) return;
-    finished = true;
-    clearTimeout(timeout);
-    delete window[callbackName];
-    script.remove();
-  }
+    if (!result || !result.success) {
+      showEventError(
+        result && result.message
+          ? result.message
+          : "Impossible de charger les informations de cet événement."
+      );
+      return;
+    }
 
-  const timeout = setTimeout(function() {
-    cleanup();
-    showEventError("Le serveur ne répond pas. Veuillez réessayer.");
-  }, 15000);
-
-  window[callbackName] = function(result) {
-    cleanup();
     displayEvent(result);
-  };
 
-  script.onerror = function() {
-    cleanup();
-    showEventError("Impossible de contacter le serveur.");
-  };
+  } catch (error) {
 
-  script.src =
-    API_URL +
-    "?action=publicEvent" +
-    "&fete_id=" + encodeURIComponent(feteId) +
-    "&callback=" + encodeURIComponent(callbackName);
+    console.error("Erreur chargement événement :", error);
 
-  document.body.appendChild(script);
+    showEventError(
+      "Une erreur est survenue lors du chargement de l'invitation. Veuillez réessayer."
+    );
+
+  }
 }
 
-/* CONFIRMATION DE PRESENCE */
 
-let selectedAttendance = "";
+// =====================================================
+// 7. AFFICHAGE DU FORMULAIRE DE CONFIRMATION
+// =====================================================
 
 function openAttendanceModal(guestName) {
-  getElement("attendanceGreeting").textContent =
-    "Bonjour " + guestName +
-    " ! Nous sommes heureux de vous compter parmi nos invités.";
 
-  getElement("attendanceModal").classList.remove("hidden");
-}
+  const greeting = getElement("attendanceGreeting");
 
-function selectAttendance(response) {
-  selectedAttendance = response;
-
-  const reasonContainer =
-    getElement("absenceReasonContainer");
-
-  const submitButton =
-    getElement("attendanceSubmit");
-
-  const message =
-    getElement("attendanceMessage");
-
-  message.textContent = "";
-
-  if (response === "NON") {
-    reasonContainer.classList.remove("hidden");
-  } else {
-    reasonContainer.classList.add("hidden");
-    getElement("absenceReason").value = "";
+  if (greeting) {
+    greeting.textContent =
+      "Bonjour " + guestName +
+      " ! Nous sommes heureux de vous compter parmi nos invités.";
   }
 
-  submitButton.classList.remove("hidden");
-}
+  selectedAttendance = "";
 
-function submitAttendance() {
-  const guestId = sessionStorage.getItem("guestId");
-  const currentFeteId = sessionStorage.getItem("feteId");
-
-  const reason = getElement("absenceReason").value.trim();
+  const reason = getElement("absenceReason");
   const message = getElement("attendanceMessage");
   const submitButton = getElement("attendanceSubmit");
 
+  if (reason) reason.value = "";
+
+  if (message) message.textContent = "";
+
+  if (submitButton) {
+    submitButton.disabled = false;
+    submitButton.textContent = "Envoyer ma réponse";
+    submitButton.classList.add("hidden");
+  }
+
+  hideElement("absenceReasonContainer");
+
+  const modal = getElement("attendanceModal");
+
+  if (modal) {
+    modal.classList.remove("hidden");
+  }
+}
+
+
+// =====================================================
+// 8. CHOIX DE LA PRÉSENCE OU DE L'ABSENCE
+// =====================================================
+
+function selectAttendance(response) {
+
+  if (response !== "OUI" && response !== "NON") {
+    return;
+  }
+
+  selectedAttendance = response;
+
+  const reasonContainer = getElement("absenceReasonContainer");
+  const submitButton = getElement("attendanceSubmit");
+  const message = getElement("attendanceMessage");
+
+  if (message) {
+    message.textContent = "";
+  }
+
+  if (response === "NON") {
+
+    if (reasonContainer) {
+      reasonContainer.classList.remove("hidden");
+    }
+
+  } else {
+
+    if (reasonContainer) {
+      reasonContainer.classList.add("hidden");
+    }
+
+    const reason = getElement("absenceReason");
+
+    if (reason) {
+      reason.value = "";
+    }
+  }
+
+  if (submitButton) {
+    submitButton.classList.remove("hidden");
+    submitButton.disabled = false;
+    submitButton.textContent = "Envoyer ma réponse";
+  }
+}
+
+
+// =====================================================
+// 9. ENREGISTREMENT DE LA CONFIRMATION
+// =====================================================
+
+async function submitAttendance() {
+
+  const guestId = sessionStorage.getItem("guestId");
+  const currentFeteId = sessionStorage.getItem("feteId");
+
+  const reasonElement = getElement("absenceReason");
+  const message = getElement("attendanceMessage");
+  const submitButton = getElement("attendanceSubmit");
+
+  const reason = reasonElement
+    ? reasonElement.value.trim()
+    : "";
+
   if (!guestId || !currentFeteId) {
-    message.textContent = "Votre session a expiré. Veuillez vous reconnecter.";
+
+    if (message) {
+      message.textContent =
+        "Votre session a expiré. Veuillez vous reconnecter.";
+    }
+
     return;
   }
 
   if (!selectedAttendance) {
-    message.textContent = "Veuillez choisir une réponse.";
+
+    if (message) {
+      message.textContent = "Veuillez choisir une réponse.";
+    }
+
     return;
   }
 
   if (selectedAttendance === "NON" && !reason) {
-    message.textContent = "Veuillez préciser le motif de votre absence.";
-    getElement("absenceReason").focus();
+
+    if (message) {
+      message.textContent =
+        "Veuillez préciser le motif de votre absence.";
+    }
+
+    if (reasonElement) {
+      reasonElement.focus();
+    }
+
     return;
   }
 
-  submitButton.disabled = true;
-  submitButton.textContent = "Enregistrement en cours...";
-  message.textContent = "";
-
-  const callbackName = "attendanceCallback_" + Date.now();
-  const script = document.createElement("script");
-
-  let finished = false;
-
-  function cleanup() {
-    if (finished) return;
-    finished = true;
-    clearTimeout(timeout);
-    delete window[callbackName];
-    script.remove();
+  if (submitButton) {
+    submitButton.disabled = true;
+    submitButton.textContent = "Enregistrement en cours...";
   }
 
-  const timeout = setTimeout(function() {
-    cleanup();
-    submitButton.disabled = false;
-    submitButton.textContent = "Réessayer";
-    message.textContent =
-      "Le serveur ne répond pas. Veuillez réessayer.";
-  }, 15000);
+  if (message) {
+    message.textContent = "";
+  }
 
-  window[callbackName] = function(result) {
-    cleanup();
+  try {
 
-   
-if (result && result.success && result.guest) {
+    const result = await jsonpRequest({
+      action: "confirmAttendance",
+      invite_id: guestId,
+      fete_id: currentFeteId,
+      confirmation: selectedAttendance,
+      motif_absence: selectedAttendance === "NON" ? reason : ""
+    });
 
-  sessionStorage.setItem("guestName", result.guest.name);
-  sessionStorage.setItem("guestId", result.guest.id);
-  sessionStorage.setItem("feteId", feteId);
+    if (result && result.success) {
 
-  // Afficher le pop-up après identification de l'invité.
-  openAttendanceModal(result.guest.name);
+      if (message) {
+        message.textContent =
+          "Votre réponse a bien été enregistrée. Merci !";
+      }
 
-}
-, 1200);
+      if (submitButton) {
+        submitButton.textContent = "Réponse enregistrée";
+      }
+
+      setTimeout(function() {
+
+        const destination = new URL(GIFT_PAGE_URL);
+
+        destination.searchParams.set("invite_id", guestId);
+        destination.searchParams.set("fete_id", currentFeteId);
+
+        window.location.href = destination.toString();
+
+      }, 1200);
 
     } else {
+
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = "Réessayer";
+      }
+
+      if (message) {
+        message.textContent =
+          result && result.message
+            ? result.message
+            : "Impossible d'enregistrer votre réponse.";
+      }
+    }
+
+  } catch (error) {
+
+    console.error("Erreur confirmation :", error);
+
+    if (submitButton) {
       submitButton.disabled = false;
       submitButton.textContent = "Réessayer";
+    }
 
+    if (message) {
       message.textContent =
-        result && result.message
-          ? result.message
-          : "Impossible d'enregistrer votre réponse.";
+        "Impossible de contacter le serveur. Veuillez réessayer.";
     }
-  };
-
-  script.onerror = function() {
-    cleanup();
-    submitButton.disabled = false;
-    submitButton.textContent = "Réessayer";
-    message.textContent = "Impossible de contacter le serveur.";
-  };
-
-  const params = new URLSearchParams({
-    action: "confirmAttendance",
-    invite_id: guestId,
-    fete_id: currentFeteId,
-    confirmation: selectedAttendance,
-    motif_absence: selectedAttendance === "NON" ? reason : "",
-    callback: callbackName
-  });
-
-  script.src = API_URL + "?" + params.toString();
-
-  document.body.appendChild(script);
+  }
 }
 
-/* CONNEXION DE L'INVITÉ */
 
-getElement("loginForm").addEventListener("submit", function(e) {
-  e.preventDefault();
+// =====================================================
+// 10. CONNEXION DE L'INVITÉ
+// =====================================================
 
-  const name = getElement("guestName").value.trim();
-  const error = getElement("errorMessage");
-  const button = getElement("loginButton");
+function initializeLogin() {
 
-  if (!feteId || !name) {
-    error.textContent = "Veuillez saisir votre nom et vérifier votre invitation.";
-    error.style.display = "block";
+  const loginForm = getElement("loginForm");
+
+  if (!loginForm) {
+    console.error("Formulaire loginForm introuvable.");
     return;
   }
 
-  error.style.display = "none";
-  button.disabled = true;
-  button.textContent = "Connexion en cours...";
+  loginForm.addEventListener("submit", async function(event) {
 
-  const callbackName = "loginCallback_" + Date.now();
-  const script = document.createElement("script");
+    event.preventDefault();
 
-  let finished = false;
-function confirmAttendance(response) {
-  const message = document.getElementById("attendanceMessage");
-  const guestId = sessionStorage.getItem("guestId");
-  const feteId = new URLSearchParams(window.location.search).get("fete_id");
+    const nameInput = getElement("guestName");
+    const error = getElement("errorMessage");
+    const submitButton = loginForm.querySelector(
+      'button[type="submit"], input[type="submit"]'
+    );
 
-  if (!guestId || !feteId) {
-    message.textContent =
-      "Veuillez d'abord vous connecter avec votre nom d'invité.";
-    return;
-  }
+    const name = nameInput
+      ? nameInput.value.trim()
+      : "";
 
-  message.textContent = "Enregistrement de votre réponse...";
-
-  api({
-    action: "confirmAttendance",
-    invite_id: guestId,
-    fete_id: feteId,
-    confirmation: response
-  }).then(result => {
-    if (result.success) {
-      message.textContent = response === "OUI"
-        ? "Merci ! Votre présence a été confirmée. 🎉"
-        : "Votre réponse a bien été enregistrée. Merci de nous avoir informés.";
-    } else {
-      message.textContent = result.message || "Une erreur est survenue.";
+    if (error) {
+      error.style.display = "none";
+      error.textContent = "";
     }
-  }).catch(error => {
-    message.textContent = "Impossible d'enregistrer votre réponse. Réessayez.";
+
+    if (!name) {
+
+      if (error) {
+        error.textContent = "Veuillez saisir votre nom.";
+        error.style.display = "block";
+      }
+
+      return;
+    }
+
+    if (!feteId) {
+
+      if (error) {
+        error.textContent = "Identifiant de fête manquant.";
+        error.style.display = "block";
+      }
+
+      return;
+    }
+
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = "Vérification...";
+    }
+
+    try {
+
+      const result = await jsonpRequest({
+        action: "login",
+        nom: name,
+        fete_id: feteId
+      });
+
+      if (result && result.success && result.guest) {
+
+        sessionStorage.setItem(
+          "guestName",
+          result.guest.name
+        );
+
+        sessionStorage.setItem(
+          "guestId",
+          result.guest.id
+        );
+
+        sessionStorage.setItem(
+          "feteId",
+          feteId
+        );
+
+        // On affiche la confirmation avant l'accès aux cadeaux.
+        openAttendanceModal(result.guest.name);
+
+      } else {
+
+        if (error) {
+          error.textContent =
+            result && result.message
+              ? result.message
+              : "Connexion impossible. Vérifiez le nom saisi.";
+
+          error.style.display = "block";
+        }
+      }
+
+    } catch (err) {
+
+      console.error("Erreur connexion invité :", err);
+
+      if (error) {
+        error.textContent =
+          "Impossible de contacter le serveur. Veuillez réessayer.";
+
+        error.style.display = "block";
+      }
+
+    } finally {
+
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = "Accéder à mon invitation";
+      }
+    }
+
   });
 }
-  function cleanup() {
-    if (finished) return;
-    finished = true;
-    clearTimeout(timeout);
-    delete window[callbackName];
-    script.remove();
-    button.disabled = false;
-    button.textContent = "Accéder à la liste des cadeaux →";
-  }
 
-  const timeout = setTimeout(function() {
-    cleanup();
-    error.textContent = "Le serveur ne répond pas. Veuillez réessayer.";
-    error.style.display = "block";
-  }, 15000);
 
-  window[callbackName] = function(result) {
-    cleanup();
+// =====================================================
+// 11. INITIALISATION DE LA PAGE
+// =====================================================
 
-    if (result && result.success && result.guest) {
-      sessionStorage.setItem("guestName", result.guest.name);
-      sessionStorage.setItem("guestId", result.guest.id);
-      sessionStorage.setItem("feteId", feteId);
+document.addEventListener("DOMContentLoaded", function() {
 
-      const destination = new URL(
-        "https://mitch4834.github.io/cadeaux2/espacecadeau.html"
-      );
+  console.log("Fête & Cadeaux : initialisation de la page.");
 
-      destination.searchParams.set("invite_id", result.guest.id);
-      destination.searchParams.set("fete_id", feteId);
+  initializeLogin();
 
-      window.location.href = destination.toString();
-    } else {
-      error.textContent =
-        result && result.message
-          ? result.message
-          : "Connexion impossible. Vérifiez le nom saisi.";
+  loadPublicEvent();
 
-      error.style.display = "block";
-    }
-  };
-
-  script.onerror = function() {
-    cleanup();
-    error.textContent = "Impossible de contacter le serveur.";
-    error.style.display = "block";
-  };
-
-  script.src =
-    API_URL +
-    "?action=login" +
-    "&name=" + encodeURIComponent(name) +
-    "&fete_id=" + encodeURIComponent(feteId) +
-    "&callback=" + encodeURIComponent(callbackName);
-
-  document.body.appendChild(script);
 });
-
-loadPublicEvent();
 </script>
 
 </body>
