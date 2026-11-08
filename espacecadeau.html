@@ -1380,11 +1380,254 @@ function escapeHTML(value) {
 }
 
 /* ==========================================
+   PUBLICITÉS — FÊTE & CADEAUX
+   Connexion au backend Apps Script
+========================================== */
+
+const advertisingTimers = {};
+
+function loadAdvertising(position, containerId) {
+
+  const container = document.getElementById(containerId);
+
+  if (!container) {
+    console.warn("Espace publicitaire introuvable :", containerId);
+    return;
+  }
+
+  const area = container.closest(".advertising-area");
+
+  if (area) {
+    area.style.display = "none";
+  }
+
+  apiRequest({
+    action: "publicAds",
+    position: position,
+    fete_id: feteId
+  })
+
+  .then(result => {
+
+    if (!result.success) {
+      throw new Error(
+        result.message || "Impossible de charger les publicités."
+      );
+    }
+
+    const advertisements = Array.isArray(result.advertisements)
+      ? result.advertisements
+      : [];
+
+    if (!advertisements.length) {
+      if (area) area.style.display = "none";
+      return;
+    }
+
+    // Afficher l'espace publicitaire
+    if (area) area.style.display = "block";
+
+    // Afficher la première publicité
+    renderAdvertising(
+      advertisements,
+      container,
+      0
+    );
+
+    // Arrêter un ancien défilement éventuel
+    if (advertisingTimers[containerId]) {
+      clearInterval(advertisingTimers[containerId]);
+    }
+
+    // Faire défiler les publicités toutes les 6 secondes
+    if (advertisements.length > 1) {
+
+      let currentIndex = 0;
+
+      advertisingTimers[containerId] = setInterval(() => {
+
+        currentIndex++;
+
+        if (currentIndex >= advertisements.length) {
+          currentIndex = 0;
+        }
+
+        renderAdvertising(
+          advertisements,
+          container,
+          currentIndex
+        );
+
+      }, 6000);
+    }
+
+  })
+
+  .catch(error => {
+
+    console.error(
+      "Erreur publicitaire (" + position + ") :",
+      error
+    );
+
+    if (area) area.style.display = "none";
+
+  });
+}
+
+
+/* ==========================================
+   AFFICHAGE D'UNE PUBLICITÉ
+========================================== */
+
+function renderAdvertising(advertisements, container, index) {
+
+  const ad = advertisements[index];
+
+  if (!ad) return;
+
+  container.innerHTML = "";
+
+  const wrapper = document.createElement("div");
+
+  wrapper.style.width = "100%";
+  wrapper.style.textAlign = "center";
+
+  const label = document.createElement("span");
+
+  label.className = "advertising-label";
+  label.textContent = "Publicité";
+
+  wrapper.appendChild(label);
+
+  // Image publicitaire
+  if (ad.image) {
+
+    const image = document.createElement("img");
+
+    image.src = ad.image;
+    image.alt = ad.name || "Publicité";
+    image.loading = "lazy";
+
+    if (ad.url) {
+
+      const imageLink = document.createElement("a");
+
+      imageLink.href = ad.url;
+      imageLink.target = "_blank";
+      imageLink.rel = "noopener noreferrer";
+
+      imageLink.appendChild(image);
+
+      wrapper.appendChild(imageLink);
+
+    } else {
+
+      wrapper.appendChild(image);
+
+    }
+  }
+
+  // Nom de l'annonceur
+  if (ad.name) {
+
+    const name = document.createElement("h3");
+
+    name.textContent = ad.name;
+
+    name.style.margin = "10px 0";
+    name.style.fontSize = "16px";
+    name.style.color = "var(--primary)";
+
+    wrapper.appendChild(name);
+  }
+
+  // Description
+  if (ad.description) {
+
+    const description = document.createElement("p");
+
+    description.textContent = ad.description;
+
+    description.style.margin = "8px 0";
+    description.style.fontSize = "13px";
+    description.style.color = "var(--muted)";
+    description.style.lineHeight = "1.5";
+
+    wrapper.appendChild(description);
+  }
+
+  // Bouton de destination
+  if (ad.url && ad.button) {
+
+    const buttonLink = document.createElement("a");
+
+    buttonLink.href = ad.url;
+    buttonLink.target = "_blank";
+    buttonLink.rel = "noopener noreferrer";
+
+    buttonLink.textContent = ad.button;
+
+    buttonLink.style.display = "inline-block";
+    buttonLink.style.marginTop = "10px";
+    buttonLink.style.padding = "10px 20px";
+    buttonLink.style.borderRadius = "8px";
+    buttonLink.style.background = "var(--primary)";
+    buttonLink.style.color = "#FFFFFF";
+    buttonLink.style.textDecoration = "none";
+    buttonLink.style.fontSize = "12px";
+    buttonLink.style.fontWeight = "bold";
+
+    wrapper.appendChild(buttonLink);
+  }
+
+  // Indicateur si plusieurs publicités
+  if (advertisements.length > 1) {
+
+    const indicator = document.createElement("div");
+
+    indicator.textContent =
+      "Publicité " + (index + 1) +
+      " / " + advertisements.length;
+
+    indicator.style.marginTop = "10px";
+    indicator.style.fontSize = "10px";
+    indicator.style.color = "var(--muted)";
+
+    wrapper.appendChild(indicator);
+  }
+
+  container.appendChild(wrapper);
+}
+
+
+/* ==========================================
+   CHARGEMENT DES DEUX ESPACES
+========================================== */
+
+function initializeGiftPageAdvertising() {
+
+  // Banner situé après la liste des cadeaux
+  loadAdvertising(
+    "haut",
+    "giftPageAdTop"
+  );
+
+  // Banner situé dans le footer
+  loadAdvertising(
+    "bas",
+    "giftPageAdFooter"
+  );
+
+}
+
+/* ==========================================
    DÉMARRAGE
 ========================================== */
 
-initializePage();
 
+initializePage();
+initializeGiftPageAdvertising();
 </script>
 
 </body>
