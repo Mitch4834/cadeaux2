@@ -809,6 +809,7 @@ const palettes = [
     name:"Élégance violette",
     primary:"#712A90",
     secondary:"#F1E8F6",
+    accent:"#D6B77A",
     text:"#35213D",
     background:"#FAF7FC"
   },
@@ -817,6 +818,7 @@ const palettes = [
     name:"Mariage naturel",
     primary:"#71866B",
     secondary:"#E9E1D2",
+    accent:"#C5A46D",
     text:"#344336",
     background:"#FAF9F4"
   },
@@ -825,6 +827,7 @@ const palettes = [
     name:"Douceur romantique",
     primary:"#C66F88",
     secondary:"#F8E6EC",
+    accent:"#D9A45B",
     text:"#573541",
     background:"#FFFAFC"
   },
@@ -833,6 +836,7 @@ const palettes = [
     name:"Bleu céleste",
     primary:"#5489B2",
     secondary:"#E4F0F8",
+    accent:"#D6B77A",
     text:"#29445A",
     background:"#F7FBFE"
   },
@@ -841,6 +845,7 @@ const palettes = [
     name:"Prestige doré",
     primary:"#A77B32",
     secondary:"#F4EBD8",
+    accent:"#D9B45B",
     text:"#493A24",
     background:"#FCFAF5"
   },
@@ -849,6 +854,7 @@ const palettes = [
     name:"Fête colorée",
     primary:"#E87961",
     secondary:"#FCE9E2",
+    accent:"#E5B75C",
     text:"#58372F",
     background:"#FFFAF7"
   }
@@ -893,10 +899,11 @@ const wizard = {
     visibility:"publique",
     purchaseMode:"reservation",
     color:"#712A90",
-    secondaryColor:"#F1E8F6",
-    textColor:"#35213D",
-    backgroundColor:"#FAF7FC",
-    palette:"violet"
+secondaryColor:"#F1E8F6",
+accentColor:"#D6B77A",
+textColor:"#35213D",
+backgroundColor:"#FAF7FC",
+palette:"violet"
   }
 };
 
@@ -905,19 +912,38 @@ function setField(key,value){
 }
 
 function updateWizardTheme(){
-  document.documentElement.style.setProperty("--primary",wizard.data.color);
-  document.documentElement.style.setProperty("--primary-light",wizard.data.secondaryColor);
-  document.documentElement.style.setProperty("--dark",wizard.data.textColor);
-  document.documentElement.style.setProperty("--bg",wizard.data.backgroundColor);
+
+  document.documentElement.style.setProperty(
+    "--primary", wizard.data.color
+  );
+
+  document.documentElement.style.setProperty(
+    "--primary-light", wizard.data.secondaryColor
+  );
+
+  document.documentElement.style.setProperty(
+    "--accent", wizard.data.accentColor
+  );
+
+  document.documentElement.style.setProperty(
+    "--dark", wizard.data.textColor
+  );
+
+  document.documentElement.style.setProperty(
+    "--bg", wizard.data.backgroundColor
+  );
 }
 
 function updatePalette(paletteId){
+
   const palette = palettes.find(p => p.id === paletteId);
+
   if(!palette) return;
 
   wizard.data.palette = palette.id;
   wizard.data.color = palette.primary;
   wizard.data.secondaryColor = palette.secondary;
+  wizard.data.accentColor = palette.accent;
   wizard.data.textColor = palette.text;
   wizard.data.backgroundColor = palette.background;
 
@@ -1116,6 +1142,10 @@ function renderWizard(){
             <div class="palette-colors">
               <span style="background:${p.primary}"></span>
               <span style="background:${p.secondary}"></span>
+              <div class="color-row">
+  <label>Couleur d'accent</label>
+  <input type="color" id="wizAccent" value="${d.accentColor}">
+</div>
               <span style="background:${p.text}"></span>
               <span style="background:${p.background};border:1px solid #ddd"></span>
             </div>
@@ -1182,7 +1212,12 @@ function renderWizard(){
       updateWizardTheme();
       updatePalettePreview();
     });
-
+$("wizAccent").addEventListener("input",e=>{
+  d.accentColor=e.target.value;
+  d.palette="custom";
+  updateWizardTheme();
+  updatePalettePreview();
+});
     $("wizText").addEventListener("input",e=>{
       d.textColor=e.target.value;
       d.palette="custom";
@@ -1419,6 +1454,7 @@ function renderWizardPeople(){
 }
 
 function updatePalettePreview(){
+
   const banner = $("themePreviewBanner");
   const body = $("themePreviewBody");
   const button = $("themePreviewButton");
@@ -1428,8 +1464,9 @@ function updatePalettePreview(){
   banner.style.background = wizard.data.color;
   body.style.background = wizard.data.backgroundColor;
   body.style.color = wizard.data.textColor;
-  button.style.background = wizard.data.color;
-  button.style.color = "#FFFFFF";
+
+  button.style.background = wizard.data.accentColor;
+  button.style.color = wizard.data.textColor;
 }
 
 function validateWizardStep(){
@@ -1561,11 +1598,16 @@ async function createEventFromWizard(){
       visibility:d.visibility,
       purchaseMode:d.purchaseMode,
 
-      // Le backend actuel reçoit déjà le champ color.
-      color:d.color,
+   
+      // Palette complète de l'événement
+color:d.color,
+secondaryColor:d.secondaryColor,
+accentColor:d.accentColor,
+backgroundColor:d.backgroundColor,
+textColor:d.textColor,
 
-      people:JSON.stringify(collectWizardPeople())
-    };
+// Personnes à l'honneur
+people:JSON.stringify(collectWizardPeople())
 
     const result = await api(payload);
 
@@ -1629,10 +1671,11 @@ function resetWizard(){
     visibility:"publique",
     purchaseMode:"reservation",
     color:"#712A90",
-    secondaryColor:"#F1E8F6",
-    textColor:"#35213D",
-    backgroundColor:"#FAF7FC",
-    palette:"violet"
+secondaryColor:"#F1E8F6",
+accentColor:"#D6B77A",
+textColor:"#35213D",
+backgroundColor:"#FAF7FC",
+palette:"violet"
   };
 
   updateWizardTheme();
