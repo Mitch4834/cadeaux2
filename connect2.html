@@ -948,21 +948,83 @@ function showEventError(message) {
 
 function applyEventPalette(event) {
 
-  const palette = {
-    "--primary": getValue(event, "Couleur_Principale", "PrimaryColor", "primaryColor", "ThemeColor"),
-    "--secondary": getValue(event, "Couleur_Secondaire", "SecondaryColor", "secondaryColor"),
-    "--accent": getValue(event, "Couleur_Accent", "AccentColor", "accentColor"),
-    "--background": getValue(event, "Couleur_Fond", "BackgroundColor", "backgroundColor"),
-    "--dark": getValue(event, "Couleur_Texte", "TextColor", "textColor")
+  const defaults = {
+    primary: "#712A90",
+    secondary: "#D8B4E2",
+    accent: "#D6B77A",
+    background: "#F8F4FA",
+    text: "#35213D"
   };
 
-  Object.entries(palette).forEach(([variable, value]) => {
-    if (value && /^#[0-9A-Fa-f]{3,8}$/.test(value)) {
-      document.documentElement.style.setProperty(variable, value);
-    }
-  });
-}
+  const palette = event.palette || {};
 
+  function validColor(value, fallback) {
+    return typeof value === "string" &&
+      /^#[0-9A-Fa-f]{6}$/.test(value)
+      ? value
+      : fallback;
+  }
+
+  const colors = {
+    primary: validColor(
+      event.color || palette.color || palette.primary,
+      defaults.primary
+    ),
+
+    secondary: validColor(
+      event.secondaryColor ||
+      palette.secondaryColor ||
+      palette.secondary,
+      defaults.secondary
+    ),
+
+    accent: validColor(
+      event.accentColor ||
+      palette.accentColor ||
+      palette.accent,
+      defaults.accent
+    ),
+
+    background: validColor(
+      event.backgroundColor ||
+      palette.backgroundColor ||
+      palette.background,
+      defaults.background
+    ),
+
+    text: validColor(
+      event.textColor ||
+      palette.textColor ||
+      palette.text,
+      defaults.text
+    )
+  };
+
+  const root = document.documentElement;
+
+  root.style.setProperty("--primary", colors.primary);
+  root.style.setProperty("--secondary", colors.secondary);
+  root.style.setProperty("--accent", colors.accent);
+  root.style.setProperty("--background", colors.background);
+  root.style.setProperty("--dark", colors.text);
+
+  root.style.setProperty("--primary-hover", colors.primary);
+  root.style.setProperty("--primary-light", colors.secondary);
+  root.style.setProperty("--border", colors.secondary);
+  root.style.setProperty("--gold", colors.accent);
+
+  const surface =
+    `color-mix(in srgb, white 90%, ${colors.background})`;
+
+  const secondaryText =
+    `color-mix(in srgb, ${colors.text} 72%, white)`;
+
+  root.style.setProperty("--surface", surface);
+  root.style.setProperty("--text", secondaryText);
+  root.style.setProperty("--muted", secondaryText);
+
+  console.log("Palette de l'événement appliquée :", colors);
+}
 
 /* =====================================================
    AFFICHAGE DE L'ÉVÉNEMENT
