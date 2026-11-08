@@ -1673,150 +1673,275 @@ function loadAdvertising(position, containerId) {
 }
 
 
+
 /* ==========================================
-   AFFICHAGE D'UNE PUBLICITÉ
+   CARROUSEL PUBLICITAIRE
+   FÊTE & CADEAUX
 ========================================== */
 
-function renderAdvertising(advertisements, container, index) {
+const adCarousels = {};
 
-  const ad = advertisements[index];
+function loadAdvertising(position, containerId) {
 
-  if (!ad) return;
+  const container = document.getElementById(containerId);
 
-  container.innerHTML = "";
+  if (!container) return;
 
-  const wrapper = document.createElement("div");
+  const area = container.closest(".advertising-area");
 
-  wrapper.style.width = "100%";
-  wrapper.style.textAlign = "center";
+  if (area) area.style.display = "none";
 
-  const label = document.createElement("span");
+  apiRequest({
+    action: "publicAds",
+    position: position,
+    fete_id: feteId
+  })
 
-  label.className = "advertising-label";
-  label.textContent = "Publicité";
+  .then(result => {
 
-  wrapper.appendChild(label);
-
-  // Image publicitaire
-  if (ad.image) {
-
-    const image = document.createElement("img");
-
-    image.src = ad.image;
-    image.alt = ad.name || "Publicité";
-    image.loading = "lazy";
-
-    if (ad.url) {
-
-      const imageLink = document.createElement("a");
-
-      imageLink.href = ad.url;
-      imageLink.target = "_blank";
-      imageLink.rel = "noopener noreferrer";
-
-      imageLink.appendChild(image);
-
-      wrapper.appendChild(imageLink);
-
-    } else {
-
-      wrapper.appendChild(image);
-
+    if (!result.success) {
+      throw new Error(result.message || "Erreur publicitaire");
     }
-  }
 
-  // Nom de l'annonceur
-  if (ad.name) {
+    const advertisements = Array.isArray(result.advertisements)
+      ? result.advertisements
+      : [];
 
-    const name = document.createElement("h3");
+    if (!advertisements.length) return;
 
-    name.textContent = ad.name;
+    if (area) area.style.display = "block";
 
-    name.style.margin = "10px 0";
-    name.style.fontSize = "16px";
-    name.style.color = "var(--primary)";
+    createAdvertisingCarousel(
+      advertisements,
+      container,
+      containerId
+    );
 
-    wrapper.appendChild(name);
-  }
+  })
 
-  // Description
-  if (ad.description) {
-
-    const description = document.createElement("p");
-
-    description.textContent = ad.description;
-
-    description.style.margin = "8px 0";
-    description.style.fontSize = "13px";
-    description.style.color = "var(--muted)";
-    description.style.lineHeight = "1.5";
-
-    wrapper.appendChild(description);
-  }
-
-  // Bouton de destination
-  if (ad.url && ad.button) {
-
-    const buttonLink = document.createElement("a");
-
-    buttonLink.href = ad.url;
-    buttonLink.target = "_blank";
-    buttonLink.rel = "noopener noreferrer";
-
-    buttonLink.textContent = ad.button;
-
-    buttonLink.style.display = "inline-block";
-    buttonLink.style.marginTop = "10px";
-    buttonLink.style.padding = "10px 20px";
-    buttonLink.style.borderRadius = "8px";
-    buttonLink.style.background = "var(--primary)";
-    buttonLink.style.color = "#FFFFFF";
-    buttonLink.style.textDecoration = "none";
-    buttonLink.style.fontSize = "12px";
-    buttonLink.style.fontWeight = "bold";
-
-    wrapper.appendChild(buttonLink);
-  }
-
-  // Indicateur si plusieurs publicités
-  if (advertisements.length > 1) {
-
-    const indicator = document.createElement("div");
-
-    indicator.textContent =
-      "Publicité " + (index + 1) +
-      " / " + advertisements.length;
-
-    indicator.style.marginTop = "10px";
-    indicator.style.fontSize = "10px";
-    indicator.style.color = "var(--muted)";
-
-    wrapper.appendChild(indicator);
-  }
-
-  container.appendChild(wrapper);
+  .catch(error => {
+    console.error("Publicité :", error);
+    if (area) area.style.display = "none";
+  });
 }
 
 
 /* ==========================================
-   CHARGEMENT DES DEUX ESPACES
+   CONSTRUCTION DU CARROUSEL
+========================================== */
+
+function createAdvertisingCarousel(ads, container, id) {
+
+  if (adCarousels[id]?.timer) {
+    clearInterval(adCarousels[id].timer);
+  }
+
+  let currentIndex = 0;
+
+  container.innerHTML = "";
+
+  const carousel = document.createElement("div");
+  carousel.className = "advertising-carousel";
+
+  const slidesContainer = document.createElement("div");
+
+  const indicators = document.createElement("div");
+  indicators.className = "ad-indicators";
+
+  const prev = document.createElement("button");
+  prev.className = "ad-arrow ad-prev";
+  prev.type = "button";
+  prev.textContent = "‹";
+  prev.setAttribute("aria-label", "Publicité précédente");
+
+  const next = document.createElement("button");
+  next.className = "ad-arrow ad-next";
+  next.type = "button";
+  next.textContent = "›";
+  next.setAttribute("aria-label", "Publicité suivante");
+
+  ads.forEach((ad, index) => {
+
+    const slide = document.createElement("div");
+    slide.className = "ad-slide";
+
+    const imageUrl = pick(
+      ad,
+      "image",
+      "Image_URL",
+      "image_url"
+    );
+
+    const name = pick(
+      ad,
+      "name",
+      "Nom_Annonceur",
+      "nom_annonceur"
+    );
+
+    const description = pick(
+      ad,
+      "description",
+      "Description"
+    );
+
+    const destination = pick(
+      ad,
+      "url",
+      "URL_Destination",
+      "url_destination"
+    );
+
+    const buttonText = pick(
+      ad,
+      "button",
+      "Bouton"
+    );
+
+    if (imageUrl) {
+
+      const image = document.createElement("img");
+
+      image.className = "ad-slide-image";
+      image.src = imageUrl;
+      image.alt = name || "Publicité";
+      image.loading = "lazy";
+
+      image.onerror = () => {
+        image.style.display = "none";
+      };
+
+      slide.appendChild(image);
+    }
+
+    const content = document.createElement("div");
+    content.className = "ad-slide-content";
+
+    const label = document.createElement("span");
+    label.className = "advertising-label";
+    label.textContent = "PUBLICITÉ";
+
+    const title = document.createElement("h3");
+    title.textContent = name || "Découvrez notre annonceur";
+
+    const text = document.createElement("p");
+    text.textContent = description || "";
+
+    content.append(label, title);
+
+    if (description) {
+      content.appendChild(text);
+    }
+
+    if (destination && buttonText) {
+
+      const link = document.createElement("a");
+
+      link.className = "ad-slide-button";
+      link.href = destination;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = buttonText;
+
+      content.appendChild(link);
+    }
+
+    slide.appendChild(content);
+    slidesContainer.appendChild(slide);
+
+    const indicator = document.createElement("button");
+
+    indicator.className = "ad-indicator";
+    indicator.type = "button";
+    indicator.setAttribute(
+      "aria-label",
+      "Afficher la publicité " + (index + 1)
+    );
+
+    indicator.addEventListener("click", () => {
+      showAdvertisingSlide(index);
+      restartAdvertisingTimer();
+    });
+
+    indicators.appendChild(indicator);
+  });
+
+  function showAdvertisingSlide(index) {
+
+    currentIndex = (index + ads.length) % ads.length;
+
+    slidesContainer.querySelectorAll(".ad-slide")
+      .forEach((slide, i) => {
+        slide.classList.toggle("active", i === currentIndex);
+      });
+
+    indicators.querySelectorAll(".ad-indicator")
+      .forEach((indicator, i) => {
+        indicator.classList.toggle("active", i === currentIndex);
+      });
+  }
+
+  function nextSlide() {
+    showAdvertisingSlide(currentIndex + 1);
+  }
+
+  function previousSlide() {
+    showAdvertisingSlide(currentIndex - 1);
+  }
+
+  function restartAdvertisingTimer() {
+
+    if (adCarousels[id]?.timer) {
+      clearInterval(adCarousels[id].timer);
+    }
+
+    if (ads.length > 1) {
+      adCarousels[id].timer = setInterval(
+        nextSlide,
+        5000
+      );
+    }
+  }
+
+  prev.addEventListener("click", () => {
+    previousSlide();
+    restartAdvertisingTimer();
+  });
+
+  next.addEventListener("click", () => {
+    nextSlide();
+    restartAdvertisingTimer();
+  });
+
+  carousel.appendChild(slidesContainer);
+
+  if (ads.length > 1) {
+    carousel.append(prev, next, indicators);
+  }
+
+  container.appendChild(carousel);
+
+  adCarousels[id] = {
+    timer: null
+  };
+
+  showAdvertisingSlide(0);
+  restartAdvertisingTimer();
+}
+
+
+/* ==========================================
+   INITIALISATION DES DEUX CARROUSELS
 ========================================== */
 
 function initializeGiftPageAdvertising() {
 
-  // Banner situé après la liste des cadeaux
-  loadAdvertising(
-    "haut",
-    "giftPageAdTop"
-  );
+  loadAdvertising("haut", "giftPageAdTop");
 
-  // Banner situé dans le footer
-  loadAdvertising(
-    "bas",
-    "giftPageAdFooter"
-  );
+  loadAdvertising("bas", "giftPageAdFooter");
 
 }
+
 
 /* ==========================================
    DÉMARRAGE
