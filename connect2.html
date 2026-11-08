@@ -662,65 +662,73 @@ button {
 
 </div>
 
-<!-- Fenêtre de confirmation de présence -->
-<div id="attendanceModal" class="attendance-modal hidden">
-  <div class="attendance-box">
 
-    <div class="attendance-icon">💌</div>
+<div class="attendance-box">
 
-    <h2>Votre participation</h2>
+  <div class="attendance-icon">💌</div>
 
-    <p id="attendanceGreeting">
-      Nous sommes heureux de vous compter parmi nos invités !
-    </p>
+  <h2>Votre invitation personnelle</h2>
 
-    <p class="attendance-question">
-      Serez-vous présent(e) à cet événement ?
-    </p>
+  <p id="attendanceGreeting">
+    Bonjour, nous sommes heureux de vous inviter !
+  </p>
 
-    <div class="attendance-buttons">
-      <button
-        type="button"
-        class="attendance-yes"
-        onclick="selectAttendance('OUI')">
-        ✅ Oui, je serai présent(e)
-      </button>
+  <div class="popup-event-details">
+    <h3 id="popupEventName">Nom de l'événement</h3>
 
-      <button
-        type="button"
-        class="attendance-no"
-        onclick="selectAttendance('NON')">
-        ❌ Non, je ne pourrai pas venir
-      </button>
+    <div class="popup-detail">
+      📅 <span id="popupEventDate">Date de l'événement</span>
     </div>
 
-    <div id="absenceReasonContainer" class="hidden">
-      <label for="absenceReason">
-        Quel est le motif de votre absence ?
-      </label>
-
-      <textarea
-        id="absenceReason"
-        placeholder="Expliquez brièvement le motif de votre absence..."
-        rows="4"></textarea>
-
-      <div class="gift-note">
-        🎁 Même si vous ne pouvez pas assister à l'événement,
-        vous pouvez toujours réserver et envoyer un cadeau !
-      </div>
+    <div class="popup-detail">
+      🕒 <span id="popupEventTime">Heure de l'événement</span>
     </div>
 
-    <p id="attendanceMessage"></p>
+    <div class="popup-detail">
+      📍 <span id="popupEventVenue">Lieu de l'événement</span>
+    </div>
+  </div>
 
-    <button
-      type="button"
-      id="attendanceSubmit"
-      class="attendance-submit hidden"
-      onclick="submitAttendance()">
-      Confirmer ma réponse
+  <p class="attendance-question">
+    Serez-vous présent(e) à cet événement ?
+  </p>
+
+  <div class="attendance-buttons">
+    <button type="button" class="attendance-yes"
+      onclick="selectAttendance('OUI')">
+      ✅ Oui, je serai présent(e)
     </button>
 
+    <button type="button" class="attendance-no"
+      onclick="selectAttendance('NON')">
+      ❌ Non, je ne pourrai pas venir
+    </button>
   </div>
+
+  <div id="absenceReasonContainer" class="hidden">
+    <label for="absenceReason">
+      Quel est le motif de votre absence ?
+    </label>
+
+    <textarea id="absenceReason"
+      placeholder="Expliquez brièvement le motif de votre absence..."
+      rows="4"></textarea>
+
+    <div class="gift-note">
+      🎁 Même si vous ne pouvez pas assister à l'événement,
+      vous pouvez toujours réserver et envoyer un cadeau !
+    </div>
+  </div>
+
+  <p id="attendanceMessage"></p>
+
+  <button type="button" id="attendanceSubmit"
+    class="attendance-submit hidden"
+    onclick="submitAttendance()">
+    Confirmer ma réponse
+  </button>
+
+</div>
 </div>
 
 <script>
