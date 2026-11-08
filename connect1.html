@@ -909,7 +909,36 @@ button:disabled {
       Nous ne pouvons pas afficher les informations de cette fête.
     </p>
   </div>
+<!-- ESPACE PUBLICITAIRE INFÉRIEUR -->
+<section class="advertising-section advertising-bottom"
+  id="bottomAdvertising">
 
+  <div class="advertising-heading">
+    <span>Découvrez nos annonceurs</span>
+    <small>PUBLICITÉ</small>
+  </div>
+
+  <div class="ad-carousel">
+
+    <button class="ad-arrow" type="button"
+      onclick="moveAd('bottom',-1)" aria-label="Publicité précédente">
+      ‹
+    </button>
+
+    <div class="ad-viewport">
+      <div class="ad-track" id="bottomAdsTrack"></div>
+    </div>
+
+    <button class="ad-arrow" type="button"
+      onclick="moveAd('bottom',1)" aria-label="Publicité suivante">
+      ›
+    </button>
+
+  </div>
+
+  <div class="ad-indicators" id="bottomAdsIndicators"></div>
+
+</section>
 <!-- POP-UP DE CONFIRMATION DE PRESENCE -->
 <div id="attendanceModal" class="attendance-modal hidden">
   <div class="attendance-box">
@@ -967,36 +996,7 @@ button:disabled {
     </button>
 
   </div>
-  <!-- ESPACE PUBLICITAIRE INFÉRIEUR -->
-<section class="advertising-section advertising-bottom"
-  id="bottomAdvertising">
-
-  <div class="advertising-heading">
-    <span>Découvrez nos annonceurs</span>
-    <small>PUBLICITÉ</small>
-  </div>
-
-  <div class="ad-carousel">
-
-    <button class="ad-arrow" type="button"
-      onclick="moveAd('bottom',-1)" aria-label="Publicité précédente">
-      ‹
-    </button>
-
-    <div class="ad-viewport">
-      <div class="ad-track" id="bottomAdsTrack"></div>
-    </div>
-
-    <button class="ad-arrow" type="button"
-      onclick="moveAd('bottom',1)" aria-label="Publicité suivante">
-      ›
-    </button>
-
-  </div>
-
-  <div class="ad-indicators" id="bottomAdsIndicators"></div>
-
-</section>
+  
 <!-- ESPACE PUBLICITAIRE SUPÉRIEUR -->
 <section class="advertising-section" id="topAdvertising">
 
