@@ -1154,7 +1154,11 @@ function displayEvent(data) {
   );
 
   setText("eventDate", formatEventDate(event.date || event.Date_Evenement));
-  setText("eventTime", event.time || event.Heure_Evenement, "Non précisée");
+  setText(
+  "eventTime",
+  formatEventTime(event.time || event.Heure_Evenement),
+  "Non précisée"
+);
   setText("eventVenue", event.place || event.venue || event.Lieu, "Non précisé");
 
   setText("eventAddress", event.address || event.Adresse, "Non précisée");
@@ -1175,7 +1179,11 @@ function displayEvent(data) {
 
   setText("popupEventName", event.name || event.Nom_Evenement);
   setText("popupEventDate", formatEventDate(event.date || event.Date_Evenement));
-  setText("popupEventTime", event.time || event.Heure_Evenement, "Non précisée");
+  setText(
+  "popupEventTime",
+  formatEventTime(event.time || event.Heure_Evenement),
+  "Non précisée"
+);
   setText("popupEventVenue", event.place || event.venue || event.Lieu, "Non précisé");
 
   const description = event.description || event.Description;
@@ -1664,7 +1672,29 @@ async function loadPublicAdvertisements() {
     renderAdCarousel("bottom");
   }
 }
+function formatEventTime(value) {
+  if (!value) return "";
 
+  // Si la valeur est déjà un objet Date
+  if (value instanceof Date) {
+    return value.toLocaleTimeString("fr-FR", {
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZone: "America/Port-au-Prince"
+    });
+  }
+
+  const text = String(value);
+
+  // Format contenant une date de 1899
+  const match = text.match(/(\d{1,2}):(\d{2})/);
+
+  if (match) {
+    return match[1].padStart(2, "0") + ":" + match[2];
+  }
+
+  return text;
+}
 /* ================================================
    INITIALISATION
 ================================================ */
