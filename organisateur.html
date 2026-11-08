@@ -1566,6 +1566,7 @@ function collectWizardPeople(){
     .filter(p=>p.firstName || p.lastName);
 }
 
+
 async function createEventFromWizard(){
 
   const btn = $("wizardNext");
@@ -1574,40 +1575,48 @@ async function createEventFromWizard(){
 
   const d = wizard.data;
 
-  try{
+  try {
 
     const payload = {
-      action:"createEvent",
+      action: "createEvent",
 
-      name:d.name.trim(),
-      type:d.type,
-      date:d.date,
-      time:d.time,
-      theme:d.theme,
-      place:d.place,
-      address:d.address,
-      city:d.city,
-      country:d.country,
-      deadline:d.deadline,
-      description:d.description,
+      name: d.name.trim(),
+      type: d.type,
+      date: d.date,
+      time: d.time,
+      theme: d.theme,
+      place: d.place,
+      address: d.address,
+      city: d.city,
+      country: d.country,
+      deadline: d.deadline,
+      description: d.description,
 
-      organizer:d.organizer,
-      phone:d.phone,
-      email:d.email,
+      organizer: d.organizer,
+      phone: d.phone,
+      email: d.email,
 
-      visibility:d.visibility,
-      purchaseMode:d.purchaseMode,
+      visibility: d.visibility,
+      purchaseMode: d.purchaseMode,
 
-   
       // Palette complète de l'événement
-color:d.color,
-secondaryColor:d.secondaryColor,
-accentColor:d.accentColor,
-backgroundColor:d.backgroundColor,
-textColor:d.textColor,
+      color: d.color,
+      secondaryColor: d.secondaryColor,
+      accentColor: d.accentColor,
+      backgroundColor: d.backgroundColor,
+      textColor: d.textColor,
 
-// Personnes à l'honneur
-people:JSON.stringify(collectWizardPeople())
+      // Personnes à l'honneur
+      people: JSON.stringify(collectWizardPeople())
+    };
+
+    console.log("Palette envoyée :", {
+      color: d.color,
+      secondaryColor: d.secondaryColor,
+      accentColor: d.accentColor,
+      backgroundColor: d.backgroundColor,
+      textColor: d.textColor
+    });
 
     const result = await api(payload);
 
@@ -1627,19 +1636,20 @@ people:JSON.stringify(collectWizardPeople())
 
     resetWizard();
 
-    window.scrollTo({top:0,behavior:"smooth"});
+    window.scrollTo({top:0, behavior:"smooth"});
 
-  }catch(err){
+  } catch(err) {
 
-    showStatus("globalStatus",err.message,"error");
+    showStatus("globalStatus", err.message, "error");
 
-  }finally{
+  } finally {
 
     btn.disabled = false;
     renderWizard();
 
   }
 }
+
 
 function resetWizard(){
 
