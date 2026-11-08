@@ -1262,38 +1262,44 @@ function goToAd(position, index) {
 /**
  * Récupérer les publicités depuis le backend.
  */
+
 async function loadPublicAdvertisements() {
 
-  console.log("Chargement des publicités depuis le backend...");
+  console.log("Chargement des publicités...");
 
-  try {
+  // Les deux requêtes sont indépendantes.
+  const [topResult, bottomResult] = await Promise.all([
 
-    // Deux demandes indépendantes :
-    // une pour le haut et une pour le bas.
-    const requests = await Promise.all([
+    jsonpRequest({
+      action: "publicAds",
+      position: "haut",
+      fete_id: feteId || ""
+    }).catch(error => {
+      console.error("Erreur publicité HAUT :", error);
+      return null;
+    }),
 
-      jsonpRequest({
-        action: "publicAds",
-        position: "haut",
-        fete_id: feteId || ""
-      }),
+    jsonpRequest({
+      action: "publicAds",
+      position: "bas",
+      fete_id: feteId || ""
+    }).catch(error => {
+      console.error("Erreur publicité BAS :", error);
+      return null;
+    })
 
-      jsonpRequest({
-        action: "publicAds",
-        position: "bas",
-        fete_id: feteId || ""
-      })
+  ]);
 
-    ]);
+  console.log("Réponse backend HAUT :", topResult);
+  console.log("Réponse backend BAS :", bottomResult);
 
-    const topResult = requests[0];
-    const bottomResult = requests[1];
-
-    // Publicités du haut.
-    if (topResult && topResult.success &&
-        Array.isArray(topResult.advertisements)) {
-
-      adData.top = topResult.advertisements
+  // Traitement des publicités du haut.
+  adData.top = (
+    topResult &&
+    topResult.success &&
+    Array.isArray(topResult.advertisements)
+  )
+    ? topResult.advertisements
         .filter(ad => safeAdUrl(ad.url))
         .map(ad => ({
           id: ad.id,
@@ -1302,17 +1308,16 @@ async function loadPublicAdvertisements() {
           image: ad.image || "",
           url: ad.url,
           button: ad.button || "Découvrir"
-        }));
+        }))
+    : [];
 
-    } else {
-      adData.top = [];
-    }
-
-    // Publicités du bas.
-    if (bottomResult && bottomResult.success &&
-        Array.isArray(bottomResult.advertisements)) {
-
-      adData.bottom = bottomResult.advertisements
+  // Traitement des publicités du bas.
+  adData.bottom = (
+    bottomResult &&
+    bottomResult.success &&
+    Array.isArray(bottomResult.advertisements)
+  )
+    ? bottomResult.advertisements
         .filter(ad => safeAdUrl(ad.url))
         .map(ad => ({
           id: ad.id,
@@ -1321,47 +1326,46 @@ async function loadPublicAdvertisements() {
           image: ad.image || "",
           url: ad.url,
           button: ad.button || "Découvrir"
-        }));
+        }))
+    : [];
 
-    } else {
-      adData.bottom = [];
-    }
+  // Réinitialisation des carrousels.
+  adIndexes.top = 0;
+  adIndexes.bottom = 0;
 
-    // Réinitialiser les index.
-    adIndexes.top = 0;
-    adIndexes.bottom = 0;
+  // Affichage indépendant.
+  renderAdCarousel("top");
+  renderAdCarousel("bottom");
 
-    // Afficher les deux carrousels.
-    renderAdCarousel("top");
-    renderAdCarousel("bottom");
+  console.log("Résultat final des publicités :", {
+    haut: adData.top.length,
+    bas: adData.bottom.length,
+    sectionBas: !!document.getElementById("bottomAdvertising"),
+    contenuBas: document.getElementById("bottomAdsTrack")?.innerHTML
+  });
 
-    console.log("Publicités chargées :", {
-      haut: adData.top.length,
-      bas: adData.bottom.length
-    });
+  // Gestion du défilement automatique.
+  if (advertisingTimer) {
+    clearInterval(advertisingTimer);
+    advertisingTimer = null;
+  }
 
-    // Arrêter un ancien intervalle s'il existe.
-    if (advertisingTimer) {
-      clearInterval(advertisingTimer);
-      advertisingTimer = null;
-    }
+  if (adData.top.length > 1 || adData.bottom.length > 1) {
 
-    // Défilement automatique uniquement
-    // lorsqu'un emplacement contient plusieurs publicités.
-    if (adData.top.length > 1 || adData.bottom.length > 1) {
+    advertisingTimer = setInterval(() => {
 
-      advertisingTimer = setInterval(() => {
+      if (adData.top.length > 1) {
+        moveAd("top", 1);
+      }
 
-        if (adData.top.length > 1) {
-          moveAd("top", 1);
-        }
+      if (adData.bottom.length > 1) {
+        moveAd("bottom", 1);
+      }
 
-        if (adData.bottom.length > 1) {
-          moveAd("bottom", 1);
-        }
+    }, 5000);
+  }
+}
 
-      }, 5000);
-    }
 
   } catch (error) {
 
