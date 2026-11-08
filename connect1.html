@@ -1263,108 +1263,103 @@ function goToAd(position, index) {
  * Récupérer les publicités depuis le backend.
  */
 
+
 async function loadPublicAdvertisements() {
 
   console.log("Chargement des publicités...");
 
-  // Les deux requêtes sont indépendantes.
-  const [topResult, bottomResult] = await Promise.all([
+  try {
 
-    jsonpRequest({
-      action: "publicAds",
-      position: "haut",
-      fete_id: feteId || ""
-    }).catch(error => {
-      console.error("Erreur publicité HAUT :", error);
-      return null;
-    }),
+    const [topResult, bottomResult] = await Promise.all([
 
-    jsonpRequest({
-      action: "publicAds",
-      position: "bas",
-      fete_id: feteId || ""
-    }).catch(error => {
-      console.error("Erreur publicité BAS :", error);
-      return null;
-    })
+      jsonpRequest({
+        action: "publicAds",
+        position: "haut",
+        fete_id: feteId || ""
+      }).catch(error => {
+        console.error("Erreur publicité HAUT :", error);
+        return null;
+      }),
 
-  ]);
+      jsonpRequest({
+        action: "publicAds",
+        position: "bas",
+        fete_id: feteId || ""
+      }).catch(error => {
+        console.error("Erreur publicité BAS :", error);
+        return null;
+      })
 
-  console.log("Réponse backend HAUT :", topResult);
-  console.log("Réponse backend BAS :", bottomResult);
+    ]);
 
-  // Traitement des publicités du haut.
-  adData.top = (
-    topResult &&
-    topResult.success &&
-    Array.isArray(topResult.advertisements)
-  )
-    ? topResult.advertisements
-        .filter(ad => safeAdUrl(ad.url))
-        .map(ad => ({
-          id: ad.id,
-          name: ad.name || "Annonceur",
-          description: ad.description || "",
-          image: ad.image || "",
-          url: ad.url,
-          button: ad.button || "Découvrir"
-        }))
-    : [];
+    console.log("Réponse backend HAUT :", topResult);
+    console.log("Réponse backend BAS :", bottomResult);
 
-  // Traitement des publicités du bas.
-  adData.bottom = (
-    bottomResult &&
-    bottomResult.success &&
-    Array.isArray(bottomResult.advertisements)
-  )
-    ? bottomResult.advertisements
-        .filter(ad => safeAdUrl(ad.url))
-        .map(ad => ({
-          id: ad.id,
-          name: ad.name || "Annonceur",
-          description: ad.description || "",
-          image: ad.image || "",
-          url: ad.url,
-          button: ad.button || "Découvrir"
-        }))
-    : [];
+    // Publicités du haut.
+    adData.top = (
+      topResult &&
+      topResult.success &&
+      Array.isArray(topResult.advertisements)
+    )
+      ? topResult.advertisements
+          .filter(ad => safeAdUrl(ad.url))
+          .map(ad => ({
+            id: ad.id,
+            name: ad.name || "Annonceur",
+            description: ad.description || "",
+            image: ad.image || "",
+            url: ad.url,
+            button: ad.button || "Découvrir"
+          }))
+      : [];
 
-  // Réinitialisation des carrousels.
-  adIndexes.top = 0;
-  adIndexes.bottom = 0;
+    // Publicités du bas.
+    adData.bottom = (
+      bottomResult &&
+      bottomResult.success &&
+      Array.isArray(bottomResult.advertisements)
+    )
+      ? bottomResult.advertisements
+          .filter(ad => safeAdUrl(ad.url))
+          .map(ad => ({
+            id: ad.id,
+            name: ad.name || "Annonceur",
+            description: ad.description || "",
+            image: ad.image || "",
+            url: ad.url,
+            button: ad.button || "Découvrir"
+          }))
+      : [];
 
-  // Affichage indépendant.
-  renderAdCarousel("top");
-  renderAdCarousel("bottom");
+    adIndexes.top = 0;
+    adIndexes.bottom = 0;
 
-  console.log("Résultat final des publicités :", {
-    haut: adData.top.length,
-    bas: adData.bottom.length,
-    sectionBas: !!document.getElementById("bottomAdvertising"),
-    contenuBas: document.getElementById("bottomAdsTrack")?.innerHTML
-  });
+    // Affichage des deux emplacements.
+    renderAdCarousel("top");
+    renderAdCarousel("bottom");
 
-  // Gestion du défilement automatique.
-  if (advertisingTimer) {
-    clearInterval(advertisingTimer);
-    advertisingTimer = null;
-  }
+    console.log("Résultat final :", {
+      haut: adData.top.length,
+      bas: adData.bottom.length,
+      sectionBas: !!document.getElementById("bottomAdvertising"),
+      contenuBas: document.getElementById("bottomAdsTrack")?.innerHTML
+    });
 
-  if (adData.top.length > 1 || adData.bottom.length > 1) {
+    if (advertisingTimer) {
+      clearInterval(advertisingTimer);
+      advertisingTimer = null;
+    }
 
-    advertisingTimer = setInterval(() => {
+    if (adData.top.length > 1 || adData.bottom.length > 1) {
 
-      if (adData.top.length > 1) {
-        moveAd("top", 1);
-      }
+      advertisingTimer = setInterval(() => {
 
-      if (adData.bottom.length > 1) {
-        moveAd("bottom", 1);
-      }
+        if (adData.top.length > 1) moveAd("top", 1);
 
-    }, 5000);
-  }
+        if (adData.bottom.length > 1) moveAd("bottom", 1);
 
+      }, 5000);
+    }
 
   } catch (error) {
 
@@ -1377,6 +1372,7 @@ async function loadPublicAdvertisements() {
     renderAdCarousel("bottom");
   }
 }
+
 
 
 /**
