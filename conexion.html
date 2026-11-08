@@ -1,0 +1,928 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Espace organisateur | Fête & Cadeaux</title>
+
+<!-- Google Identity Services -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<style>
+:root {
+  --primary: #712A90;
+  --secondary: #8D4EAA;
+  --accent: #D6B77A;
+  --light: #F3EAFA;
+  --background: #FAF7FC;
+  --dark: #35213D;
+  --muted: #786B7D;
+  --white: #FFFFFF;
+  --border: #E9DDED;
+  --success: #23865B;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--background);
+  color: var(--dark);
+  min-height: 100vh;
+}
+
+.page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.presentation {
+  background: linear-gradient(145deg, #712A90, #4E1D65);
+  color: white;
+  padding: 55px 8%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.presentation::before,
+.presentation::after {
+  content: "";
+  position: absolute;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 50%;
+}
+
+.presentation::before {
+  width: 400px;
+  height: 400px;
+  right: -160px;
+  top: 10%;
+}
+
+.presentation::after {
+  width: 280px;
+  height: 280px;
+  right: -90px;
+  top: 22%;
+}
+
+.brand {
+  font-size: 25px;
+  font-weight: 800;
+  letter-spacing: -.7px;
+  position: relative;
+  z-index: 1;
+}
+
+.brand span {
+  color: var(--accent);
+}
+
+.presentation-content {
+  max-width: 490px;
+  position: relative;
+  z-index: 1;
+  margin: 60px 0;
+}
+
+.presentation h1 {
+  font-size: clamp(34px, 4vw, 51px);
+  line-height: 1.12;
+  margin-bottom: 22px;
+}
+
+.presentation-content > p {
+  color: rgba(255,255,255,.83);
+  line-height: 1.8;
+  font-size: 16px;
+}
+
+.features {
+  margin-top: 35px;
+  display: grid;
+  gap: 20px;
+}
+
+.feature {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 15px;
+}
+
+.feature-icon {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: rgba(255,255,255,.14);
+  font-size: 20px;
+}
+
+.presentation-footer {
+  color: rgba(255,255,255,.65);
+  font-size: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.auth-area {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 45px 25px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 440px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 36px;
+  box-shadow: 0 12px 45px rgba(65, 27, 79, .07);
+}
+
+.mobile-brand {
+  display: none;
+  color: var(--primary);
+  font-weight: 800;
+  font-size: 23px;
+  margin-bottom: 28px;
+}
+
+.auth-heading {
+  margin-bottom: 25px;
+}
+
+.auth-heading h2 {
+  font-size: 27px;
+  margin-bottom: 9px;
+}
+
+.auth-heading p {
+  color: var(--muted);
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+.tabs {
+  display: flex;
+  padding: 5px;
+  background: var(--light);
+  border-radius: 11px;
+  margin-bottom: 25px;
+}
+
+.tab {
+  flex: 1;
+  border: 0;
+  background: transparent;
+  padding: 12px 8px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.tab.active {
+  background: white;
+  color: var(--primary);
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
+}
+
+.google-button-container {
+  display: flex;
+  justify-content: center;
+  min-height: 44px;
+}
+
+.google-button-container > div {
+  max-width: 100%;
+}
+
+.separator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #A69AAA;
+  font-size: 12px;
+  margin: 23px 0;
+}
+
+.separator::before,
+.separator::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.form-group {
+  margin-bottom: 17px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  outline: none;
+  font-size: 14px;
+  background: #FFFEFF;
+  transition: .2s;
+}
+
+.form-group input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(113,42,144,.09);
+}
+
+.password-wrap {
+  position: relative;
+}
+
+.password-wrap input {
+  padding-right: 48px;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-size: 17px;
+}
+
+.submit-button {
+  width: 100%;
+  border: 0;
+  padding: 15px;
+  background: var(--primary);
+  color: white;
+  border-radius: 9px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: .2s;
+  margin-top: 5px;
+}
+
+.submit-button:hover {
+  background: var(--secondary);
+  transform: translateY(-1px);
+}
+
+.forgot {
+  display: block;
+  text-align: right;
+  color: var(--primary);
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: -5px;
+  margin-bottom: 19px;
+}
+
+.forgot:hover,
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.terms {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.6;
+  text-align: center;
+  margin-top: 22px;
+}
+
+.terms a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.message {
+  display: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.5;
+  margin-bottom: 17px;
+}
+
+.message.error {
+  display: block;
+  background: #FFF0F0;
+  color: #B42318;
+}
+
+.message.success {
+  display: block;
+  background: #EAF8F0;
+  color: var(--success);
+}
+
+.hidden {
+  display: none !important;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 20px;
+  color: var(--primary);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+@media(max-width: 850px) {
+  .page {
+    grid-template-columns: 1fr;
+  }
+
+  .presentation {
+    display: none;
+  }
+
+  .mobile-brand {
+    display: block;
+  }
+
+  .auth-area {
+    padding: 35px 18px;
+    align-items: flex-start;
+  }
+
+  .auth-card {
+    margin-top: 10px;
+    padding: 27px 22px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+  <!-- PRESENTATION -->
+  <section class="presentation">
+
+    <div class="brand">
+      Fête <span>&</span> Cadeaux
+    </div>
+
+    <div class="presentation-content">
+      <h1>Chaque événement mérite une organisation exceptionnelle.</h1>
+
+      <p>
+        Créez vos événements, invitez vos proches et simplifiez
+        la gestion des cadeaux depuis un espace unique.
+      </p>
+
+      <div class="features">
+
+        <div class="feature">
+          <div class="feature-icon">🎉</div>
+          <div>Créez et personnalisez vos événements</div>
+        </div>
+
+        <div class="feature">
+          <div class="feature-icon">💌</div>
+          <div>Envoyez des invitations personnalisées</div>
+        </div>
+
+        <div class="feature">
+          <div class="feature-icon">🎁</div>
+          <div>Permettez aux invités de réserver leurs cadeaux</div>
+        </div>
+
+        <div class="feature">
+          <div class="feature-icon">📊</div>
+          <div>Suivez les confirmations et les réservations</div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="presentation-footer">
+      © 2026 Fête & Cadeaux — Tous droits réservés.
+    </div>
+
+  </section>
+
+
+  <!-- AUTHENTIFICATION -->
+  <main class="auth-area">
+
+    <div class="auth-card">
+
+      <div class="mobile-brand">
+        Fête <span style="color:#D6B77A">&</span> Cadeaux
+      </div>
+
+      <!-- CONNEXION / INSCRIPTION -->
+      <div id="authSection">
+
+        <div class="auth-heading">
+          <h2 id="headingTitle">Bienvenue !</h2>
+          <p id="headingDescription">
+            Connectez-vous pour accéder à votre espace organisateur.
+          </p>
+        </div>
+
+        <div id="message" class="message"></div>
+
+        <div class="tabs">
+          <button class="tab active" id="loginTab" onclick="showLogin()">
+            Connexion
+          </button>
+
+          <button class="tab" id="registerTab" onclick="showRegister()">
+            Inscription
+          </button>
+        </div>
+
+        <!-- GOOGLE -->
+        <div class="google-button-container" id="googleButton"></div>
+
+        <div class="separator">
+          OU AVEC VOTRE ADRESSE E-MAIL
+        </div>
+
+        <!-- FORMULAIRE INSCRIPTION -->
+        <form id="registerForm" class="hidden">
+
+          <div class="form-group">
+            <label for="registerName">Nom complet</label>
+            <input
+              type="text"
+              id="registerName"
+              placeholder="Votre nom complet"
+              autocomplete="name"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="registerEmail">Adresse e-mail</label>
+            <input
+              type="email"
+              id="registerEmail"
+              placeholder="exemple@email.com"
+              autocomplete="email"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="registerPassword">Mot de passe</label>
+
+            <div class="password-wrap">
+              <input
+                type="password"
+                id="registerPassword"
+                placeholder="Minimum 8 caractères"
+                minlength="8"
+                autocomplete="new-password"
+                required
+              >
+              <button type="button" class="toggle-password"
+                onclick="togglePassword('registerPassword', this)">👁</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword">Confirmer le mot de passe</label>
+
+            <div class="password-wrap">
+              <input
+                type="password"
+                id="confirmPassword"
+                placeholder="Répétez votre mot de passe"
+                minlength="8"
+                autocomplete="new-password"
+                required
+              >
+              <button type="button" class="toggle-password"
+                onclick="togglePassword('confirmPassword', this)">👁</button>
+            </div>
+          </div>
+
+          <button type="submit" class="submit-button">
+            Créer mon compte
+          </button>
+
+        </form>
+
+
+        <!-- FORMULAIRE CONNEXION -->
+        <form id="loginForm">
+
+          <div class="form-group">
+            <label for="loginEmail">Adresse e-mail</label>
+            <input
+              type="email"
+              id="loginEmail"
+              placeholder="exemple@email.com"
+              autocomplete="email"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="loginPassword">Mot de passe</label>
+
+            <div class="password-wrap">
+              <input
+                type="password"
+                id="loginPassword"
+                placeholder="Votre mot de passe"
+                autocomplete="current-password"
+                required
+              >
+              <button type="button" class="toggle-password"
+                onclick="togglePassword('loginPassword', this)">👁</button>
+            </div>
+          </div>
+
+          <a href="#" class="forgot" onclick="showForgot(); return false;">
+            Mot de passe oublié ?
+          </a>
+
+          <button type="submit" class="submit-button">
+            Me connecter
+          </button>
+
+        </form>
+
+        <p class="terms">
+          En continuant, vous acceptez nos
+          <a href="#">conditions d'utilisation</a>
+          et notre
+          <a href="#">politique de confidentialité</a>.
+        </p>
+
+      </div>
+
+
+      <!-- MOT DE PASSE OUBLIE -->
+      <div id="forgotSection" class="hidden">
+
+        <a class="back-link" onclick="backToLogin()">
+          ← Retour à la connexion
+        </a>
+
+        <div class="auth-heading">
+          <h2>Mot de passe oublié ?</h2>
+          <p>
+            Entrez votre adresse e-mail. Nous vous aiderons à
+            retrouver l'accès à votre compte.
+          </p>
+        </div>
+
+        <div id="forgotMessage" class="message"></div>
+
+        <form id="forgotForm">
+
+          <div class="form-group">
+            <label for="forgotEmail">Adresse e-mail</label>
+            <input
+              type="email"
+              id="forgotEmail"
+              placeholder="exemple@email.com"
+              required
+            >
+          </div>
+
+          <button type="submit" class="submit-button">
+            Envoyer le lien de réinitialisation
+          </button>
+
+        </form>
+
+      </div>
+
+    </div>
+  </main>
+
+</div>
+
+
+<script>
+
+/*
+====================================================
+CONFIGURATION GOOGLE
+====================================================
+
+Remplace cette valeur par ton identifiant client OAuth
+créé dans Google Cloud Console.
+*/
+
+const GOOGLE_CLIENT_ID = "TON_CLIENT_ID_GOOGLE.apps.googleusercontent.com";
+
+
+/*
+====================================================
+INITIALISATION GOOGLE
+====================================================
+*/
+
+function initializeGoogle() {
+
+  if (!window.google || !google.accounts) {
+    setTimeout(initializeGoogle, 500);
+    return;
+  }
+
+  if (
+    !GOOGLE_CLIENT_ID ||
+    GOOGLE_CLIENT_ID.startsWith("TON_CLIENT_ID")
+  ) {
+    showMessage(
+      "Ajoute ton identifiant client Google pour activer la connexion Google.",
+      "error"
+    );
+    return;
+  }
+
+  google.accounts.id.initialize({
+    client_id: GOOGLE_CLIENT_ID,
+    callback: handleGoogleCredential
+  });
+
+  google.accounts.id.renderButton(
+    document.getElementById("googleButton"),
+    {
+      theme: "outline",
+      size: "large",
+      shape: "rectangular",
+      text: "continue_with",
+      width: 340
+    }
+  );
+}
+
+window.addEventListener("load", initializeGoogle);
+
+
+/*
+====================================================
+GESTION DE L'INTERFACE
+====================================================
+*/
+
+function showLogin() {
+
+  document.getElementById("loginForm").classList.remove("hidden");
+  document.getElementById("registerForm").classList.add("hidden");
+
+  document.getElementById("loginTab").classList.add("active");
+  document.getElementById("registerTab").classList.remove("active");
+
+  document.getElementById("headingTitle").textContent = "Bienvenue !";
+
+  document.getElementById("headingDescription").textContent =
+    "Connectez-vous pour accéder à votre espace organisateur.";
+
+  clearMessage();
+}
+
+function showRegister() {
+
+  document.getElementById("registerForm").classList.remove("hidden");
+  document.getElementById("loginForm").classList.add("hidden");
+
+  document.getElementById("registerTab").classList.add("active");
+  document.getElementById("loginTab").classList.remove("active");
+
+  document.getElementById("headingTitle").textContent =
+    "Créer mon compte";
+
+  document.getElementById("headingDescription").textContent =
+    "Rejoignez Fête & Cadeaux et gérez vos événements.";
+
+  clearMessage();
+}
+
+function showForgot() {
+
+  document.getElementById("authSection").classList.add("hidden");
+  document.getElementById("forgotSection").classList.remove("hidden");
+}
+
+function backToLogin() {
+
+  document.getElementById("forgotSection").classList.add("hidden");
+  document.getElementById("authSection").classList.remove("hidden");
+
+  showLogin();
+}
+
+function togglePassword(id, button) {
+
+  const input = document.getElementById(id);
+
+  if (input.type === "password") {
+    input.type = "text";
+    button.textContent = "🙈";
+  } else {
+    input.type = "password";
+    button.textContent = "👁";
+  }
+}
+
+function showMessage(message, type = "error") {
+
+  const element = document.getElementById("message");
+
+  element.textContent = message;
+  element.className = "message " + type;
+}
+
+function clearMessage() {
+
+  const element = document.getElementById("message");
+
+  element.textContent = "";
+  element.className = "message";
+}
+
+
+/*
+====================================================
+CONNEXION GOOGLE
+====================================================
+
+Le jeton Google doit être vérifié côté serveur.
+Ne jamais considérer le nom ou l'adresse e-mail
+transmis par le navigateur comme une preuve d'identité.
+*/
+
+async function handleGoogleCredential(response) {
+
+  if (!response || !response.credential) {
+    showMessage("Impossible de récupérer votre identité Google.");
+    return;
+  }
+
+  /*
+    À raccorder au backend :
+
+    Envoyer response.credential au serveur.
+    Le serveur devra vérifier le jeton Google,
+    récupérer le sub, l'e-mail vérifié et le nom,
+    puis créer ou retrouver le compte organisateur.
+
+    Ne pas stocker le jeton comme mot de passe.
+  */
+
+  showMessage(
+    "Google a transmis votre identité. La vérification du compte doit maintenant être raccordée au backend.",
+    "success"
+  );
+
+  console.log("Identité Google reçue. Jeton non affiché.");
+}
+
+
+/*
+====================================================
+INSCRIPTION PAR E-MAIL
+====================================================
+*/
+
+document.getElementById("registerForm")
+.addEventListener("submit", async function(e) {
+
+  e.preventDefault();
+  clearMessage();
+
+  const name = document.getElementById("registerName").value.trim();
+  const email = document.getElementById("registerEmail").value.trim();
+  const password = document.getElementById("registerPassword").value;
+  const confirmation = document.getElementById("confirmPassword").value;
+
+  if (password.length < 8) {
+    showMessage("Le mot de passe doit contenir au moins 8 caractères.");
+    return;
+  }
+
+  if (password !== confirmation) {
+    showMessage("Les deux mots de passe ne correspondent pas.");
+    return;
+  }
+
+  /*
+    À raccorder au service d'authentification.
+
+    registerOrganizer({
+      name: name,
+      email: email,
+      password: password
+    });
+
+    Le mot de passe ne doit jamais être enregistré
+    en clair dans Google Sheets.
+  */
+
+  showMessage(
+    "Le formulaire est prêt. L'inscription sera activée après le raccordement du backend.",
+    "success"
+  );
+
+});
+
+
+/*
+====================================================
+CONNEXION PAR E-MAIL
+====================================================
+*/
+
+document.getElementById("loginForm")
+.addEventListener("submit", async function(e) {
+
+  e.preventDefault();
+  clearMessage();
+
+  const email = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("loginPassword").value;
+
+  /*
+    À raccorder au service d'authentification.
+
+    loginOrganizer({
+      email: email,
+      password: password
+    });
+
+    Le serveur doit vérifier le mot de passe
+    et délivrer une session sécurisée.
+  */
+
+  showMessage(
+    "Le formulaire est prêt. La connexion sera activée après le raccordement du backend.",
+    "success"
+  );
+
+});
+
+
+/*
+====================================================
+MOT DE PASSE OUBLIE
+====================================================
+*/
+
+document.getElementById("forgotForm")
+.addEventListener("submit", async function(e) {
+
+  e.preventDefault();
+
+  const email = document.getElementById("forgotEmail").value.trim();
+  const message = document.getElementById("forgotMessage");
+
+  /*
+    À raccorder au système de réinitialisation :
+    envoi d'un lien sécurisé, à durée limitée,
+    à l'adresse e-mail du compte.
+  */
+
+  message.textContent =
+    "La récupération du mot de passe sera activée après la configuration du backend.";
+
+  message.className = "message success";
+
+});
+
+</script>
+
+</body>
+</html>
+
