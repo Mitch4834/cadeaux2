@@ -1,0 +1,1508 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Votre invitation personnelle | Fête & Cadeaux</title>
+<meta name="description" content="Vous avez reçu une invitation personnelle sur Fête & Cadeaux.">
+
+<style>
+:root {
+  --primary: #712A90;
+  --secondary: #D8B4E2;
+  --accent: #D6B77A;
+  --background: #F8F4FA;
+  --dark: #35213D;
+  --text: #6F6474;
+  --white: #FFFFFF;
+  --surface: #FFFFFF;
+  --border: #E5D8EC;
+  --primary-hover: #8D4EAA;
+  --primary-light: #F3EAFA;
+  --gold: var(--accent);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--background);
+  color: var(--dark);
+  line-height: 1.6;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.page {
+  width: min(1050px, 94%);
+  margin: auto;
+  padding-bottom: 35px;
+}
+
+.brand {
+  text-align: center;
+  padding: 25px 10px 18px;
+}
+
+.brand h1 {
+  margin: 0;
+  color: var(--primary);
+  font-size: 27px;
+  letter-spacing: .5px;
+}
+
+.brand p {
+  margin: 3px 0 0;
+  color: var(--text);
+  font-size: 13px;
+}
+
+.section-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 25px;
+  margin: 18px 0;
+  box-shadow: 0 5px 20px rgba(53, 33, 61, .045);
+}
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: 22px;
+  padding: 55px 25px;
+  text-align: center;
+  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+  color: white;
+}
+
+.hero::before,
+.hero::after {
+  content: "✦";
+  position: absolute;
+  color: var(--accent);
+  font-size: 55px;
+  opacity: .55;
+}
+
+.hero::before {
+  top: 10px;
+  left: 25px;
+}
+
+.hero::after {
+  right: 25px;
+  bottom: 5px;
+}
+
+.hero-label {
+  display: inline-block;
+  border: 1px solid rgba(255,255,255,.5);
+  border-radius: 30px;
+  padding: 5px 15px;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.hero h2 {
+  font-family: Georgia, serif;
+  font-size: clamp(30px, 6vw, 48px);
+  margin: 18px 0 8px;
+  line-height: 1.2;
+}
+
+.hero p {
+  max-width: 650px;
+  margin: auto;
+  opacity: .93;
+}
+
+.event-type {
+  color: var(--accent);
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 13px;
+}
+
+.section-title {
+  color: var(--primary);
+  font-family: Georgia, serif;
+  font-size: 23px;
+  margin: 0 0 15px;
+  text-align: center;
+}
+
+.section-description {
+  color: var(--text);
+  text-align: center;
+  margin: -5px auto 20px;
+  max-width: 700px;
+}
+
+.people-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+.person-card {
+  background: var(--primary-light);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 17px;
+  text-align: center;
+}
+
+.person-icon {
+  font-size: 30px;
+}
+
+.person-card h3 {
+  margin: 7px 0 2px;
+  color: var(--primary);
+  font-size: 17px;
+}
+
+.person-card p {
+  margin: 0;
+  color: var(--text);
+  font-size: 13px;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 13px;
+}
+
+.detail-item {
+  padding: 15px;
+  border-radius: 12px;
+  background: var(--primary-light);
+  border-left: 4px solid var(--accent);
+}
+
+.detail-item strong {
+  display: block;
+  color: var(--primary);
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.detail-item span {
+  color: var(--dark);
+  overflow-wrap: anywhere;
+}
+
+.invitation-message {
+  background: var(--primary-light);
+  border-radius: 14px;
+  padding: 22px;
+  text-align: center;
+  color: var(--dark);
+  white-space: pre-line;
+}
+
+.guest-card {
+  text-align: center;
+  border: 2px solid var(--secondary);
+  background: linear-gradient(145deg, #fff, var(--primary-light));
+}
+
+.guest-card .guest-icon {
+  font-size: 36px;
+}
+
+.guest-card h2 {
+  color: var(--primary);
+  font-family: Georgia, serif;
+  margin: 5px 0;
+  font-size: 27px;
+}
+
+.guest-name {
+  color: var(--primary);
+  font-weight: bold;
+}
+
+.guest-status {
+  display: inline-block;
+  padding: 7px 15px;
+  border-radius: 25px;
+  background: #fff;
+  border: 1px solid var(--border);
+  color: var(--primary);
+  font-size: 13px;
+  margin: 10px 0;
+}
+
+.primary-button,
+.secondary-button {
+  display: inline-block;
+  border: none;
+  border-radius: 30px;
+  padding: 13px 24px;
+  font-weight: bold;
+  transition: .2s;
+}
+
+.primary-button {
+  color: white;
+  background: var(--primary);
+}
+
+.primary-button:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.secondary-button {
+  color: var(--primary);
+  background: white;
+  border: 1px solid var(--border);
+}
+
+.button-area {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.ad-section {
+  margin: 18px 0;
+  text-align: center;
+}
+
+.ad-title {
+  font-size: 11px;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.ad-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.ad-card {
+  display: block;
+  text-decoration: none;
+  color: var(--dark);
+  border: 1px solid var(--border);
+  background: white;
+  border-radius: 13px;
+  overflow: hidden;
+  text-align: left;
+}
+
+.ad-card img {
+  display: block;
+  width: 100%;
+  height: 125px;
+  object-fit: cover;
+}
+
+.ad-card div {
+  padding: 10px;
+}
+
+.ad-card strong {
+  color: var(--primary);
+  font-size: 14px;
+}
+
+.ad-card p {
+  font-size: 12px;
+  margin: 4px 0;
+  color: var(--text);
+}
+
+.footer {
+  text-align: center;
+  padding: 25px 10px;
+  color: var(--text);
+  font-size: 12px;
+}
+
+.footer strong {
+  color: var(--primary);
+}
+
+/* Chargement et erreurs */
+
+.loading-box,
+.error-box {
+  text-align: center;
+  margin: 60px auto;
+  max-width: 550px;
+  padding: 30px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+}
+
+.loading-spinner {
+  width: 38px;
+  height: 38px;
+  border: 4px solid var(--primary-light);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  margin: 0 auto 15px;
+  animation: spin .8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.error-box h2 {
+  color: #a83232;
+}
+
+/* Fenêtre de confirmation */
+
+.attendance-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(35, 20, 42, .76);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  overflow-y: auto;
+}
+
+.attendance-box {
+  width: min(480px, 100%);
+  background: white;
+  border-radius: 20px;
+  padding: 28px 23px;
+  text-align: center;
+  box-shadow: 0 15px 50px rgba(0,0,0,.25);
+  animation: modalIn .25s ease-out;
+}
+
+@keyframes modalIn {
+  from { transform: translateY(15px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.attendance-icon {
+  font-size: 42px;
+}
+
+.attendance-box h2 {
+  color: var(--primary);
+  font-family: Georgia, serif;
+  margin: 5px 0 8px;
+}
+
+.attendance-question {
+  font-weight: bold;
+  margin: 18px 0;
+}
+
+.attendance-buttons {
+  display: grid;
+  gap: 10px;
+}
+
+.attendance-buttons button {
+  border: none;
+  border-radius: 30px;
+  padding: 13px;
+  font-weight: bold;
+}
+
+.attendance-yes {
+  color: white;
+  background: #39834c;
+}
+
+.attendance-no {
+  color: white;
+  background: #a84646;
+}
+
+#absenceReasonContainer {
+  text-align: left;
+  margin-top: 18px;
+}
+
+#absenceReasonContainer label {
+  display: block;
+  font-weight: bold;
+  color: var(--primary);
+  margin-bottom: 7px;
+}
+
+#absenceReason {
+  width: 100%;
+  resize: vertical;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  font: inherit;
+}
+
+.gift-note {
+  background: var(--primary-light);
+  border-radius: 10px;
+  padding: 11px;
+  margin-top: 10px;
+  font-size: 12px;
+}
+
+.attendance-submit {
+  width: 100%;
+  margin-top: 17px;
+  border: none;
+  border-radius: 30px;
+  background: var(--primary);
+  color: white;
+  padding: 13px;
+  font-weight: bold;
+}
+
+.attendance-submit:disabled {
+  opacity: .6;
+  cursor: wait;
+}
+
+#attendanceMessage {
+  font-size: 13px;
+  color: #a83232;
+  margin: 10px 0 0;
+}
+
+@media(max-width: 600px) {
+  .section-card {
+    padding: 19px 15px;
+  }
+
+  .hero {
+    padding: 42px 18px;
+  }
+
+  .brand h1 {
+    font-size: 23px;
+  }
+
+  .attendance-box {
+    padding: 24px 17px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+  <header class="brand">
+    <h1>Fête &amp; Cadeaux</h1>
+    <p>Chaque événement mérite une attention particulière</p>
+  </header>
+
+  <div id="loadingEvent" class="loading-box">
+    <div class="loading-spinner"></div>
+    <strong>Préparation de votre invitation...</strong>
+    <p>Veuillez patienter quelques instants.</p>
+  </div>
+
+  <div id="eventError" class="error-box hidden">
+    <div style="font-size:40px">💌</div>
+    <h2>Invitation indisponible</h2>
+    <p id="eventErrorMessage">
+      Nous ne pouvons pas afficher cette invitation.
+    </p>
+  </div>
+
+  <main id="eventPage" class="hidden">
+
+    <!-- Publicité supérieure -->
+    <section class="ad-section" id="topAdvertising">
+      <div class="ad-title">Nos partenaires</div>
+      <div class="ad-list" id="topAdsList"></div>
+    </section>
+
+    <!-- Présentation de l'événement -->
+    <section class="hero">
+      <span class="hero-label">Vous êtes invité(e)</span>
+      <div class="event-type" id="eventType"></div>
+      <h2 id="eventName">Notre événement</h2>
+      <p id="eventHeroDescription"></p>
+    </section>
+
+    <!-- Personnes à l'honneur -->
+    <section class="section-card" id="peopleSection">
+      <h2 class="section-title">À l'honneur</h2>
+      <p class="section-description">
+        Cet événement est organisé pour célébrer un moment spécial.
+      </p>
+      <div class="people-grid" id="peopleContainer"></div>
+    </section>
+
+    <!-- Informations pratiques -->
+    <section class="section-card">
+      <h2 class="section-title">Les informations de l'événement</h2>
+
+      <div class="details-grid">
+        <div class="detail-item">
+          <strong>📅 Date</strong>
+          <span id="eventDate">À préciser</span>
+        </div>
+
+        <div class="detail-item">
+          <strong>🕒 Heure</strong>
+          <span id="eventTime">À préciser</span>
+        </div>
+
+        <div class="detail-item">
+          <strong>📍 Lieu</strong>
+          <span id="eventVenue">À préciser</span>
+        </div>
+
+        <div class="detail-item">
+          <strong>🏠 Adresse</strong>
+          <span id="eventAddress">À préciser</span>
+        </div>
+
+        <div class="detail-item">
+          <strong>🌆 Ville</strong>
+          <span id="eventCity">À préciser</span>
+        </div>
+
+        <div class="detail-item">
+          <strong>🌍 Pays</strong>
+          <span id="eventCountry">À préciser</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Message de l'organisateur -->
+    <section class="section-card">
+      <h2 class="section-title">Un message pour vous</h2>
+      <div class="invitation-message" id="eventMessage">
+        Nous serions heureux de vous compter parmi nous pour ce moment spécial.
+      </div>
+    </section>
+
+    <!-- Invitation personnelle -->
+    <section class="section-card guest-card">
+      <div class="guest-icon">💌</div>
+      <p>Cette invitation vous est personnellement adressée</p>
+      <h2 id="guestGreeting">Bonjour !</h2>
+      <p>
+        Nous avons le plaisir de vous inviter à
+        <strong id="guestEventName">cet événement</strong>.
+      </p>
+
+      <div id="guestStatus" class="guest-status hidden"></div>
+
+      <div class="button-area">
+        <button
+          type="button"
+          id="openAttendanceButton"
+          class="primary-button"
+          onclick="openAttendanceModal()">
+          Confirmer ma présence
+        </button>
+
+        <button
+          type="button"
+          id="goToGiftsButton"
+          class="primary-button hidden"
+          onclick="goToGiftPage()">
+          🎁 Accéder aux cadeaux
+        </button>
+      </div>
+    </section>
+
+    <!-- Informations complémentaires -->
+    <section class="section-card" id="additionalSection">
+      <h2 class="section-title">Un moment à partager</h2>
+      <p class="section-description" id="additionalInformation">
+        Nous espérons vous retrouver pour célébrer ensemble ce beau moment.
+      </p>
+    </section>
+
+    <!-- Publicité inférieure -->
+    <section class="ad-section" id="bottomAdvertising">
+      <div class="ad-title">Découvrez nos partenaires</div>
+      <div class="ad-list" id="bottomAdsList"></div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <strong>Fête &amp; Cadeaux</strong>
+    <p>Une invitation, une attention, un souvenir.</p>
+  </footer>
+
+</div>
+
+<!-- Fenêtre de confirmation de présence -->
+<div id="attendanceModal" class="attendance-modal hidden">
+  <div class="attendance-box">
+
+    <div class="attendance-icon">💌</div>
+
+    <h2>Votre participation</h2>
+
+    <p id="attendanceGreeting">
+      Nous sommes heureux de vous compter parmi nos invités !
+    </p>
+
+    <p class="attendance-question">
+      Serez-vous présent(e) à cet événement ?
+    </p>
+
+    <div class="attendance-buttons">
+      <button
+        type="button"
+        class="attendance-yes"
+        onclick="selectAttendance('OUI')">
+        ✅ Oui, je serai présent(e)
+      </button>
+
+      <button
+        type="button"
+        class="attendance-no"
+        onclick="selectAttendance('NON')">
+        ❌ Non, je ne pourrai pas venir
+      </button>
+    </div>
+
+    <div id="absenceReasonContainer" class="hidden">
+      <label for="absenceReason">
+        Quel est le motif de votre absence ?
+      </label>
+
+      <textarea
+        id="absenceReason"
+        placeholder="Expliquez brièvement le motif de votre absence..."
+        rows="4"></textarea>
+
+      <div class="gift-note">
+        🎁 Même si vous ne pouvez pas assister à l'événement,
+        vous pouvez toujours réserver et envoyer un cadeau !
+      </div>
+    </div>
+
+    <p id="attendanceMessage"></p>
+
+    <button
+      type="button"
+      id="attendanceSubmit"
+      class="attendance-submit hidden"
+      onclick="submitAttendance()">
+      Confirmer ma réponse
+    </button>
+
+  </div>
+</div>
+
+<script>
+/* =====================================================
+   CONFIGURATION
+===================================================== */
+
+const API_URL =
+  "https://script.google.com/macros/s/AKfycbzYJfU2zvkx44mUpPUzp5uV9bbacd61dfwrWY1oLXDDAZgfdw1W0BTAyBODXQj1GuwG/exec";
+
+const GIFT_PAGE_URL =
+  "https://mitch4834.github.io/cadeaux2/espacecadeau.html";
+
+const params = new URLSearchParams(window.location.search);
+
+const feteId = params.get("fete_id");
+const inviteId = params.get("invite_id");
+
+let currentGuest = null;
+let currentEvent = null;
+let selectedAttendance = null;
+let attendanceSubmitting = false;
+
+
+/* =====================================================
+   REQUÊTES JSONP
+===================================================== */
+
+function jsonpRequest(requestParams, timeoutDuration = 15000) {
+
+  return new Promise((resolve, reject) => {
+
+    const callbackName =
+      "jsonpCallback_" +
+      Date.now() +
+      "_" +
+      Math.floor(Math.random() * 100000);
+
+    const script = document.createElement("script");
+    const url = new URL(API_URL);
+
+    Object.entries(requestParams).forEach(([key, value]) => {
+      url.searchParams.set(key, value);
+    });
+
+    url.searchParams.set("callback", callbackName);
+
+    let finished = false;
+
+    const timeout = setTimeout(() => {
+      finish();
+      reject(new Error("Le serveur ne répond pas. Veuillez réessayer."));
+    }, timeoutDuration);
+
+    function finish() {
+      if (finished) return;
+
+      finished = true;
+      clearTimeout(timeout);
+
+      delete window[callbackName];
+
+      if (script.parentNode) {
+        script.parentNode.removeChild(script);
+      }
+    }
+
+    window[callbackName] = function(data) {
+      finish();
+      resolve(data);
+    };
+
+    script.onerror = function() {
+      finish();
+      reject(new Error("Impossible de contacter le serveur."));
+    };
+
+    url.searchParams.set("callback", callbackName);
+    script.src = url.toString();
+
+    document.body.appendChild(script);
+
+  });
+}
+
+
+/* =====================================================
+   OUTILS D'AFFICHAGE
+===================================================== */
+
+function getValue(object, ...keys) {
+
+  if (!object) return "";
+
+  for (const key of keys) {
+    const value = object[key];
+
+    if (value !== undefined && value !== null && value !== "") {
+      return value;
+    }
+  }
+
+  return "";
+}
+
+function setText(id, value, fallback = "À préciser") {
+
+  const element = document.getElementById(id);
+
+  if (!element) return;
+
+  element.textContent =
+    value !== undefined && value !== null && value !== ""
+      ? value
+      : fallback;
+}
+
+function formatEventDate(value) {
+
+  if (!value) return "À préciser";
+
+  const date = new Date(value);
+
+  if (isNaN(date.getTime())) return value;
+
+  return date.toLocaleDateString("fr-FR", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric"
+  });
+}
+
+function showEventError(message) {
+
+  document.getElementById("loadingEvent").classList.add("hidden");
+  document.getElementById("eventPage").classList.add("hidden");
+  document.getElementById("eventError").classList.remove("hidden");
+
+  setText("eventErrorMessage", message, "Cette invitation est indisponible.");
+}
+
+
+/* =====================================================
+   PERSONNALISATION DES COULEURS
+===================================================== */
+
+function applyEventPalette(event) {
+
+  const palette = {
+    "--primary": getValue(event, "Couleur_Principale", "PrimaryColor", "primaryColor", "ThemeColor"),
+    "--secondary": getValue(event, "Couleur_Secondaire", "SecondaryColor", "secondaryColor"),
+    "--accent": getValue(event, "Couleur_Accent", "AccentColor", "accentColor"),
+    "--background": getValue(event, "Couleur_Fond", "BackgroundColor", "backgroundColor"),
+    "--dark": getValue(event, "Couleur_Texte", "TextColor", "textColor")
+  };
+
+  Object.entries(palette).forEach(([variable, value]) => {
+    if (value && /^#[0-9A-Fa-f]{3,8}$/.test(value)) {
+      document.documentElement.style.setProperty(variable, value);
+    }
+  });
+}
+
+
+/* =====================================================
+   AFFICHAGE DE L'ÉVÉNEMENT
+===================================================== */
+
+function displayEvent(data) {
+
+  const event =
+    data.event ||
+    data.fete ||
+    data.evenement ||
+    data.data?.event ||
+    data;
+
+  if (!event) {
+    throw new Error("Les informations de l'événement sont introuvables.");
+  }
+
+  currentEvent = event;
+
+  applyEventPalette(event);
+
+  const eventName = getValue(
+    event,
+    "Nom_Evenement",
+    "nom_evenement",
+    "event_name",
+    "name"
+  );
+
+  setText(
+    "eventType",
+    getValue(event, "Type_Evenement", "type_evenement", "event_type"),
+    "Événement spécial"
+  );
+
+  setText("eventName", eventName, "Notre événement");
+
+  setText(
+    "eventHeroDescription",
+    getValue(
+      event,
+      "Description",
+      "description",
+      "Presentation",
+      "Présentation de l'événement"
+    ),
+    "Nous avons le plaisir de vous inviter à partager ce moment."
+  );
+
+  setText(
+    "eventDate",
+    formatEventDate(
+      getValue(event, "Date_Evenement", "date_evenement", "event_date")
+    )
+  );
+
+  setText(
+    "eventTime",
+    getValue(event, "Heure_Evenement", "heure_evenement", "event_time")
+  );
+
+  setText(
+    "eventVenue",
+    getValue(event, "Lieu", "lieu", "venue")
+  );
+
+  setText(
+    "eventAddress",
+    getValue(event, "Adresse", "adresse", "address")
+  );
+
+  setText(
+    "eventCity",
+    getValue(event, "Ville", "ville", "city")
+  );
+
+  setText(
+    "eventCountry",
+    getValue(event, "Pays", "pays", "country")
+  );
+
+  setText(
+    "eventMessage",
+    getValue(
+      event,
+      "Message_Invitation",
+      "message_invitation",
+      "Message",
+      "message"
+    ),
+    "Nous serions heureux de vous compter parmi nous pour ce moment spécial."
+  );
+
+  setText(
+    "additionalInformation",
+    getValue(
+      event,
+      "Informations_Complementaires",
+      "Informations_Complémentaires",
+      "informations_complementaires"
+    ),
+    "Nous espérons vous retrouver pour célébrer ensemble ce beau moment."
+  );
+
+  setText("guestEventName", eventName, "cet événement");
+
+  const people =
+    data.people ||
+    data.personnes ||
+    data.personnesFete ||
+    data.personnes_fete ||
+    data.data?.people ||
+    [];
+
+  displayPeople(people);
+
+  document.getElementById("loadingEvent").classList.add("hidden");
+  document.getElementById("eventPage").classList.remove("hidden");
+}
+
+
+/* =====================================================
+   AFFICHAGE DES PERSONNES À L'HONNEUR
+===================================================== */
+
+function displayPeople(people) {
+
+  const container = document.getElementById("peopleContainer");
+  const section = document.getElementById("peopleSection");
+
+  container.innerHTML = "";
+
+  if (!Array.isArray(people) || people.length === 0) {
+    section.classList.add("hidden");
+    return;
+  }
+
+  section.classList.remove("hidden");
+
+  people.forEach(person => {
+
+    const name = getValue(
+      person,
+      "Nom",
+      "Nom_Personne",
+      "nom",
+      "name"
+    );
+
+    const role = getValue(
+      person,
+      "Role",
+      "Rôle",
+      "Lien",
+      "role"
+    );
+
+    const card = document.createElement("div");
+    card.className = "person-card";
+
+    const icon = document.createElement("div");
+    icon.className = "person-icon";
+    icon.textContent = "🌟";
+
+    const title = document.createElement("h3");
+    title.textContent = name || "Personne à l'honneur";
+
+    const description = document.createElement("p");
+    description.textContent = role || "";
+
+    card.appendChild(icon);
+    card.appendChild(title);
+    card.appendChild(description);
+
+    container.appendChild(card);
+  });
+}
+
+
+/* =====================================================
+   IDENTIFICATION DE L'INVITÉ PAR SON LIEN
+===================================================== */
+
+async function initializePersonalInvitation() {
+
+  if (!feteId || !inviteId) {
+    showEventError(
+      "Votre lien personnel est incomplet. Veuillez contacter l'organisateur."
+    );
+    return;
+  }
+
+  try {
+
+    const results = await Promise.all([
+
+      jsonpRequest({
+        action: "publicEvent",
+        fete_id: feteId
+      }),
+
+      jsonpRequest({
+        action: "guestByLink",
+        fete_id: feteId,
+        invite_id: inviteId
+      })
+
+    ]);
+
+    const eventResult = results[0];
+    const guestResult = results[1];
+
+    if (!eventResult || eventResult.success !== true) {
+      throw new Error(
+        eventResult?.message || "Impossible de charger cet événement."
+      );
+    }
+
+    if (
+      !guestResult ||
+      guestResult.success !== true ||
+      !guestResult.guest
+    ) {
+      throw new Error(
+        guestResult?.message ||
+        "Ce lien personnel est invalide ou a été désactivé."
+      );
+    }
+
+    currentGuest = guestResult.guest;
+
+    if (
+      currentGuest.event_id &&
+      currentGuest.event_id !== feteId
+    ) {
+      throw new Error("Cette invitation ne correspond pas à cet événement.");
+    }
+
+    // Afficher les informations de l'événement.
+    displayEvent(eventResult);
+
+    // Enregistrer les informations de l'invité.
+    sessionStorage.setItem("guestId", currentGuest.id);
+    sessionStorage.setItem("guestName", currentGuest.name);
+    sessionStorage.setItem("feteId", feteId);
+
+    // Afficher son nom.
+    setText(
+      "guestGreeting",
+      "Bonjour " + currentGuest.name + " !",
+      "Bonjour !"
+    );
+
+    setText(
+      "attendanceGreeting",
+      "Bonjour " + currentGuest.name +
+      ", nous sommes heureux de vous compter parmi nos invités !"
+    );
+
+    // Vérifier sa réponse précédente.
+    const attendance = String(
+      currentGuest.attendance || "EN_ATTENTE"
+    ).trim().toUpperCase();
+
+    if (attendance === "OUI" || attendance === "NON") {
+
+      showAttendanceStatus(attendance);
+
+    } else {
+
+      // Une seule fenêtre : celle de confirmation de présence.
+      setTimeout(() => {
+        openAttendanceModal();
+      }, 400);
+
+    }
+
+  } catch (error) {
+
+    console.error("Erreur invitation personnelle :", error);
+
+    showEventError(
+      error.message ||
+      "Une erreur est survenue lors du chargement de votre invitation."
+    );
+
+  }
+}
+
+
+/* =====================================================
+   STATUT DE CONFIRMATION
+===================================================== */
+
+function showAttendanceStatus(status) {
+
+  const statusElement = document.getElementById("guestStatus");
+
+  statusElement.classList.remove("hidden");
+
+  if (status === "OUI") {
+
+    statusElement.textContent = "✅ Votre présence est confirmée";
+
+  } else {
+
+    statusElement.textContent = "ℹ️ Vous avez indiqué votre absence";
+
+  }
+
+  document.getElementById("openAttendanceButton").classList.add("hidden");
+  document.getElementById("goToGiftsButton").classList.remove("hidden");
+}
+
+
+/* =====================================================
+   FENÊTRE DE CONFIRMATION
+===================================================== */
+
+function openAttendanceModal() {
+
+  if (!currentGuest) return;
+
+  selectedAttendance = null;
+
+  document.getElementById("absenceReasonContainer").classList.add("hidden");
+  document.getElementById("attendanceSubmit").classList.add("hidden");
+
+  document.getElementById("absenceReason").value = "";
+  document.getElementById("attendanceMessage").textContent = "";
+
+  setText(
+    "attendanceGreeting",
+    "Bonjour " + currentGuest.name +
+    ", nous sommes heureux de vous compter parmi nos invités !"
+  );
+
+  document.getElementById("attendanceModal").classList.remove("hidden");
+}
+
+
+function selectAttendance(choice) {
+
+  selectedAttendance = choice;
+
+  const absenceContainer =
+    document.getElementById("absenceReasonContainer");
+
+  const submitButton =
+    document.getElementById("attendanceSubmit");
+
+  const message =
+    document.getElementById("attendanceMessage");
+
+  message.textContent = "";
+
+  if (choice === "NON") {
+
+    absenceContainer.classList.remove("hidden");
+
+  } else {
+
+    absenceContainer.classList.add("hidden");
+
+  }
+
+  submitButton.classList.remove("hidden");
+}
+
+
+/* =====================================================
+   ENREGISTRER LA RÉPONSE
+===================================================== */
+
+async function submitAttendance() {
+
+  if (attendanceSubmitting) return;
+
+  if (!currentGuest || !feteId || !inviteId) {
+    document.getElementById("attendanceMessage").textContent =
+      "Votre invitation n'a pas pu être vérifiée.";
+    return;
+  }
+
+  if (!selectedAttendance) {
+    document.getElementById("attendanceMessage").textContent =
+      "Veuillez sélectionner votre réponse.";
+    return;
+  }
+
+  const reason = document
+    .getElementById("absenceReason")
+    .value
+    .trim();
+
+  if (selectedAttendance === "NON" && !reason) {
+    document.getElementById("attendanceMessage").textContent =
+      "Veuillez indiquer le motif de votre absence.";
+    return;
+  }
+
+  const submitButton =
+    document.getElementById("attendanceSubmit");
+
+  attendanceSubmitting = true;
+  submitButton.disabled = true;
+  submitButton.textContent = "Enregistrement en cours...";
+
+  try {
+
+    const result = await jsonpRequest({
+
+      action: "confirmAttendance",
+
+      invite_id: inviteId,
+      fete_id: feteId,
+
+      confirmation: selectedAttendance,
+
+      motif_absence:
+        selectedAttendance === "NON" ? reason : ""
+
+    });
+
+    if (!result || result.success !== true) {
+      throw new Error(
+        result?.message || "Votre réponse n'a pas pu être enregistrée."
+      );
+    }
+
+    currentGuest.attendance = selectedAttendance;
+
+    document.getElementById("attendanceModal").classList.add("hidden");
+
+    showAttendanceStatus(selectedAttendance);
+
+    // Redirection vers la liste des cadeaux.
+    setTimeout(() => {
+      goToGiftPage();
+    }, 1200);
+
+  } catch (error) {
+
+    document.getElementById("attendanceMessage").textContent =
+      error.message || "Une erreur est survenue.";
+
+    submitButton.disabled = false;
+    submitButton.textContent = "Réessayer";
+
+  } finally {
+
+    attendanceSubmitting = false;
+
+  }
+}
+
+
+/* =====================================================
+   ACCÈS À LA LISTE DES CADEAUX
+===================================================== */
+
+function goToGiftPage() {
+
+  if (!inviteId || !feteId) return;
+
+  const destination = new URL(GIFT_PAGE_URL);
+
+  destination.searchParams.set("invite_id", inviteId);
+  destination.searchParams.set("fete_id", feteId);
+
+  window.location.href = destination.toString();
+}
+
+
+/* =====================================================
+   PUBLICITÉS
+===================================================== */
+
+function escapeHTML(value) {
+
+  return String(value || "").replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  })[char]);
+}
+
+function safeAdUrl(value) {
+
+  try {
+
+    const url = new URL(value);
+
+    if (url.protocol === "https:" || url.protocol === "http:") {
+      return url.href;
+    }
+
+  } catch (error) {}
+
+  return "";
+}
+
+function renderAds(ads, containerId) {
+
+  const container = document.getElementById(containerId);
+
+  container.innerHTML = "";
+
+  if (!Array.isArray(ads) || ads.length === 0) {
+    return;
+  }
+
+  ads.forEach(ad => {
+
+    const image = safeAdUrl(
+      getValue(ad, "Image_URL", "image_url", "image")
+    );
+
+    const destination = safeAdUrl(
+      getValue(ad, "URL_Destination", "url_destination", "url")
+    );
+
+    if (!image || !destination) return;
+
+    const name = getValue(
+      ad,
+      "Nom_Annonceur",
+      "nom_annonceur",
+      "Nom",
+      "name"
+    );
+
+    const description = getValue(
+      ad,
+      "Description",
+      "description"
+    );
+
+    const card = document.createElement("a");
+
+    card.className = "ad-card";
+    card.href = destination;
+    card.target = "_blank";
+    card.rel = "noopener noreferrer";
+
+    const img = document.createElement("img");
+    img.src = image;
+    img.alt = name || "Publicité";
+    img.loading = "lazy";
+
+    const content = document.createElement("div");
+
+    const title = document.createElement("strong");
+    title.textContent = name || "Notre partenaire";
+
+    const text = document.createElement("p");
+    text.textContent = description || "";
+
+    content.appendChild(title);
+    content.appendChild(text);
+
+    card.appendChild(img);
+    card.appendChild(content);
+
+    container.appendChild(card);
+
+  });
+
+}
+
+async function loadAdsForPosition(position, containerId) {
+
+  try {
+
+    const result = await jsonpRequest({
+      action: "publicAds",
+      position: position
+    });
+
+    const ads =
+      result.publicites ||
+      result.ads ||
+      result.data ||
+      [];
+
+    renderAds(ads, containerId);
+
+  } catch (error) {
+
+    console.warn("Publicités non disponibles :", position, error);
+
+  }
+
+}
+
+function initializeAdvertising() {
+
+  loadAdsForPosition("haut", "topAdsList");
+  loadAdsForPosition("bas", "bottomAdsList");
+
+}
+
+
+/* =====================================================
+   INITIALISATION
+===================================================== */
+
+document.addEventListener("DOMContentLoaded", function() {
+
+  initializeAdvertising();
+
+  initializePersonalInvitation();
+
+});
+</script>
+
+</body>
+</html>
