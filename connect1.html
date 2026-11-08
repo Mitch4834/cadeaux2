@@ -1040,118 +1040,183 @@ function getElement(id) {
   return document.getElementById(id);
 }
   
-/* =========================================
-   GESTION DES PUBLICITÉS
-========================================= */
 
-// Remplacer les exemples par les publicités réelles.
-const advertisements = [
-  {
-    name: "Annonceur 1",
-    description: "Découvrez nos produits et nos offres.",
-    image: "images/annonceur-1.jpg",
-    url: "https://exemple.com",
-    button: "Découvrir"
-  },
-  {
-    name: "Annonceur 2",
-    description: "Découvrez notre sélection de produits.",
-    image: "images/annonceur-2.jpg",
-    url: "https://exemple.com",
-    button: "Voir les produits"
-  },
-  {
-    name: "Annonceur 3",
-    description: "Une offre spéciale à découvrir.",
-    image: "images/annonceur-3.jpg",
-    url: "https://exemple.com",
-    button: "En savoir plus"
-  }
-];
+/*******************************************************
+ * FÊTE & CADEAUX — PUBLICITÉS DYNAMIQUES
+ * Les publicités sont chargées depuis Google Sheets
+ * via le backend Google Apps Script.
+ *******************************************************/
 
+// Publicités séparées par emplacement.
+const adData = {
+  top: [],
+  bottom: []
+};
+
+// Position actuelle de chaque carrousel.
 const adIndexes = {
   top: 0,
   bottom: 0
 };
 
+// Intervalle de défilement automatique.
+let advertisingTimer = null;
+
+
+/**
+ * Vérifie qu'une URL est sécurisée.
+ * Accepte uniquement HTTP et HTTPS.
+ */
+function safeAdUrl(value) {
+  try {
+    const url = new URL(String(value || ""), window.location.href);
+
+    if (url.protocol !== "http:" && url.protocol !== "https:") {
+      return "";
+    }
+
+    return url.href;
+
+  } catch (error) {
+    return "";
+  }
+}
+
+
+/**
+ * Protection des textes injectés dans le HTML.
+ */
+function escapeAdHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[c]);
+}
+
+
+/**
+ * Affiche un carrousel publicitaire.
+ * position = top ou bottom
+ */
 function renderAdCarousel(position) {
 
+  const section = getElement(
+    position === "top"
+      ? "topAdvertising"
+      : "bottomAdvertising"
+  );
+
   const track = getElement(
-    position === "top" ? "topAdsTrack" : "bottomAdsTrack"
+    position === "top"
+      ? "topAdsTrack"
+      : "bottomAdsTrack"
   );
 
   const indicators = getElement(
-    position === "top" ? "topAdsIndicators" : "bottomAdsIndicators"
+    position === "top"
+      ? "topAdsIndicators"
+      : "bottomAdsIndicators"
   );
 
-  if (!track || !indicators) return;
+  if (!section || !track || !indicators) return;
 
+  const advertisements = adData[position];
+
+  // Aucun annonceur : masquer complètement l'espace.
   if (!advertisements.length) {
+    section.classList.add("hidden");
     track.innerHTML = "";
     indicators.innerHTML = "";
     return;
   }
 
-  track.innerHTML = advertisements.map(ad => `
-    <div class="ad-slide">
-      <a class="ad-link"
-         href="${escapeAdAttribute(ad.url)}"
-         target="_blank"
-         rel="noopener noreferrer">
+  section.classList.remove("hidden");
 
-        <img class="ad-image"
-          src="${escapeAdAttribute(ad.image)}"
-          alt="${escapeAdAttribute(ad.name)}"
-          loading="lazy">
+  track.innerHTML = advertisements.map(ad => {
 
-        <div class="ad-content">
-          <strong>${escapeAdHTML(ad.name)}</strong>
-          <p>${escapeAdHTML(ad.description)}</p>
-          <span class="ad-cta">
-            ${escapeAdHTML(ad.button || "Découvrir")} →
-          </span>
-        </div>
+    const image = safeAdUrl(ad.image);
+    const destination = safeAdUrl(ad.url);
 
-      </a>
-    </div>
-  `).join("");
+    return `
+      <div class="ad-slide">
+
+        <a class="ad-link"
+           href="${escapeAdHTML(destination)}"
+           target="_blank"
+           rel="noopener noreferrer">
+
+          ${image ? `
+            <img
+              class="ad-image"
+              src="${escapeAdHTML(image)}"
+              alt="${escapeAdHTML(ad.name)}"
+              loading="lazy"
+              onerror="this.style.display='none'">
+          ` : ""}
+
+          <div class="ad-content">
+
+            <strong>${escapeAdHTML(ad.name)}</strong>
+
+            <p>${escapeAdHTML(ad.description)}</p>
+
+            <span class="ad-cta">
+              ${escapeAdHTML(ad.button || "Découvrir")} →
+            </span>
+
+          </div>
+
+        </a>
+
+      </div>
+    `;
+  }).join("");
 
   indicators.innerHTML = advertisements.map((ad, index) => `
-    <button type="button"
+    <button
+      type="button"
       class="ad-dot ${index === 0 ? "active" : ""}"
       aria-label="Afficher la publicité ${index + 1}"
       onclick="goToAd('${position}',${index})">
     </button>
   `).join("");
 
+  // Masquer les flèches s'il n'y a qu'une publicité.
+  section.querySelectorAll(".ad-arrow").forEach(button => {
+    button.style.display = advertisements.length > 1
+      ? ""
+      : "none";
+  });
+
   updateAdCarousel(position);
 }
 
-function escapeAdHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, c => ({
-    "&":"&amp;",
-    "<":"&lt;",
-    ">":"&gt;",
-    '"':"&quot;",
-    "'":"&#39;"
-  })[c]);
-}
 
-function escapeAdAttribute(value) {
-  return escapeAdHTML(value);
-}
-
+/**
+ * Met à jour la position du carrousel.
+ */
 function updateAdCarousel(position) {
 
   const track = getElement(
-    position === "top" ? "topAdsTrack" : "bottomAdsTrack"
+    position === "top"
+      ? "topAdsTrack"
+      : "bottomAdsTrack"
   );
 
   const indicators = getElement(
-    position === "top" ? "topAdsIndicators" : "bottomAdsIndicators"
+    position === "top"
+      ? "topAdsIndicators"
+      : "bottomAdsIndicators"
   );
 
-  if (!track || !indicators || !advertisements.length) return;
+  if (!track || !indicators) return;
+
+  const advertisements = adData[position];
+
+  if (!advertisements.length) return;
 
   const index = adIndexes[position];
 
@@ -1162,11 +1227,15 @@ function updateAdCarousel(position) {
   });
 }
 
+
+/**
+ * Passer à la publicité précédente ou suivante.
+ */
 function moveAd(position, direction) {
 
-  if (!advertisements.length) return;
+  const total = adData[position].length;
 
-  const total = advertisements.length;
+  if (!total) return;
 
   adIndexes[position] =
     (adIndexes[position] + direction + total) % total;
@@ -1174,25 +1243,144 @@ function moveAd(position, direction) {
   updateAdCarousel(position);
 }
 
+
+/**
+ * Aller directement à une publicité.
+ */
 function goToAd(position, index) {
 
-  if (index < 0 || index >= advertisements.length) return;
+  const total = adData[position].length;
+
+  if (index < 0 || index >= total) return;
 
   adIndexes[position] = index;
 
   updateAdCarousel(position);
 }
 
+
+/**
+ * Récupérer les publicités depuis le backend.
+ */
+async function loadPublicAdvertisements() {
+
+  console.log("Chargement des publicités depuis le backend...");
+
+  try {
+
+    // Deux demandes indépendantes :
+    // une pour le haut et une pour le bas.
+    const requests = await Promise.all([
+
+      jsonpRequest({
+        action: "publicAds",
+        position: "haut",
+        fete_id: feteId || ""
+      }),
+
+      jsonpRequest({
+        action: "publicAds",
+        position: "bas",
+        fete_id: feteId || ""
+      })
+
+    ]);
+
+    const topResult = requests[0];
+    const bottomResult = requests[1];
+
+    // Publicités du haut.
+    if (topResult && topResult.success &&
+        Array.isArray(topResult.advertisements)) {
+
+      adData.top = topResult.advertisements
+        .filter(ad => safeAdUrl(ad.url))
+        .map(ad => ({
+          id: ad.id,
+          name: ad.name || "Annonceur",
+          description: ad.description || "",
+          image: ad.image || "",
+          url: ad.url,
+          button: ad.button || "Découvrir"
+        }));
+
+    } else {
+      adData.top = [];
+    }
+
+    // Publicités du bas.
+    if (bottomResult && bottomResult.success &&
+        Array.isArray(bottomResult.advertisements)) {
+
+      adData.bottom = bottomResult.advertisements
+        .filter(ad => safeAdUrl(ad.url))
+        .map(ad => ({
+          id: ad.id,
+          name: ad.name || "Annonceur",
+          description: ad.description || "",
+          image: ad.image || "",
+          url: ad.url,
+          button: ad.button || "Découvrir"
+        }));
+
+    } else {
+      adData.bottom = [];
+    }
+
+    // Réinitialiser les index.
+    adIndexes.top = 0;
+    adIndexes.bottom = 0;
+
+    // Afficher les deux carrousels.
+    renderAdCarousel("top");
+    renderAdCarousel("bottom");
+
+    console.log("Publicités chargées :", {
+      haut: adData.top.length,
+      bas: adData.bottom.length
+    });
+
+    // Arrêter un ancien intervalle s'il existe.
+    if (advertisingTimer) {
+      clearInterval(advertisingTimer);
+      advertisingTimer = null;
+    }
+
+    // Défilement automatique uniquement
+    // lorsqu'un emplacement contient plusieurs publicités.
+    if (adData.top.length > 1 || adData.bottom.length > 1) {
+
+      advertisingTimer = setInterval(() => {
+
+        if (adData.top.length > 1) {
+          moveAd("top", 1);
+        }
+
+        if (adData.bottom.length > 1) {
+          moveAd("bottom", 1);
+        }
+
+      }, 5000);
+    }
+
+  } catch (error) {
+
+    console.error("Erreur de chargement des publicités :", error);
+
+    adData.top = [];
+    adData.bottom = [];
+
+    renderAdCarousel("top");
+    renderAdCarousel("bottom");
+  }
+}
+
+
+/**
+ * Initialisation du module publicitaire.
+ */
 function initializeAdvertising() {
-
-  renderAdCarousel("top");
-  renderAdCarousel("bottom");
-
-  // Rotation automatique des deux espaces.
-  setInterval(() => {
-    moveAd("top", 1);
-    moveAd("bottom", 1);
-  }, 5000);
+  loadPublicAdvertisements();
 }
 
 // =====================================================
@@ -1915,7 +2103,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
   console.log("Fête & Cadeaux : initialisation de la page.");
 
-  
   initializeLogin();
   initializeAdvertising();
   loadPublicEvent();
