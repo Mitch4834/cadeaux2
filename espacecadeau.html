@@ -4,20 +4,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ma liste de cadeaux</title>
-
+<title>Mon espace cadeaux | Fête & Cadeaux</title>
 
 <style>
 :root {
   --primary: #712A90;
-  --primary-hover: #8D4EAA;
-  --primary-light: #B58AC8;
-  --light: #F0E5F5;
+  --secondary: #8D4EAA;
+  --accent: #D6B77A;
+  --primary-light: #F3EAFA;
   --background: #FAF7FC;
   --dark: #35213D;
   --muted: #786D7D;
   --white: #FFFFFF;
   --border: #E5D8EC;
+  --success: #27845A;
+  --danger: #B94040;
+  --surface: #FFFFFF;
 }
 
 * {
@@ -31,43 +33,170 @@ body {
   color: var(--dark);
 }
 
-header {
-  background: linear-gradient(135deg, #712A90, #8D4EAA);
-  color: var(--white);
+button {
+  font-family: inherit;
+}
+
+/* HEADER */
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: 48px 20px 55px;
   text-align: center;
-  padding: 45px 20px;
+  color: white;
+  background: linear-gradient(
+    135deg,
+    var(--primary),
+    var(--secondary)
+  );
 }
 
-header h1 {
-  margin: 0 0 12px;
-  font-size: 30px;
+.hero::before,
+.hero::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,.08);
 }
 
-header p {
+.hero::before {
+  width: 240px;
+  height: 240px;
+  top: -120px;
+  left: -70px;
+}
+
+.hero::after {
+  width: 190px;
+  height: 190px;
+  bottom: -110px;
+  right: -40px;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 850px;
+  margin: auto;
+}
+
+.brand {
+  font-size: 13px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: .9;
+  margin-bottom: 20px;
+}
+
+.hero h1 {
+  font-size: 34px;
+  margin: 0 0 14px;
+  line-height: 1.25;
+}
+
+.hero p {
   margin: 0;
   font-size: 16px;
+  line-height: 1.6;
+  opacity: .95;
 }
+
+/* CONTENU */
 
 .container {
-  max-width: 1100px;
-  margin: 35px auto;
-  padding: 0 18px;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
-.intro {
+.welcome-card {
+  position: relative;
+  margin: -25px auto 35px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 17px;
+  padding: 25px;
   text-align: center;
-  margin-bottom: 30px;
+  box-shadow: 0 8px 28px rgba(0,0,0,.06);
 }
 
-.intro h2 {
-  font-size: 25px;
+.welcome-icon {
+  font-size: 32px;
   margin-bottom: 10px;
+}
+
+.welcome-card h2 {
+  margin: 0 0 10px;
+  color: var(--primary);
+  font-size: 25px;
+}
+
+.welcome-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.event-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin: 0 0 45px;
+}
+
+.event-detail {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  padding: 16px;
+  min-width: 0;
+}
+
+.event-detail-icon {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  background: var(--primary-light);
+  font-size: 20px;
+}
+
+.event-detail-label {
+  color: var(--muted);
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+
+.event-detail-value {
+  font-size: 14px;
+  font-weight: bold;
+  overflow-wrap: anywhere;
+}
+
+/* SECTION CADEAUX */
+
+.section-heading {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.section-heading h2 {
+  margin: 0 0 10px;
+  font-size: 27px;
   color: var(--dark);
 }
 
-.intro p {
+.section-heading p {
   color: var(--muted);
-  line-height: 1.5;
+  line-height: 1.6;
+  margin: 0;
 }
 
 .legend {
@@ -75,8 +204,9 @@ header p {
   justify-content: center;
   flex-wrap: wrap;
   gap: 20px;
-  margin: 25px 0;
-  font-size: 14px;
+  margin: 22px 0 30px;
+  font-size: 13px;
+  color: var(--muted);
 }
 
 .legend span {
@@ -86,330 +216,479 @@ header p {
 }
 
 .dot {
-  width: 12px;
-  height: 12px;
+  width: 11px;
+  height: 11px;
   border-radius: 50%;
-  background: var(--primary);
+  background: var(--success);
 }
 
 .dot.unavailable {
-  background: #AAA;
+  background: #999;
 }
+
+/* GRILLE */
 
 .gift-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(235px, 1fr)
+  );
   gap: 22px;
+  margin-bottom: 40px;
 }
 
 .gift-card {
-  background: var(--white);
-  border-radius: 15px;
-  overflow: hidden;
-  box-shadow: 0 4px 15px rgba(113,42,144,.07);
+  background: var(--surface);
   border: 1px solid var(--border);
-  transition: .2s;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,.045);
+  transition: transform .2s, box-shadow .2s;
 }
 
-.gift-card:hover:not(.taken) {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 22px rgba(113,42,144,.13);
+.gift-card:not(.taken):hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,.09);
 }
 
 .gift-image {
-  height: 175px;
-  background: var(--light);
+  height: 190px;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  background: var(--primary-light);
+  overflow: hidden;
   font-size: 75px;
+}
+
+.gift-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .gift-content {
   padding: 18px;
 }
 
-.gift-content h3 {
-  margin: 0 0 8px;
-  font-size: 18px;
-  color: var(--dark);
-}
-
-.gift-content p {
-  color: var(--muted);
-  font-size: 14px;
-  line-height: 1.5;
-  min-height: 40px;
-}
-
 .gift-status {
   display: inline-block;
-  font-size: 12px;
-  font-weight: bold;
-  color: var(--primary);
-  background: var(--light);
-  border-radius: 20px;
   padding: 6px 10px;
+  border-radius: 20px;
+  background: #E8F5ED;
+  color: var(--success);
+  font-size: 11px;
+  font-weight: bold;
   margin-bottom: 12px;
 }
 
-button {
+.gift-status.unavailable {
+  background: #EEEEEE;
+  color: #666;
+}
+
+.gift-content h3 {
+  margin: 0 0 9px;
+  font-size: 18px;
+}
+
+.gift-description {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+  min-height: 39px;
+  margin: 0 0 13px;
+}
+
+.gift-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 15px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.gift-price {
+  color: var(--primary);
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.gift-button {
   width: 100%;
+  padding: 13px;
   border: none;
+  border-radius: 9px;
   background: var(--primary);
-  color: var(--white);
-  padding: 12px;
-  border-radius: 8px;
-  font-size: 14px;
+  color: white;
+  font-size: 13px;
   font-weight: bold;
   cursor: pointer;
-  transition: .2s ease;
+  transition: .2s;
 }
 
-button:hover {
-  background: var(--primary-hover);
+.gift-button:hover {
+  background: var(--secondary);
 }
 
-button:disabled {
-  opacity: .6;
+.gift-button:disabled {
+  background: #AAA;
   cursor: not-allowed;
 }
 
 .gift-card.taken {
-  opacity: .48;
+  opacity: .65;
+}
+
+.gift-card.taken .gift-image {
   filter: grayscale(1);
-  pointer-events: none;
 }
 
-.gift-card.taken .gift-status {
-  color: #555;
-  background: #E5E5E5;
-}
+/* MESSAGES */
 
-.gift-card.taken button {
-  background: #999;
-  cursor: not-allowed;
-}
-
-.confirmation {
+.message {
   display: none;
-  background: var(--light);
-  border: 1px solid var(--primary-light);
-  color: var(--dark);
-  padding: 18px;
+  padding: 16px;
   border-radius: 12px;
   text-align: center;
-  margin: 25px 0;
   line-height: 1.5;
+  margin: 20px 0;
+  font-size: 14px;
 }
 
-footer {
+.message.success {
+  display: block;
+  background: var(--primary-light);
+  border: 1px solid var(--border);
+}
+
+.message.error {
+  display: block;
+  background: #FDECEC;
+  border: 1px solid #E5A5A5;
+  color: var(--danger);
+}
+
+.empty-state {
+  grid-column: 1 / -1;
   text-align: center;
-  padding: 30px 15px;
+  padding: 45px 20px;
+  background: white;
+  border: 1px dashed var(--border);
+  border-radius: 15px;
   color: var(--muted);
-  font-size: 13px;
 }
 
-@media(max-width: 500px) {
-  header {
-    padding: 35px 18px;
+.empty-state .empty-icon {
+  font-size: 45px;
+  margin-bottom: 12px;
+}
+
+/* FOOTER */
+
+.footer {
+  margin-top: 45px;
+  padding: 30px 15px;
+  background: var(--dark);
+  color: white;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.footer strong {
+  color: var(--accent);
+}
+
+/* CHARGEMENT */
+
+.loading {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 35px;
+  color: var(--muted);
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  margin: 0 auto 12px;
+  border: 3px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ERREUR DE LIEN */
+
+.error-page {
+  max-width: 550px;
+  margin: 70px auto;
+  padding: 30px 22px;
+  text-align: center;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+
+.error-page h2 {
+  color: var(--danger);
+}
+
+.error-page p {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* RESPONSIVE */
+
+@media(max-width: 700px) {
+  .hero {
+    padding: 38px 18px 48px;
   }
 
-  header h1 {
-    font-size: 24px;
+  .hero h1 {
+    font-size: 26px;
   }
 
-  .container {
-    margin: 25px auto;
+  .event-summary {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .welcome-card {
+    padding: 22px 16px;
+  }
+
+  .welcome-card h2 {
+    font-size: 21px;
+  }
+
+  .section-heading h2 {
+    font-size: 23px;
   }
 
   .gift-grid {
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(210px, 1fr)
+    );
+  }
+}
+
+@media(max-width: 480px) {
+  .gift-grid {
     grid-template-columns: 1fr;
+  }
+
+  .gift-image {
+    height: 210px;
   }
 }
 </style>
-
 </head>
 
 <body>
 
-<header>
-  <h1>🎉 Une belle fête se prépare !</h1>
-  <p>Choisissez un cadeau pour faire plaisir à notre petit trésor.</p>
+<header class="hero">
+  <div class="hero-content">
+    <div class="brand">🎁 Fête & Cadeaux</div>
+    <h1 id="heroTitle">Une belle fête se prépare !</h1>
+    <p id="heroDescription">
+      Découvrez la liste de cadeaux de notre événement.
+    </p>
+  </div>
 </header>
 
 <main class="container">
 
-  <section class="intro">
+  <section class="welcome-card">
+    <div class="welcome-icon">💝</div>
+    <h2 id="welcomeTitle">Bienvenue dans votre espace cadeau</h2>
+    <p id="welcomeMessage">
+      Choisissez le cadeau que vous souhaitez offrir.
+    </p>
+  </section>
+
+  <section class="event-summary">
+    <div class="event-detail">
+      <div class="event-detail-icon">🎉</div>
+      <div>
+        <div class="event-detail-label">Événement</div>
+        <div class="event-detail-value" id="eventName">Chargement...</div>
+      </div>
+    </div>
+
+    <div class="event-detail">
+      <div class="event-detail-icon">📅</div>
+      <div>
+        <div class="event-detail-label">Date</div>
+        <div class="event-detail-value" id="eventDate">-</div>
+      </div>
+    </div>
+
+    <div class="event-detail">
+      <div class="event-detail-icon">📍</div>
+      <div>
+        <div class="event-detail-label">Lieu</div>
+        <div class="event-detail-value" id="eventVenue">-</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-heading">
     <h2>Notre liste de cadeaux 🎁</h2>
     <p>
-      Parcourez les cadeaux proposés et choisissez celui que vous
-      souhaitez apporter. Les cadeaux déjà choisis sont grisés.
+      Découvrez les cadeaux proposés et sélectionnez celui
+      que vous souhaitez offrir.
     </p>
   </section>
 
   <div class="legend">
     <span><i class="dot"></i> Disponible</span>
-    <span><i class="dot unavailable"></i> Déjà choisi</span>
+    <span><i class="dot unavailable"></i> Indisponible</span>
   </div>
 
-  <div id="confirmation" class="confirmation"></div>
+  <div id="message" class="message"></div>
 
-  <section class="gift-grid" id="giftGrid"></section>
+  <section class="gift-grid" id="giftGrid">
+    <div class="loading">
+      <div class="spinner"></div>
+      Chargement de votre espace cadeau...
+    </div>
+  </section>
 
 </main>
 
-<footer>
-  Merci de participer à cette belle journée ❤️
+<footer class="footer">
+  Merci de contribuer au bonheur de cette journée ❤️
+  <br>
+  <strong>Fête & Cadeaux</strong>
 </footer>
 
 <script>
+/* ==========================================
+   CONFIGURATION
+========================================== */
 
-/**
- * PLATEFORME DE RESERVATION DE CADEAUX
- * FRONTEND PREPARE POUR GOOGLE APPS SCRIPT
- */
+const API_URL =
+  "https://script.google.com/macros/s/AKfycbzrZdyo2slQY61S88Muv6IHmOWxYw3q6tPmeuPOLaSd1gE1e9gHcqZDsnlG2Qondk9y/exec";
 
-// =====================================
-// CONFIGURATION
-// =====================================
+const TIMEOUT = 15000;
 
-const API_URL = "https://script.google.com/macros/s/AKfycbzrZdyo2slQY61S88Muv6IHmOWxYw3q6tPmeuPOLaSd1gE1e9gHcqZDsnlG2Qondk9y/exec";
+const params = new URLSearchParams(window.location.search);
 
-const CONFIG = {
-  TIMEOUT: 15000,
-  REFRESH_AFTER_RESERVATION: true
-};
-
-// Cadeaux de démonstration pour référence
-// Le serveur sera la source réelle des cadeaux.
-const DEMO_GIFTS = [
-  {
-    id: 1,
-    name: "Poussette",
-    description: "Une poussette confortable pour les promenades.",
-    emoji: "🛒",
-    taken: true
-  },
-  {
-    id: 2,
-    name: "Vêtements pour bébé",
-    description: "Un joli ensemble de vêtements.",
-    emoji: "👕",
-    taken: false
-  },
-  {
-    id: 3,
-    name: "Chaussures",
-    description: "Une paire de petites chaussures.",
-    emoji: "👟",
-    taken: false
-  },
-  {
-    id: 4,
-    name: "Jouets éducatifs",
-    description: "Des jouets pour apprendre en s'amusant.",
-    emoji: "🧸",
-    taken: true
-  },
-  {
-    id: 5,
-    name: "Baignoire pour bébé",
-    description: "Une petite baignoire pratique.",
-    emoji: "🛁",
-    taken: false
-  },
-  {
-    id: 6,
-    name: "Sac à langer",
-    description: "Un sac pour transporter les affaires de bébé.",
-    emoji: "👜",
-    taken: false
-  },
-  {
-    id: 7,
-    name: "Couverture",
-    description: "Une couverture douce et confortable.",
-    emoji: "🧺",
-    taken: false
-  },
-  {
-    id: 8,
-    name: "Chaise haute",
-    description: "Une chaise pour les repas de bébé.",
-    emoji: "🪑",
-    taken: true
-  }
-];
-
-// =====================================
-// SESSION INVITE
-// =====================================
-
-const guestId = sessionStorage.getItem("guestId");
-const guestName = sessionStorage.getItem("guestName");
+const feteId = params.get("fete_id");
+const inviteId = params.get("invite_id");
 
 const grid = document.getElementById("giftGrid");
-const confirmation = document.getElementById("confirmation");
+const messageBox = document.getElementById("message");
 
+let guest = null;
+let eventData = null;
 let gifts = [];
 let reservationEnCours = false;
 
-// Vérification de la session
-if (!guestId || !guestName) {
-  window.location.href = "index.html";
+/* ==========================================
+   OUTILS
+========================================== */
+
+function pick(object, ...keys) {
+  if (!object) return "";
+
+  for (const key of keys) {
+    if (
+      object[key] !== undefined &&
+      object[key] !== null &&
+      object[key] !== ""
+    ) {
+      return object[key];
+    }
+  }
+
+  return "";
 }
 
-// =====================================
-// AFFICHAGE DES MESSAGES
-// =====================================
-
-function showMessage(message, type = "success") {
-  confirmation.style.display = "block";
-  confirmation.textContent = message;
-
-  confirmation.style.background =
-    type === "error" ? "#FDECEC" : "#F0E5F5";
-
-  confirmation.style.borderColor =
-    type === "error" ? "#E5A5A5" : "#B58AC8";
-
-  confirmation.style.color =
-    type === "error" ? "#A52A2A" : "#35213D";
+function eventObject(result) {
+  return (
+    result?.event ||
+    result?.fete ||
+    result?.evenement ||
+    result?.data?.event ||
+    result?.data?.fete ||
+    result?.data ||
+    result
+  );
 }
 
-// =====================================
-// COMMUNICATION JSONP
-// =====================================
+function formatDate(value) {
+  if (!value) return "À préciser";
 
-function apiRequest(params) {
+  const date = new Date(value);
+
+  if (isNaN(date.getTime())) return String(value);
+
+  return date.toLocaleDateString("fr-FR", {
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+  });
+}
+
+function showMessage(text, type = "success") {
+  messageBox.className = "message " + type;
+  messageBox.textContent = text;
+  messageBox.scrollIntoView({
+    behavior: "smooth",
+    block: "nearest"
+  });
+}
+
+function clearMessage() {
+  messageBox.className = "message";
+  messageBox.textContent = "";
+}
+
+/* ==========================================
+   COMMUNICATION AVEC APPS SCRIPT
+========================================== */
+
+function apiRequest(requestParams) {
   return new Promise((resolve, reject) => {
 
     const callbackName =
-      "giftCallback_" + Date.now() + "_" +
+      "giftCallback_" +
+      Date.now() + "_" +
       Math.random().toString(36).slice(2);
 
     const script = document.createElement("script");
 
-    let termine = false;
+    let finished = false;
 
     const timeout = setTimeout(() => {
-      nettoyer();
+      cleanup();
       reject(new Error("Le serveur ne répond pas."));
-    }, CONFIG.TIMEOUT);
+    }, TIMEOUT);
 
-    function nettoyer() {
-      if (termine) return;
+    function cleanup() {
+      if (finished) return;
 
-      termine = true;
-
+      finished = true;
       clearTimeout(timeout);
+
       delete window[callbackName];
       script.remove();
     }
 
     window[callbackName] = function(result) {
-      nettoyer();
+      cleanup();
 
       if (!result) {
         reject(new Error("Réponse invalide du serveur."));
@@ -420,12 +699,12 @@ function apiRequest(params) {
     };
 
     script.onerror = function() {
-      nettoyer();
+      cleanup();
       reject(new Error("Impossible de contacter le serveur."));
     };
 
     const query = new URLSearchParams({
-      ...params,
+      ...requestParams,
       callback: callbackName
     });
 
@@ -435,96 +714,430 @@ function apiRequest(params) {
   });
 }
 
-// =====================================
-// CHARGEMENT DES CADEAUX
-// =====================================
+/* ==========================================
+   PALETTE DE LA FÊTE
+========================================== */
 
-async function loadGifts() {
+function applyEventPalette(event) {
 
-  grid.innerHTML = "<p>Chargement des cadeaux...</p>";
+  const palette =
+    event.palette ||
+    event.Palette ||
+    event.couleurs ||
+    event.Couleurs ||
+    event.theme_colors ||
+    {};
 
-  try {
+  const primary = pick(
+    palette,
+    "primary",
+    "primaire",
+    "couleur_principale",
+    "Couleur_Principale"
+  ) || pick(
+    event,
+    "Couleur_Principale",
+    "couleur_principale",
+    "Couleur_Theme",
+    "couleur_theme",
+    "Couleur"
+  );
 
-    const result = await apiRequest({
-      action: "gifts"
-    });
+  const secondary = pick(
+    palette,
+    "secondary",
+    "secondaire",
+    "couleur_secondaire",
+    "Couleur_Secondaire"
+  ) || pick(
+    event,
+    "Couleur_Secondaire",
+    "couleur_secondaire"
+  );
 
-    if (!result.success) {
-      throw new Error(
-        result.message || "Impossible de charger les cadeaux."
-      );
-    }
+  const accent = pick(
+    palette,
+    "accent",
+    "accentuation",
+    "couleur_accent"
+  ) || pick(
+    event,
+    "Couleur_Accent",
+    "couleur_accent"
+  );
 
-    if (!Array.isArray(result.gifts)) {
-      throw new Error("Format de données incorrect.");
-    }
+  const background = pick(
+    palette,
+    "background",
+    "fond",
+    "arriere_plan"
+  ) || pick(
+    event,
+    "Couleur_Fond",
+    "couleur_fond"
+  );
 
-    gifts = result.gifts;
+  const dark = pick(
+    palette,
+    "dark",
+    "sombre",
+    "texte"
+  );
 
-    displayGifts();
+  const root = document.documentElement;
 
-  } catch (error) {
+  if (isValidColor(primary)) {
+    root.style.setProperty("--primary", primary);
+  }
 
-    grid.innerHTML = "";
+  if (isValidColor(secondary)) {
+    root.style.setProperty("--secondary", secondary);
+  }
 
-    showMessage(error.message, "error");
+  if (isValidColor(accent)) {
+    root.style.setProperty("--accent", accent);
+  }
 
-    const retry = document.createElement("button");
-    retry.textContent = "Réessayer";
-    retry.addEventListener("click", loadGifts);
+  if (isValidColor(background)) {
+    root.style.setProperty("--background", background);
+  }
 
-    grid.appendChild(retry);
+  if (isValidColor(dark)) {
+    root.style.setProperty("--dark", dark);
+  }
+
+  // Couleur claire dérivée de la couleur principale
+  if (isValidColor(primary)) {
+    root.style.setProperty(
+      "--primary-light",
+      hexToRgba(primary, 0.11)
+    );
   }
 }
 
-// =====================================
-// AFFICHAGE DES CARTES
-// =====================================
+function isValidColor(color) {
+  if (typeof color !== "string") return false;
+
+  return (
+    /^#[0-9A-Fa-f]{3,8}$/.test(color) ||
+    /^rgba?\(/i.test(color) ||
+    /^hsla?\(/i.test(color)
+  );
+}
+
+function hexToRgba(hex, alpha) {
+  if (!/^#[0-9A-Fa-f]{6}$/.test(hex)) {
+    return "rgba(113,42,144," + alpha + ")";
+  }
+
+  const value = hex.replace("#", "");
+
+  const r = parseInt(value.substring(0, 2), 16);
+  const g = parseInt(value.substring(2, 4), 16);
+  const b = parseInt(value.substring(4, 6), 16);
+
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+/* ==========================================
+   IDENTIFICATION DE L'INVITÉ ET DE LA FÊTE
+========================================== */
+
+async function initializePage() {
+
+  if (!feteId || !inviteId) {
+    showPageError(
+      "Lien incomplet",
+      "Votre lien personnel ne contient pas les informations nécessaires pour accéder à cet espace."
+    );
+    return;
+  }
+
+  try {
+
+    const results = await Promise.all([
+
+      apiRequest({
+        action: "publicEvent",
+        fete_id: feteId
+      }),
+
+      apiRequest({
+        action: "guestByLink",
+        fete_id: feteId,
+        invite_id: inviteId
+      })
+
+    ]);
+
+    const eventResult = results[0];
+    const guestResult = results[1];
+
+    if (!eventResult.success) {
+      throw new Error(
+        eventResult.message || "Impossible de charger la fête."
+      );
+    }
+
+    if (!guestResult.success || !guestResult.guest) {
+      throw new Error(
+        guestResult.message || "Votre invitation personnelle est invalide."
+      );
+    }
+
+    guest = guestResult.guest;
+    eventData = eventObject(eventResult);
+
+    // Vérification de cohérence
+    if (
+      guest.event_id &&
+      String(guest.event_id) !== String(feteId)
+    ) {
+      throw new Error("Cette invitation ne correspond pas à cette fête.");
+    }
+
+    displayPersonalInformation();
+
+    applyEventPalette(eventData);
+
+    await loadGifts();
+
+  } catch (error) {
+
+    showPageError(
+      "Accès impossible",
+      error.message
+    );
+
+  }
+}
+
+/* ==========================================
+   AFFICHAGE PERSONNALISÉ
+========================================== */
+
+function displayPersonalInformation() {
+
+  const guestName = guest.name || "Cher invité";
+
+  const eventName = pick(
+    eventData,
+    "Nom_Evenement",
+    "nom_evenement",
+    "name",
+    "nom",
+    "event_name"
+  ) || "Notre événement";
+
+  const date = pick(
+    eventData,
+    "Date_Evenement",
+    "date_evenement",
+    "event_date"
+  );
+
+  const venue = pick(
+    eventData,
+    "Lieu",
+    "lieu",
+    "venue"
+  ) || "Lieu à préciser";
+
+  const eventType = pick(
+    eventData,
+    "Type_Evenement",
+    "type_evenement"
+  );
+
+  document.getElementById("heroTitle").textContent =
+    eventName;
+
+  document.getElementById("heroDescription").textContent =
+    eventType
+      ? "Nous sommes heureux de vous accueillir pour cette belle occasion : " + eventType + "."
+      : "Découvrez la liste des cadeaux de cette belle célébration.";
+
+  document.getElementById("welcomeTitle").textContent =
+    "Bienvenue, " + guestName + " !";
+
+  document.getElementById("welcomeMessage").textContent =
+    "Nous sommes ravis de vous compter parmi nos invités. Vous pouvez découvrir les cadeaux proposés et choisir celui que vous souhaitez offrir.";
+
+  document.getElementById("eventName").textContent =
+    eventName;
+
+  document.getElementById("eventDate").textContent =
+    formatDate(date);
+
+  document.getElementById("eventVenue").textContent =
+    venue;
+}
+
+/* ==========================================
+   CHARGEMENT DES CADEAUX DE LA FÊTE
+========================================== */
+
+async function loadGifts() {
+
+  clearMessage();
+
+  grid.innerHTML = `
+    <div class="loading">
+      <div class="spinner"></div>
+      Chargement des cadeaux...
+    </div>
+  `;
+
+  const result = await apiRequest({
+    action: "gifts",
+    fete_id: feteId
+  });
+
+  if (!result.success) {
+    throw new Error(
+      result.message || "Impossible de charger les cadeaux."
+    );
+  }
+
+  if (!Array.isArray(result.gifts)) {
+    throw new Error("Les données des cadeaux sont incorrectes.");
+  }
+
+  gifts = result.gifts;
+
+  displayGifts();
+}
+
+/* ==========================================
+   AFFICHAGE DES CADEAUX
+========================================== */
 
 function displayGifts() {
 
   grid.innerHTML = "";
 
   if (!gifts.length) {
-    grid.textContent = "Aucun cadeau disponible pour le moment.";
+
+    grid.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">🎁</div>
+        <h3>La liste de cadeaux arrive bientôt</h3>
+        <p>L'organisateur n'a pas encore ajouté de cadeaux à cet événement.</p>
+      </div>
+    `;
+
     return;
   }
 
   gifts.forEach(gift => {
 
-    const card = document.createElement("article");
-    card.className = "gift-card" + (
-      gift.taken ? " taken" : ""
+    const remaining = Number(
+      pick(gift, "remaining", "restant")
     );
 
-    const image = document.createElement("div");
-    image.className = "gift-image";
-    image.textContent = gift.emoji || "🎁";
+    const quantity = Number(
+      pick(gift, "quantity", "quantite")
+    );
+
+    const taken =
+      gift.taken === true ||
+      (
+        Number.isFinite(remaining) &&
+        remaining <= 0
+      );
+
+    const card = document.createElement("article");
+
+    card.className = "gift-card" + (
+      taken ? " taken" : ""
+    );
+
+    const imageContainer = document.createElement("div");
+    imageContainer.className = "gift-image";
+
+    const imageUrl = pick(
+      gift,
+      "image",
+      "Image",
+      "image_url"
+    );
+
+    if (imageUrl) {
+
+      const img = document.createElement("img");
+      img.src = imageUrl;
+      img.alt = gift.name || "Cadeau";
+      img.loading = "lazy";
+
+      img.onerror = function() {
+        imageContainer.textContent = gift.emoji || "🎁";
+      };
+
+      imageContainer.appendChild(img);
+
+    } else {
+
+      imageContainer.textContent = gift.emoji || "🎁";
+
+    }
 
     const content = document.createElement("div");
     content.className = "gift-content";
 
     const status = document.createElement("span");
-    status.className = "gift-status";
-    status.textContent = gift.taken
-      ? "Déjà choisi"
+    status.className = "gift-status" + (
+      taken ? " unavailable" : ""
+    );
+
+    status.textContent = taken
+      ? "Indisponible"
       : "Disponible";
 
     const title = document.createElement("h3");
-    title.textContent = gift.name;
+    title.textContent = gift.name || "Cadeau";
 
     const description = document.createElement("p");
-    description.textContent = gift.description || "";
+    description.className = "gift-description";
+    description.textContent = gift.description || "Un joli cadeau pour cette occasion.";
+
+    const meta = document.createElement("div");
+    meta.className = "gift-meta";
+
+    const price = document.createElement("span");
+    price.className = "gift-price";
+
+    const giftPrice = pick(gift, "price", "prix");
+
+    price.textContent =
+      giftPrice !== "" && giftPrice !== null
+        ? giftPrice + " "
+        : "";
+
+    const availability = document.createElement("span");
+
+    if (Number.isFinite(remaining) && Number.isFinite(quantity)) {
+      availability.textContent =
+        remaining + " / " + quantity + " disponible(s)";
+    } else if (Number.isFinite(remaining)) {
+      availability.textContent =
+        remaining + " disponible(s)";
+    } else {
+      availability.textContent =
+        taken ? "Indisponible" : "À réserver";
+    }
+
+    meta.append(price, availability);
 
     const button = document.createElement("button");
+    button.className = "gift-button";
 
-    button.textContent = gift.taken
-      ? "Cadeau réservé"
+    button.textContent = taken
+      ? "Plus disponible"
       : "Je choisis ce cadeau";
 
-    button.disabled = gift.taken || reservationEnCours;
+    button.disabled = taken || reservationEnCours;
 
-    button.addEventListener("click", () => {
+    button.addEventListener("click", function() {
       chooseGift(gift.id);
     });
 
@@ -532,78 +1145,94 @@ function displayGifts() {
       status,
       title,
       description,
+      meta,
       button
     );
 
-    card.append(image, content);
+    card.append(imageContainer, content);
 
     grid.appendChild(card);
   });
 }
 
-// =====================================
-// RESERVATION D'UN CADEAU
-// =====================================
+/* ==========================================
+   RÉSERVATION
+========================================== */
 
-async function chooseGift(id) {
+async function chooseGift(giftId) {
 
   if (reservationEnCours) return;
 
   const gift = gifts.find(item =>
-    String(item.id) === String(id)
+    String(item.id) === String(giftId)
   );
 
   if (!gift || gift.taken) return;
 
-  const confirmChoice = confirm(
-    `Bonjour ${guestName} !\n\n` +
-    `Confirmez-vous votre choix : ${gift.name} ?`
+  const guestName = guest.name || "Cher invité";
+
+  const confirmed = confirm(
+    "Bonjour " + guestName + " !\n\n" +
+    "Souhaitez-vous réserver ce cadeau : " +
+    gift.name + " ?"
   );
 
-  if (!confirmChoice) return;
+  if (!confirmed) return;
 
   reservationEnCours = true;
 
   displayGifts();
 
-  showMessage("Enregistrement de votre réservation...");
+  showMessage(
+    "Enregistrement de votre réservation...",
+    "success"
+  );
 
   try {
 
     const result = await apiRequest({
       action: "reserve",
+      fete_id: feteId,
       gift_id: gift.id,
-      guest_id: guestId
+      guest_id: guest.id,
+      mode: "reservation"
     });
 
     if (!result.success) {
-
       throw new Error(
         result.message || "La réservation n'a pas abouti."
       );
     }
 
     showMessage(
-      `🎉 Félicitations ${guestName} ! Vous avez réservé : ${gift.name}. Merci pour votre participation !`
+      "🎉 Félicitations " + guestName +
+      " ! Votre réservation pour « " +
+      gift.name +
+      " » a bien été enregistrée. Merci pour votre générosité !",
+      "success"
     );
 
-    // Recharger les disponibilités depuis le serveur
-    if (CONFIG.REFRESH_AFTER_RESERVATION) {
-      await loadGifts();
-    }
+    await loadGifts();
+
+    showMessage(
+      "🎉 Votre cadeau « " + gift.name +
+      " » est bien réservé. Merci " +
+      guestName + " !",
+      "success"
+    );
 
   } catch (error) {
 
     showMessage(error.message, "error");
 
-    // Actualiser les disponibilités en cas de conflit
     try {
-      const result = await apiRequest({
-        action: "gifts"
+      const refresh = await apiRequest({
+        action: "gifts",
+        fete_id: feteId
       });
 
-      if (result.success && Array.isArray(result.gifts)) {
-        gifts = result.gifts;
+      if (refresh.success && Array.isArray(refresh.gifts)) {
+        gifts = refresh.gifts;
         displayGifts();
       }
 
@@ -615,16 +1244,44 @@ async function chooseGift(id) {
 
     reservationEnCours = false;
     displayGifts();
+
   }
 }
 
-// =====================================
-// INITIALISATION
-// =====================================
+/* ==========================================
+   ERREUR DE LIEN
+========================================== */
 
-loadGifts();
+function showPageError(title, description) {
+
+  document.querySelector("main").innerHTML = `
+    <div class="error-page">
+      <div style="font-size:45px">⚠️</div>
+      <h2>${escapeHTML(title)}</h2>
+      <p>${escapeHTML(description)}</p>
+      <p>Veuillez vérifier votre lien personnel ou contacter l'organisateur.</p>
+    </div>
+  `;
+}
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  })[char]);
+}
+
+/* ==========================================
+   DÉMARRAGE
+========================================== */
+
+initializePage();
 
 </script>
 
 </body>
 </html>
+
