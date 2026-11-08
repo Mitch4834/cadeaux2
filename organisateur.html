@@ -234,7 +234,59 @@ button{font-family:inherit}
   line-height:1.4;
   overflow-wrap:anywhere;
 }
+.guest-personal-link {
+  margin-top: 10px;
+  padding: 10px;
+  background: #f8f4fa;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+}
 
+.guest-personal-link small {
+  display: block;
+  color: var(--muted);
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.guest-personal-link a {
+  display: block;
+  color: var(--primary);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+  text-decoration: none;
+  line-height: 1.5;
+}
+
+.guest-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  flex-shrink: 0;
+}
+
+.btn-copy-guest {
+  background: var(--primary-light);
+  color: var(--primary);
+  padding: 9px 11px;
+  font-size: 12px;
+}
+
+.btn-copy-guest:hover {
+  background: #e8d9f0;
+}
+
+@media(max-width:560px) {
+  .item {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .guest-actions {
+    flex-direction: row;
+    width: 100%;
+  }
+}
 /* ASSISTANT DE CREATION */
 
 .wizard-panel{overflow:hidden}
@@ -1820,58 +1872,222 @@ function renderSelectedEvent(){
     $("giftCount").textContent="0";
   }
 }
+/* =====================================================
+   LIENS PERSONNELS DES INVITES
+===================================================== */
 
+function getGuestInvitationLink(guestId) {
+
+  if (!selectedEventId || !guestId) {
+    return "";
+  }
+
+  const link = new URL(
+    "connect1.html",
+    window.location.href
+  );
+
+  link.searchParams.set("fete_id", selectedEventId);
+  link.searchParams.set("invite_id", guestId);
+
+  return link.toString();
+}
+
+
+/* =====================================================
+   COPIE DU LIEN PERSONNEL
+===================================================== */
+
+async function copyGuestInvitationLink(link) {
+
+  if (!link) {
+    showStatus(
+      "guestStatus",
+      "Impossible de générer le lien de cet invité.",
+      "error"
+    );
+    return;
+  }
+
+  try {
+
+    if (navigator.clipboard && window.isSecureContext) {
+
+      await navigator.clipboard.writeText(link);
+
+    } else {
+
+      const textarea = document.createElement("textarea");
+
+      textarea.value = link;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+
+      document.body.appendChild(textarea);
+
+      textarea.select();
+
+      const copied = document.execCommand("copy");
+
+      textarea.remove();
+
+      if (!copied) {
+        throw new Error("Copie impossible.");
+      }
+    }
+
+    showStatus(
+      "guestStatus",
+      "Lien personnel copié ! Vous pouvez maintenant l'envoyer à votre invité.",
+      "ok"
+    );
+
+  } catch (error) {
+
+    showStatus(
+      "guestStatus",
+      "La copie automatique a échoué. Sélectionnez et copiez le lien affiché.",
+      "error"
+    );
+
+  }
+}
 /* =====================================================
    INVITES
 ===================================================== */
 
-function renderGuests(guests){
+function renderGuests(guests) {
 
-  $("guestCount").textContent=guests.length;
+  $("guestCount").textContent = guests.length;
 
-  $("guestList").innerHTML=guests.length
-    ? guests.map(g=>`
-      <div class="item">
-        <div class="item-info">
-          <strong>${escapeHTML(g.name)}</strong>
-          <small>
-            ${escapeHTML(g.phone||"")}
-            ${g.email?" · "+escapeHTML(g.email):""}
-          </small>
-          <small>ID invité : ${escapeHTML(g.id)}</small>
-        </div>
+  $("guestList").innerHTML = guests.length
 
-        <button class="btn btn-danger"
-          type="button"
-          data-delete-guest="${escapeHTML(g.id)}">
-          Désactiver
-        </button>
-      </div>
-    `).join("")
+    ? guests.map(g => {
+
+        const personalLink = getGuestInvitationLink(g.id);
+
+        return `
+          <div class="item">
+
+            <div class="item-info">
+
+              <strong>${escapeHTML(g.name)}</strong>
+
+              <small>
+                ${escapeHTML(g.phone || "")}
+                ${g.email ? " · " + escapeHTML(g.email) : ""}
+              </small>
+
+              <small>
+                ID invité : ${escapeHTML(g.id)}
+              </small>
+
+              <div class="guest-personal-link">
+
+                <small>🔗 LIEN PERSONNEL D'INVITATION</small>
+
+                <a
+                  href="${escapeHTML(personalLink)}"
+                  target="_blank"
+                  rel="noopener">
+                  ${escapeHTML(personalLink)}
+                </a>
+
+              </div>
+
+            </div>
+
+            <div class="guest-actions">
+
+              <button
+                class="btn btn-copy-guest"
+                type="button"
+                data-copy-guest="${escapeHTML(personalLink)}">
+
+                📋 Copier le lien
+
+              </button>
+
+              <button
+                class="btn btn-danger"
+                type="button"
+                data-delete-guest="${escapeHTML(g.id)}">
+
+                Désactiver
+
+              </button>
+
+            </div>
+
+          </div>
+        `;
+
+      }).join("")
+
     : '<div class="muted">Aucun invité enregistré pour cette fête.</div>';
 
-  $("guestList").querySelectorAll("[data-delete-guest]").forEach(btn=>{
-    btn.addEventListener("click",async()=>{
 
-      if(!confirm("Désactiver cet invité ?")) return;
+  // Boutons de copie des liens personnels
 
-      try{
+  $("guestList")
+    .querySelectorAll("[data-copy-guest]")
+    .forEach(btn => {
 
-        await api({
-          action:"deleteGuest",
-          event_id:selectedEventId,
-          id:btn.dataset.deleteGuest
-        });
+      btn.addEventListener("click", async () => {
 
-        await refreshSelected();
+        await copyGuestInvitationLink(
+          btn.dataset.copyGuest
+        );
 
-      }catch(e){
+      });
 
-        showStatus("guestStatus",e.message,"error");
-
-      }
     });
-  });
+
+
+  // Boutons de désactivation
+
+  $("guestList")
+    .querySelectorAll("[data-delete-guest]")
+    .forEach(btn => {
+
+      btn.addEventListener("click", async () => {
+
+        if (!confirm("Désactiver cet invité ?")) return;
+
+        try {
+
+        const result = await api({
+  action: "addGuest",
+  event_id: selectedEventId,
+  name: $("guestName").value.trim(),
+  phone: $("guestPhone").value.trim(),
+  email: $("guestEmail").value.trim()
+});
+
+$("guestForm").reset();
+
+await refreshSelected();
+
+showStatus(
+  "guestStatus",
+  "Invité ajouté avec succès ! Son lien personnel est maintenant disponible dans sa fiche.",
+  "ok"
+);
+
+        } catch (e) {
+
+          showStatus(
+            "guestStatus",
+            e.message,
+            "error"
+          );
+
+        }
+
+      });
+
+    });
+
 }
 
 /* =====================================================
