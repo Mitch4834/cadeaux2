@@ -498,6 +498,227 @@ button:disabled {
   }
 }
 
+/* =========================================
+   HERO PLUS COMPACT
+========================================= */
+
+.event-hero {
+  padding: 30px 20px;
+  border-radius: 18px;
+}
+
+.hero-icon {
+  font-size: 34px;
+  margin-bottom: 6px;
+}
+
+.event-type {
+  padding: 6px 14px;
+  margin-bottom: 9px;
+  font-size: 12px;
+}
+
+.event-hero h1 {
+  font-size: clamp(24px, 4vw, 34px);
+  margin: 4px 0 8px;
+}
+
+.event-hero p {
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+@media(max-width:600px) {
+  .event-hero {
+    padding: 25px 16px;
+  }
+
+  .hero-icon {
+    font-size: 30px;
+  }
+}
+
+/* =========================================
+   ESPACES PUBLICITAIRES
+========================================= */
+
+.advertising-section {
+  margin: 22px 0;
+  padding: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 17px;
+  box-shadow: 0 5px 18px rgba(60,30,75,.05);
+}
+
+.advertising-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.advertising-heading span {
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--dark);
+}
+
+.advertising-heading small {
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--text);
+  background: var(--background);
+  border-radius: 20px;
+  padding: 5px 9px;
+}
+
+.ad-carousel {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.ad-viewport {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.ad-track {
+  display: flex;
+  transition: transform .45s ease;
+}
+
+.ad-slide {
+  flex: 0 0 100%;
+  min-width: 0;
+}
+
+.ad-link {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 125px;
+  padding: 14px;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  text-decoration: none;
+  color: var(--dark);
+  transition: .2s;
+}
+
+.ad-link:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.ad-image {
+  width: 125px;
+  height: 95px;
+  flex-shrink: 0;
+  object-fit: contain;
+  border-radius: 9px;
+  background: white;
+}
+
+.ad-content {
+  min-width: 0;
+}
+
+.ad-content strong {
+  display: block;
+  color: var(--primary);
+  font-size: 15px;
+  margin-bottom: 6px;
+}
+
+.ad-content p {
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 0 0 8px;
+}
+
+.ad-cta {
+  display: inline-block;
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.ad-arrow {
+  width: 30px;
+  height: 36px;
+  padding: 0;
+  flex-shrink: 0;
+  background: var(--primary);
+  color: white;
+  border-radius: 8px;
+  font-size: 23px;
+}
+
+.ad-arrow:hover {
+  background: var(--primary-hover);
+}
+
+.ad-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.ad-dot {
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border-radius: 50%;
+  background: var(--secondary);
+}
+
+.ad-dot.active {
+  background: var(--primary);
+  transform: scale(1.25);
+}
+
+.advertising-bottom {
+  margin-top: 35px;
+}
+
+@media(max-width:600px) {
+  .advertising-section {
+    padding: 12px;
+  }
+
+  .ad-link {
+    min-height: 105px;
+    gap: 10px;
+    padding: 9px;
+  }
+
+  .ad-image {
+    width: 85px;
+    height: 80px;
+  }
+
+  .ad-content strong {
+    font-size: 13px;
+  }
+
+  .ad-content p {
+    font-size: 11px;
+  }
+
+  .ad-arrow {
+    width: 25px;
+    height: 32px;
+  }
+}
+
 </style>
 </head>
 
@@ -506,6 +727,36 @@ button:disabled {
 <main class="page">
 
   <div class="brand">🎁 FÊTE & CADEAUX</div>
+
+<!-- ESPACE PUBLICITAIRE SUPÉRIEUR -->
+<section class="advertising-section" id="topAdvertising">
+
+  <div class="advertising-heading">
+    <span>Nos partenaires</span>
+    <small>PUBLICITÉ</small>
+  </div>
+
+  <div class="ad-carousel">
+
+    <button class="ad-arrow" type="button"
+      onclick="moveAd('top',-1)" aria-label="Publicité précédente">
+      ‹
+    </button>
+
+    <div class="ad-viewport">
+      <div class="ad-track" id="topAdsTrack"></div>
+    </div>
+
+    <button class="ad-arrow" type="button"
+      onclick="moveAd('top',1)" aria-label="Publicité suivante">
+      ›
+    </button>
+
+  </div>
+
+  <div class="ad-indicators" id="topAdsIndicators"></div>
+
+</section>
 
   <div id="loadingEvent" class="loading">
     <div style="font-size:38px">🎉</div>
@@ -718,6 +969,37 @@ button:disabled {
   </div>
 </div>
 
+<!-- ESPACE PUBLICITAIRE INFÉRIEUR -->
+<section class="advertising-section advertising-bottom"
+  id="bottomAdvertising">
+
+  <div class="advertising-heading">
+    <span>Découvrez nos annonceurs</span>
+    <small>PUBLICITÉ</small>
+  </div>
+
+  <div class="ad-carousel">
+
+    <button class="ad-arrow" type="button"
+      onclick="moveAd('bottom',-1)" aria-label="Publicité précédente">
+      ‹
+    </button>
+
+    <div class="ad-viewport">
+      <div class="ad-track" id="bottomAdsTrack"></div>
+    </div>
+
+    <button class="ad-arrow" type="button"
+      onclick="moveAd('bottom',1)" aria-label="Publicité suivante">
+      ›
+    </button>
+
+  </div>
+
+  <div class="ad-indicators" id="bottomAdsIndicators"></div>
+
+</section>
+
   <div class="footer">
     Organisé avec ❤️ grâce à Fête & Cadeaux
   </div>
@@ -756,6 +1038,162 @@ let currentEvent = null;
 function getElement(id) {
   return document.getElementById(id);
 }
+  
+/* =========================================
+   GESTION DES PUBLICITÉS
+========================================= */
+
+// Remplacer les exemples par les publicités réelles.
+const advertisements = [
+  {
+    name: "Annonceur 1",
+    description: "Découvrez nos produits et nos offres.",
+    image: "images/annonceur-1.jpg",
+    url: "https://exemple.com",
+    button: "Découvrir"
+  },
+  {
+    name: "Annonceur 2",
+    description: "Découvrez notre sélection de produits.",
+    image: "images/annonceur-2.jpg",
+    url: "https://exemple.com",
+    button: "Voir les produits"
+  },
+  {
+    name: "Annonceur 3",
+    description: "Une offre spéciale à découvrir.",
+    image: "images/annonceur-3.jpg",
+    url: "https://exemple.com",
+    button: "En savoir plus"
+  }
+];
+
+const adIndexes = {
+  top: 0,
+  bottom: 0
+};
+
+function renderAdCarousel(position) {
+
+  const track = getElement(
+    position === "top" ? "topAdsTrack" : "bottomAdsTrack"
+  );
+
+  const indicators = getElement(
+    position === "top" ? "topAdsIndicators" : "bottomAdsIndicators"
+  );
+
+  if (!track || !indicators) return;
+
+  if (!advertisements.length) {
+    track.innerHTML = "";
+    indicators.innerHTML = "";
+    return;
+  }
+
+  track.innerHTML = advertisements.map(ad => `
+    <div class="ad-slide">
+      <a class="ad-link"
+         href="${escapeAdAttribute(ad.url)}"
+         target="_blank"
+         rel="noopener noreferrer">
+
+        <img class="ad-image"
+          src="${escapeAdAttribute(ad.image)}"
+          alt="${escapeAdAttribute(ad.name)}"
+          loading="lazy">
+
+        <div class="ad-content">
+          <strong>${escapeAdHTML(ad.name)}</strong>
+          <p>${escapeAdHTML(ad.description)}</p>
+          <span class="ad-cta">
+            ${escapeAdHTML(ad.button || "Découvrir")} →
+          </span>
+        </div>
+
+      </a>
+    </div>
+  `).join("");
+
+  indicators.innerHTML = advertisements.map((ad, index) => `
+    <button type="button"
+      class="ad-dot ${index === 0 ? "active" : ""}"
+      aria-label="Afficher la publicité ${index + 1}"
+      onclick="goToAd('${position}',${index})">
+    </button>
+  `).join("");
+
+  updateAdCarousel(position);
+}
+
+function escapeAdHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  })[c]);
+}
+
+function escapeAdAttribute(value) {
+  return escapeAdHTML(value);
+}
+
+function updateAdCarousel(position) {
+
+  const track = getElement(
+    position === "top" ? "topAdsTrack" : "bottomAdsTrack"
+  );
+
+  const indicators = getElement(
+    position === "top" ? "topAdsIndicators" : "bottomAdsIndicators"
+  );
+
+  if (!track || !indicators || !advertisements.length) return;
+
+  const index = adIndexes[position];
+
+  track.style.transform = `translateX(-${index * 100}%)`;
+
+  indicators.querySelectorAll(".ad-dot").forEach((dot, i) => {
+    dot.classList.toggle("active", i === index);
+  });
+}
+
+function moveAd(position, direction) {
+
+  if (!advertisements.length) return;
+
+  const total = advertisements.length;
+
+  adIndexes[position] =
+    (adIndexes[position] + direction + total) % total;
+
+  updateAdCarousel(position);
+}
+
+function goToAd(position, index) {
+
+  if (index < 0 || index >= advertisements.length) return;
+
+  adIndexes[position] = index;
+
+  updateAdCarousel(position);
+}
+
+function initializeAdvertising() {
+
+  renderAdCarousel("top");
+  renderAdCarousel("bottom");
+
+  // Rotation automatique des deux espaces.
+  setInterval(() => {
+    moveAd("top", 1);
+    moveAd("bottom", 1);
+  }, 5000);
+}
+
 // =====================================================
 // APPLICATION DE L'IDENTITÉ VISUELLE DE L'ÉVÉNEMENT
 // =====================================================
@@ -1476,8 +1914,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
   console.log("Fête & Cadeaux : initialisation de la page.");
 
+  initializeAdvertising();
   initializeLogin();
-
   loadPublicEvent();
 
 });
