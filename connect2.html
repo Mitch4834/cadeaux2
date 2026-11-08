@@ -958,7 +958,25 @@ function displayEvent(data) {
   );
 
   setText("eventName", eventName, "Notre événement");
+// Informations de l'événement dans le popup
+setText("popupEventName", eventName, "Notre événement");
 
+setText(
+  "popupEventDate",
+  formatEventDate(
+    getValue(event, "Date_Evenement", "date_evenement", "event_date")
+  )
+);
+
+setText(
+  "popupEventTime",
+  getValue(event, "Heure_Evenement", "heure_evenement", "event_time")
+);
+
+setText(
+  "popupEventVenue",
+  getValue(event, "Lieu", "lieu", "venue")
+);
   setText(
     "eventHeroDescription",
     getValue(
