@@ -9,14 +9,18 @@
 <style>
 :root {
   --primary: #712A90;
-  --primary-hover: #8D4EAA;
-  --primary-light: #F3EAFA;
-  --background: #FAF7FC;
+  --secondary: #D8B4E2;
+  --accent: #D6B77A;
+  --background: #F8F4FA;
   --dark: #35213D;
   --text: #6F6474;
   --white: #FFFFFF;
+  --surface: #FFFFFF;
   --border: #E5D8EC;
-  --gold: #E8B95C;
+
+  --primary-hover: #8D4EAA;
+  --primary-light: #F3EAFA;
+  --gold: var(--accent);
 }
 
 * {
@@ -48,7 +52,7 @@ body {
 .event-hero {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, #712A90, #9A60B2);
+  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
   color: white;
   border-radius: 25px;
   padding: 55px 25px;
@@ -85,7 +89,7 @@ body {
 
 .content-section {
   margin-top: 30px;
-  background: white;
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 20px;
   padding: 28px;
@@ -106,7 +110,7 @@ body {
 
 .person-card {
   text-align: center;
-  background: var(--background);
+  background: var(--surface);
   border-radius: 16px;
   padding: 22px 15px;
 }
@@ -191,16 +195,16 @@ body {
 }
 
 .theme-box {
-  background: var(--primary-light);
+  background: var(--secondary);
   padding: 17px;
   border-radius: 12px;
-  color: var(--primary);
+  color: var(--dark);
   line-height: 1.6;
 }
 
 .invitation-message {
   text-align: center;
-  background: linear-gradient(135deg, #F3EAFA, #FAF7FC);
+  background: var(--surface);
 }
 
 .invitation-message h2 {
@@ -217,7 +221,7 @@ body {
   max-width: 520px;
   margin: 30px auto 0;
   padding: 32px;
-  background: white;
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 20px;
   box-shadow: 0 8px 28px rgba(113,42,144,.08);
@@ -351,7 +355,7 @@ button:disabled {
 .attendance-box {
   width: 100%;
   max-width: 470px;
-  background: white;
+  background: var(--surface);
   border-radius: 22px;
   padding: 30px 25px;
   text-align: center;
@@ -752,7 +756,84 @@ let currentEvent = null;
 function getElement(id) {
   return document.getElementById(id);
 }
+// =====================================================
+// APPLICATION DE L'IDENTITÉ VISUELLE DE L'ÉVÉNEMENT
+// =====================================================
 
+function applyEventPalette(event) {
+
+  const defaults = {
+    primary: "#712A90",
+    secondary: "#D8B4E2",
+    accent: "#D6B77A",
+    background: "#F8F4FA",
+    text: "#35213D"
+  };
+
+  const palette = event.palette || {};
+
+  function validColor(value, fallback) {
+    return typeof value === "string" &&
+      /^#[0-9A-Fa-f]{6}$/.test(value)
+      ? value
+      : fallback;
+  }
+
+  const colors = {
+    primary: validColor(
+      event.color || palette.color || palette.primary,
+      defaults.primary
+    ),
+
+    secondary: validColor(
+      event.secondaryColor || palette.secondaryColor || palette.secondary,
+      defaults.secondary
+    ),
+
+    accent: validColor(
+      event.accentColor || palette.accentColor || palette.accent,
+      defaults.accent
+    ),
+
+    background: validColor(
+      event.backgroundColor || palette.backgroundColor || palette.background,
+      defaults.background
+    ),
+
+    text: validColor(
+      event.textColor || palette.textColor || palette.text,
+      defaults.text
+    )
+  };
+
+  const root = document.documentElement;
+
+  root.style.setProperty("--primary", colors.primary);
+  root.style.setProperty("--secondary", colors.secondary);
+  root.style.setProperty("--accent", colors.accent);
+  root.style.setProperty("--background", colors.background);
+  root.style.setProperty("--dark", colors.text);
+
+  // Couleurs dérivées
+  root.style.setProperty("--primary-hover", colors.primary);
+  root.style.setProperty("--primary-light", colors.secondary);
+  root.style.setProperty("--border", colors.secondary);
+  root.style.setProperty("--gold", colors.accent);
+
+  // Surface légèrement teintée par le fond choisi
+  root.style.setProperty(
+    "--surface",
+    `color-mix(in srgb, white 90%, ${colors.background})`
+  );
+
+  // Couleur des textes secondaires
+  root.style.setProperty(
+    "--text",
+    `color-mix(in srgb, ${colors.text} 72%, white)`
+  );
+
+  console.log("Palette de l'événement appliquée :", colors);
+}
 function setText(id, value) {
   const element = getElement(id);
   if (element) {
@@ -951,8 +1032,10 @@ function displayEvent(data) {
 
   currentEvent = data.event;
 
-  const event = data.event;
+const event = data.event;
 
+// Appliquer les couleurs choisies par l'organisateur
+applyEventPalette(event);
   // Informations principales
   setText("eventName", event.name);
   setText("eventType", event.type);
@@ -961,7 +1044,7 @@ function displayEvent(data) {
   // Informations pratiques
   setText("eventDate", formatEventDate(event.date) || "Non précisée");
   setText("eventTime", event.time || "Non précisée");
-  setText("eventVenue", event.venue || "Non précisé");
+  setText("eventVenue", event.place || event.venue || "Non précisé");
   setText("eventAddress", event.address || "Non précisée");
   setText("eventCity", event.city || "Non précisée");
   setText("eventCountry", event.country || "Non précisé");
