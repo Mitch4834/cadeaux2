@@ -997,7 +997,35 @@ button:disabled {
   <div class="ad-indicators" id="bottomAdsIndicators"></div>
 
 </section>
+<!-- ESPACE PUBLICITAIRE SUPÉRIEUR -->
+<section class="advertising-section" id="topAdvertising">
 
+  <div class="advertising-heading">
+    <span>Nos partenaires</span>
+    <small>PUBLICITÉ</small>
+  </div>
+
+  <div class="ad-carousel">
+
+    <button class="ad-arrow" type="button"
+      onclick="moveAd('top',-1)" aria-label="Publicité précédente">
+      ‹
+    </button>
+
+    <div class="ad-viewport">
+      <div class="ad-track" id="topAdsTrack"></div>
+    </div>
+
+    <button class="ad-arrow" type="button"
+      onclick="moveAd('top',1)" aria-label="Publicité suivante">
+      ›
+    </button>
+
+  </div>
+
+  <div class="ad-indicators" id="topAdsIndicators"></div>
+
+</section>
 </div>
 
 
