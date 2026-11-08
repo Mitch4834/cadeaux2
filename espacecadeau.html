@@ -1578,9 +1578,9 @@ function escapeHTML(value) {
 
 
 
+
 /* ==========================================
-   CARROUSEL PUBLICITAIRE
-   FÊTE & CADEAUX
+   PUBLICITÉS — FÊTE & CADEAUX
 ========================================== */
 
 const adCarousels = {};
@@ -1589,7 +1589,10 @@ function loadAdvertising(position, containerId) {
 
   const container = document.getElementById(containerId);
 
-  if (!container) return;
+  if (!container) {
+    console.error("Conteneur publicitaire introuvable :", containerId);
+    return;
+  }
 
   const area = container.closest(".advertising-area");
 
@@ -1603,15 +1606,28 @@ function loadAdvertising(position, containerId) {
 
   .then(result => {
 
-    if (!result.success) {
-      throw new Error(result.message || "Erreur publicitaire");
+    console.log("Réponse publicitaire (" + position + ") :", result);
+
+    if (!result || result.success !== true) {
+      throw new Error(
+        result?.message || "Le backend n'a pas retourné de publicité."
+      );
     }
 
-    const advertisements = Array.isArray(result.advertisements)
-      ? result.advertisements
-      : [];
+    // Accepter les différents noms de tableaux possibles
+    const advertisements =
+      result.advertisements ||
+      result.ads ||
+      result.publicites ||
+      result.data?.advertisements ||
+      result.data?.ads ||
+      [];
 
-    if (!advertisements.length) return;
+    if (!Array.isArray(advertisements) || advertisements.length === 0) {
+      console.warn("Aucune publicité pour :", position);
+      container.innerHTML = "";
+      return;
+    }
 
     if (area) area.style.display = "block";
 
@@ -1624,14 +1640,19 @@ function loadAdvertising(position, containerId) {
   })
 
   .catch(error => {
-    console.error("Publicité :", error);
+
+    console.error("Erreur publicité " + position + " :", error);
+
+    container.innerHTML = "";
+
     if (area) area.style.display = "none";
+
   });
 }
 
 
 /* ==========================================
-   CONSTRUCTION DU CARROUSEL
+   CRÉATION DU CARROUSEL
 ========================================== */
 
 function createAdvertisingCarousel(ads, container, id) {
@@ -1652,15 +1673,15 @@ function createAdvertisingCarousel(ads, container, id) {
   const indicators = document.createElement("div");
   indicators.className = "ad-indicators";
 
-  const prev = document.createElement("button");
-  prev.className = "ad-arrow ad-prev";
-  prev.type = "button";
-  prev.textContent = "‹";
-  prev.setAttribute("aria-label", "Publicité précédente");
+  const previous = document.createElement("button");
+  previous.type = "button";
+  previous.className = "ad-arrow ad-prev";
+  previous.textContent = "‹";
+  previous.setAttribute("aria-label", "Publicité précédente");
 
   const next = document.createElement("button");
-  next.className = "ad-arrow ad-next";
   next.type = "button";
+  next.className = "ad-arrow ad-next";
   next.textContent = "›";
   next.setAttribute("aria-label", "Publicité suivante");
 
@@ -1671,35 +1692,36 @@ function createAdvertisingCarousel(ads, container, id) {
 
     const imageUrl = pick(
       ad,
-      "image",
       "Image_URL",
-      "image_url"
+      "image_url",
+      "image"
     );
 
-    const name = pick(
+    const advertiser = pick(
       ad,
-      "name",
       "Nom_Annonceur",
+      "name",
       "nom_annonceur"
     );
 
     const description = pick(
       ad,
-      "description",
-      "Description"
+      "Description",
+      "description"
     );
 
     const destination = pick(
       ad,
-      "url",
       "URL_Destination",
-      "url_destination"
+      "url_destination",
+      "url"
     );
 
     const buttonText = pick(
       ad,
+      "Bouton",
       "button",
-      "Bouton"
+      "bouton"
     );
 
     if (imageUrl) {
@@ -1708,11 +1730,11 @@ function createAdvertisingCarousel(ads, container, id) {
 
       image.className = "ad-slide-image";
       image.src = imageUrl;
-      image.alt = name || "Publicité";
+      image.alt = advertiser || "Publicité";
       image.loading = "lazy";
 
-      image.onerror = () => {
-        image.style.display = "none";
+      image.onerror = function() {
+        image.remove();
       };
 
       slide.appendChild(image);
@@ -1726,18 +1748,17 @@ function createAdvertisingCarousel(ads, container, id) {
     label.textContent = "PUBLICITÉ";
 
     const title = document.createElement("h3");
-    title.textContent = name || "Découvrez notre annonceur";
-
-    const text = document.createElement("p");
-    text.textContent = description || "";
+    title.textContent = advertiser || "Découvrez notre annonceur";
 
     content.append(label, title);
 
     if (description) {
+      const text = document.createElement("p");
+      text.textContent = description;
       content.appendChild(text);
     }
 
-    if (destination && buttonText) {
+    if (destination) {
 
       const link = document.createElement("a");
 
@@ -1745,7 +1766,7 @@ function createAdvertisingCarousel(ads, container, id) {
       link.href = destination;
       link.target = "_blank";
       link.rel = "noopener noreferrer";
-      link.textContent = buttonText;
+      link.textContent = buttonText || "En savoir plus";
 
       content.appendChild(link);
     }
@@ -1755,22 +1776,24 @@ function createAdvertisingCarousel(ads, container, id) {
 
     const indicator = document.createElement("button");
 
-    indicator.className = "ad-indicator";
     indicator.type = "button";
+    indicator.className = "ad-indicator";
+
     indicator.setAttribute(
       "aria-label",
       "Afficher la publicité " + (index + 1)
     );
 
-    indicator.addEventListener("click", () => {
-      showAdvertisingSlide(index);
-      restartAdvertisingTimer();
+    indicator.addEventListener("click", function() {
+      showSlide(index);
+      restartTimer();
     });
 
     indicators.appendChild(indicator);
+
   });
 
-  function showAdvertisingSlide(index) {
+  function showSlide(index) {
 
     currentIndex = (index + ads.length) % ads.length;
 
@@ -1785,42 +1808,35 @@ function createAdvertisingCarousel(ads, container, id) {
       });
   }
 
-  function nextSlide() {
-    showAdvertisingSlide(currentIndex + 1);
-  }
-
-  function previousSlide() {
-    showAdvertisingSlide(currentIndex - 1);
-  }
-
-  function restartAdvertisingTimer() {
+  function restartTimer() {
 
     if (adCarousels[id]?.timer) {
       clearInterval(adCarousels[id].timer);
     }
 
+    adCarousels[id].timer = null;
+
     if (ads.length > 1) {
-      adCarousels[id].timer = setInterval(
-        nextSlide,
-        5000
-      );
+      adCarousels[id].timer = setInterval(() => {
+        showSlide(currentIndex + 1);
+      }, 5000);
     }
   }
 
-  prev.addEventListener("click", () => {
-    previousSlide();
-    restartAdvertisingTimer();
+  previous.addEventListener("click", function() {
+    showSlide(currentIndex - 1);
+    restartTimer();
   });
 
-  next.addEventListener("click", () => {
-    nextSlide();
-    restartAdvertisingTimer();
+  next.addEventListener("click", function() {
+    showSlide(currentIndex + 1);
+    restartTimer();
   });
 
   carousel.appendChild(slidesContainer);
 
   if (ads.length > 1) {
-    carousel.append(prev, next, indicators);
+    carousel.append(previous, next, indicators);
   }
 
   container.appendChild(carousel);
@@ -1829,13 +1845,20 @@ function createAdvertisingCarousel(ads, container, id) {
     timer: null
   };
 
-  showAdvertisingSlide(0);
-  restartAdvertisingTimer();
+  showSlide(0);
+  restartTimer();
+
+  console.log(
+    "Carrousel affiché :",
+    position,
+    ads.length,
+    "publicité(s)"
+  );
 }
 
 
 /* ==========================================
-   INITIALISATION DES DEUX CARROUSELS
+   INITIALISATION
 ========================================== */
 
 function initializeGiftPageAdvertising() {
