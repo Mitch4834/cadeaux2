@@ -2351,7 +2351,7 @@ $("copyEventLink").addEventListener("click",async()=>{
 $("logoutBtn").addEventListener("click", async () => {
   try {
     await auth.signOut();
-    window.location.replace(LOGIN_URL);
+    window.location.replace("index.html");
   } catch (error) {
     showStatus("globalStatus", error.message, "error");
   }
