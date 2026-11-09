@@ -526,9 +526,16 @@ button{font-family:inherit}
 
 <header>
   <h1>🎁 Fête & Cadeaux</h1>
-  <span>Votre espace organisateur</span>
-</header>
 
+  <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+    <span id="organizerIdentity">Vérification de votre compte...</span>
+
+    <button type="button" class="btn btn-secondary btn-small"
+      id="logoutBtn">
+      Déconnexion
+    </button>
+  </div>
+</header>
 <main class="container">
 
   <section class="welcome">
@@ -769,14 +776,35 @@ button{font-family:inherit}
   </div>
 
 </main>
-
-<script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script>
 /* =====================================================
-   CONFIGURATION API
+   FIREBASE ET API — ESPACE ORGANISATEUR
 ===================================================== */
 
-const API_URL = "https://script.google.com/macros/s/AKfycbyqG2aSbtJmBOgIvM9TCXf1KwpQTOBh6zorJsajdjqMX-CIDpWrPhOsnGXBABG3SCpl/exec";
+const firebaseConfig = {
+  apiKey: "AIzaSyBGdtNBo1j09rRegrjy8YfsiSPNhP6HIGE",
+  authDomain: "feteetcadeau.firebaseapp.com",
+  projectId: "feteetcadeau",
+  storageBucket: "feteetcadeau.firebasestorage.app",
+  messagingSenderId: "494807499217",
+  appId: "1:494807499217:web:6723be8d6dfdaefe76a0f0",
+  measurementId: "G-FVWFL7X82X"
+};
 
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+
+const auth = firebase.auth();
+
+const API_URL =
+  "https://script.google.com/macros/s/AKfycbzYJfU2zvkx44mUpPUzp5uV9bbacd61dfwrWY1oLXDDAZgfdw1W0BTAyBODXQj1GuwG/exec";
+
+const LOGIN_URL = "connexion-organisateur.html";
+
+let currentOrganizer = null;
 let events = [];
 let selectedEventId = null;
 let selectedEvent = null;
@@ -804,53 +832,56 @@ function escapeHTML(value) {
   })[c]);
 }
 
-function api(params) {
-  return new Promise((resolve, reject) => {
+/* =====================================================
+   COMMUNICATION SÉCURISÉE AVEC APPS SCRIPT
+===================================================== */
 
-    const callback = "organizerCb_" + Date.now() + "_" +
-      Math.floor(Math.random()*100000);
+async function api(params) {
 
-    const script = document.createElement("script");
-    let finished = false;
+  const user = auth.currentUser;
 
-    const cleanup = () => {
-      if (finished) return;
-      finished = true;
-      clearTimeout(timer);
-      delete window[callback];
-      script.remove();
-    };
+  if (!user) {
+    throw new Error("Votre session a expiré. Veuillez vous reconnecter.");
+  }
 
-    const timer = setTimeout(() => {
-      cleanup();
-      reject(new Error("Le serveur ne répond pas. Réessayez."));
-    }, 20000);
+  const idToken = await user.getIdToken();
 
-    window[callback] = data => {
-      cleanup();
+  const payload = {
+    ...params,
+    id_token: idToken
+  };
 
-      if (data && data.success) {
-        resolve(data);
-      } else {
-        reject(new Error(data?.message || "Une erreur est survenue."));
-      }
-    };
-
-    script.onerror = () => {
-      cleanup();
-      reject(new Error("Impossible de contacter le serveur."));
-    };
-
-    const query = new URLSearchParams({
-      ...params,
-      callback
-    }).toString();
-
-    script.src = API_URL + "?" + query;
-    document.body.appendChild(script);
+  const response = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "text/plain;charset=utf-8"
+    },
+    body: JSON.stringify(payload),
+    redirect: "follow"
   });
-}
 
+  if (!response.ok) {
+    throw new Error("Erreur de communication avec le serveur.");
+  }
+
+  const text = await response.text();
+
+  let data;
+
+  try {
+    data = JSON.parse(text);
+  } catch (error) {
+    throw new Error(
+      "Réponse du serveur illisible. Vérifiez le déploiement Apps Script."
+    );
+  }
+
+  if (!data.success) {
+    throw new Error(data.message || "Une erreur est survenue.");
+  }
+
+  return data;
+}
 /* =====================================================
    ASSISTANT DE CREATION
 ===================================================== */
@@ -1750,7 +1781,7 @@ palette:"violet"
 
 async function loadEvents(){
 
-  const result = await api({action:"events"});
+  const result = await api({action:"myEvents"});
 
   events = result.events || [];
 
@@ -2047,46 +2078,43 @@ function renderGuests(guests) {
   // Boutons de désactivation
 
   $("guestList")
-    .querySelectorAll("[data-delete-guest]")
-    .forEach(btn => {
+  $("guestList")
+  .querySelectorAll("[data-delete-guest]")
+  .forEach(btn => {
 
-      btn.addEventListener("click", async () => {
+    btn.addEventListener("click", async () => {
 
-        if (!confirm("Désactiver cet invité ?")) return;
+      if (!confirm("Désactiver cet invité ?")) return;
 
-        try {
+      try {
 
-        const result = await api({
-  action: "addGuest",
-  event_id: selectedEventId,
-  name: $("guestName").value.trim(),
-  phone: $("guestPhone").value.trim(),
-  email: $("guestEmail").value.trim()
-});
+        await api({
+          action: "deleteGuest",
+          event_id: selectedEventId,
+          id: btn.dataset.deleteGuest
+        });
 
-$("guestForm").reset();
+        await refreshSelected();
 
-await refreshSelected();
+        showStatus(
+          "guestStatus",
+          "Invité désactivé avec succès.",
+          "ok"
+        );
 
-showStatus(
-  "guestStatus",
-  "Invité ajouté avec succès ! Son lien personnel est maintenant disponible dans sa fiche.",
-  "ok"
-);
+      } catch (error) {
 
-        } catch (e) {
+        showStatus(
+          "guestStatus",
+          error.message,
+          "error"
+        );
 
-          showStatus(
-            "guestStatus",
-            e.message,
-            "error"
-          );
-
-        }
-
-      });
+      }
 
     });
+
+  });
 
 }
 
@@ -2316,31 +2344,58 @@ $("copyEventLink").addEventListener("click",async()=>{
 
   }
 });
-
 /* =====================================================
-   INITIALISATION
+   SESSION ORGANISATEUR
 ===================================================== */
 
-(async function init(){
+$("logoutBtn").addEventListener("click", async () => {
+  try {
+    await auth.signOut();
+    window.location.replace(LOGIN_URL);
+  } catch (error) {
+    showStatus("globalStatus", error.message, "error");
+  }
+});
 
-  renderWizard();
+auth.onAuthStateChanged(async user => {
 
-  try{
+  if (!user) {
+    window.location.replace(LOGIN_URL);
+    return;
+  }
 
-    await api({action:"health"});
+  currentOrganizer = user;
+
+  $("organizerIdentity").textContent =
+    user.displayName || user.email || "Organisateur";
+
+  try {
+
     await loadEvents();
-
-  }catch(err){
 
     showStatus(
       "globalStatus",
-      err.message+" Vérifiez l'URL de l'API et le déploiement Apps Script.",
+      "Bienvenue dans votre espace organisateur.",
+      "ok"
+    );
+
+  } catch (error) {
+
+    showStatus(
+      "globalStatus",
+      error.message,
       "error"
     );
 
   }
 
-})();
+});
+/* =====================================================
+   INITIALISATION DU TABLEAU DE BORD
+===================================================== */
+
+renderWizard();
+updateWizardTheme();
 </script>
 
 </body>
