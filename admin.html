@@ -458,23 +458,25 @@ auth.onAuthStateChanged(async user => {
 
 
 async function loadPartners() {
-  try {
-    const result = await apiRequest("adminListPartners");
 
-    partners = Array.isArray(result.partners)
-      ? result.partners
-      : [];
+/* =====================================================
+   GESTION DES ACTIONS DES PARTENAIRES
+===================================================== */
 
-    updateStatistics();
-    renderPartners();
+$("partnersList").addEventListener("click", async event => {
 
-  } catch (error) {
-    showMessage("mainMessage", error.message, "error");
-    $("partnersList").innerHTML =
-      '<div class="empty">Impossible de charger les partenaires.</div>';
+  const button = event.target.closest("button[data-action]");
+  if (!button) return;
+
+  const action = button.dataset.action;
+  const uid = button.dataset.uid;
+
+  const partner = partners.find(p => String(p.UID) === uid);
+
+  if (!partner) {
+    showMessage("mainMessage", "Partenaire introuvable.", "error");
+    return;
   }
-}
-
 
   // NOMINATION MASTER
   if (action === "appoint-master") {
@@ -492,14 +494,13 @@ async function loadPartners() {
     button.textContent = "Nomination...";
 
     try {
-
       const result = await apiRequest("adminAppointMaster", {
         master_uid: uid
       });
 
       showMessage(
         "mainMessage",
-        (result.message || "Nomination effectuée avec succès.") +
+        (result.message || "Nomination effectuée.") +
         (result.code ? " Code Master : " + result.code : ""),
         "success"
       );
@@ -507,10 +508,8 @@ async function loadPartners() {
       await loadPartners();
 
     } catch(error) {
-
       button.disabled = false;
       button.textContent = "★ Nommer Master";
-
       showMessage("mainMessage", error.message, "error");
     }
 
@@ -532,7 +531,6 @@ async function loadPartners() {
     button.textContent = "Validation...";
 
     try {
-
       const result = await apiRequest("adminApprovePartner", {
         partner_uid: uid
       });
@@ -546,10 +544,8 @@ async function loadPartners() {
       await loadPartners();
 
     } catch(error) {
-
       button.disabled = false;
       button.textContent = "✓ Approuver";
-
       showMessage("mainMessage", error.message, "error");
     }
 
@@ -559,16 +555,11 @@ async function loadPartners() {
   // REFUS
   if (action === "reject") {
 
-    const reason = prompt(
-      "Indique le motif du refus (facultatif) :"
-    );
-
+    const reason = prompt("Indique le motif du refus (facultatif) :");
     if (reason === null) return;
 
     const confirmed = confirm(
-      "Confirmer le refus de " +
-      partner.Nom_Partenaire +
-      " ?"
+      "Confirmer le refus de " + partner.Nom_Partenaire + " ?"
     );
 
     if (!confirmed) return;
@@ -577,25 +568,22 @@ async function loadPartners() {
     button.textContent = "Refus...";
 
     try {
-
       const result = await apiRequest("adminRejectPartner", {
         partner_uid: uid,
         reason: reason.trim()
       });
 
       showMessage("mainMessage", result.message, "success");
-
       await loadPartners();
 
     } catch(error) {
-
       button.disabled = false;
       button.textContent = "✕ Refuser";
-
       showMessage("mainMessage", error.message, "error");
     }
-
   }
+
+});
 
 });
 
