@@ -1,0 +1,811 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mon espace partenaire | Fête & Cadeaux</title>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<style>
+:root {
+  --primary:#712a90;
+  --primary-hover:#8540a3;
+  --primary-light:#f1e8f6;
+  --background:#faf7fc;
+  --white:#fff;
+  --text:#292332;
+  --muted:#777080;
+  --border:#e9e2ed;
+  --success:#238653;
+  --warning:#bd8122;
+  --danger:#c44444;
+}
+
+* {box-sizing:border-box}
+
+body {
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:var(--background);
+  color:var(--text);
+}
+
+button,input {
+  font:inherit;
+}
+
+button {
+  cursor:pointer;
+}
+
+.header {
+  background:var(--white);
+  border-bottom:1px solid var(--border);
+  padding:15px 5%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+}
+
+.logo {
+  font-size:20px;
+  font-weight:800;
+  color:var(--primary);
+}
+
+.logo span {color:#d6b77a}
+
+.header-user {
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.header-user img {
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  object-fit:cover;
+}
+
+.container {
+  max-width:1100px;
+  margin:30px auto;
+  padding:0 18px;
+}
+
+h1 {
+  font-size:26px;
+  margin:0 0 8px;
+}
+
+.subtitle {
+  color:var(--muted);
+  margin:0 0 25px;
+  line-height:1.5;
+}
+
+.card {
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:22px;
+  margin-bottom:20px;
+}
+
+.grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+}
+
+.stat-label {
+  color:var(--muted);
+  font-size:13px;
+  margin-bottom:12px;
+}
+
+.stat-value {
+  font-size:28px;
+  font-weight:800;
+  color:var(--primary);
+}
+
+.stat-icon {
+  font-size:22px;
+  margin-bottom:10px;
+}
+
+.profile {
+  display:flex;
+  align-items:center;
+  gap:15px;
+}
+
+.profile img {
+  width:65px;
+  height:65px;
+  border-radius:50%;
+  object-fit:cover;
+  background:var(--primary-light);
+}
+
+.profile h2 {
+  margin:0 0 6px;
+  font-size:20px;
+}
+
+.profile p {
+  margin:0;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.status {
+  display:inline-block;
+  padding:7px 12px;
+  border-radius:30px;
+  font-size:12px;
+  font-weight:700;
+  margin-top:10px;
+}
+
+.status.actif {
+  color:var(--success);
+  background:#e5f5ec;
+}
+
+.status.attente {
+  color:var(--warning);
+  background:#fff4df;
+}
+
+.status.refuse,
+.status.suspendu {
+  color:var(--danger);
+  background:#fdeaea;
+}
+
+.referral-layout {
+  display:grid;
+  grid-template-columns:1fr 220px;
+  gap:25px;
+  align-items:center;
+}
+
+.referral-link {
+  background:#f7f3f9;
+  border:1px solid var(--border);
+  border-radius:9px;
+  padding:13px;
+  overflow-wrap:anywhere;
+  font-size:13px;
+  line-height:1.5;
+}
+
+.btn {
+  border:0;
+  border-radius:9px;
+  padding:12px 17px;
+  font-weight:700;
+  margin-top:12px;
+}
+
+.btn-primary {
+  background:var(--primary);
+  color:white;
+}
+
+.btn-primary:hover {
+  background:var(--primary-hover);
+}
+
+.btn-light {
+  background:var(--primary-light);
+  color:var(--primary);
+}
+
+.btn-danger {
+  background:#fdeaea;
+  color:var(--danger);
+}
+
+#qrcode {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:180px;
+}
+
+#qrcode img,
+#qrcode canvas {
+  max-width:180px;
+  height:auto;
+}
+
+.info {
+  background:var(--primary-light);
+  color:#543469;
+  padding:16px;
+  border-radius:10px;
+  line-height:1.6;
+  font-size:14px;
+}
+
+.hidden {display:none!important}
+
+.login-card {
+  max-width:430px;
+  margin:60px auto;
+}
+
+.login-card h2 {
+  color:var(--primary);
+  margin-top:0;
+}
+
+.field {
+  width:100%;
+  padding:13px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  margin:8px 0 14px;
+}
+
+.full {width:100%}
+
+.message {
+  margin-top:15px;
+  font-size:14px;
+  line-height:1.5;
+}
+
+.error {color:var(--danger)}
+.success {color:var(--success)}
+
+.footer {
+  text-align:center;
+  color:var(--muted);
+  font-size:12px;
+  padding:30px 15px;
+}
+
+@media(max-width:750px) {
+  .grid {grid-template-columns:1fr 1fr}
+  .referral-layout {grid-template-columns:1fr}
+  #qrcode {justify-content:flex-start}
+}
+
+@media(max-width:480px) {
+  .grid {grid-template-columns:1fr}
+  .header {padding:13px 16px}
+  h1 {font-size:22px}
+  .card {padding:17px}
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+  <div class="logo">Fête <span>&</span> Cadeaux</div>
+
+  <div class="header-user hidden" id="headerUser">
+    <span id="headerEmail"></span>
+    <img id="headerPhoto" alt="Photo du partenaire">
+  </div>
+</header>
+
+<!-- CONNEXION -->
+
+<section id="loginSection" class="container login-card card hidden">
+
+  <h2>Connexion partenaire</h2>
+  <p class="subtitle">
+    Connectez-vous pour accéder à votre espace partenaire.
+  </p>
+
+  <form id="loginForm">
+    <label for="email">Adresse e-mail</label>
+    <input class="field" id="email" type="email"
+      placeholder="Votre adresse e-mail" required>
+
+    <label for="password">Mot de passe</label>
+    <input class="field" id="password" type="password"
+      placeholder="Votre mot de passe" required>
+
+    <button class="btn btn-primary full" type="submit">
+      Se connecter
+    </button>
+  </form>
+
+  <button class="btn btn-light full" id="googleLogin">
+    Continuer avec Google
+  </button>
+
+  <p id="loginMessage" class="message"></p>
+</section>
+
+
+<!-- TABLEAU DE BORD -->
+
+<main id="dashboardSection" class="container hidden">
+
+  <h1>Mon espace partenaire</h1>
+  <p class="subtitle">
+    Retrouvez votre profil, votre lien de parrainage et vos performances.
+  </p>
+
+  <section class="card">
+    <div class="profile">
+      <img id="partnerPhoto"
+        src="https://placehold.co/100x100?text=FC"
+        alt="Photo du partenaire">
+
+      <div>
+        <h2 id="partnerName">Partenaire</h2>
+        <p id="partnerEmail"></p>
+        <span id="partnerStatus" class="status"></span>
+      </div>
+    </div>
+  </section>
+
+  <section id="pendingMessage" class="card hidden">
+    <h2>Votre demande est en cours d'examen</h2>
+    <div class="info">
+      Merci pour votre inscription au programme partenaire de Fête & Cadeaux.
+      Notre équipe examine votre demande. Votre lien de parrainage et votre
+      QR code seront disponibles après approbation.
+    </div>
+  </section>
+
+  <section id="rejectedMessage" class="card hidden">
+    <h2>Votre demande n'a pas été approuvée</h2>
+    <div class="info" id="rejectionReason"></div>
+  </section>
+
+  <section id="activeContent" class="hidden">
+
+    <div class="grid">
+
+      <div class="card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-label">Organisateurs parrainés</div>
+        <div class="stat-value" id="organizerCount">0</div>
+      </div>
+
+      <div class="card">
+        <div class="stat-icon">💰</div>
+        <div class="stat-label">Commissions générées</div>
+        <div class="stat-value">Bientôt</div>
+      </div>
+
+      <div class="card">
+        <div class="stat-icon">💳</div>
+        <div class="stat-label">Solde disponible</div>
+        <div class="stat-value">Bientôt</div>
+      </div>
+
+    </div>
+
+    <section class="card">
+      <h2>Mon lien de parrainage</h2>
+      <p class="subtitle">
+        Partagez ce lien pour inviter des organisateurs sur Fête & Cadeaux.
+      </p>
+
+      <div class="referral-layout">
+
+        <div>
+          <div class="stat-label">Mon code partenaire</div>
+          <div class="referral-link" id="partnerCode"></div>
+
+          <div class="stat-label" style="margin-top:18px">
+            Mon lien personnel
+          </div>
+
+          <div class="referral-link" id="referralLink"></div>
+
+          <button class="btn btn-primary" id="copyLink">
+            Copier mon lien
+          </button>
+        </div>
+
+        <div>
+          <h3>Mon QR code</h3>
+          <div id="qrcode"></div>
+          <button class="btn btn-light full" id="downloadQR">
+            Télécharger le QR code
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Informations de mon compte</h2>
+      <p><strong>Type :</strong> <span id="partnerType"></span></p>
+      <p><strong>Catégorie :</strong> <span id="partnerCategory"></span></p>
+      <p><strong>Pays :</strong> <span id="partnerCountry"></span></p>
+      <p><strong>Ville :</strong> <span id="partnerCity"></span></p>
+      <p><strong>Téléphone :</strong> <span id="partnerPhone"></span></p>
+    </section>
+
+  </section>
+
+  <button class="btn btn-danger" id="logoutButton">
+    Déconnexion
+  </button>
+
+</main>
+
+<footer class="footer">
+  Fête & Cadeaux — Programme partenaire
+</footer>
+
+
+<script>
+/* =====================================================
+   CONFIGURATION
+===================================================== */
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBGdtNBo1j09rRegrjy8YfsiNhP6HIGE",
+  authDomain: "feteetcadeau.firebaseapp.com",
+  projectId: "feteetcadeau",
+  storageBucket: "feteetcadeau.firebasestorage.app",
+  messagingSenderId: "494807499217",
+  appId: "1:494807499217:web:6723be8d6dfdaefe76a0f0",
+  measurementId: "G-FVWFL7X82X"
+};
+
+const AUTH_API_URL =
+"https://script.google.com/macros/s/AKfycbyCaT0X3Zvd16vUflnao-Sn1IbUw5OrecEs2veTBAuvaywF_QCPAPv0E0-_eQE96h7Plw/exec";
+
+firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
+
+
+/* =====================================================
+   ÉLÉMENTS
+===================================================== */
+
+const loginSection = document.getElementById("loginSection");
+const dashboardSection = document.getElementById("dashboardSection");
+const loginMessage = document.getElementById("loginMessage");
+
+
+/* =====================================================
+   AFFICHER UN MESSAGE
+===================================================== */
+
+function showLoginMessage(message, type) {
+  loginMessage.textContent = message;
+  loginMessage.className = "message " + (type || "");
+}
+
+
+/* =====================================================
+   APPEL DU BACKEND
+===================================================== */
+
+async function callAuthAPI(action, extra = {}) {
+
+  const user = auth.currentUser;
+
+  if (!user) {
+    throw new Error("Veuillez vous connecter.");
+  }
+
+  const idToken = await user.getIdToken(true);
+
+  const response = await fetch(AUTH_API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "text/plain;charset=utf-8"
+    },
+    body: JSON.stringify({
+      action: action,
+      id_token: idToken,
+      ...extra
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error("Erreur de communication avec le serveur.");
+  }
+
+  const result = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.message || "Une erreur est survenue.");
+  }
+
+  return result;
+}
+
+
+/* =====================================================
+   CHARGER LE TABLEAU DE BORD
+===================================================== */
+
+async function loadPartnerDashboard() {
+
+  dashboardSection.classList.remove("hidden");
+  loginSection.classList.add("hidden");
+
+  document.getElementById("headerUser")
+    .classList.remove("hidden");
+
+  const user = auth.currentUser;
+
+  document.getElementById("headerEmail").textContent =
+    user.email || "";
+
+  try {
+
+    const result = await callAuthAPI("partnerDashboard");
+
+    const partner = result.partner;
+    const statistics = result.statistics;
+
+    document.getElementById("partnerName").textContent =
+      partner.name || "Partenaire";
+
+    document.getElementById("partnerEmail").textContent =
+      partner.email || "";
+
+    document.getElementById("partnerPhoto").src =
+      partner.photo || "https://placehold.co/100x100?text=FC";
+
+    document.getElementById("headerPhoto").src =
+      partner.photo || "https://placehold.co/100x100?text=FC";
+
+    document.getElementById("partnerStatus").textContent =
+      partner.status || "Inconnu";
+
+    const status = String(partner.status || "").toLowerCase();
+
+    const statusElement = document.getElementById("partnerStatus");
+
+    statusElement.className = "status";
+
+    if (status === "actif") {
+      statusElement.classList.add("actif");
+    } else if (status === "en attente") {
+      statusElement.classList.add("attente");
+    } else {
+      statusElement.classList.add("refuse");
+    }
+
+    document.getElementById("pendingMessage")
+      .classList.toggle("hidden", status !== "en attente");
+
+    document.getElementById("rejectedMessage")
+      .classList.toggle("hidden", status !== "refusé");
+
+    document.getElementById("activeContent")
+      .classList.toggle("hidden", status !== "actif");
+
+    if (status === "refusé") {
+      document.getElementById("rejectionReason").textContent =
+        partner.motif_refus ||
+        "Vous pouvez contacter l'administration pour obtenir plus d'informations.";
+    }
+
+    if (status === "actif") {
+
+      document.getElementById("organizerCount").textContent =
+        statistics.referred_organizers || 0;
+
+      document.getElementById("partnerCode").textContent =
+        partner.code || "";
+
+      document.getElementById("referralLink").textContent =
+        partner.referral_url || "";
+
+      document.getElementById("partnerType").textContent =
+        partner.type || "";
+
+      document.getElementById("partnerCategory").textContent =
+        partner.category || "";
+
+      document.getElementById("partnerCountry").textContent =
+        partner.country || "";
+
+      document.getElementById("partnerCity").textContent =
+        partner.city || "";
+
+      document.getElementById("partnerPhone").textContent =
+        partner.phone || "";
+
+      const qrContainer = document.getElementById("qrcode");
+      qrContainer.innerHTML = "";
+
+      if (partner.referral_url) {
+        new QRCode(qrContainer, {
+          text: partner.referral_url,
+          width: 180,
+          height: 180,
+          colorDark: "#712a90",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.H
+        });
+      }
+    }
+
+  } catch (error) {
+
+    dashboardSection.classList.add("hidden");
+    loginSection.classList.remove("hidden");
+
+    showLoginMessage(error.message, "error");
+
+    if (
+      error.message.includes("Aucun profil partenaire")
+    ) {
+      showLoginMessage(
+        "Aucune inscription partenaire n'est associée à ce compte. Veuillez d'abord effectuer votre inscription.",
+        "error"
+      );
+    }
+  }
+}
+
+
+/* =====================================================
+   CONNEXION EMAIL / MOT DE PASSE
+===================================================== */
+
+document.getElementById("loginForm")
+.addEventListener("submit", async function(event) {
+
+  event.preventDefault();
+
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  showLoginMessage("Connexion en cours...", "");
+
+  try {
+
+    await auth.signInWithEmailAndPassword(email, password);
+
+  } catch (error) {
+
+    showLoginMessage(error.message, "error");
+
+  }
+});
+
+
+/* =====================================================
+   CONNEXION GOOGLE
+===================================================== */
+
+document.getElementById("googleLogin")
+.addEventListener("click", async function() {
+
+  try {
+
+    const provider = new firebase.auth.GoogleAuthProvider();
+
+    await auth.signInWithPopup(provider);
+
+  } catch (error) {
+
+    showLoginMessage(error.message, "error");
+
+  }
+});
+
+
+/* =====================================================
+   DÉTECTION DE SESSION
+===================================================== */
+
+auth.onAuthStateChanged(async function(user) {
+
+  if (!user) {
+
+    dashboardSection.classList.add("hidden");
+    loginSection.classList.remove("hidden");
+    document.getElementById("headerUser")
+      .classList.add("hidden");
+
+    return;
+  }
+
+  if (!user.emailVerified) {
+
+    showLoginMessage(
+      "Veuillez vérifier votre adresse e-mail avant de continuer.",
+      "error"
+    );
+
+    await auth.signOut();
+    return;
+  }
+
+  await loadPartnerDashboard();
+
+});
+
+
+/* =====================================================
+   COPIER LE LIEN
+===================================================== */
+
+document.getElementById("copyLink")
+.addEventListener("click", async function() {
+
+  const link = document.getElementById("referralLink").textContent;
+
+  if (!link) return;
+
+  try {
+    await navigator.clipboard.writeText(link);
+    this.textContent = "Lien copié !";
+
+    setTimeout(() => {
+      this.textContent = "Copier mon lien";
+    }, 2000);
+
+  } catch (error) {
+    alert("Impossible de copier le lien.");
+  }
+});
+
+
+/* =====================================================
+   TÉLÉCHARGER LE QR CODE
+===================================================== */
+
+document.getElementById("downloadQR")
+.addEventListener("click", function() {
+
+  const qrContainer = document.getElementById("qrcode");
+  const canvas = qrContainer.querySelector("canvas");
+  const image = qrContainer.querySelector("img");
+
+  let imageUrl = "";
+
+  if (canvas) {
+    imageUrl = canvas.toDataURL("image/png");
+  } else if (image) {
+    imageUrl = image.src;
+  }
+
+  if (!imageUrl) {
+    alert("Le QR code n'est pas encore disponible.");
+    return;
+  }
+
+  const link = document.createElement("a");
+  link.href = imageUrl;
+  link.download = "mon-qr-code-fete-et-cadeaux.png";
+  link.click();
+
+});
+
+
+/* =====================================================
+   DÉCONNEXION
+===================================================== */
+
+document.getElementById("logoutButton")
+.addEventListener("click", async function() {
+
+  await auth.signOut();
+
+});
+</script>
+
+</body>
+</html>
