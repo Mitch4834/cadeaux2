@@ -1997,6 +1997,36 @@ document.querySelectorAll(".organizer-link").forEach(link => {
 </div>
 <script>
 const STATS_API_URL = "https://script.google.com/macros/s/AKfycbxpheLazHFneJy4YD-ebIlRKQHuO9YK3ug4boXazM4XsNiwoE669EITd5L2-gtiItyG/exec";
+// ENREGISTREMENT DU CODE PARTENAIRE
+function captureReferralCode() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const refCode = params.get("ref");
+
+    if (!refCode) return;
+
+    // Vérifier le format du code
+    const validCode = /^[A-Za-z0-9_-]{3,50}$/.test(refCode);
+
+    if (!validCode) return;
+
+    const storageKey = "fete_cadeaux_referral";
+
+    // Premier partenaire enregistré conservé
+    const existingCode = localStorage.getItem(storageKey);
+
+    if (!existingCode) {
+      localStorage.setItem(storageKey, refCode.toUpperCase());
+      console.log("Code partenaire enregistré :", refCode);
+    }
+
+  } catch (error) {
+    console.error("Erreur d'enregistrement du code partenaire :", error);
+  }
+}
+
+// Capturer le code dès l'arrivée sur la page
+captureReferralCode();
 
 function loadPublicStats() {
   const callback = "publicStatsCallback_" + Date.now();
@@ -2090,8 +2120,6 @@ document.addEventListener("keydown", function(e) {
 
 loadPublicStats();
 </script>
-<script>
-
 
 </body>
 </html>
