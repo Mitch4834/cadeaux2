@@ -1,0 +1,918 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Devenir partenaire | Fête & Cadeaux</title>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+
+<style>
+:root {
+  --primary:#712A90;
+  --secondary:#F1E8F6;
+  --accent:#D6B77A;
+  --dark:#35213D;
+  --bg:#FAF7FC;
+  --white:#fff;
+  --border:#e8dfee;
+  --muted:#766b7c;
+}
+
+* {
+  box-sizing:border-box;
+}
+
+body {
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:var(--bg);
+  color:var(--dark);
+}
+
+header {
+  background:white;
+  padding:18px 6%;
+  box-shadow:0 2px 12px #00000008;
+}
+
+.brand {
+  color:var(--primary);
+  font-size:22px;
+  font-weight:800;
+}
+
+.container {
+  max-width:760px;
+  margin:35px auto;
+  padding:0 16px 40px;
+}
+
+.card {
+  background:white;
+  border-radius:18px;
+  padding:30px;
+  box-shadow:0 8px 35px #35213d0c;
+  border:1px solid var(--border);
+}
+
+h1 {
+  text-align:center;
+  color:var(--primary);
+  font-size:27px;
+  margin:0 0 10px;
+}
+
+.intro {
+  text-align:center;
+  color:var(--muted);
+  line-height:1.6;
+  margin-bottom:25px;
+}
+
+h2 {
+  font-size:18px;
+  margin:25px 0 15px;
+  color:var(--primary);
+}
+
+.form-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
+}
+
+.form-group {
+  margin-bottom:16px;
+}
+
+label {
+  display:block;
+  font-weight:600;
+  font-size:14px;
+  margin-bottom:7px;
+}
+
+input,select,textarea {
+  width:100%;
+  padding:13px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  font-size:15px;
+  background:white;
+  color:var(--dark);
+  outline:none;
+}
+
+input:focus,select:focus,textarea:focus {
+  border-color:var(--primary);
+  box-shadow:0 0 0 3px #712a9012;
+}
+
+textarea {
+  min-height:95px;
+  resize:vertical;
+}
+
+button {
+  border:0;
+  border-radius:9px;
+  padding:14px 18px;
+  font-size:15px;
+  font-weight:700;
+  cursor:pointer;
+  transition:.2s;
+}
+
+button:disabled {
+  opacity:.6;
+  cursor:not-allowed;
+}
+
+.btn-primary {
+  background:var(--primary);
+  color:white;
+  width:100%;
+}
+
+.btn-primary:hover {
+  background:#8540a3;
+}
+
+.btn-google {
+  width:100%;
+  background:white;
+  border:1px solid var(--border);
+  color:var(--dark);
+  margin-bottom:12px;
+}
+
+.btn-google:hover {
+  background:var(--bg);
+}
+
+.btn-secondary {
+  background:var(--secondary);
+  color:var(--primary);
+  width:100%;
+  margin-top:10px;
+}
+
+.divider {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin:18px 0;
+  color:#998da0;
+  font-size:13px;
+}
+
+.divider:before,.divider:after {
+  content:"";
+  flex:1;
+  height:1px;
+  background:var(--border);
+}
+
+.status {
+  display:none;
+  padding:14px;
+  border-radius:9px;
+  margin:15px 0;
+  font-size:14px;
+  line-height:1.5;
+}
+
+.status.ok {
+  display:block;
+  background:#e8f6ec;
+  color:#216b37;
+}
+
+.status.error {
+  display:block;
+  background:#fdeaea;
+  color:#a32929;
+}
+
+.status.info {
+  display:block;
+  background:#f1e8f6;
+  color:#712a90;
+}
+
+.notice {
+  background:#faf5e9;
+  border-left:4px solid var(--accent);
+  padding:14px;
+  border-radius:6px;
+  font-size:13px;
+  line-height:1.6;
+  margin:18px 0;
+}
+
+.auth-panel {
+  background:var(--bg);
+  padding:18px;
+  border-radius:12px;
+  margin-bottom:20px;
+}
+
+.auth-panel h2 {
+  margin-top:0;
+}
+
+.auth-hidden {
+  display:none;
+}
+
+.account-info {
+  font-size:14px;
+  color:var(--muted);
+  margin-bottom:12px;
+  overflow-wrap:anywhere;
+}
+
+footer {
+  text-align:center;
+  padding:20px;
+  color:var(--muted);
+  font-size:13px;
+}
+
+a {
+  color:var(--primary);
+  text-decoration:none;
+  font-weight:600;
+}
+
+.login-link {
+  text-align:center;
+  margin-top:22px;
+  font-size:14px;
+}
+
+@media(max-width:600px) {
+  .form-grid {
+    grid-template-columns:1fr;
+    gap:0;
+  }
+
+  .card {
+    padding:22px 17px;
+  }
+
+  h1 {
+    font-size:23px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="brand">🎁 Fête & Cadeaux</div>
+</header>
+
+<main class="container">
+
+<div class="card">
+
+  <h1>Devenez partenaire</h1>
+
+  <p class="intro">
+    Rejoignez le réseau de partenaires Fête & Cadeaux.
+    Recommandez notre plateforme aux organisateurs
+    et bénéficiez de commissions sur leurs abonnements Premium.
+  </p>
+
+  <div id="globalStatus" class="status"></div>
+
+  <!-- AUTHENTIFICATION -->
+
+  <section id="authSection" class="auth-panel">
+
+    <h2>1. Votre compte</h2>
+
+    <div id="authDescription" class="account-info">
+      Connectez-vous ou créez votre compte pour déposer
+      votre candidature partenaire.
+    </div>
+
+    <button type="button" id="googleBtn" class="btn-google">
+      🌐 Continuer avec Google
+    </button>
+
+    <div class="divider">OU AVEC VOTRE E-MAIL</div>
+
+    <div class="form-group">
+      <label>Adresse e-mail</label>
+      <input type="email" id="authEmail"
+        placeholder="vous@exemple.com">
+    </div>
+
+    <div class="form-group">
+      <label>Mot de passe</label>
+      <input type="password" id="authPassword"
+        placeholder="Au moins 6 caractères">
+    </div>
+
+    <button type="button" id="registerAccountBtn"
+      class="btn-primary">
+      Créer mon compte
+    </button>
+
+    <button type="button" id="loginAccountBtn"
+      class="btn-secondary">
+      J'ai déjà un compte
+    </button>
+
+    <div id="verificationPanel" class="auth-hidden">
+
+      <div class="notice">
+        Un e-mail de vérification vient de vous être envoyé.
+        Ouvrez-le et cliquez sur le lien de confirmation.
+        Revenez ensuite sur cette page.
+      </div>
+
+      <button type="button" id="checkVerificationBtn"
+        class="btn-primary">
+        J'ai vérifié mon adresse e-mail
+      </button>
+
+      <button type="button" id="resendVerificationBtn"
+        class="btn-secondary">
+        Renvoyer l'e-mail de vérification
+      </button>
+
+    </div>
+
+  </section>
+
+  <!-- FORMULAIRE PARTENAIRE -->
+
+  <section id="partnerSection" class="auth-hidden">
+
+    <h2>2. Informations du partenaire</h2>
+
+    <div id="connectedEmail" class="account-info"></div>
+
+    <div class="notice">
+      Les informations ci-dessous permettront à notre équipe
+      d'examiner votre candidature.
+    </div>
+
+    <form id="partnerForm">
+
+      <div class="form-group">
+        <label>Vous êtes *</label>
+        <select id="partnerType" required>
+          <option value="">Choisir</option>
+          <option value="individu">Un particulier</option>
+          <option value="entreprise">Une entreprise</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Nom complet ou nom de l'entreprise *</label>
+        <input id="partnerName" required
+          placeholder="Votre nom ou celui de votre entreprise">
+      </div>
+
+      <div class="form-group">
+        <label>Catégorie d'activité *</label>
+        <select id="category" required>
+          <option value="">Sélectionner votre activité</option>
+          <option value="Boulangerie et pâtisserie">Boulangerie et pâtisserie</option>
+          <option value="Fleuriste">Fleuriste</option>
+          <option value="Photographe">Photographe</option>
+          <option value="Vidéaste">Vidéaste</option>
+          <option value="Traiteur">Traiteur</option>
+          <option value="Décorateur événementiel">Décorateur événementiel</option>
+          <option value="Organisateur événementiel">Organisateur événementiel</option>
+          <option value="Boutique de cadeaux">Boutique de cadeaux</option>
+          <option value="Salle de réception">Salle de réception</option>
+          <option value="DJ et animation">DJ et animation</option>
+          <option value="Créateur de contenu">Créateur de contenu</option>
+          <option value="Agence de communication">Agence de communication</option>
+          <option value="Prestataire événementiel">Prestataire événementiel</option>
+          <option value="Autre">Autre</option>
+        </select>
+      </div>
+
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label>Pays *</label>
+          <input id="country" required value="Haïti">
+        </div>
+
+        <div class="form-group">
+          <label>Ville</label>
+          <input id="city" placeholder="Votre ville">
+        </div>
+
+      </div>
+
+      <div class="form-group">
+        <label>Téléphone *</label>
+        <input id="phone" type="tel" required
+          placeholder="+509 ...">
+      </div>
+
+      <div class="form-group">
+        <label>Site web</label>
+        <input id="website" type="url"
+          placeholder="https://www.exemple.com">
+      </div>
+
+      <div class="form-group">
+        <label>Réseaux sociaux</label>
+        <input id="social"
+          placeholder="Lien Facebook, Instagram, TikTok...">
+      </div>
+
+      <div class="form-group">
+        <label>Présentez votre activité</label>
+        <textarea id="description"
+          placeholder="Parlez-nous de votre activité et de vos services..."></textarea>
+      </div>
+
+      <div class="notice">
+        <strong>Comment fonctionne le partenariat ?</strong><br>
+        Après validation de votre candidature, vous recevrez
+        un code partenaire et un lien personnel de recommandation.
+        Les commissions sont calculées sur les paiements Premium
+        confirmés selon les conditions du programme.
+      </div>
+
+      <button type="submit" id="submitPartnerBtn"
+        class="btn-primary">
+        Envoyer ma candidature
+      </button>
+
+    </form>
+
+    <button type="button" id="logoutBtn"
+      class="btn-secondary">
+      Se déconnecter
+    </button>
+
+  </section>
+
+  <div class="login-link">
+    Vous avez déjà un espace partenaire ?
+    <br>
+    <a href="dashboard-partenaire.html">
+      Accéder à mon espace partenaire
+    </a>
+  </div>
+
+</div>
+</main>
+
+<footer>
+  © 2026 Fête & Cadeaux — Tous droits réservés.
+</footer>
+
+<script>
+
+/* =====================================================
+   CONFIGURATION FIREBASE
+===================================================== */
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBGdtNBo1j09Regrjy8YfsiSPNhP6HIGE",
+  authDomain: "feteetcadeau.firebaseapp.com",
+  projectId: "feteetcadeau",
+  storageBucket: "feteetcadeau.firebasestorage.app",
+  messagingSenderId: "494807499217",
+  appId: "1:494807499217:web:6723be8d6dfdaefe76a0f0",
+  measurementId: "G-FVWFL7X82X"
+};
+
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+
+const auth = firebase.auth();
+
+const AUTH_API_URL =
+"https://script.google.com/macros/s/AKfycbyCaT0X3Zvd16vUflnao-Sn1IbUw5OrecEs2veTBAuvaywF_QCPAPv0E0-_eQE96h7Plw/exec";
+
+
+/* =====================================================
+   OUTILS
+===================================================== */
+
+const $ = id => document.getElementById(id);
+
+function showStatus(message,type="info") {
+  const el = $("globalStatus");
+  el.textContent = message;
+  el.className = "status " + type;
+  el.scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+
+function hideStatus() {
+  $("globalStatus").className = "status";
+  $("globalStatus").textContent = "";
+}
+
+function showPartnerForm(user) {
+  $("authSection").classList.add("auth-hidden");
+  $("partnerSection").classList.remove("auth-hidden");
+  $("connectedEmail").textContent =
+    "Compte connecté : " + user.email;
+}
+
+function showAuthForm() {
+  $("authSection").classList.remove("auth-hidden");
+  $("partnerSection").classList.add("auth-hidden");
+  $("verificationPanel").classList.add("auth-hidden");
+}
+
+
+/* =====================================================
+   INSCRIPTION PAR E-MAIL
+===================================================== */
+
+$("registerAccountBtn").addEventListener("click",async()=>{
+
+  hideStatus();
+
+  const email = $("authEmail").value.trim();
+  const password = $("authPassword").value;
+
+  if(!email || !password) {
+    return showStatus(
+      "Veuillez saisir votre adresse e-mail et votre mot de passe.",
+      "error"
+    );
+  }
+
+  if(password.length < 6) {
+    return showStatus(
+      "Le mot de passe doit contenir au moins 6 caractères.",
+      "error"
+    );
+  }
+
+  const btn = $("registerAccountBtn");
+  btn.disabled = true;
+  btn.textContent = "Création du compte...";
+
+  try {
+
+    const credential =
+      await auth.createUserWithEmailAndPassword(email,password);
+
+    await credential.user.sendEmailVerification();
+
+    $("verificationPanel").classList.remove("auth-hidden");
+
+    showStatus(
+      "Votre compte a été créé. Vérifiez votre adresse e-mail pour continuer.",
+      "info"
+    );
+
+  } catch(error) {
+
+    showStatus(error.message,"error");
+
+  } finally {
+
+    btn.disabled = false;
+    btn.textContent = "Créer mon compte";
+
+  }
+
+});
+
+
+/* =====================================================
+   CONNEXION PAR E-MAIL
+===================================================== */
+
+$("loginAccountBtn").addEventListener("click",async()=>{
+
+  hideStatus();
+
+  const email = $("authEmail").value.trim();
+  const password = $("authPassword").value;
+
+  if(!email || !password) {
+    return showStatus(
+      "Veuillez saisir votre adresse e-mail et votre mot de passe.",
+      "error"
+    );
+  }
+
+  const btn = $("loginAccountBtn");
+  btn.disabled = true;
+
+  try {
+
+    await auth.signInWithEmailAndPassword(email,password);
+
+  } catch(error) {
+
+    showStatus(error.message,"error");
+
+  } finally {
+
+    btn.disabled = false;
+
+  }
+
+});
+
+
+/* =====================================================
+   CONNEXION GOOGLE
+===================================================== */
+
+$("googleBtn").addEventListener("click",async()=>{
+
+  hideStatus();
+
+  const provider = new firebase.auth.GoogleAuthProvider();
+
+  try {
+
+    await auth.signInWithPopup(provider);
+
+  } catch(error) {
+
+    showStatus(error.message,"error");
+
+  }
+
+});
+
+
+/* =====================================================
+   VÉRIFICATION DE L'ADRESSE E-MAIL
+===================================================== */
+
+$("checkVerificationBtn").addEventListener("click",async()=>{
+
+  const user = auth.currentUser;
+
+  if(!user) {
+    return showStatus("Reconnectez-vous pour continuer.","error");
+  }
+
+  try {
+
+    await user.reload();
+
+    const refreshedUser = auth.currentUser;
+
+    if(!refreshedUser.emailVerified) {
+      return showStatus(
+        "Votre adresse n'est pas encore vérifiée. Consultez votre boîte e-mail.",
+        "error"
+      );
+    }
+
+    await refreshedUser.getIdToken(true);
+
+    showPartnerForm(refreshedUser);
+
+    showStatus(
+      "Adresse vérifiée ! Vous pouvez maintenant compléter votre candidature.",
+      "ok"
+    );
+
+  } catch(error) {
+
+    showStatus(error.message,"error");
+
+  }
+
+});
+
+
+/* =====================================================
+   RENVOYER L'E-MAIL
+===================================================== */
+
+$("resendVerificationBtn").addEventListener("click",async()=>{
+
+  const user = auth.currentUser;
+
+  if(!user) {
+    return showStatus("Reconnectez-vous pour continuer.","error");
+  }
+
+  try {
+
+    await user.sendEmailVerification();
+
+    showStatus(
+      "Un nouvel e-mail de vérification vient d'être envoyé.",
+      "ok"
+    );
+
+  } catch(error) {
+
+    showStatus(error.message,"error");
+
+  }
+
+});
+
+
+/* =====================================================
+   ENVOI DE LA DEMANDE AU BACKEND
+===================================================== */
+
+async function submitPartnerApplication(data) {
+
+  const user = auth.currentUser;
+
+  if(!user) {
+    throw new Error("Vous devez être connecté.");
+  }
+
+  await user.reload();
+
+  if(!user.emailVerified) {
+    throw new Error(
+      "Veuillez d'abord vérifier votre adresse e-mail."
+    );
+  }
+
+  const idToken = await user.getIdToken(true);
+
+  const payload = {
+    action:"registerPartner",
+    id_token:idToken,
+    ...data
+  };
+
+  const response = await fetch(AUTH_API_URL,{
+    method:"POST",
+    headers:{
+      "Content-Type":"text/plain;charset=utf-8"
+    },
+    body:JSON.stringify(payload),
+    redirect:"follow"
+  });
+
+  if(!response.ok) {
+    throw new Error("Erreur de communication avec le serveur.");
+  }
+
+  const result = await response.json();
+
+  if(!result.success) {
+    throw new Error(result.message || "Erreur lors de l'inscription.");
+  }
+
+  return result;
+}
+
+
+/* =====================================================
+   FORMULAIRE PARTENAIRE
+===================================================== */
+
+$("partnerForm").addEventListener("submit",async event=>{
+
+  event.preventDefault();
+  hideStatus();
+
+  const btn = $("submitPartnerBtn");
+
+  const data = {
+    partner_type:$("partnerType").value,
+    partner_name:$("partnerName").value.trim(),
+    category:$("category").value,
+    country:$("country").value.trim(),
+    city:$("city").value.trim(),
+    phone:$("phone").value.trim(),
+    website:$("website").value.trim(),
+    social:$("social").value.trim(),
+    description:$("description").value.trim()
+  };
+
+  if(
+    !data.partner_type ||
+    !data.partner_name ||
+    !data.category ||
+    !data.country ||
+    !data.phone
+  ) {
+    return showStatus(
+      "Veuillez remplir tous les champs obligatoires.",
+      "error"
+    );
+  }
+
+  btn.disabled = true;
+  btn.textContent = "Envoi de la candidature...";
+
+  try {
+
+    const result = await submitPartnerApplication(data);
+
+    $("partnerForm").reset();
+
+    showStatus(
+      result.message ||
+      "Votre candidature a été enregistrée. Elle est en attente de validation.",
+      "ok"
+    );
+
+    $("partnerForm").classList.add("auth-hidden");
+
+    $("logoutBtn").textContent = "Se déconnecter";
+
+  } catch(error) {
+
+    showStatus(error.message,"error");
+
+  } finally {
+
+    btn.disabled = false;
+    btn.textContent = "Envoyer ma candidature";
+
+  }
+
+});
+
+
+/* =====================================================
+   DÉCONNEXION
+===================================================== */
+
+$("logoutBtn").addEventListener("click",async()=>{
+
+  try {
+
+    await auth.signOut();
+    showAuthForm();
+    showStatus("Vous êtes déconnecté.","info");
+
+  } catch(error) {
+
+    showStatus(error.message,"error");
+
+  }
+
+});
+
+
+/* =====================================================
+   ÉTAT DE LA SESSION
+===================================================== */
+
+auth.onAuthStateChanged(async user=>{
+
+  if(!user) {
+    showAuthForm();
+    return;
+  }
+
+  try {
+
+    await user.reload();
+
+    const currentUser = auth.currentUser;
+
+    if(currentUser.emailVerified) {
+
+      showPartnerForm(currentUser);
+
+      $("verificationPanel").classList.add("auth-hidden");
+
+    } else {
+
+      showAuthForm();
+
+      $("verificationPanel").classList.remove("auth-hidden");
+
+      showStatus(
+        "Votre adresse e-mail doit être vérifiée avant de déposer votre candidature.",
+        "info"
+      );
+
+    }
+
+  } catch(error) {
+
+    showStatus(error.message,"error");
+
+  }
+
+});
+
+</script>
+
+</body>
+</html>
