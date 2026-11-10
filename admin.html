@@ -456,24 +456,25 @@ auth.onAuthStateChanged(async user => {
    CHARGEMENT DES PARTENAIRES
 ===================================================== */
 
+
 async function loadPartners() {
+  try {
+    const result = await apiRequest("adminListPartners");
 
-  
-$("partnersList").addEventListener("click", async event => {
+    partners = Array.isArray(result.partners)
+      ? result.partners
+      : [];
 
-  const button = event.target.closest("button[data-action]");
+    updateStatistics();
+    renderPartners();
 
-  if (!button) return;
-
-  const action = button.dataset.action;
-  const uid = button.dataset.uid;
-
-  const partner = partners.find(p => String(p.UID) === uid);
-
-  if (!partner) {
-    showMessage("mainMessage", "Partenaire introuvable dans la liste.", "error");
-    return;
+  } catch (error) {
+    showMessage("mainMessage", error.message, "error");
+    $("partnersList").innerHTML =
+      '<div class="empty">Impossible de charger les partenaires.</div>';
   }
+}
+
 
   // NOMINATION MASTER
   if (action === "appoint-master") {
