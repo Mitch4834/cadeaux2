@@ -468,9 +468,16 @@ function firebaseError(error) {
    SYNCHRONISATION AVEC LE BACKEND
 ===================================================== */
 
+
 async function syncOrganizer(user) {
 
   const idToken = await user.getIdToken(true);
+
+  const referralKey = "fete_cadeaux_referral";
+
+  // Récupérer le code partenaire enregistré
+  const referralCode =
+    localStorage.getItem(referralKey) || "";
 
   const response = await fetch(BACKEND_URL, {
     method: "POST",
@@ -479,7 +486,8 @@ async function syncOrganizer(user) {
     },
     body: JSON.stringify({
       action: "syncProfile",
-      id_token: idToken
+      id_token: idToken,
+      referral_code: referralCode
     })
   });
 
@@ -492,6 +500,24 @@ async function syncOrganizer(user) {
   if (!result.success) {
     throw new Error(
       result.message || "Synchronisation impossible."
+    );
+  }
+
+  // Supprimer le code uniquement si le backend
+  // confirme qu'il a bien traité l'attribution.
+  if (referralCode) {
+
+    if (result.referral_processed !== true) {
+      throw new Error(
+        "Votre compte est synchronisé, mais le code partenaire n'a pas encore été confirmé. Il est conservé dans votre navigateur."
+      );
+    }
+
+    localStorage.removeItem(referralKey);
+
+    console.log(
+      "Code partenaire enregistré et retiré du navigateur :",
+      referralCode
     );
   }
 
