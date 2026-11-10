@@ -87,6 +87,25 @@ button:disabled{opacity:.5;cursor:not-allowed}
 .secondary{background:var(--light);color:var(--primary)}
 .approve{background:#e4f5eb;color:var(--green)}
 .reject{background:#fce9eb;color:var(--red)}
+  .master-badge{
+  display:inline-block;
+  background:#eee6f5;
+  color:#712A90;
+  padding:7px 12px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:700;
+  margin-top:10px;
+}
+
+.master-button{
+  background:#712A90;
+  color:white;
+}
+
+.master-button:hover{
+  background:#57206f;
+}
 .logout{background:#f1edf3;color:#574d5e}
 .google{background:#fff;border:1px solid var(--border);width:100%}
 .message{
@@ -439,26 +458,146 @@ auth.onAuthStateChanged(async user => {
 
 async function loadPartners() {
 
-  $("partnersList").innerHTML =
-    '<div class="empty">Chargement...</div>';
+  
+$("partnersList").addEventListener("click", async event => {
 
-  try {
-    const result = await apiRequest("adminListPartners");
+  const button = event.target.closest("button[data-action]");
 
-    partners = Array.isArray(result.partners)
-      ? result.partners
-      : [];
+  if (!button) return;
 
-    updateStatistics();
-    renderPartners();
+  const action = button.dataset.action;
+  const uid = button.dataset.uid;
 
-    hideMessage("mainMessage");
+  const partner = partners.find(p => String(p.UID) === uid);
 
-  } catch(error) {
-    $("partnersList").innerHTML = "";
-    showMessage("mainMessage", error.message, "error");
+  if (!partner) {
+    showMessage("mainMessage", "Partenaire introuvable dans la liste.", "error");
+    return;
   }
-}
+
+  // NOMINATION MASTER
+  if (action === "appoint-master") {
+
+    const confirmed = confirm(
+      "Nommer " + partner.Nom_Partenaire +
+      " comme Master Partenaire ?\n\n" +
+      "Ce partenaire recevra une commission de 25 % " +
+      "sur les paiements des organisateurs de son réseau."
+    );
+
+    if (!confirmed) return;
+
+    button.disabled = true;
+    button.textContent = "Nomination...";
+
+    try {
+
+      const result = await apiRequest("adminAppointMaster", {
+        master_uid: uid
+      });
+
+      showMessage(
+        "mainMessage",
+        (result.message || "Nomination effectuée avec succès.") +
+        (result.code ? " Code Master : " + result.code : ""),
+        "success"
+      );
+
+      await loadPartners();
+
+    } catch(error) {
+
+      button.disabled = false;
+      button.textContent = "★ Nommer Master";
+
+      showMessage("mainMessage", error.message, "error");
+    }
+
+    return;
+  }
+
+  // APPROBATION
+  if (action === "approve") {
+
+    const confirmed = confirm(
+      "Confirmer l'approbation de " +
+      partner.Nom_Partenaire +
+      " ?\n\nUn code partenaire sera généré automatiquement."
+    );
+
+    if (!confirmed) return;
+
+    button.disabled = true;
+    button.textContent = "Validation...";
+
+    try {
+
+      const result = await apiRequest("adminApprovePartner", {
+        partner_uid: uid
+      });
+
+      showMessage(
+        "mainMessage",
+        result.message + " Code partenaire : " + result.code,
+        "success"
+      );
+
+      await loadPartners();
+
+    } catch(error) {
+
+      button.disabled = false;
+      button.textContent = "✓ Approuver";
+
+      showMessage("mainMessage", error.message, "error");
+    }
+
+    return;
+  }
+
+  // REFUS
+  if (action === "reject") {
+
+    const reason = prompt(
+      "Indique le motif du refus (facultatif) :"
+    );
+
+    if (reason === null) return;
+
+    const confirmed = confirm(
+      "Confirmer le refus de " +
+      partner.Nom_Partenaire +
+      " ?"
+    );
+
+    if (!confirmed) return;
+
+    button.disabled = true;
+    button.textContent = "Refus...";
+
+    try {
+
+      const result = await apiRequest("adminRejectPartner", {
+        partner_uid: uid,
+        reason: reason.trim()
+      });
+
+      showMessage("mainMessage", result.message, "success");
+
+      await loadPartners();
+
+    } catch(error) {
+
+      button.disabled = false;
+      button.textContent = "✕ Refuser";
+
+      showMessage("mainMessage", error.message, "error");
+    }
+
+  }
+
+});
+
 
 
 /* =====================================================
@@ -517,6 +656,7 @@ function formatDate(value) {
    AFFICHER LES PARTENAIRES
 ===================================================== */
 
+
 function renderPartners() {
 
   const list = $("partnersList");
@@ -558,6 +698,41 @@ function renderPartners() {
     const code = escapeHTML(partner.Code_Partenaire);
     const reason = escapeHTML(partner.Motif_Refus);
 
+    const isMaster =
+      partner.Est_Master === true ||
+      String(partner.Est_Master).toLowerCase() === "true";
+
+    const masterCode = escapeHTML(partner.Code_Master || "");
+    const masterRate = Number(
+      partner.Taux_Commission_Master || 25
+    );
+
+    let masterDisplay = "";
+
+    if (status === "actif" && isMaster) {
+
+      masterDisplay = `
+        <div class="master-badge">
+          ★ Master · ${masterRate}% de commission
+        </div>
+        <p><strong>Code Master :</strong> ${masterCode}</p>
+      `;
+
+    } else if (status === "actif") {
+
+      masterDisplay = `
+        <div class="actions">
+          <button
+            class="master-button"
+            data-action="appoint-master"
+            data-uid="${uid}">
+            ★ Nommer Master
+          </button>
+        </div>
+      `;
+
+    }
+
     const actions = status === "en attente"
       ? `
         <div class="actions">
@@ -585,6 +760,8 @@ function renderPartners() {
           </span>
         </div>
 
+        ${masterDisplay}
+
         <div class="partner-details">
           <p><strong>Type :</strong> ${type}</p>
           <p><strong>Catégorie :</strong> ${category}</p>
@@ -608,7 +785,6 @@ function renderPartners() {
 
   }).join("");
 }
-
 
 /* =====================================================
    FILTRES
