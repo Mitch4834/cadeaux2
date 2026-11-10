@@ -286,6 +286,7 @@ button:disabled{opacity:.5;cursor:not-allowed}
 
 </main>
 
+
 <script>
 /* =====================================================
    CONFIGURATION
@@ -306,10 +307,20 @@ const AUTH_API_URL =
 
 const ADMIN_EMAIL = "michelblaise312@gmail.com";
 
-firebase.initializeApp(firebaseConfig);
+/* =====================================================
+   INITIALISATION FIREBASE
+===================================================== */
+
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
 
 const auth = firebase.auth();
 const provider = new firebase.auth.GoogleAuthProvider();
+
+provider.setCustomParameters({
+  prompt: "select_account"
+});
 
 let currentUser = null;
 let partners = [];
@@ -317,28 +328,33 @@ let currentFilter = "En attente";
 
 const $ = id => document.getElementById(id);
 
-
 /* =====================================================
    AFFICHAGE DES MESSAGES
 ===================================================== */
 
-function showMessage(id, message, type="info") {
+function showMessage(id, message, type = "info") {
   const element = $(id);
+
+  if (!element) return;
+
   element.className = "message " + type;
   element.textContent = message;
 }
 
 function hideMessage(id) {
-  $(id).className = "message";
-  $(id).textContent = "";
-}
+  const element = $(id);
 
+  if (!element) return;
+
+  element.className = "message";
+  element.textContent = "";
+}
 
 /* =====================================================
    APPEL AU BACKEND
 ===================================================== */
 
-async function apiRequest(action, extra={}) {
+async function apiRequest(action, extra = {}) {
 
   if (!currentUser) {
     throw new Error("Vous devez être connecté.");
@@ -359,53 +375,118 @@ async function apiRequest(action, extra={}) {
   });
 
   if (!response.ok) {
-    throw new Error("Erreur de communication avec le serveur.");
+    throw new Error(
+      "Erreur de communication avec le serveur."
+    );
   }
 
   const result = await response.json();
 
   if (!result.success) {
-    throw new Error(result.message || "Une erreur est survenue.");
+    throw new Error(
+      result.message || "Une erreur est survenue."
+    );
   }
 
   return result;
 }
 
-
 /* =====================================================
-   CONNEXION
+   CONNEXION GOOGLE
 ===================================================== */
 
 $("googleBtn").addEventListener("click", async () => {
+
   hideMessage("loginMessage");
 
+  const button = $("googleBtn");
+
+  button.disabled = true;
+  button.textContent = "Connexion en cours...";
+
   try {
+
     await auth.signInWithPopup(provider);
+
   } catch(error) {
-    showMessage("loginMessage", error.message, "error");
+
+    console.error("Erreur connexion Google :", error);
+
+    showMessage(
+      "loginMessage",
+      error.message || "Impossible de se connecter avec Google.",
+      "error"
+    );
+
+  } finally {
+
+    button.disabled = false;
+    button.textContent = "Continuer avec Google";
+
   }
+
 });
 
+/* =====================================================
+   CONNEXION EMAIL / MOT DE PASSE
+===================================================== */
+
 $("loginBtn").addEventListener("click", async () => {
+
   hideMessage("loginMessage");
 
   const email = $("email").value.trim();
   const password = $("password").value;
 
   if (!email || !password) {
-    showMessage("loginMessage", "Veuillez saisir votre e-mail et votre mot de passe.", "error");
+
+    showMessage(
+      "loginMessage",
+      "Veuillez saisir votre e-mail et votre mot de passe.",
+      "error"
+    );
+
     return;
   }
 
+  const button = $("loginBtn");
+
+  button.disabled = true;
+  button.textContent = "Connexion...";
+
   try {
-    await auth.signInWithEmailAndPassword(email, password);
+
+    await auth.signInWithEmailAndPassword(
+      email,
+      password
+    );
+
   } catch(error) {
-    showMessage("loginMessage", error.message, "error");
+
+    console.error("Erreur connexion :", error);
+
+    showMessage(
+      "loginMessage",
+      error.message,
+      "error"
+    );
+
+  } finally {
+
+    button.disabled = false;
+    button.textContent = "Se connecter";
+
   }
+
 });
 
-$("logoutBtn").addEventListener("click", () => auth.signOut());
+/* =====================================================
+   DÉCONNEXION
+===================================================== */
 
+$("logoutBtn").addEventListener("click", () => {
+  auth.signOut();
+});
 
 /* =====================================================
    SURVEILLANCE DE LA SESSION
@@ -416,212 +497,147 @@ auth.onAuthStateChanged(async user => {
   currentUser = user;
 
   if (!user) {
+
     $("loginPanel").classList.remove("hidden");
     $("dashboard").classList.add("hidden");
     $("logoutBtn").classList.add("hidden");
+
     $("adminEmail").textContent = "";
+
     return;
   }
 
-  if (user.email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+  // Vérification de l'adresse administrateur.
+  if (
+    !user.email ||
+    user.email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()
+  ) {
+
     await auth.signOut();
+
     showMessage(
       "loginMessage",
       "Accès refusé. Cette adresse n'est pas autorisée à administrer les partenaires.",
       "error"
     );
+
     return;
   }
 
+  // Vérification de l'adresse e-mail.
   if (!user.emailVerified) {
+
     showMessage(
       "loginMessage",
       "Veuillez vérifier votre adresse e-mail avant d'accéder à l'administration.",
       "error"
     );
+
     await auth.signOut();
+
     return;
   }
 
   $("loginPanel").classList.add("hidden");
   $("dashboard").classList.remove("hidden");
   $("logoutBtn").classList.remove("hidden");
+
   $("adminEmail").textContent = user.email;
 
   await loadPartners();
-});
 
+});
 
 /* =====================================================
    CHARGEMENT DES PARTENAIRES
 ===================================================== */
 
-
 async function loadPartners() {
 
+  $("partnersList").innerHTML =
+    '<div class="empty">Chargement des partenaires...</div>';
+
+  try {
+
+    const result = await apiRequest("adminListPartners");
+
+    partners = Array.isArray(result.partners)
+      ? result.partners
+      : [];
+
+    updateStatistics();
+    renderPartners();
+
+  } catch(error) {
+
+    console.error("Erreur chargement partenaires :", error);
+
+    showMessage(
+      "mainMessage",
+      error.message,
+      "error"
+    );
+
+    $("partnersList").innerHTML =
+      '<div class="empty">Impossible de charger les partenaires.</div>';
+
+  }
+
+}
+
 /* =====================================================
-   GESTION DES ACTIONS DES PARTENAIRES
+   NORMALISATION DES STATUTS
 ===================================================== */
 
-$("partnersList").addEventListener("click", async event => {
+function normalizeStatus(status) {
 
-  const button = event.target.closest("button[data-action]");
-  if (!button) return;
+  return String(status || "")
+    .trim()
+    .toLowerCase();
 
-  const action = button.dataset.action;
-  const uid = button.dataset.uid;
-
-  const partner = partners.find(p => String(p.UID) === uid);
-
-  if (!partner) {
-    showMessage("mainMessage", "Partenaire introuvable.", "error");
-    return;
-  }
-
-  // NOMINATION MASTER
-  if (action === "appoint-master") {
-
-    const confirmed = confirm(
-      "Nommer " + partner.Nom_Partenaire +
-      " comme Master Partenaire ?\n\n" +
-      "Ce partenaire recevra une commission de 25 % " +
-      "sur les paiements des organisateurs de son réseau."
-    );
-
-    if (!confirmed) return;
-
-    button.disabled = true;
-    button.textContent = "Nomination...";
-
-    try {
-      const result = await apiRequest("adminAppointMaster", {
-        master_uid: uid
-      });
-
-      showMessage(
-        "mainMessage",
-        (result.message || "Nomination effectuée.") +
-        (result.code ? " Code Master : " + result.code : ""),
-        "success"
-      );
-
-      await loadPartners();
-
-    } catch(error) {
-      button.disabled = false;
-      button.textContent = "★ Nommer Master";
-      showMessage("mainMessage", error.message, "error");
-    }
-
-    return;
-  }
-
-  // APPROBATION
-  if (action === "approve") {
-
-    const confirmed = confirm(
-      "Confirmer l'approbation de " +
-      partner.Nom_Partenaire +
-      " ?\n\nUn code partenaire sera généré automatiquement."
-    );
-
-    if (!confirmed) return;
-
-    button.disabled = true;
-    button.textContent = "Validation...";
-
-    try {
-      const result = await apiRequest("adminApprovePartner", {
-        partner_uid: uid
-      });
-
-      showMessage(
-        "mainMessage",
-        result.message + " Code partenaire : " + result.code,
-        "success"
-      );
-
-      await loadPartners();
-
-    } catch(error) {
-      button.disabled = false;
-      button.textContent = "✓ Approuver";
-      showMessage("mainMessage", error.message, "error");
-    }
-
-    return;
-  }
-
-  // REFUS
-  if (action === "reject") {
-
-    const reason = prompt("Indique le motif du refus (facultatif) :");
-    if (reason === null) return;
-
-    const confirmed = confirm(
-      "Confirmer le refus de " + partner.Nom_Partenaire + " ?"
-    );
-
-    if (!confirmed) return;
-
-    button.disabled = true;
-    button.textContent = "Refus...";
-
-    try {
-      const result = await apiRequest("adminRejectPartner", {
-        partner_uid: uid,
-        reason: reason.trim()
-      });
-
-      showMessage("mainMessage", result.message, "success");
-      await loadPartners();
-
-    } catch(error) {
-      button.disabled = false;
-      button.textContent = "✕ Refuser";
-      showMessage("mainMessage", error.message, "error");
-    }
-  }
-
-});
-
-});
-
-
+}
 
 /* =====================================================
    STATISTIQUES
 ===================================================== */
 
-function normalizeStatus(status) {
-  return String(status || "").trim().toLowerCase();
-}
-
 function updateStatistics() {
 
   $("pendingCount").textContent =
-    partners.filter(p => normalizeStatus(p.Statut) === "en attente").length;
+    partners.filter(p =>
+      normalizeStatus(p.Statut) === "en attente"
+    ).length;
 
   $("activeCount").textContent =
-    partners.filter(p => normalizeStatus(p.Statut) === "actif").length;
+    partners.filter(p =>
+      normalizeStatus(p.Statut) === "actif"
+    ).length;
 
   $("rejectedCount").textContent =
-    partners.filter(p => normalizeStatus(p.Statut) === "refusé").length;
-}
+    partners.filter(p =>
+      normalizeStatus(p.Statut) === "refusé"
+    ).length;
 
+}
 
 /* =====================================================
    PROTECTION CONTRE INJECTION HTML
 ===================================================== */
 
 function escapeHTML(value) {
+
   return String(value == null ? "" : value)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
+
 }
+
+/* =====================================================
+   FORMATAGE DES DATES
+===================================================== */
 
 function formatDate(value) {
 
@@ -634,17 +650,16 @@ function formatDate(value) {
   }
 
   return date.toLocaleDateString("fr-FR", {
-    day:"2-digit",
-    month:"long",
-    year:"numeric"
+    day: "2-digit",
+    month: "long",
+    year: "numeric"
   });
+
 }
 
-
 /* =====================================================
-   AFFICHER LES PARTENAIRES
+   AFFICHAGE DES PARTENAIRES
 ===================================================== */
-
 
 function renderPartners() {
 
@@ -652,15 +667,20 @@ function renderPartners() {
 
   const filtered = partners.filter(partner => {
 
-    if (currentFilter === "Tous") return true;
+    if (currentFilter === "Tous") {
+      return true;
+    }
 
     return normalizeStatus(partner.Statut) ===
-      currentFilter.toLowerCase();
+      normalizeStatus(currentFilter);
+
   });
 
   if (!filtered.length) {
+
     list.innerHTML =
       '<div class="empty">Aucun partenaire dans cette catégorie.</div>';
+
     return;
   }
 
@@ -670,8 +690,13 @@ function renderPartners() {
 
     let statusClass = "pending";
 
-    if (status === "actif") statusClass = "active";
-    if (status === "refusé") statusClass = "refused";
+    if (status === "actif") {
+      statusClass = "active";
+    }
+
+    if (status === "refusé") {
+      statusClass = "refused";
+    }
 
     const uid = escapeHTML(partner.UID);
     const name = escapeHTML(partner.Nom_Partenaire);
@@ -691,88 +716,162 @@ function renderPartners() {
       partner.Est_Master === true ||
       String(partner.Est_Master).toLowerCase() === "true";
 
-    const masterCode = escapeHTML(partner.Code_Master || "");
+    const masterCode = escapeHTML(
+      partner.Code_Master || ""
+    );
+
     const masterRate = Number(
       partner.Taux_Commission_Master || 25
     );
 
     let masterDisplay = "";
 
+    // PARTENAIRE DÉJÀ MASTER
     if (status === "actif" && isMaster) {
 
       masterDisplay = `
         <div class="master-badge">
           ★ Master · ${masterRate}% de commission
         </div>
-        <p><strong>Code Master :</strong> ${masterCode}</p>
+
+        <p>
+          <strong>Code Master :</strong>
+          ${masterCode}
+        </p>
       `;
 
-    } else if (status === "actif") {
+    }
+
+    // PARTENAIRE ACTIF POUVANT DEVENIR MASTER
+    else if (status === "actif") {
 
       masterDisplay = `
         <div class="actions">
+
           <button
             class="master-button"
             data-action="appoint-master"
             data-uid="${uid}">
+
             ★ Nommer Master
+
           </button>
+
         </div>
       `;
 
     }
 
+    // ACTIONS D'APPROBATION ET DE REFUS
     const actions = status === "en attente"
       ? `
         <div class="actions">
-          <button class="approve" data-action="approve" data-uid="${uid}">
+
+          <button
+            class="approve"
+            data-action="approve"
+            data-uid="${uid}">
+
             ✓ Approuver
+
           </button>
-          <button class="reject" data-action="reject" data-uid="${uid}">
+
+          <button
+            class="reject"
+            data-action="reject"
+            data-uid="${uid}">
+
             ✕ Refuser
+
           </button>
+
         </div>
       `
       : "";
 
     return `
+
       <article class="partner">
 
         <div class="partner-top">
+
           <div>
-            <h3>${name || "Partenaire sans nom"}</h3>
+
+            <h3>
+              ${name || "Partenaire sans nom"}
+            </h3>
+
             <p>${email}</p>
+
           </div>
 
           <span class="status ${statusClass}">
             ${escapeHTML(partner.Statut)}
           </span>
+
         </div>
 
         ${masterDisplay}
 
         <div class="partner-details">
+
           <p><strong>Type :</strong> ${type}</p>
+
           <p><strong>Catégorie :</strong> ${category}</p>
+
           <p><strong>Pays :</strong> ${country}</p>
+
           <p><strong>Ville :</strong> ${city}</p>
+
           <p><strong>Téléphone :</strong> ${phone}</p>
-          <p><strong>Inscription :</strong> ${formatDate(partner.Date_Creation)}</p>
-          <p><strong>Site web :</strong> ${website || "Non renseigné"}</p>
-          <p><strong>Réseaux sociaux :</strong> ${social || "Non renseignés"}</p>
-          <p><strong>Code partenaire :</strong> ${code || "Pas encore attribué"}</p>
-          <p><strong>Validation :</strong> ${formatDate(partner.Date_Validation)}</p>
+
+          <p>
+            <strong>Inscription :</strong>
+            ${formatDate(partner.Date_Creation)}
+          </p>
+
+          <p>
+            <strong>Site web :</strong>
+            ${website || "Non renseigné"}
+          </p>
+
+          <p>
+            <strong>Réseaux sociaux :</strong>
+            ${social || "Non renseignés"}
+          </p>
+
+          <p>
+            <strong>Code partenaire :</strong>
+            ${code || "Pas encore attribué"}
+          </p>
+
+          <p>
+            <strong>Validation :</strong>
+            ${formatDate(partner.Date_Validation)}
+          </p>
+
         </div>
 
-        ${description ? `<p><strong>Description :</strong> ${description}</p>` : ""}
-        ${reason ? `<p><strong>Motif du refus :</strong> ${reason}</p>` : ""}
+        ${
+          description
+            ? `<p><strong>Description :</strong> ${description}</p>`
+            : ""
+        }
+
+        ${
+          reason
+            ? `<p><strong>Motif du refus :</strong> ${reason}</p>`
+            : ""
+        }
 
         ${actions}
 
       </article>
+
     `;
 
   }).join("");
+
 }
 
 /* =====================================================
@@ -783,46 +882,130 @@ document.querySelectorAll(".tab").forEach(button => {
 
   button.addEventListener("click", () => {
 
-    document.querySelectorAll(".tab").forEach(tab =>
-      tab.classList.remove("active")
-    );
+    document.querySelectorAll(".tab").forEach(tab => {
+      tab.classList.remove("active");
+    });
 
     button.classList.add("active");
 
     currentFilter = button.dataset.filter;
 
     renderPartners();
+
   });
 
 });
 
-
 /* =====================================================
-   APPROBATION ET REFUS
+   GESTION UNIQUE DES ACTIONS
+   - Nommer Master
+   - Approuver
+   - Refuser
 ===================================================== */
 
 $("partnersList").addEventListener("click", async event => {
 
-  const button = event.target.closest("button[data-action]");
+  const button = event.target.closest(
+    "button[data-action]"
+  );
 
   if (!button) return;
 
   const action = button.dataset.action;
   const uid = button.dataset.uid;
 
-  const partner = partners.find(p => String(p.UID) === uid);
+  const partner = partners.find(
+    p => String(p.UID) === uid
+  );
 
   if (!partner) {
-    showMessage("mainMessage", "Partenaire introuvable dans la liste.", "error");
+
+    showMessage(
+      "mainMessage",
+      "Partenaire introuvable dans la liste.",
+      "error"
+    );
+
     return;
   }
+
+  // Éviter les clics multiples.
+  if (button.disabled) return;
+
+  /* -----------------------------------------------
+     NOMINATION MASTER
+  ----------------------------------------------- */
+
+  if (action === "appoint-master") {
+
+    const confirmed = confirm(
+
+      "Nommer " + partner.Nom_Partenaire +
+      " comme Master Partenaire ?\n\n" +
+
+      "Ce partenaire recevra une commission de 25 % " +
+      "sur les paiements des organisateurs de son réseau."
+
+    );
+
+    if (!confirmed) return;
+
+    button.disabled = true;
+    button.textContent = "Nomination...";
+
+    try {
+
+      const result = await apiRequest(
+        "adminAppointMaster",
+        {
+          master_uid: uid
+        }
+      );
+
+      showMessage(
+        "mainMessage",
+
+        (result.message ||
+          "Nomination effectuée avec succès.") +
+
+        (result.code
+          ? " Code Master : " + result.code
+          : ""),
+
+        "success"
+      );
+
+      await loadPartners();
+
+    } catch(error) {
+
+      button.disabled = false;
+      button.textContent = "★ Nommer Master";
+
+      showMessage(
+        "mainMessage",
+        error.message,
+        "error"
+      );
+
+    }
+
+    return;
+  }
+
+  /* -----------------------------------------------
+     APPROBATION
+  ----------------------------------------------- */
 
   if (action === "approve") {
 
     const confirmed = confirm(
+
       "Confirmer l'approbation de " +
       partner.Nom_Partenaire +
+
       " ?\n\nUn code partenaire sera généré automatiquement."
+
     );
 
     if (!confirmed) return;
@@ -832,13 +1015,21 @@ $("partnersList").addEventListener("click", async event => {
 
     try {
 
-      const result = await apiRequest("adminApprovePartner", {
-        partner_uid: uid
-      });
+      const result = await apiRequest(
+        "adminApprovePartner",
+        {
+          partner_uid: uid
+        }
+      );
 
       showMessage(
         "mainMessage",
-        result.message + " Code partenaire : " + result.code,
+
+        result.message +
+        (result.code
+          ? " Code partenaire : " + result.code
+          : ""),
+
         "success"
       );
 
@@ -849,10 +1040,20 @@ $("partnersList").addEventListener("click", async event => {
       button.disabled = false;
       button.textContent = "✓ Approuver";
 
-      showMessage("mainMessage", error.message, "error");
+      showMessage(
+        "mainMessage",
+        error.message,
+        "error"
+      );
+
     }
 
+    return;
   }
+
+  /* -----------------------------------------------
+     REFUS
+  ----------------------------------------------- */
 
   if (action === "reject") {
 
@@ -875,12 +1076,19 @@ $("partnersList").addEventListener("click", async event => {
 
     try {
 
-      const result = await apiRequest("adminRejectPartner", {
-        partner_uid: uid,
-        reason: reason.trim()
-      });
+      const result = await apiRequest(
+        "adminRejectPartner",
+        {
+          partner_uid: uid,
+          reason: reason.trim()
+        }
+      );
 
-      showMessage("mainMessage", result.message, "success");
+      showMessage(
+        "mainMessage",
+        result.message,
+        "success"
+      );
 
       await loadPartners();
 
@@ -889,21 +1097,29 @@ $("partnersList").addEventListener("click", async event => {
       button.disabled = false;
       button.textContent = "✕ Refuser";
 
-      showMessage("mainMessage", error.message, "error");
+      showMessage(
+        "mainMessage",
+        error.message,
+        "error"
+      );
+
     }
 
   }
 
 });
 
-
 /* =====================================================
    ACTUALISATION
 ===================================================== */
 
-$("refreshBtn").addEventListener("click", loadPartners);
+$("refreshBtn").addEventListener(
+  "click",
+  loadPartners
+);
 
 </script>
+
 
 </body>
 </html>
