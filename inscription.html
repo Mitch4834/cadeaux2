@@ -508,6 +508,10 @@ const AUTH_API_URL =
 ===================================================== */
 
 const $ = id => document.getElementById(id);
+  // Récupération du code Master depuis le lien d'inscription.
+const MASTER_REFERRAL_CODE = (
+  new URLSearchParams(window.location.search).get("master") || ""
+).trim().toUpperCase();
 
 function showStatus(message,type="info") {
   const el = $("globalStatus");
@@ -797,8 +801,11 @@ $("partnerForm").addEventListener("submit",async event=>{
     phone:$("phone").value.trim(),
     website:$("website").value.trim(),
     social:$("social").value.trim(),
-    description:$("description").value.trim()
-  };
+    description:$("description").value.trim(),
+
+    // Attribution au Master si le lien en contient un.
+    master_code: MASTER_REFERRAL_CODE
+};
 
   if(
     !data.partner_type ||
