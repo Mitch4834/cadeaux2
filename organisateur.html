@@ -731,46 +731,65 @@ button{font-family:inherit}
       <section class="panel">
         <h3>🎁 Ajouter un cadeau</h3>
 
-        <form id="giftForm">
+       
+<form id="giftForm">
 
-          <div class="form-group">
-            <label for="giftName">Nom du cadeau *</label>
-            <input id="giftName" required placeholder="Ex. Poussette">
-          </div>
+  <div id="giftEntries">
 
-          <div class="form-group">
-            <label for="giftDescription">Description</label>
-            <textarea id="giftDescription" placeholder="Décrivez le cadeau..."></textarea>
-          </div>
+    <div class="gift-entry">
 
-          <div class="form-grid">
-            <div class="form-group">
-              <label for="giftQuantity">Quantité</label>
-              <input id="giftQuantity" type="number" min="1" value="1">
-            </div>
+      <div class="form-group">
+        <label>Nom du cadeau *</label>
+        <input class="gift-name" required placeholder="Ex. Téléphone portable">
+      </div>
 
-            <div class="form-group">
-              <label for="giftPrice">Prix indicatif</label>
-              <input id="giftPrice" type="number" min="0" step="0.01" placeholder="Facultatif">
-            </div>
-          </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea class="gift-description" placeholder="Description du cadeau"></textarea>
+      </div>
 
-          <div class="form-grid">
-            <div class="form-group">
-              <label for="giftEmoji">Emoji</label>
-              <input id="giftEmoji" value="🎁" maxlength="8">
-            </div>
+      <div class="form-grid">
 
-            <div class="form-group">
-              <label for="giftImage">URL de l'image</label>
-              <input id="giftImage" type="url" placeholder="https://...">
-            </div>
-          </div>
+        <div class="form-group">
+          <label>Quantité *</label>
+          <input class="gift-quantity" type="number" min="1" value="1" required>
+        </div>
 
-          <button class="btn" type="submit" id="addGiftBtn">
-            Enregistrer le cadeau
-          </button>
-        </form>
+        <div class="form-group">
+          <label>Prix</label>
+          <input class="gift-price" type="number" min="0" step="0.01" placeholder="0.00">
+        </div>
+
+      </div>
+
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label>Emoji</label>
+          <input class="gift-emoji" placeholder="🎁">
+        </div>
+
+        <div class="form-group">
+          <label>Image (URL)</label>
+          <input class="gift-image" type="url" placeholder="https://...">
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <button class="btn btn-secondary" type="button" id="addGiftRowBtn">
+    + Ajouter un cadeau
+  </button>
+
+  <button class="btn" type="submit" id="addGiftBtn">
+    Enregistrer tous les cadeaux
+  </button>
+
+</form>
+
 
         <p class="muted">
           Les images doivent être hébergées en ligne et ajoutées avec leur URL.
@@ -2403,52 +2422,187 @@ $("guestForm").addEventListener("submit", async e => {
 });
 
 
+
 /* =====================================================
-   AJOUT D'UN CADEAU
+   AJOUT MULTIPLE DE CADEAUX
 ===================================================== */
 
-$("giftForm").addEventListener("submit",async e=>{
+// Ajouter un nouveau formulaire cadeau
+$("addGiftRowBtn").addEventListener("click", () => {
+
+  const container = $("giftEntries");
+
+  const entry = document.createElement("div");
+  entry.className = "gift-entry";
+
+  entry.innerHTML = `
+    <hr>
+
+    <div class="form-group">
+      <label>Nom du cadeau *</label>
+      <input class="gift-name" required placeholder="Ex. Téléphone portable">
+    </div>
+
+    <div class="form-group">
+      <label>Description</label>
+      <textarea class="gift-description" placeholder="Description du cadeau"></textarea>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Quantité *</label>
+        <input class="gift-quantity" type="number" min="1" value="1" required>
+      </div>
+
+      <div class="form-group">
+        <label>Prix</label>
+        <input class="gift-price" type="number" min="0" step="0.01" placeholder="0.00">
+      </div>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Emoji</label>
+        <input class="gift-emoji" placeholder="🎁">
+      </div>
+
+      <div class="form-group">
+        <label>Image (URL)</label>
+        <input class="gift-image" type="url" placeholder="https://...">
+      </div>
+    </div>
+
+    <button type="button" class="btn btn-danger remove-gift-btn">
+      Retirer ce cadeau
+    </button>
+  `;
+
+  container.appendChild(entry);
+
+  entry.querySelector(".gift-name").focus();
+
+  entry.querySelector(".remove-gift-btn")
+    .addEventListener("click", () => entry.remove());
+
+});
+
+
+// Enregistrer tous les cadeaux
+$("giftForm").addEventListener("submit", async e => {
 
   e.preventDefault();
 
-  if(!selectedEventId){
-    return showStatus("giftStatus","Sélectionnez d'abord un événement.","error");
+  if (!selectedEventId) {
+    return showStatus(
+      "giftStatus",
+      "Sélectionnez d'abord un événement.",
+      "error"
+    );
   }
 
-  const btn=$("addGiftBtn");
-  btn.disabled=true;
+  const entries = [
+    ...document.querySelectorAll("#giftEntries .gift-entry")
+  ];
 
-  try{
+  const btn = $("addGiftBtn");
+  const addRowBtn = $("addGiftRowBtn");
 
-    await api({
-      action:"addGift",
-      event_id:selectedEventId,
-      name:$("giftName").value.trim(),
-      description:$("giftDescription").value.trim(),
-      quantity:$("giftQuantity").value,
-      price:$("giftPrice").value,
-      emoji:$("giftEmoji").value.trim(),
-      image:$("giftImage").value.trim()
-    });
+  btn.disabled = true;
+  addRowBtn.disabled = true;
 
-    $("giftForm").reset();
+  let successCount = 0;
 
-    $("giftQuantity").value=1;
-    $("giftEmoji").value="🎁";
+  try {
+
+    for (const entry of entries) {
+
+      const name = entry.querySelector(".gift-name").value.trim();
+      const description = entry.querySelector(".gift-description").value.trim();
+      const quantity = entry.querySelector(".gift-quantity").value;
+      const price = entry.querySelector(".gift-price").value;
+      const emoji = entry.querySelector(".gift-emoji").value.trim();
+      const image = entry.querySelector(".gift-image").value.trim();
+
+      await api({
+        action: "addGift",
+        event_id: selectedEventId,
+        name: name,
+        description: description,
+        quantity: quantity,
+        price: price,
+        emoji: emoji,
+        image: image
+      });
+
+      successCount++;
+      entry.remove();
+    }
+
+    $("giftEntries").innerHTML = `
+      <div class="gift-entry">
+        <div class="form-group">
+          <label>Nom du cadeau *</label>
+          <input class="gift-name" required placeholder="Ex. Téléphone portable">
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea class="gift-description" placeholder="Description du cadeau"></textarea>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Quantité *</label>
+            <input class="gift-quantity" type="number" min="1" value="1" required>
+          </div>
+
+          <div class="form-group">
+            <label>Prix</label>
+            <input class="gift-price" type="number" min="0" step="0.01" placeholder="0.00">
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Emoji</label>
+            <input class="gift-emoji" placeholder="🎁">
+          </div>
+
+          <div class="form-group">
+            <label>Image (URL)</label>
+            <input class="gift-image" type="url" placeholder="https://...">
+          </div>
+        </div>
+      </div>
+    `;
 
     await refreshSelected();
 
-    showStatus("giftStatus","Cadeau ajouté à cet événement.","ok");
+    showStatus(
+      "giftStatus",
+      successCount + " cadeau(x) enregistré(s) avec succès !",
+      "ok"
+    );
 
-  }catch(err){
+  } catch (err) {
 
-    showStatus("giftStatus",err.message,"error");
+    await refreshSelected();
 
-  }finally{
+    showStatus(
+      "giftStatus",
+      successCount > 0
+        ? successCount + " cadeau(x) enregistré(s). Une erreur a interrompu la suite : " + err.message
+        : err.message,
+      "error"
+    );
 
-    btn.disabled=false;
+  } finally {
+
+    btn.disabled = false;
+    addRowBtn.disabled = false;
 
   }
+
 });
 
 /* =====================================================
