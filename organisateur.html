@@ -683,28 +683,44 @@ button{font-family:inherit}
       <section class="panel">
         <h3>👥 Ajouter un invité</h3>
 
-        <form id="guestForm">
-          <div class="form-group">
-            <label for="guestName">Nom et prénom *</label>
-            <input id="guestName" required placeholder="Ex. Jean Dupont">
-          </div>
+       
+<form id="guestForm">
 
-          <div class="form-grid">
-            <div class="form-group">
-              <label for="guestPhone">Téléphone</label>
-              <input id="guestPhone" type="tel">
-            </div>
+  <div id="guestEntries">
 
-            <div class="form-group">
-              <label for="guestEmail">Email</label>
-              <input id="guestEmail" type="email">
-            </div>
-          </div>
+    <div class="guest-entry">
 
-          <button class="btn" type="submit" id="addGuestBtn">
-            Ajouter l'invité
-          </button>
-        </form>
+      <div class="form-group">
+        <label>Nom et prénom *</label>
+        <input class="guest-name" required placeholder="Ex. Jean Dupont">
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Téléphone</label>
+          <input class="guest-phone" type="tel">
+        </div>
+
+        <div class="form-group">
+          <label>Email</label>
+          <input class="guest-email" type="email">
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <button class="btn btn-secondary" type="button" id="addGuestRowBtn">
+    + Ajouter un invité
+  </button>
+
+  <button class="btn" type="submit" id="addGuestBtn">
+    Créer toutes les invitations
+  </button>
+
+</form>
+
 
         <div id="guestStatus" class="status"></div>
         <div class="item-list" id="guestList">
@@ -2232,47 +2248,160 @@ async function refreshSelected(){
   await loadEventReport();
 }
 
+
 /* =====================================================
-   AJOUT D'UN INVITE
+   AJOUT MULTIPLE D'INVITES
 ===================================================== */
 
-$("guestForm").addEventListener("submit",async e=>{
+// Ajouter un nouveau formulaire identique
+$("addGuestRowBtn").addEventListener("click", () => {
+
+  const container = $("guestEntries");
+
+  const entry = document.createElement("div");
+  entry.className = "guest-entry";
+
+  entry.innerHTML = `
+    <hr>
+
+    <div class="form-group">
+      <label>Nom et prénom *</label>
+      <input class="guest-name" required placeholder="Ex. Marie Pierre">
+    </div>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Téléphone</label>
+        <input class="guest-phone" type="tel">
+      </div>
+
+      <div class="form-group">
+        <label>Email</label>
+        <input class="guest-email" type="email">
+      </div>
+    </div>
+
+    <button type="button" class="btn btn-danger remove-guest-btn">
+      Retirer cet invité
+    </button>
+  `;
+
+  container.appendChild(entry);
+
+  entry.querySelector(".guest-name").focus();
+
+  entry.querySelector(".remove-guest-btn")
+    .addEventListener("click", () => {
+      entry.remove();
+    });
+
+});
+
+
+// Créer toutes les invitations
+$("guestForm").addEventListener("submit", async e => {
 
   e.preventDefault();
 
-  if(!selectedEventId){
-    return showStatus("guestStatus","Sélectionnez d'abord un événement.","error");
+  if (!selectedEventId) {
+    return showStatus(
+      "guestStatus",
+      "Sélectionnez d'abord un événement.",
+      "error"
+    );
   }
 
-  const btn=$("addGuestBtn");
-  btn.disabled=true;
+  const entries = [
+    ...document.querySelectorAll("#guestEntries .guest-entry")
+  ];
 
-  try{
+  if (!entries.length) {
+    return showStatus(
+      "guestStatus",
+      "Ajoutez au moins un invité.",
+      "error"
+    );
+  }
 
-    await api({
-      action:"addGuest",
-      event_id:selectedEventId,
-      name:$("guestName").value.trim(),
-      phone:$("guestPhone").value.trim(),
-      email:$("guestEmail").value.trim()
-    });
+  const btn = $("addGuestBtn");
+  const addRowBtn = $("addGuestRowBtn");
 
-    $("guestForm").reset();
+  btn.disabled = true;
+  addRowBtn.disabled = true;
+
+  let successCount = 0;
+
+  try {
+
+    for (const entry of entries) {
+
+      const name = entry.querySelector(".guest-name").value.trim();
+      const phone = entry.querySelector(".guest-phone").value.trim();
+      const email = entry.querySelector(".guest-email").value.trim();
+
+      await api({
+        action: "addGuest",
+        event_id: selectedEventId,
+        name: name,
+        phone: phone,
+        email: email
+      });
+
+      successCount++;
+
+      entry.remove();
+    }
+
+    $("guestEntries").innerHTML = `
+      <div class="guest-entry">
+        <div class="form-group">
+          <label>Nom et prénom *</label>
+          <input class="guest-name" required placeholder="Ex. Jean Dupont">
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Téléphone</label>
+            <input class="guest-phone" type="tel">
+          </div>
+
+          <div class="form-group">
+            <label>Email</label>
+            <input class="guest-email" type="email">
+          </div>
+        </div>
+      </div>
+    `;
 
     await refreshSelected();
 
-    showStatus("guestStatus","Invité ajouté à cet événement.","ok");
+    showStatus(
+      "guestStatus",
+      successCount + " invitation(s) créée(s) avec succès !",
+      "ok"
+    );
 
-  }catch(err){
+  } catch (err) {
 
-    showStatus("guestStatus",err.message,"error");
+    await refreshSelected();
 
-  }finally{
+    showStatus(
+      "guestStatus",
+      successCount > 0
+        ? successCount + " invité(s) ajouté(s). Une erreur a interrompu la suite : " + err.message
+        : err.message,
+      "error"
+    );
 
-    btn.disabled=false;
+  } finally {
+
+    btn.disabled = false;
+    addRowBtn.disabled = false;
 
   }
+
 });
+
 
 /* =====================================================
    AJOUT D'UN CADEAU
