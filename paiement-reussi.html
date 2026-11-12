@@ -57,6 +57,35 @@
     <h1>Vérification du paiement</h1>
     <p>Nous vérifions votre transaction. Veuillez patienter...</p>
   </div>
+  
+<script>
+(function () {
+  const params = new URLSearchParams(window.location.search);
+  const transactionId = params.get("transactionId");
+
+  if (!transactionId) {
+    document.querySelector("p").textContent =
+      "Aucune référence de transaction n'a été reçue.";
+    return;
+  }
+
+  // Transmission au système de vérification Fête & Cadeaux
+  const API_URL = "URL_API_FETE_ET_CADEAUX";
+
+  fetch(
+    API_URL + "?action=verifyPayment&transactionId=" +
+    encodeURIComponent(transactionId)
+  )
+    .then(response => response.json())
+    .then(data => {
+      console.log("Vérification Fête & Cadeaux :", data);
+    })
+    .catch(error => {
+      console.error("Erreur de vérification :", error);
+    });
+})();
+</script>
+
 </body>
 </html>
 
