@@ -834,8 +834,39 @@ const auth = firebase.auth();
 
 const API_URL =
   "https://script.google.com/macros/s/AKfycbwP0rfL5eV9H0TqdNOvKWLP5xKvSbFqTdMPraWNZah5TQYqcJJZDHY6aY0skhh8iK89/exec";
+    /* =====================================================
+   CONFIGURATION LOGAPAY
+===================================================== */
 
-const LOGIN_URL = "connexion-organisateur.html";
+const LOGAPAY_API_URL = "https://script.google.com/macros/s/AKfycbxqCIF5y67QiBrolRCvVsjL2FiJEJMqswNelyd_kTCeBO2GuMUoARawvmS9T0h9t6da_A/exec";
+    async function createFeteCadeauxPayment(amountHTG, orderId) {
+  const response = await fetch(LOGAPAY_API_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "createPayment",
+      amount: amountHTG,
+      orderId: orderId,
+      paymentMethod: "moncash"
+    })
+  });
+      function generateFeteCadeauxOrderId() {
+  return "FC_" +
+    Date.now() + "_" +
+    Math.random().toString(36).substring(2, 10).toUpperCase();
+}
+
+  const data = await response.json();
+
+  if (!data.redirect_url) {
+    throw new Error(
+      data.message || "Impossible de créer le paiement LogaPay."
+    );
+  }
+
+  window.location.href = data.redirect_url;
+}
+
+const LOGIN_URL = "organisateur.html";
 
 let currentOrganizer = null;
 let events = [];
