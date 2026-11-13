@@ -519,6 +519,34 @@ button{font-family:inherit}
   .wizard-content h2{font-size:21px}
   .wizard-actions .btn{min-width:0}
 }
+  .trial-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 18px;
+  margin: 18px 0;
+  border: 1px solid #cde8d8;
+  border-radius: 13px;
+  background: #edf8f1;
+  color: #216844;
+}
+
+.trial-banner-icon {
+  font-size: 28px;
+}
+
+.trial-banner-content {
+  line-height: 1.5;
+}
+
+.trial-banner-content p {
+  margin: 5px 0;
+  font-size: 13px;
+}
+
+.trial-banner-content small {
+  font-size: 12px;
+}
 </style>
 </head>
 
@@ -542,6 +570,23 @@ button{font-family:inherit}
     <h2>Bienvenue dans votre espace organisateur</h2>
     <p>Créez votre événement, personnalisez votre invitation et gérez les cadeaux de vos invités.</p>
   </section>
+  <div id="trialBanner" class="trial-banner hidden">
+  <div class="trial-banner-icon">🎉</div>
+
+  <div class="trial-banner-content">
+    <strong>Votre période d'essai gratuit est active !</strong>
+
+    <p>
+      Profitez de 30 jours pour ajouter vos invités et vos cadeaux
+      gratuitement.
+    </p>
+
+    <small>
+      Votre période d'essai se termine le :
+      <strong id="trialEndDate">En attente...</strong>
+    </small>
+  </div>
+</div>
 
   <div id="globalStatus" class="status"></div>
 
