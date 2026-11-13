@@ -993,6 +993,74 @@ async function api(params) {
 
   return data;
 }
+    
+/* =====================================================
+   RÉCUPÉRATION DE LA PÉRIODE D'ESSAI
+===================================================== */
+
+async function loadTrialStatus() {
+  const user = auth.currentUser;
+
+  if (!user) return;
+
+  const idToken = await user.getIdToken();
+
+  const response = await fetch(AUTH_API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "text/plain;charset=utf-8"
+    },
+    body: JSON.stringify({
+      action: "getTrialStatus",
+      id_token: idToken
+    }),
+    redirect: "follow"
+  });
+
+  const raw = await response.text();
+  const data = JSON.parse(raw);
+
+  if (!response.ok || !data.success) {
+    throw new Error(
+      data.message || "Impossible de récupérer votre période d'essai."
+    );
+  }
+
+  const banner = $("trialBanner");
+  const dateElement = $("trialEndDate");
+
+  if (!banner || !dateElement) return;
+
+  const trial = data.trial;
+
+  if (
+    trial &&
+    trial.actif === true &&
+    trial.date_fin_essai
+  ) {
+    const endDate = new Date(trial.date_fin_essai);
+
+    if (isNaN(endDate.getTime())) {
+      banner.classList.add("hidden");
+      return;
+    }
+
+    dateElement.textContent = endDate.toLocaleDateString(
+      "fr-FR",
+      {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      }
+    );
+
+    banner.classList.remove("hidden");
+
+  } else {
+    banner.classList.add("hidden");
+  }
+}
+
 /* =====================================================
    ASSISTANT DE CREATION
 ===================================================== */
