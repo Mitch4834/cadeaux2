@@ -2798,8 +2798,17 @@ auth.onAuthStateChanged(async user => {
 
   try {
 
-    await loadEvents();
+  // Récupérer la période d'essai
+  try {
+    await loadTrialStatus();
+  } catch (trialError) {
+    console.error(
+      "Erreur de récupération de l'essai :",
+      trialError
+    );
+  }
 
+  await loadEvents();
     showStatus(
       "globalStatus",
       "Bienvenue dans votre espace organisateur.",
