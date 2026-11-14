@@ -912,10 +912,31 @@ function setText(id, value, fallback = "") {
 function formatEventDate(dateValue) {
   if (!dateValue) return "";
 
+  const value = String(dateValue).trim();
+
+  // Date au format YYYY-MM-DD
+  const dateOnly = value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+
+  if (dateOnly) {
+    const year = Number(dateOnly[1]);
+    const month = Number(dateOnly[2]) - 1;
+    const day = Number(dateOnly[3]);
+
+    const date = new Date(year, month, day);
+
+    return date.toLocaleDateString("fr-FR", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric"
+    });
+  }
+
+  // Autres formats contenant une date et éventuellement une heure.
   const date = new Date(dateValue);
 
   if (isNaN(date.getTime())) {
-    return dateValue;
+    return value;
   }
 
   return date.toLocaleDateString("fr-FR", {
@@ -924,7 +945,6 @@ function formatEventDate(dateValue) {
     month: "long",
     year: "numeric"
   });
-
 }
 
 /* ================================================
