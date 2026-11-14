@@ -909,11 +909,14 @@ function setText(id, value, fallback = "") {
   }
 }
 
-function formatEventDate(value) {
-  if (!value) return "Non précisée";
+function formatEventDate(dateValue) {
+  if (!dateValue) return "";
 
-  const date = new Date(value);
-  if (isNaN(date.getTime())) return value;
+  const date = new Date(dateValue);
+
+  if (isNaN(date.getTime())) {
+    return dateValue;
+  }
 
   return date.toLocaleDateString("fr-FR", {
     weekday: "long",
@@ -921,6 +924,7 @@ function formatEventDate(value) {
     month: "long",
     year: "numeric"
   });
+}
 }
 
 /* ================================================
