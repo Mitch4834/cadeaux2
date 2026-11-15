@@ -2119,12 +2119,15 @@ async function submitAttendance() {
 
     currentGuest.attendance = selectedAttendance;
 
-    getElement("attendanceModal").classList.add("hidden");
+getElement("attendanceModal").classList.add("hidden");
 
-    showAttendanceStatus(selectedAttendance);
+showAttendanceStatus(selectedAttendance);
 
-    setTimeout(goToGiftPage, 1200);
-
+if (selectedAttendance === "OUI") {
+  await loadPendingAnnouncements();
+} else {
+  setTimeout(goToGiftPage, 1200);
+}
   } catch (error) {
 
     setText(
