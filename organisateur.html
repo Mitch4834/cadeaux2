@@ -1101,7 +1101,7 @@ if (!firebase.apps.length) {
 const auth = firebase.auth();
 
 const API_URL =
-  "https://script.google.com/macros/s/AKfycbytEjlEWKxSGZqgHBLYZg0aLT-noBfU3A50p8cxTCO7-nGWveT2-U2MVWeCYnhlqyIN/exec";
+  "https://script.google.com/macros/s/AKfycbxrlTCST_0hJ08uXwwopMrNS1gLlsOxwD6SDYMoam-Z3TKHrNPV3oFijGXtF7aoQjnb/exec";
     const AUTH_API_URL =
   "https://script.google.com/macros/s/AKfycbxgOdKO9NTBTHlVQYqfw6N0GJEqUZdh0mXd5L4Nv9q6_iqw8qKIIQVw_nDPK2GU00EJyw/exec";
     /* =====================================================
@@ -2245,67 +2245,74 @@ palette:"violet"
    CHARGEMENT DES EVENEMENTS
 ===================================================== */
 
-async function loadEvents(){
+async function loadEvents() {
 
-  const result = await api({action:"myEvents"});
+  const result = await api({action: "myEvents"});
 
   events = result.events || [];
 
   $("eventCount").textContent = events.length;
 
+  // Récupérer l'événement partagé après acceptation
+  const collaboratorEventId = sessionStorage.getItem(
+    "fete_cadeaux_collaborator_event"
+  );
+
   renderEvents();
 
-  if(selectedEventId && events.some(e=>e.id===selectedEventId)){
-    selectedEvent = events.find(e=>e.id===selectedEventId);
-    await selectEvent(selectedEventId,false);
+  // Priorité à l'événement partagé
+  if (
+    collaboratorEventId &&
+    events.some(e => String(e.id) === String(collaboratorEventId))
+  ) {
+
+    await selectEvent(collaboratorEventId, false);
+
+    sessionStorage.removeItem(
+      "fete_cadeaux_collaborator_event"
+    );
+
   }
-  else if(events.length){
-    await selectEvent(events[0].id,false);
+
+  // Conserver l'événement déjà sélectionné
+  else if (
+    selectedEventId &&
+    events.some(e => String(e.id) === String(selectedEventId))
+  ) {
+
+    await selectEvent(selectedEventId, false);
+
   }
-  else{
-    selectedEventId=null;
-    selectedEvent=null;
+
+  // Sélectionner le premier événement disponible
+  else if (events.length) {
+
+    await selectEvent(events[0].id, false);
+
+  }
+
+  else {
+
+    selectedEventId = null;
+    selectedEvent = null;
+
     renderSelectedEvent();
   }
 }
 
-function renderEvents(){
-
-  $("eventList").innerHTML = events.length
-    ? events.map(e=>`
-      <button type="button"
-        class="event-option ${e.id===selectedEventId?"active":""}"
-        data-id="${escapeHTML(e.id)}">
-
-        <strong>${escapeHTML(e.name)}</strong>
-
-        <small>
-          ${escapeHTML(e.type)}
-          ${e.date?" · "+escapeHTML(e.date):""}
-        </small>
-
-        <small>ID : ${escapeHTML(e.id)}</small>
-      </button>
-    `).join("")
-    : `<div class="muted">Aucun événement créé.</div>`;
-
-  $("eventList").querySelectorAll("[data-id]").forEach(btn=>{
-    btn.addEventListener("click",()=>selectEvent(btn.dataset.id));
-  });
-}
-
-
 async function selectEvent(id) {
 
   selectedEventId = id;
-  selectedEvent = events.find(e => e.id === id) || null;
+
+  selectedEvent = events.find(e =>
+    String(e.id) === String(id)
+  ) || null;
 
   renderEvents();
   renderSelectedEvent();
 
   if (!selectedEvent) return;
 
-  // Déterminer les permissions
   const isCollaborator = selectedEvent.isCollaborator === true;
   const permissions = selectedEvent.permissions || [];
 
@@ -2314,123 +2321,99 @@ async function selectEvent(id) {
     permissions.includes("FULL") ||
     permissions.includes(permission);
 
-  // Afficher le panneau collaborateurs uniquement au propriétaire
-  const collaboratorPanel =
-    document.getElementById("collaboratorPanel");
+  const collaboratorPanel = $("collaboratorPanel");
 
-  if (isCollaborator) {
-    collaboratorPanel.classList.add("hidden");
-  } else {
-    collaboratorPanel.classList.remove("hidden");
-    await loadCollaborators();
+  // Réinitialiser les anciens affichages
+  if ($("announcementHistory")) {
+    $("announcementHistory").innerHTML =
+      '<div class="muted">Chargement des annonces...</div>';
   }
 
-  // Charger uniquement les fonctionnalités autorisées
+  if ($("reportGuests")) $("reportGuests").textContent = "0";
+  if ($("reportConfirmed")) $("reportConfirmed").textContent = "0";
+  if ($("reportPending")) $("reportPending").textContent = "0";
+  if ($("reportDeclined")) $("reportDeclined").textContent = "0";
+  if ($("reportGifts")) $("reportGifts").textContent = "0";
+  if ($("reportReservations")) $("reportReservations").textContent = "0";
+
   try {
 
+    // Collaborateurs : propriétaire uniquement
+    if (collaboratorPanel) {
+      collaboratorPanel.classList.toggle(
+        "hidden",
+        isCollaborator
+      );
+    }
+
+    if (!isCollaborator) {
+      await loadCollaborators();
+    }
+
+    // Invités
     if (hasPermission("invites")) {
+
       const guestResult = await api({
         action: "guests",
         event_id: id
       });
 
       renderGuests(guestResult.guests || []);
+
     } else {
       renderGuests([]);
     }
 
+    // Cadeaux
     if (hasPermission("cadeaux")) {
+
       const giftResult = await api({
         action: "gifts",
         event_id: id
       });
 
       renderGifts(giftResult.gifts || []);
+
     } else {
       renderGifts([]);
     }
 
+    // Rapports
     if (hasPermission("rapports")) {
+
       await loadEventReport();
+
+    } else if ($("reportStatus")) {
+
+      $("reportStatus").textContent = "";
+      $("reportStatus").className = "status";
+
     }
 
+    // Annonces urgentes
     if (hasPermission("annonces_urgentes")) {
+
       await loadAnnouncements();
+
+    } else if ($("announcementHistory")) {
+
+      $("announcementHistory").innerHTML =
+        '<div class="muted">Vous ne disposez pas de l’autorisation pour consulter les annonces.</div>';
+
     }
 
   } catch (err) {
 
-    showStatus("globalStatus", err.message, "error");
+    console.error(err);
+
+    showStatus(
+      "globalStatus",
+      err.message,
+      "error"
+    );
 
   }
 }
-
-function renderSelectedEvent() {
-  if (!selectedEventId) return;
-
-  selectedEvent = events.find(event =>
-    String(event.id) === String(selectedEventId)
-  );
-
-  if (!selectedEvent) return;
-
-  const isCollaborator = selectedEvent.isCollaborator === true;
-  const permissions = selectedEvent.permissions || [];
-
-  function hasPermission(permission) {
-    return !isCollaborator ||
-      permissions.includes("FULL") ||
-      permissions.includes(permission);
-  }
-
-  // Gestion des annonces urgentes
-  const announcementPanel = $("announcementPanel");
-  if (announcementPanel) {
-    announcementPanel.classList.toggle(
-      "hidden",
-      !hasPermission("annonces_urgentes")
-    );
-  }
-
-  // Gestion des invités
-  const guestPanel = $("guestPanel");
-  if (guestPanel) {
-    guestPanel.classList.toggle(
-      "hidden",
-      !hasPermission("invites")
-    );
-  }
-
-  // Gestion des cadeaux
-  const giftPanel = $("giftPanel");
-  if (giftPanel) {
-    giftPanel.classList.toggle(
-      "hidden",
-      !hasPermission("cadeaux")
-    );
-  }
-
-  // Gestion des rapports
-  const reportPanel = $("reportPanel");
-  if (reportPanel) {
-    reportPanel.classList.toggle(
-      "hidden",
-      !hasPermission("rapports")
-    );
-  }
-
-  // Activer ou désactiver le formulaire d'annonces
-  const announcementForm = $("announcementForm");
-
-  if (announcementForm) {
-    announcementForm.querySelectorAll(
-      "input, textarea, button"
-    ).forEach(element => {
-      element.disabled = !hasPermission("annonces_urgentes");
-    });
-  }
-}
-    
 /* =====================================================
    LIENS PERSONNELS DES INVITES
 ===================================================== */
@@ -2606,14 +2589,36 @@ function renderGuests(guests) {
   // Boutons de désactivation
 
   $("guestList")
-  $("guestList")
   .querySelectorAll("[data-delete-guest]")
   .forEach(btn => {
 
     btn.addEventListener("click", async () => {
 
-      if (!confirm("Désactiver cet invité ?")) return;
+      if (!selectedEvent || !selectedEventId) {
+        return showStatus(
+          "guestStatus",
+          "Sélectionnez d'abord un événement.",
+          "error"
+        );
+      }
 
+      const isCollaborator = selectedEvent.isCollaborator === true;
+      const permissions = selectedEvent.permissions || [];
+
+      const canDeleteGuest =
+        !isCollaborator ||
+        permissions.includes("FULL") ||
+        permissions.includes("invites");
+
+      if (!canDeleteGuest) {
+        return showStatus(
+          "guestStatus",
+          "Vous n'avez pas l'autorisation de désactiver les invités.",
+          "error"
+        );
+      }
+
+      if (!confirm("Désactiver cet invité ?")) return;
       try {
 
         await api({
@@ -2688,10 +2693,35 @@ function renderGifts(gifts){
     `).join("")
     : '<div class="muted">Aucun cadeau enregistré pour cette fête.</div>';
 
-  $("giftList").querySelectorAll("[data-delete-gift]").forEach(btn=>{
+ $("giftList").querySelectorAll("[data-delete-gift]").forEach(btn=>{
     btn.addEventListener("click",async()=>{
 
+      if (!selectedEvent || !selectedEventId) {
+        return showStatus(
+          "giftStatus",
+          "Sélectionnez d'abord un événement.",
+          "error"
+        );
+      }
+
+      const isCollaborator = selectedEvent.isCollaborator === true;
+      const permissions = selectedEvent.permissions || [];
+
+      const canDeleteGift =
+        !isCollaborator ||
+        permissions.includes("FULL") ||
+        permissions.includes("cadeaux");
+
+      if (!canDeleteGift) {
+        return showStatus(
+          "giftStatus",
+          "Vous n'avez pas l'autorisation de désactiver les cadeaux.",
+          "error"
+        );
+      }
+
       if(!confirm("Désactiver ce cadeau ?")) return;
+
 
       try{
 
@@ -2716,190 +2746,87 @@ function renderGifts(gifts){
    RAPPORT
 ===================================================== */
 
-async function loadEventReport(){
 
-  if(!selectedEventId) return;
-
-  try{
-
-    const result=await api({
-      action:"report",
-      event_id:selectedEventId
-    });
-
-    const r=result.report;
-
-    $("reportGuests").textContent=r.total_guests;
-    $("reportConfirmed").textContent=r.confirmed_attendance;
-    $("reportPending").textContent=r.pending_attendance;
-    $("reportDeclined").textContent=r.declined_attendance;
-    $("reportGifts").textContent=r.total_gifts;
-    $("reportReservations").textContent=r.total_reservations;
-
-    hideStatus("reportStatus");
-
-  }catch(error){
-
-    showStatus("reportStatus",error.message,"error");
-
-  }
-}
-
-$("refreshReport").addEventListener("click",loadEventReport);
-
-async function refreshSelected() {
+async function loadEventReport() {
 
   if (!selectedEventId || !selectedEvent) return;
 
   const isCollaborator = selectedEvent.isCollaborator === true;
   const permissions = selectedEvent.permissions || [];
 
-  function hasPermission(permission) {
-    return !isCollaborator ||
-      permissions.includes("FULL") ||
-      permissions.includes(permission);
-  }
-
-  try {
-
-    // Actualiser les invités
-    if (hasPermission("invites")) {
-      const a = await api({
-        action: "guests",
-        event_id: selectedEventId
-      });
-
-      renderGuests(a.guests || []);
-    }
-
-    // Actualiser les cadeaux
-    if (hasPermission("cadeaux")) {
-      const b = await api({
-        action: "gifts",
-        event_id: selectedEventId
-      });
-
-      renderGifts(b.gifts || []);
-    }
-
-    // Actualiser les rapports
-    if (hasPermission("rapports")) {
-      await loadEventReport();
-    }
-
-    // Actualiser les annonces
-    if (hasPermission("annonces_urgentes")) {
-      await loadAnnouncements();
-    }
-
-  } catch (err) {
-    showStatus("globalStatus", err.message, "error");
-  }
-}
-/* =================================================
-   HISTORIQUE DES ANNONCES URGENTES
-================================================= */
-
-
-async function loadAnnouncements() {
-
-  const container = $("announcementHistory");
-
-  if (!selectedEventId) {
-    container.innerHTML =
-      '<div class="muted">Sélectionnez un événement.</div>';
-    return;
-  }
-
-  const isCollaborator = selectedEvent?.isCollaborator === true;
-  const permissions = selectedEvent?.permissions || [];
-
   const canViewReports =
     !isCollaborator ||
     permissions.includes("FULL") ||
     permissions.includes("rapports");
 
-  container.innerHTML =
-    '<div class="muted">Chargement des annonces...</div>';
+  // Vérification des permissions
+  if (!canViewReports) {
+    showStatus(
+      "reportStatus",
+      "Vous n'avez pas l'autorisation de consulter les rapports.",
+      "error"
+    );
+    return;
+  }
 
   try {
 
     const result = await api({
-      action: "announcementList",
+      action: "report",
       event_id: selectedEventId
     });
 
-    const annonces = Array.isArray(result.annonces)
-      ? result.annonces
-      : [];
+    const r = result.report;
 
-    if (annonces.length === 0) {
-      container.innerHTML =
-        '<div class="muted">Aucune annonce envoyée pour cet événement.</div>';
-      return;
-    }
+    $("reportGuests").textContent = r.total_guests;
+    $("reportConfirmed").textContent = r.confirmed_attendance;
+    $("reportPending").textContent = r.pending_attendance;
+    $("reportDeclined").textContent = r.declined_attendance;
+    $("reportGifts").textContent = r.total_gifts;
+    $("reportReservations").textContent = r.total_reservations;
 
-    container.innerHTML = annonces.map(annonce => {
-
-      const date = annonce.date_creation
-        ? new Date(annonce.date_creation).toLocaleString("fr-FR")
-        : "";
-
-      const reportHTML = canViewReports
-        ? `
-          <div class="announcement-report"
-               id="announcement-report-${escapeHTML(annonce.id)}">
-            <span class="muted">Chargement des statistiques...</span>
-          </div>
-
-          <button
-            type="button"
-            class="btn"
-            onclick="loadAnnouncementReport('${escapeHTML(String(annonce.id))}')">
-            Voir les lectures
-          </button>
-        `
-        : "";
-
-      return `
-        <div class="item-card announcement-card">
-          <h4>${escapeHTML(annonce.titre)}</h4>
-          <p>${escapeHTML(annonce.message)}</p>
-          <small class="muted">${escapeHTML(date)}</small>
-
-          ${reportHTML}
-        </div>
-      `;
-
-    }).join("");
-
-    // Charger les statistiques uniquement si autorisé
-    if (canViewReports) {
-      annonces.forEach(annonce => {
-        loadAnnouncementReport(annonce.id);
-      });
-    }
+    hideStatus("reportStatus");
 
   } catch (error) {
 
-    console.error(error);
-
-    container.innerHTML =
-      '<div class="muted">Impossible de charger les annonces.</div>';
+    showStatus(
+      "reportStatus",
+      error.message,
+      "error"
+    );
 
   }
 }
+
 
 
     /* =================================================
    RAPPORT DE LECTURE D'UNE ANNONCE
 ================================================= */
 
+
 async function loadAnnouncementReport(announcementId) {
 
   const container = $("announcement-report-" + announcementId);
 
   if (!container) return;
+
+  if (!selectedEventId || !selectedEvent) return;
+
+  const isCollaborator = selectedEvent.isCollaborator === true;
+  const permissions = selectedEvent.permissions || [];
+
+  const canViewReports =
+    !isCollaborator ||
+    permissions.includes("FULL") ||
+    permissions.includes("rapports");
+
+  // Bloquer l'accès aux statistiques
+  if (!canViewReports) {
+    container.innerHTML =
+      '<span class="muted">Vous n’avez pas l’autorisation de consulter ces statistiques.</span>';
+    return;
+  }
 
   container.innerHTML =
     '<span class="muted">Chargement...</span>';
@@ -2929,7 +2856,7 @@ async function loadAnnouncementReport(announcementId) {
         ${invites.length
           ? invites.map(invite => `
               <div class="announcement-guest-row">
-               <span>${escapeHTML(invite.nom)}</span>
+                <span>${escapeHTML(invite.nom)}</span>
                 <span class="${invite.statut === "VU" ? "status-ok" : "status-pending"}">
                   ${invite.statut === "VU" ? "✓ Vu" : "◷ Non vu"}
                 </span>
@@ -2949,6 +2876,7 @@ async function loadAnnouncementReport(announcementId) {
 
   }
 }
+
 /* =====================================================
    AJOUT MULTIPLE D'INVITES
 ===================================================== */
@@ -3011,6 +2939,30 @@ $("addGuestRowBtn").addEventListener("click", () => {
 $("guestForm").addEventListener("submit", async e => {
 
   e.preventDefault();
+
+  if (!selectedEvent || !selectedEventId) {
+    return showStatus(
+      "guestStatus",
+      "Sélectionnez d'abord un événement.",
+      "error"
+    );
+  }
+
+  const isCollaborator = selectedEvent.isCollaborator === true;
+  const permissions = selectedEvent.permissions || [];
+
+  const canManageGuests =
+    !isCollaborator ||
+    permissions.includes("FULL") ||
+    permissions.includes("invites");
+
+  if (!canManageGuests) {
+    return showStatus(
+      "guestStatus",
+      "Vous n'avez pas l'autorisation de gérer les invités.",
+      "error"
+    );
+  }
 
   if (!selectedEventId) {
     return showStatus(
@@ -3193,7 +3145,29 @@ $("addGiftRowBtn").addEventListener("click", () => {
 $("giftForm").addEventListener("submit", async e => {
 
   e.preventDefault();
+  if (!selectedEvent || !selectedEventId) {
+    return showStatus(
+      "giftStatus",
+      "Sélectionnez d'abord un événement.",
+      "error"
+    );
+  }
 
+  const isCollaborator = selectedEvent.isCollaborator === true;
+  const permissions = selectedEvent.permissions || [];
+
+  const canManageGifts =
+    !isCollaborator ||
+    permissions.includes("FULL") ||
+    permissions.includes("cadeaux");
+
+  if (!canManageGifts) {
+    return showStatus(
+      "giftStatus",
+      "Vous n'avez pas l'autorisation de gérer les cadeaux.",
+      "error"
+    );
+  }
   if (!selectedEventId) {
     return showStatus(
       "giftStatus",
@@ -3606,13 +3580,28 @@ $("announcementForm").addEventListener("submit", async function(e) {
 
   e.preventDefault();
 
-  if (!selectedEventId) {
-    showStatus(
+  if (!selectedEvent || !selectedEventId) {
+    return showStatus(
       "announcementStatus",
       "Veuillez d'abord sélectionner un événement.",
       "error"
     );
-    return;
+  }
+
+  const isCollaborator = selectedEvent.isCollaborator === true;
+  const permissions = selectedEvent.permissions || [];
+
+  const canSendAnnouncement =
+    !isCollaborator ||
+    permissions.includes("FULL") ||
+    permissions.includes("annonces_urgentes");
+
+  if (!canSendAnnouncement) {
+    return showStatus(
+      "announcementStatus",
+      "Vous n'avez pas l'autorisation d'envoyer des annonces urgentes.",
+      "error"
+    );
   }
 
   const titre = $("announcementTitleInput").value.trim();
@@ -3642,7 +3631,9 @@ $("announcementForm").addEventListener("submit", async function(e) {
     });
 
     $("announcementForm").reset();
-await loadAnnouncements();
+
+    await loadAnnouncements();
+
     showStatus(
       "announcementStatus",
       result.message + " " +
