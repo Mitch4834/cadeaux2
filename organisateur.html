@@ -2587,13 +2587,15 @@ $("guestForm").addEventListener("submit", async e => {
       const name = entry.querySelector(".guest-name").value.trim();
       const phone = entry.querySelector(".guest-phone").value.trim();
       const email = entry.querySelector(".guest-email").value.trim();
+      const language = entry.querySelector(".guest-language").value;
 
       await api({
         action: "addGuest",
         event_id: selectedEventId,
         name: name,
         phone: phone,
-        email: email
+        email: email,
+        language: language
       });
 
       successCount++;
@@ -2618,6 +2620,16 @@ $("guestForm").addEventListener("submit", async e => {
             <label>Email</label>
             <input class="guest-email" type="email">
           </div>
+          <div class="form-group">
+  <label>🌍 Langue de l'invitation</label>
+  <select class="guest-language">
+    <option value="fr" selected>🇫🇷 Français</option>
+    <option value="ht">🇭🇹 Créole haïtien</option>
+    <option value="en">🇺🇸 Anglais</option>
+    <option value="es">🇪🇸 Espagnol</option>
+    <option value="pt">🇵🇹 Portugais</option>
+  </select>
+</div>
         </div>
       </div>
     `;
