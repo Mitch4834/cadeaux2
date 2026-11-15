@@ -624,7 +624,7 @@ button { font: inherit; cursor: pointer; }
 
   <div id="loadingEvent" class="loading">
     <div class="loading-spinner"></div>
-    <h2>Préparation de votre invitation...</h2>
+    <h2 data-i18n="personalInvitation">Préparation de votre invitation...</h2>
     <p>Nous récupérons les informations de votre événement.</p>
   </div>
 
@@ -905,11 +905,334 @@ const params = new URLSearchParams(window.location.search);
 const feteId = params.get("fete_id");
 const inviteId = params.get("invite_id");
 
+
 let currentEvent = null;
 let currentGuest = null;
 let selectedAttendance = "";
 let attendanceSubmitting = false;
 
+// Langue utilisée par l'invité
+let currentLanguage = "fr";
+
+// Traductions de l'interface
+const translations = {
+  fr: {
+    loading: "Préparation de votre invitation...",
+    loadingDescription: "Nous récupérons les informations de votre événement.",
+    unavailable: "Invitation indisponible",
+    unavailableDescription: "Nous ne pouvons pas afficher cette invitation.",
+    partners: "Nos partenaires",
+    advertising: "PUBLICITÉ",
+    event: "ÉVÉNEMENT",
+    welcome: "Bienvenue à la fête !",
+    heroDescription: "Vous êtes chaleureusement invité à partager ce moment spécial.",
+    honored: "💜 À l'honneur",
+    essential: "📅 Les informations essentielles",
+    date: "Date",
+    time: "Heure",
+    venue: "Lieu",
+    unspecified: "Non précisée",
+    unspecifiedMale: "Non précisé",
+    presenceMatters: "❤️ Votre présence compte !",
+    presenceMessage: "Nous sommes heureux de vous compter parmi les invités. Merci de partager ce moment de joie et de convivialité avec nous.",
+    personalInvitation: "Cette invitation vous est personnellement adressée",
+    hello: "Bonjour",
+    thisEvent: "cet événement",
+    confirmPresence: "Confirmer ma présence",
+    accessGifts: "🎁 Accéder aux cadeaux",
+    additionalInfo: "ℹ️ Informations complémentaires",
+    fullAddress: "Adresse complète",
+    city: "Ville",
+    country: "Pays",
+    parking: "🚗 Informations sur le stationnement",
+    availability: "Disponibilité",
+    pricing: "Tarification",
+    instructions: "📌 Instructions",
+    aboutEvent: "📝 À propos de cette fête",
+    eventTheme: "🎨 Thème de l'événement",
+    advertisers: "Découvrez nos annonceurs",
+    organizedWith: "Organisé avec ❤️ grâce à Fête & Cadeaux",
+    participation: "Votre participation",
+    happyToHaveYou: "Nous sommes heureux de vous compter parmi nos invités !",
+    attendanceQuestion: "Serez-vous présent(e) à cet événement ?",
+    yes: "✅ Oui, je serai présent(e)",
+    no: "❌ Non, je ne pourrai pas venir",
+    absenceReason: "Quel est le motif de votre absence ?",
+    absencePlaceholder: "Expliquez brièvement le motif de votre absence...",
+    giftNote: "🎁 Même si vous ne pouvez pas assister à l'événement, vous pouvez toujours réserver et envoyer un cadeau !",
+    sendResponse: "Envoyer ma réponse",
+    retry: "Réessayer",
+    sending: "Enregistrement en cours...",
+    discover: "Découvrir",
+    noPerson: "Aucune personne renseignée.",
+    guest: "Invité",
+    confirmed: "✅ Votre présence est confirmée",
+    absent: "ℹ️ Vous avez indiqué votre absence",
+    notVerified: "Votre invitation n'a pas pu être vérifiée.",
+    chooseAnswer: "Veuillez choisir une réponse.",
+    explainAbsence: "Veuillez préciser le motif de votre absence."
+  },
+
+  ht: {
+    loading: "Preparasyon envitasyon ou...",
+    loadingDescription: "N ap chèche enfòmasyon sou evènman ou an.",
+    unavailable: "Envitasyon an pa disponib",
+    unavailableDescription: "Nou pa kapab montre envitasyon sa a.",
+    partners: "Patnè nou yo",
+    advertising: "PÈBLIsite",
+    event: "EVÈNMAN",
+    welcome: "Byenveni nan fèt la!",
+    heroDescription: "Nou envite ou ak anpil kè kontan pou pataje bèl moman espesyal sa a.",
+    honored: "💜 Moun n ap fete a",
+    essential: "📅 Enfòmasyon enpòtan",
+    date: "Dat",
+    time: "Lè",
+    venue: "Kote",
+    unspecified: "Pa presize",
+    unspecifiedMale: "Pa presize",
+    presenceMatters: "❤️ Prezans ou enpòtan!",
+    presenceMessage: "Nou kontan konte sou prezans ou. Mèsi paske w ap pataje bèl moman sa a avèk nou.",
+    personalInvitation: "Envitasyon sa a voye ba ou pèsonèlman",
+    hello: "Bonjou",
+    thisEvent: "evènman sa a",
+    confirmPresence: "Konfime prezans mwen",
+    accessGifts: "🎁 Gade kado yo",
+    additionalInfo: "ℹ️ Lòt enfòmasyon",
+    fullAddress: "Adrès konplè",
+    city: "Vil",
+    country: "Peyi",
+    parking: "🚗 Enfòmasyon sou pakin",
+    availability: "Disponibilite",
+    pricing: "Pri",
+    instructions: "📌 Enstriksyon",
+    aboutEvent: "📝 Konsènan fèt sa a",
+    eventTheme: "🎨 Tèm evènman an",
+    advertisers: "Dekouvri piblisite patnè nou yo",
+    organizedWith: "Òganize avèk ❤️ gras ak Fête & Cadeaux",
+    participation: "Patisipasyon ou",
+    happyToHaveYou: "Nou kontan konte sou prezans ou!",
+    attendanceQuestion: "Èske w ap vini nan evènman sa a?",
+    yes: "✅ Wi, m ap vini",
+    no: "❌ Non, mwen p ap kapab vini",
+    absenceReason: "Poukisa ou pap kapab vini?",
+    absencePlaceholder: "Eksplike rezon absans ou an...",
+    giftNote: "🎁 Menm si ou pa kapab vini, ou ka toujou rezève epi voye yon kado!",
+    sendResponse: "Voye repons mwen",
+    retry: "Eseye ankò",
+    sending: "N ap anrejistre...",
+    discover: "Dekouvri",
+    noPerson: "Pa gen moun ki prezante.",
+    guest: "Envite",
+    confirmed: "✅ Prezans ou konfime",
+    absent: "ℹ️ Ou fè konnen ou pap vini",
+    notVerified: "Nou pa kapab verifye envitasyon ou an.",
+    chooseAnswer: "Tanpri chwazi yon repons.",
+    explainAbsence: "Tanpri bay rezon absans ou an."
+  },
+
+  en: {
+    loading: "Preparing your invitation...",
+    loadingDescription: "We are retrieving your event information.",
+    unavailable: "Invitation unavailable",
+    unavailableDescription: "We cannot display this invitation.",
+    partners: "Our partners",
+    advertising: "ADVERTISEMENT",
+    event: "EVENT",
+    welcome: "Welcome to the celebration!",
+    heroDescription: "You are warmly invited to share this special moment.",
+    honored: "💜 Celebrating",
+    essential: "📅 Essential information",
+    date: "Date",
+    time: "Time",
+    venue: "Venue",
+    unspecified: "Not specified",
+    unspecifiedMale: "Not specified",
+    presenceMatters: "❤️ Your presence matters!",
+    presenceMessage: "We are happy to have you among our guests. Thank you for sharing this joyful moment with us.",
+    personalInvitation: "This invitation is personally addressed to you",
+    hello: "Hello",
+    thisEvent: "this event",
+    confirmPresence: "Confirm my attendance",
+    accessGifts: "🎁 View gifts",
+    additionalInfo: "ℹ️ Additional information",
+    fullAddress: "Full address",
+    city: "City",
+    country: "Country",
+    parking: "🚗 Parking information",
+    availability: "Availability",
+    pricing: "Pricing",
+    instructions: "📌 Instructions",
+    aboutEvent: "📝 About this event",
+    eventTheme: "🎨 Event theme",
+    advertisers: "Discover our advertisers",
+    organizedWith: "Organized with ❤️ thanks to Fête & Cadeaux",
+    participation: "Your attendance",
+    happyToHaveYou: "We are happy to have you among our guests!",
+    attendanceQuestion: "Will you attend this event?",
+    yes: "✅ Yes, I will attend",
+    no: "❌ No, I won't be able to attend",
+    absenceReason: "What is the reason for your absence?",
+    absencePlaceholder: "Briefly explain why you cannot attend...",
+    giftNote: "🎁 Even if you cannot attend, you can still reserve and send a gift!",
+    sendResponse: "Submit my response",
+    retry: "Try again",
+    sending: "Saving your response...",
+    discover: "Discover",
+    noPerson: "No person has been specified.",
+    guest: "Guest",
+    confirmed: "✅ Your attendance is confirmed",
+    absent: "ℹ️ You have indicated that you cannot attend",
+    notVerified: "Your invitation could not be verified.",
+    chooseAnswer: "Please select an answer.",
+    explainAbsence: "Please provide the reason for your absence."
+  },
+
+  es: {
+    loading: "Preparando tu invitación...",
+    loadingDescription: "Estamos recuperando la información de tu evento.",
+    unavailable: "Invitación no disponible",
+    unavailableDescription: "No podemos mostrar esta invitación.",
+    partners: "Nuestros socios",
+    advertising: "PUBLICIDAD",
+    event: "EVENTO",
+    welcome: "¡Bienvenido a la celebración!",
+    heroDescription: "Te invitamos cordialmente a compartir este momento especial.",
+    honored: "💜 Homenajeados",
+    essential: "📅 Información esencial",
+    date: "Fecha",
+    time: "Hora",
+    venue: "Lugar",
+    unspecified: "No especificada",
+    unspecifiedMale: "No especificado",
+    presenceMatters: "❤️ ¡Tu presencia es importante!",
+    presenceMessage: "Nos alegra contar contigo. Gracias por compartir este momento de alegría con nosotros.",
+    personalInvitation: "Esta invitación está dirigida personalmente a ti",
+    hello: "Hola",
+    thisEvent: "este evento",
+    confirmPresence: "Confirmar mi asistencia",
+    accessGifts: "🎁 Ver los regalos",
+    additionalInfo: "ℹ️ Información adicional",
+    fullAddress: "Dirección completa",
+    city: "Ciudad",
+    country: "País",
+    parking: "🚗 Información sobre el estacionamiento",
+    availability: "Disponibilidad",
+    pricing: "Tarifa",
+    instructions: "📌 Instrucciones",
+    aboutEvent: "📝 Sobre esta celebración",
+    eventTheme: "🎨 Tema del evento",
+    advertisers: "Descubre nuestros anunciantes",
+    organizedWith: "Organizado con ❤️ gracias a Fête & Cadeaux",
+    participation: "Tu asistencia",
+    happyToHaveYou: "¡Nos alegra contar contigo!",
+    attendanceQuestion: "¿Asistirás a este evento?",
+    yes: "✅ Sí, asistiré",
+    no: "❌ No podré asistir",
+    absenceReason: "¿Cuál es el motivo de tu ausencia?",
+    absencePlaceholder: "Explica brevemente el motivo de tu ausencia...",
+    giftNote: "🎁 Aunque no puedas asistir, ¡puedes reservar y enviar un regalo!",
+    sendResponse: "Enviar mi respuesta",
+    retry: "Intentar de nuevo",
+    sending: "Guardando tu respuesta...",
+    discover: "Descubrir",
+    noPerson: "No se ha especificado ninguna persona.",
+    guest: "Invitado",
+    confirmed: "✅ Tu asistencia está confirmada",
+    absent: "ℹ️ Has indicado que no podrás asistir",
+    notVerified: "No se pudo verificar tu invitación.",
+    chooseAnswer: "Por favor, selecciona una respuesta.",
+    explainAbsence: "Por favor, indica el motivo de tu ausencia."
+  },
+
+  pt: {
+    loading: "Preparando seu convite...",
+    loadingDescription: "Estamos recuperando as informações do seu evento.",
+    unavailable: "Convite indisponível",
+    unavailableDescription: "Não podemos exibir este convite.",
+    partners: "Nossos parceiros",
+    advertising: "PUBLICIDADE",
+    event: "EVENTO",
+    welcome: "Bem-vindo à comemoração!",
+    heroDescription: "Você está cordialmente convidado para compartilhar este momento especial.",
+    honored: "💜 Homenageados",
+    essential: "📅 Informações essenciais",
+    date: "Data",
+    time: "Horário",
+    venue: "Local",
+    unspecified: "Não especificada",
+    unspecifiedMale: "Não especificado",
+    presenceMatters: "❤️ Sua presença é importante!",
+    presenceMessage: "Estamos felizes em contar com você. Obrigado por compartilhar este momento de alegria conosco.",
+    personalInvitation: "Este convite é dirigido pessoalmente a você",
+    hello: "Olá",
+    thisEvent: "este evento",
+    confirmPresence: "Confirmar minha presença",
+    accessGifts: "🎁 Ver os presentes",
+    additionalInfo: "ℹ️ Informações adicionais",
+    fullAddress: "Endereço completo",
+    city: "Cidade",
+    country: "País",
+    parking: "🚗 Informações sobre estacionamento",
+    availability: "Disponibilidade",
+    pricing: "Preço",
+    instructions: "📌 Instruções",
+    aboutEvent: "📝 Sobre esta comemoração",
+    eventTheme: "🎨 Tema do evento",
+    advertisers: "Conheça nossos anunciantes",
+    organizedWith: "Organizado com ❤️ graças à Fête & Cadeaux",
+    participation: "Sua participação",
+    happyToHaveYou: "Estamos felizes em contar com você!",
+    attendanceQuestion: "Você participará deste evento?",
+    yes: "✅ Sim, estarei presente",
+    no: "❌ Não poderei comparecer",
+    absenceReason: "Qual é o motivo da sua ausência?",
+    absencePlaceholder: "Explique brevemente o motivo da sua ausência...",
+    giftNote: "🎁 Mesmo que não possa comparecer, você ainda pode reservar e enviar um presente!",
+    sendResponse: "Enviar minha resposta",
+    retry: "Tentar novamente",
+    sending: "Salvando sua resposta...",
+    discover: "Descobrir",
+    noPerson: "Nenhuma pessoa foi indicada.",
+    guest: "Convidado",
+    confirmed: "✅ Sua presença está confirmada",
+    absent: "ℹ️ Você informou que não poderá comparecer",
+    notVerified: "Não foi possível verificar seu convite.",
+    chooseAnswer: "Por favor, escolha uma resposta.",
+    explainAbsence: "Por favor, informe o motivo da sua ausência."
+  }
+};
+
+// Récupérer une traduction
+function t(key) {
+  return translations[currentLanguage]?.[key] ||
+         translations.fr[key] ||
+         key;
+}
+
+// Définir la langue de l'invitation
+function setInvitationLanguage(language) {
+  const supported = ["fr", "ht", "en", "es", "pt"];
+
+  currentLanguage = String(language || "fr").trim().toLowerCase();
+
+  if (!supported.includes(currentLanguage)) {
+    currentLanguage = "fr";
+  }
+
+  document.documentElement.lang = currentLanguage;
+}
+
+function applyStaticTranslations() {
+  document.querySelectorAll("[data-i18n]").forEach(element => {
+    const key = element.getAttribute("data-i18n");
+    element.textContent = t(key);
+  });
+
+  document.querySelectorAll("[data-i18n-placeholder]").forEach(element => {
+    const key = element.getAttribute("data-i18n-placeholder");
+    element.placeholder = t(key);
+  });
+}
 /* ================================================
    OUTILS
 ================================================ */
@@ -1404,8 +1727,13 @@ async function initializePersonalInvitation() {
 
     currentGuest = guestResult.guest;
 
-    const guestEventId =
-      currentGuest.event_id || currentGuest.Fete_ID || "";
+// Appliquer la langue choisie par l'organisateur pour cet invité
+setInvitationLanguage(
+  currentGuest.language || currentGuest.Langue || "fr"
+);
+applyStaticTranslations();
+const guestEventId =
+  currentGuest.event_id || currentGuest.Fete_ID || "";
 
     if (guestEventId && String(guestEventId) !== String(feteId)) {
       throw new Error("Cette invitation ne correspond pas à cet événement.");
