@@ -365,7 +365,29 @@ const BACKEND_URL =
 "https://script.google.com/macros/s/AKfycbyzEyibC9BD2ANxJUOfft9HSq0veTBQjdx7scQRSL_hHUijxNJ4KyW42ITDGggSsq-MgA/exec";
 
 let currentMode = "login";
+/* =====================================================
+   INVITATION COLLABORATEUR
+===================================================== */
 
+const collaboratorInvitationToken =
+  new URLSearchParams(window.location.search)
+    .get("invitation") || "";
+
+if (collaboratorInvitationToken) {
+
+  localStorage.setItem(
+    "fete_cadeaux_collaborator_invitation",
+    collaboratorInvitationToken
+  );
+
+  document.getElementById("formTitle").textContent =
+    "Vous êtes invité à collaborer !";
+
+  document.getElementById("formSubtitle").textContent =
+    "Connectez-vous ou créez votre compte avec l'adresse e-mail invitée pour rejoindre cet événement.";
+
+  showMode("login");
+}
 
 /* =====================================================
    AFFICHAGE DES MESSAGES
@@ -651,8 +673,40 @@ async function googleLogin() {
   }
 }
 
-
 /* =====================================================
+   ACCEPTATION DE L'INVITATION COLLABORATEUR
+===================================================== */
+
+async function acceptCollaboratorInvitation(user, token) {
+
+  const idToken = await user.getIdToken(true);
+
+  const response = await fetch(BACKEND_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "text/plain;charset=utf-8"
+    },
+    body: JSON.stringify({
+      action: "acceptCollaboratorInvitation",
+      id_token: idToken,
+      invitation_token: token
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error("Impossible de vérifier l'invitation.");
+  }
+
+  const result = await response.json();
+
+  if (!result.success) {
+    throw new Error(
+      result.message || "Impossible d'accepter l'invitation."
+    );
+  }
+
+  return result;
+}/* =====================================================
    FINALISATION DE CONNEXION
 ===================================================== */
 
@@ -669,14 +723,39 @@ async function finishLogin(user) {
     "success"
   );
 
-  const organizer = await syncOrganizer(user);
+  await syncOrganizer(user);
 
-  /*
-   * Destination à remplacer lorsque le tableau
-   * de bord organisateur sera prêt.
-   */
-  window.location.href =
-    "organisateur.html";
+  const invitationToken = localStorage.getItem(
+    "fete_cadeaux_collaborator_invitation"
+  );
+
+  // Parcours collaborateur
+  if (invitationToken) {
+
+    const invitation = await acceptCollaboratorInvitation(
+      user,
+      invitationToken
+    );
+
+    localStorage.removeItem(
+      "fete_cadeaux_collaborator_invitation"
+    );
+
+    sessionStorage.setItem(
+      "fete_cadeaux_collaborator_event",
+      invitation.event_id
+    );
+
+    showMessage(
+      "Invitation acceptée ! Votre accès à l'événement est enregistré. Préparation de votre espace collaborateur...",
+      "success"
+    );
+
+    return;
+  }
+
+  // Parcours habituel de l'organisateur
+  window.location.href = "organisateur.html";
 }
 
 
