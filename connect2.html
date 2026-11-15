@@ -690,6 +690,217 @@ button { font: inherit; cursor: pointer; }
   opacity: .6;
   cursor: wait;
 }
+  
+/* ================================================
+   OUVERTURE AUTOMATIQUE DE L'ENVELOPPE
+================================================ */
+
+.envelope-stage {
+  width: 100%;
+  max-width: 470px;
+  min-height: 330px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  animation: envelopeStageAppear .6s ease both;
+}
+
+.envelope-scene {
+  position: relative;
+  width: 270px;
+  height: 220px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  perspective: 900px;
+}
+
+.envelope {
+  position: relative;
+  width: 250px;
+  height: 155px;
+  margin-bottom: 15px;
+  filter: drop-shadow(0 12px 12px rgba(0,0,0,.2));
+  animation: envelopeEnter .7s ease both;
+}
+
+.envelope-back {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #8D4EAA, #712A90);
+  border-radius: 9px;
+  z-index: 1;
+}
+
+.envelope-letter {
+  position: absolute;
+  z-index: 2;
+  bottom: 30px;
+  left: 50%;
+  width: 205px;
+  height: 135px;
+  transform: translateX(-50%);
+  background: #fffdf8;
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  color: var(--primary);
+  box-shadow: 0 3px 12px rgba(0,0,0,.12);
+}
+
+.envelope-letter span {
+  font-size: 28px;
+}
+
+.envelope-letter strong {
+  font-size: 14px;
+}
+
+.envelope-letter small {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: #A88743;
+  font-weight: bold;
+}
+
+.envelope-front {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  background: linear-gradient(145deg, #D8B4E2, #A56BC0);
+  clip-path: polygon(0 0, 50% 62%, 100% 0, 100% 100%, 0 100%);
+  border-radius: 0 0 9px 9px;
+}
+
+.envelope-flap {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: linear-gradient(135deg, #B985CE, #712A90);
+  clip-path: polygon(0 0, 100% 0, 50% 72%);
+  transform-origin: top center;
+  backface-visibility: visible;
+}
+
+.envelope-seal {
+  position: absolute;
+  z-index: 6;
+  top: 65px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 37px;
+  height: 37px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #F1D99B, #C49A4C);
+  color: #712A90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 19px;
+  box-shadow: 0 3px 9px rgba(0,0,0,.2);
+}
+
+.envelope-caption {
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  letter-spacing: .4px;
+  margin-top: 5px;
+  animation: captionPulse 1.5s ease-in-out infinite;
+}
+
+/* Animations déclenchées par JavaScript */
+
+.envelope-stage.play .envelope-flap {
+  animation: envelopeOpen .8s ease-in-out 1s forwards;
+}
+
+.envelope-stage.play .envelope-letter {
+  animation: letterRise 1.2s cubic-bezier(.2,.8,.3,1) 1.25s forwards;
+}
+
+.envelope-stage.play .envelope-seal {
+  animation: sealDisappear .35s ease 1s forwards;
+}
+
+.envelope-stage.play .envelope-caption {
+  animation: captionDisappear .4s ease 2.4s forwards;
+}
+
+@keyframes envelopeStageAppear {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes envelopeEnter {
+  from {
+    opacity: 0;
+    transform: translateY(35px) scale(.65);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes envelopeOpen {
+  to {
+    transform: rotateX(180deg);
+    opacity: .65;
+  }
+}
+
+@keyframes letterRise {
+  0% {
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+  65% {
+    transform: translateX(-50%) translateY(-115px) scale(1.08);
+  }
+  100% {
+    transform: translateX(-50%) translateY(-105px) scale(1.12);
+  }
+}
+
+@keyframes sealDisappear {
+  to {
+    opacity: 0;
+    transform: translateX(-50%) scale(1.8);
+  }
+}
+
+@keyframes captionDisappear {
+  to { opacity: 0; }
+}
+
+@keyframes captionPulse {
+  50% { opacity: .65; }
+}
+
+@media (max-width: 600px) {
+  .envelope-stage {
+    min-height: 290px;
+  }
+
+  .envelope-scene {
+    transform: scale(.88);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .envelope-stage,
+  .envelope,
+  .envelope-caption {
+    animation: none;
+  }
+}
+
 </style>
 </head>
 
@@ -905,6 +1116,30 @@ button { font: inherit; cursor: pointer; }
   </div>
 
   <div id="attendanceModal" class="attendance-modal hidden">
+    
+<div id="attendanceEnvelope" class="envelope-stage hidden">
+  <div class="envelope-scene">
+
+    <div class="envelope-letter">
+      <span>💌</span>
+      <strong>Une invitation spéciale</strong>
+      <small>FÊTE &amp; CADEAUX</small>
+    </div>
+
+    <div class="envelope">
+      <div class="envelope-back"></div>
+      <div class="envelope-front"></div>
+      <div class="envelope-flap"></div>
+      <div class="envelope-seal">♥</div>
+    </div>
+
+  </div>
+
+  <p class="envelope-caption">
+    Une belle surprise vous attend...
+  </p>
+</div>
+
     <div class="attendance-box">
 
       <div class="attendance-icon">💌</div>
@@ -2028,6 +2263,7 @@ function showAttendanceStatus(status) {
    POPUP DE CONFIRMATION
 ================================================ */
 
+
 function openAttendanceModal() {
 
   if (!currentGuest) return;
@@ -2048,7 +2284,35 @@ function openAttendanceModal() {
     " ! Nous sommes heureux de vous compter parmi nos invités."
   );
 
-  getElement("attendanceModal").classList.remove("hidden");
+  const modal = getElement("attendanceModal");
+  const envelope = getElement("attendanceEnvelope");
+  const attendanceBox = modal.querySelector(".attendance-box");
+
+  // Afficher le popup principal en arrière-plan
+  modal.classList.remove("hidden");
+
+  // Masquer le formulaire pendant l'animation
+  attendanceBox.classList.add("hidden");
+
+  // Préparer l'enveloppe
+  envelope.classList.remove("hidden");
+  envelope.classList.remove("play");
+
+  // Relancer proprement l'animation
+  void envelope.offsetWidth;
+
+  // Ouvrir automatiquement l'enveloppe
+  envelope.classList.add("play");
+
+  // Afficher le formulaire après l'animation
+  setTimeout(() => {
+
+    envelope.classList.add("hidden");
+    envelope.classList.remove("play");
+
+    attendanceBox.classList.remove("hidden");
+
+  }, 3200);
 }
 
 function selectAttendance(choice) {
