@@ -2515,6 +2515,7 @@ async function refreshSelected(){
    HISTORIQUE DES ANNONCES URGENTES
 ================================================= */
 
+
 async function loadAnnouncements() {
 
   const container = $("announcementHistory");
@@ -2553,21 +2554,21 @@ async function loadAnnouncements() {
 
       return `
         <div class="item-card announcement-card">
-          <h4>${escapeHTML((annonce.titre)}</h4>
-          <p>${escapeHTML(annonce.titre)}</p>
-          <small class="muted">${escapeHTML((date)}</small>
+          <h4>${escapeHTML(annonce.titre)}</h4>
+          <p>${escapeHTML(annonce.message)}</p>
+          <small class="muted">${escapeHTML(date)}</small>
 
           <div class="announcement-report"
-               id="announcement-report-${escapeHTML((annonce.id)}">
+               id="announcement-report-${escapeHTML(annonce.id)}">
             <span class="muted">Chargement des statistiques...</span>
           </div>
 
-         <button
-  type="button"
-  class="btn"
-  onclick="loadAnnouncementReport('${escapeHTML(String(annonce.id))}')">
-  Voir les lectures
-</button>
+          <button
+            type="button"
+            class="btn"
+            onclick="loadAnnouncementReport('${escapeHTML(String(annonce.id))}')">
+            Voir les lectures
+          </button>
         </div>
       `;
 
@@ -2586,6 +2587,7 @@ async function loadAnnouncements() {
 
   }
 }
+
 
     /* =================================================
    RAPPORT DE LECTURE D'UNE ANNONCE
