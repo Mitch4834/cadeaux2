@@ -2554,7 +2554,7 @@ async function loadAnnouncements() {
       return `
         <div class="item-card announcement-card">
           <h4>${escapeHTML((annonce.titre)}</h4>
-          <p>${escapeHTML((annonce.message)}</p>
+          <p>${escapeHTML(annonce.titre)}</p>
           <small class="muted">${escapeHTML((date)}</small>
 
           <div class="announcement-report"
