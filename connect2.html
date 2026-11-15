@@ -618,88 +618,84 @@ button { font: inherit; cursor: pointer; }
 
 <body>
 
+
 <main class="page">
 
   <div class="brand">🎁 FÊTE &amp; CADEAUX</div>
 
   <div id="loadingEvent" class="loading">
     <div class="loading-spinner"></div>
-    <h2 data-i18n="personalInvitation">Préparation de votre invitation...</h2>
-    <p>Nous récupérons les informations de votre événement.</p>
+    <h2 data-i18n="loading">Préparation de votre invitation...</h2>
+    <p data-i18n="loadingDescription">Nous récupérons les informations de votre événement.</p>
   </div>
 
   <div id="eventError" class="error-box hidden">
     <div style="font-size:42px">💌</div>
-    <h2>Invitation indisponible</h2>
-    <p id="eventErrorMessage">
+    <h2 data-i18n="unavailable">Invitation indisponible</h2>
+    <p id="eventErrorMessage" data-i18n="unavailableDescription">
       Nous ne pouvons pas afficher cette invitation.
     </p>
   </div>
 
   <div id="eventPage" class="hidden">
 
-    <!-- PUBLICITÉ SUPÉRIEURE -->
     <section class="advertising-section" id="topAdvertising">
       <div class="advertising-heading">
-        <span>Nos partenaires</span>
-        <small>PUBLICITÉ</small>
+        <span data-i18n="partners">Nos partenaires</span>
+        <small data-i18n="advertising">PUBLICITÉ</small>
       </div>
 
       <div class="ad-carousel">
         <button class="ad-arrow" type="button"
           onclick="moveAd('top',-1)" aria-label="Publicité précédente">‹</button>
-
         <div class="ad-viewport">
           <div class="ad-track" id="topAdsTrack"></div>
         </div>
-
         <button class="ad-arrow" type="button"
           onclick="moveAd('top',1)" aria-label="Publicité suivante">›</button>
       </div>
-
       <div class="ad-indicators" id="topAdsIndicators"></div>
     </section>
 
-    <!-- ÉVÉNEMENT -->
     <section class="content-section main-event-box">
 
       <div class="event-hero">
         <div class="hero-icon">🎉</div>
-        <div class="event-type" id="eventType">ÉVÉNEMENT</div>
+        <div class="event-type" id="eventType" data-i18n="event">ÉVÉNEMENT</div>
         <h1 id="eventName">Bienvenue à la fête !</h1>
-        <p id="eventHeroDescription">
+        <p id="eventHeroDescription" data-i18n="heroDescription">
           Vous êtes chaleureusement invité à partager ce moment spécial.
         </p>
       </div>
 
       <div class="main-info">
-        <h2 class="section-title">💜 À l'honneur</h2>
+        <h2 class="section-title" data-i18n="honored">💜 À l'honneur</h2>
         <div id="peopleContainer" class="people-grid"></div>
       </div>
 
       <div class="main-info">
-        <h2 class="section-title">📅 Les informations essentielles</h2>
+        <h2 class="section-title" data-i18n="essential">📅 Les informations essentielles</h2>
 
         <div class="info-grid">
           <div class="info-item">
             <div class="info-icon">📅</div>
-            <div><strong>Date</strong><span id="eventDate">Non précisée</span></div>
+            <div><strong data-i18n="date">Date</strong><span id="eventDate" data-i18n="unspecified">Non précisée</span></div>
           </div>
 
           <div class="info-item">
             <div class="info-icon">🕒</div>
-            <div><strong>Heure</strong><span id="eventTime">Non précisée</span></div>
+            <div><strong data-i18n="time">Heure</strong><span id="eventTime" data-i18n="unspecified">Non précisée</span></div>
           </div>
 
           <div class="info-item">
             <div class="info-icon">📍</div>
-            <div><strong>Lieu</strong><span id="eventVenue">Non précisé</span></div>
+            <div><strong data-i18n="venue">Lieu</strong><span id="eventVenue" data-i18n="unspecifiedMale">Non précisé</span></div>
           </div>
         </div>
       </div>
 
       <div class="invitation-message">
-        <h2>❤️ Votre présence compte !</h2>
+        <h2 data-i18n="presenceMatters">❤️ Votre présence compte !</h2>
         <p id="eventMessage">
           Nous sommes heureux de vous compter parmi les invités.
           Merci de partager ce moment de joie et de convivialité avec nous.
@@ -708,15 +704,14 @@ button { font: inherit; cursor: pointer; }
 
     </section>
 
-    <!-- INVITATION PERSONNELLE -->
     <section class="guest-card">
       <div class="guest-icon">💌</div>
-      <p>Cette invitation vous est personnellement adressée</p>
+      <p data-i18n="personalInvitation">Cette invitation vous est personnellement adressée</p>
 
       <h2 id="guestGreeting">Bonjour !</h2>
 
       <p>
-        Nous avons le plaisir de vous inviter à
+        <span data-i18n="weInviteYou">Nous avons le plaisir de vous inviter à</span>
         <strong id="guestEventName">cet événement</strong>.
       </p>
 
@@ -726,50 +721,49 @@ button { font: inherit; cursor: pointer; }
         <button type="button"
           id="openAttendanceButton"
           class="primary-button"
-          onclick="openAttendanceModal()">
+          onclick="openAttendanceModal()"
+          data-i18n="confirmPresence">
           Confirmer ma présence
         </button>
 
         <button type="button"
           id="goToGiftsButton"
           class="primary-button hidden"
-          onclick="goToGiftPage()">
+          onclick="goToGiftPage()"
+          data-i18n="accessGifts">
           🎁 Accéder aux cadeaux
         </button>
       </div>
     </section>
 
-    <!-- INFORMATIONS COMPLÉMENTAIRES -->
     <section class="content-section additional-info-box">
-      <h2 class="section-title">ℹ️ Informations complémentaires</h2>
+      <h2 class="section-title" data-i18n="additionalInfo">ℹ️ Informations complémentaires</h2>
 
       <div class="info-grid">
         <div class="info-item">
           <div class="info-icon">🗺️</div>
-          <div><strong>Adresse complète</strong><span id="eventAddress">Non précisée</span></div>
+          <div><strong data-i18n="fullAddress">Adresse complète</strong><span id="eventAddress" data-i18n="unspecified">Non précisée</span></div>
         </div>
 
         <div class="info-item">
           <div class="info-icon">🏙️</div>
-          <div><strong>Ville</strong><span id="eventCity">Non précisée</span></div>
+          <div><strong data-i18n="city">Ville</strong><span id="eventCity" data-i18n="unspecified">Non précisée</span></div>
         </div>
 
         <div class="info-item">
           <div class="info-icon">🌎</div>
-          <div><div><strong>Pays</strong><span id="eventCountry">Non précisé</span></div></div>
+          <div><div><strong data-i18n="country">Pays</strong><span id="eventCountry" data-i18n="unspecifiedMale">Non précisé</span></div></div>
         </div>
       </div>
-      <!-- INFORMATIONS SUR LE STATIONNEMENT -->
-      <section id="parkingSection" class="extra-detail hidden">
 
-        <h3>🚗 Informations sur le stationnement</h3>
+      <section id="parkingSection" class="extra-detail hidden">
+        <h3 data-i18n="parking">🚗 Informations sur le stationnement</h3>
 
         <div class="info-grid">
-
           <div class="info-item">
             <div class="info-icon">🅿️</div>
             <div>
-              <strong>Disponibilité</strong>
+              <strong data-i18n="availability">Disponibilité</strong>
               <span id="eventParkingAvailability"></span>
             </div>
           </div>
@@ -777,96 +771,94 @@ button { font: inherit; cursor: pointer; }
           <div class="info-item">
             <div class="info-icon">💰</div>
             <div>
-              <strong>Tarification</strong>
+              <strong data-i18n="pricing">Tarification</strong>
               <span id="eventParkingPrice"></span>
             </div>
           </div>
-
         </div>
 
-        <div id="parkingDetailsContainer" class="theme-box hidden"
-             style="margin-top:15px;">
-          <strong>📌 Instructions</strong>
+        <div id="parkingDetailsContainer" class="theme-box hidden" style="margin-top:15px;">
+          <strong data-i18n="instructions">📌 Instructions</strong>
           <p id="eventParkingDetails"></p>
         </div>
-
       </section>
+
       <section id="descriptionSection" class="extra-detail hidden">
-        <h3>📝 À propos de cette fête</h3>
+        <h3 data-i18n="aboutEvent">📝 À propos de cette fête</h3>
         <p id="eventDescription" class="event-description"></p>
       </section>
 
       <section id="themeSection" class="extra-detail hidden">
-        <h3>🎨 Thème de l'événement</h3>
+        <h3 data-i18n="eventTheme">🎨 Thème de l'événement</h3>
         <div id="eventTheme" class="theme-box"></div>
       </section>
     </section>
 
-    <!-- PUBLICITÉ INFÉRIEURE -->
     <section class="advertising-section advertising-bottom" id="bottomAdvertising">
       <div class="advertising-heading">
-        <span>Découvrez nos annonceurs</span>
-        <small>PUBLICITÉ</small>
+        <span data-i18n="advertisers">Découvrez nos annonceurs</span>
+        <small data-i18n="advertising">PUBLICITÉ</small>
       </div>
 
       <div class="ad-carousel">
         <button class="ad-arrow" type="button"
           onclick="moveAd('bottom',-1)" aria-label="Publicité précédente">‹</button>
-
         <div class="ad-viewport">
           <div class="ad-track" id="bottomAdsTrack"></div>
         </div>
-
         <button class="ad-arrow" type="button"
           onclick="moveAd('bottom',1)" aria-label="Publicité suivante">›</button>
       </div>
-
       <div class="ad-indicators" id="bottomAdsIndicators"></div>
     </section>
 
   </div>
 
-  <!-- POPUP DE CONFIRMATION -->
   <div id="attendanceModal" class="attendance-modal hidden">
     <div class="attendance-box">
 
       <div class="attendance-icon">💌</div>
-      <h2>Votre participation</h2>
+      <h2 data-i18n="participation">Votre participation</h2>
 
-      <p id="attendanceGreeting">
+      <p id="attendanceGreeting" data-i18n="happyToHaveYou">
         Nous sommes heureux de vous compter parmi nos invités !
       </p>
 
       <div class="theme-box" style="margin:15px 0;">
         <strong id="popupEventName">Nom de l'événement</strong>
-        <p>📅 <span id="popupEventDate">Date</span></p>
-        <p>🕒 <span id="popupEventTime">Heure</span></p>
-        <p>📍 <span id="popupEventVenue">Lieu</span></p>
+        <p>📅 <span id="popupEventDate" data-i18n="date">Date</span></p>
+        <p>🕒 <span id="popupEventTime" data-i18n="time">Heure</span></p>
+        <p>📍 <span id="popupEventVenue" data-i18n="venue">Lieu</span></p>
       </div>
 
-      <p class="attendance-question">
+      <p class="attendance-question" data-i18n="attendanceQuestion">
         Serez-vous présent(e) à cet événement ?
       </p>
 
       <div class="attendance-buttons">
         <button type="button" class="attendance-yes"
-          onclick="selectAttendance('OUI')">
+          onclick="selectAttendance('OUI')"
+          data-i18n="yes">
           ✅ Oui, je serai présent(e)
         </button>
 
         <button type="button" class="attendance-no"
-          onclick="selectAttendance('NON')">
+          onclick="selectAttendance('NON')"
+          data-i18n="no">
           ❌ Non, je ne pourrai pas venir
         </button>
       </div>
 
       <div id="absenceReasonContainer" class="hidden">
-        <label for="absenceReason">Quel est le motif de votre absence ?</label>
+        <label for="absenceReason" data-i18n="absenceReason">
+          Quel est le motif de votre absence ?
+        </label>
         <textarea id="absenceReason"
+          data-i18n-placeholder="absencePlaceholder"
           placeholder="Expliquez brièvement le motif de votre absence..."
           rows="4"></textarea>
 
-        <div class="gift-note">
+        <div class="gift-note" data-i18n="giftNote">
           🎁 Même si vous ne pouvez pas assister à l'événement,
           vous pouvez toujours réserver et envoyer un cadeau !
         </div>
@@ -877,18 +869,20 @@ button { font: inherit; cursor: pointer; }
       <button type="button"
         id="attendanceSubmit"
         class="attendance-submit hidden"
-        onclick="submitAttendance()">
+        onclick="submitAttendance()"
+        data-i18n="sendResponse">
         Envoyer ma réponse
       </button>
 
     </div>
   </div>
 
-  <div class="footer">
+  <div class="footer" data-i18n="organizedWith">
     Organisé avec ❤️ grâce à Fête &amp; Cadeaux
   </div>
 
 </main>
+
 
 <script>
 /* ================================================
