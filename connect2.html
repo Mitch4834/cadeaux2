@@ -1299,8 +1299,8 @@ function displayEvent(data) {
   setText("eventAddress", event.address || event.Adresse, "Non précisée");
   setText("eventCity", event.city || event.Ville, "Non précisée");
   setText("eventCountry", event.country || event.Pays, "Non précisé");
-
-  setText(
+  // Afficher les informations de stationnement
+  displayParking(event);  setText(
     "eventMessage",
     event.message || event.Message_Invitation,
     "Nous sommes heureux de vous compter parmi les invités. Merci de partager ce moment de joie et de convivialité avec nous."
