@@ -2295,6 +2295,135 @@ function renderEvents() {
   });
 
 }
+    
+function renderSelectedEvent() {
+
+  const nameElement = $("currentEventName");
+  const typeElement = $("currentEventType");
+  const badgeElement = $("selectedBadge");
+
+  const linkBox = $("eventLinkBox");
+  const linkElement = $("eventLink");
+
+  const collaboratorPanel = $("collaboratorPanel");
+  const reportPanel = $("reportPanel");
+  const announcementPanel = $("announcementPanel");
+  const guestPanel = $("guestPanel");
+  const giftPanel = $("giftPanel");
+
+  // Aucun événement sélectionné
+  if (!selectedEvent) {
+
+    if (nameElement) {
+      nameElement.textContent =
+        "Choisissez un événement dans la liste pour gérer ses invités et ses cadeaux.";
+    }
+
+    if (typeElement) {
+      typeElement.textContent = "Sélectionnez une fête";
+    }
+
+    if (badgeElement) {
+      badgeElement.textContent = "Aucun sélectionné";
+    }
+
+    if (linkBox) linkBox.classList.add("hidden");
+
+    [
+      collaboratorPanel,
+      reportPanel,
+      announcementPanel,
+      guestPanel,
+      giftPanel
+    ].forEach(panel => {
+      if (panel) panel.classList.add("hidden");
+    });
+
+    return;
+  }
+
+  // Informations de l'événement
+  const eventName =
+    selectedEvent.nom ||
+    selectedEvent.titre ||
+    selectedEvent.name ||
+    "Ma fête";
+
+  const isCollaborator =
+    selectedEvent.isCollaborator === true;
+
+  const permissions =
+    selectedEvent.permissions || [];
+
+  const hasPermission = permission =>
+    !isCollaborator ||
+    permissions.includes("FULL") ||
+    permissions.includes(permission);
+
+  if (nameElement) {
+    nameElement.textContent = eventName;
+  }
+
+  if (typeElement) {
+    typeElement.textContent =
+      isCollaborator ? "Collaborateur" : "Propriétaire";
+  }
+
+  if (badgeElement) {
+    badgeElement.textContent = eventName;
+  }
+
+  // Lien de l'événement
+  const invitationUrl =
+    selectedEvent.invitation_url ||
+    selectedEvent.lien_invitation ||
+    selectedEvent.event_url ||
+    "";
+
+  if (linkElement && invitationUrl) {
+    linkElement.textContent = invitationUrl;
+    linkBox.classList.remove("hidden");
+  } else if (linkBox) {
+    linkBox.classList.add("hidden");
+  }
+
+  // Gestion des panneaux selon les permissions
+  if (collaboratorPanel) {
+    collaboratorPanel.classList.toggle(
+      "hidden",
+      isCollaborator
+    );
+  }
+
+  if (reportPanel) {
+    reportPanel.classList.toggle(
+      "hidden",
+      !hasPermission("rapports")
+    );
+  }
+
+  if (announcementPanel) {
+    announcementPanel.classList.toggle(
+      "hidden",
+      !hasPermission("annonces_urgentes")
+    );
+  }
+
+  if (guestPanel) {
+    guestPanel.classList.toggle(
+      "hidden",
+      !hasPermission("invites")
+    );
+  }
+
+  if (giftPanel) {
+    giftPanel.classList.toggle(
+      "hidden",
+      !hasPermission("cadeaux")
+    );
+  }
+}
+
 /* =====================================================
    CHARGEMENT DES EVENEMENTS
 ===================================================== */
