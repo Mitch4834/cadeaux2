@@ -1183,7 +1183,87 @@ function createPersonCard(person) {
 
   return card;
 }
+/* ================================================
+   AFFICHAGE DES INFORMATIONS DE STATIONNEMENT
+================================================ */
 
+function displayParking(event) {
+
+  const availability = getValue(
+    event,
+    "parkingAvailability",
+    "Parking_Disponibilite"
+  );
+
+  const feeType = getValue(
+    event,
+    "parkingFeeType",
+    "Parking_Type_Tarif"
+  );
+
+  const price = getValue(
+    event,
+    "parkingPrice",
+    "Parking_Prix"
+  );
+
+  const details = getValue(
+    event,
+    "parkingDetails",
+    "Parking_Details"
+  );
+
+  const availabilityLabels = {
+    sur_place: "Parking disponible sur place",
+    proximite: "Parking disponible à proximité",
+    rue: "Stationnement dans la rue",
+    aucun: "Aucun parking disponible"
+  };
+
+  const availabilityText =
+    availabilityLabels[String(availability).toLowerCase()] ||
+    availability;
+
+  let feeText = "";
+
+  if (String(feeType).toLowerCase() === "gratuit") {
+    feeText = "Gratuit";
+  } else if (String(feeType).toLowerCase() === "payant") {
+    feeText = price
+      ? "Payant — " + price
+      : "Payant";
+  } else {
+    feeText = price || "";
+  }
+
+  const hasInformation =
+    availabilityText || feeText || details;
+
+  const section = getElement("parkingSection");
+
+  section.classList.toggle("hidden", !hasInformation);
+
+  if (!hasInformation) return;
+
+  setText(
+    "eventParkingAvailability",
+    availabilityText,
+    "Non précisée"
+  );
+
+  setText(
+    "eventParkingPrice",
+    feeText,
+    "Non précisée"
+  );
+
+  const detailsContainer =
+    getElement("parkingDetailsContainer");
+
+  detailsContainer.classList.toggle("hidden", !details);
+
+  setText("eventParkingDetails", details);
+}
 /* ================================================
    AFFICHAGE DE L'ÉVÉNEMENT
 ================================================ */
