@@ -725,6 +725,73 @@ button{font-family:inherit}
 
       </section>
 
+<!-- =================================================
+     ANNONCES URGENTES
+================================================= -->
+
+<section class="panel" id="announcementPanel">
+
+  <div class="section-head">
+    <h3>📢 Annonces urgentes</h3>
+    <span class="badge">Invités confirmés</span>
+  </div>
+
+  <p class="muted">
+    Envoyez une information importante aux invités ayant confirmé
+    leur participation à cet événement.
+  </p>
+
+  <form id="announcementForm">
+
+    <div class="form-group">
+      <label for="announcementTitleInput">
+        Titre de l'annonce *
+      </label>
+
+      <input
+        type="text"
+        id="announcementTitleInput"
+        maxlength="150"
+        required
+        placeholder="Ex. Changement de lieu">
+    </div>
+
+    <div class="form-group">
+      <label for="announcementMessageInput">
+        Message *
+      </label>
+
+      <textarea
+        id="announcementMessageInput"
+        maxlength="3000"
+        required
+        placeholder="Rédigez votre information importante..."></textarea>
+    </div>
+
+    <button
+      type="submit"
+      class="btn"
+      id="sendAnnouncementBtn">
+      📢 Envoyer l'annonce
+    </button>
+
+  </form>
+
+  <div id="announcementStatus" class="status"></div>
+
+  <div class="notice">
+    L'annonce apparaîtra sous forme de popup dans l'invitation
+    personnelle des invités concernés.
+  </div>
+
+  <div id="announcementHistory" class="item-list">
+    <div class="muted">
+      Sélectionnez un événement pour gérer ses annonces.
+    </div>
+  </div>
+
+</section>
+
       <section class="panel">
         <h3>👥 Ajouter un invité</h3>
 
@@ -889,7 +956,7 @@ if (!firebase.apps.length) {
 const auth = firebase.auth();
 
 const API_URL =
-  "https://script.google.com/macros/s/AKfycbzMq8X9RUQdOZ69WTWVWI7GzI8Cet9BwAvmAJ-Hws8sPPkOyTAgdSKCub4A_n1Q3w02/exec";
+  "https://script.google.com/macros/s/AKfycbzCuyXCossna9Ic_Ey94i2dIwp-PUzzFjlZGmMxt1Dn7jH3VfUkYJqtWsfSiNrpsMNM/exec";
     const AUTH_API_URL =
   "https://script.google.com/macros/s/AKfycbxgOdKO9NTBTHlVQYqfw6N0GJEqUZdh0mXd5L4Nv9q6_iqw8qKIIQVw_nDPK2GU00EJyw/exec";
     /* =====================================================
@@ -2084,77 +2151,33 @@ function renderEvents(){
 
 async function selectEvent(id){
 
-  selectedEventId=id;
-  selectedEvent=events.find(e=>e.id===id)||null;
+  selectedEventId = id;
+  selectedEvent = events.find(e => e.id === id) || null;
 
   renderEvents();
   renderSelectedEvent();
 
-  if(!selectedEvent) return;
+  if (!selectedEvent) return;
 
-  try{
+  try {
 
-    const [guestResult,giftResult]=await Promise.all([
-      api({action:"guests",event_id:id}),
-      api({action:"gifts",event_id:id})
+    const [guestResult, giftResult] = await Promise.all([
+      api({action:"guests", event_id:id}),
+      api({action:"gifts", event_id:id})
     ]);
 
-    renderGuests(guestResult.guests||[]);
-    renderGifts(giftResult.gifts||[]);
+    renderGuests(guestResult.guests || []);
+    renderGifts(giftResult.gifts || []);
 
     await loadEventReport();
 
-  }catch(err){
+    // Charger l'historique des annonces
+    await loadAnnouncements();
 
-    showStatus("globalStatus",err.message,"error");
+  } catch(err) {
 
-  }
-}
+    showStatus("globalStatus", err.message, "error");
 
-function renderSelectedEvent(){
-
-  const active=!!selectedEvent;
-
-  $("currentEventName").textContent=active
-    ? `${selectedEvent.name} — ${selectedEvent.id}`
-    : "Choisissez un événement pour gérer ses invités et ses cadeaux.";
-
-  $("currentEventType").textContent=active
-    ? selectedEvent.type
-    : "Aucun événement";
-
-  $("selectedBadge").textContent=active
-    ? "Événement sélectionné"
-    : "Aucun sélectionné";
-
-  $("eventLinkBox").classList.toggle("hidden",!active);
-
-  if(active){
-
-    const link=new URL("connect1.html",window.location.href);
-    link.searchParams.set("fete_id",selectedEvent.id);
-
-    $("eventLink").textContent=link.toString();
-
-  }else{
-
-    $("eventLink").textContent="";
-
-  }
-
-  ["guestForm","giftForm"].forEach(id=>{
-    [...$(id).elements].forEach(el=>{
-      el.disabled=!active;
-    });
-  });
-
-  if(!active){
-
-    $("guestList").innerHTML='<div class="muted">Aucun événement sélectionné.</div>';
-    $("giftList").innerHTML='<div class="muted">Aucun événement sélectionné.</div>';
-
-    $("guestCount").textContent="0";
-    $("giftCount").textContent="0";
   }
 }
 /* =====================================================
@@ -2488,7 +2511,140 @@ async function refreshSelected(){
   await loadEventReport();
 }
 
+/* =================================================
+   HISTORIQUE DES ANNONCES URGENTES
+================================================= */
 
+async function loadAnnouncements() {
+
+  const container = $("announcementHistory");
+
+  if (!selectedEventId) {
+    container.innerHTML =
+      '<div class="muted">Sélectionnez un événement.</div>';
+    return;
+  }
+
+  container.innerHTML =
+    '<div class="muted">Chargement des annonces...</div>';
+
+  try {
+
+    const result = await api({
+      action: "announcementList",
+      event_id: selectedEventId
+    });
+
+    const annonces = Array.isArray(result.annonces)
+      ? result.annonces
+      : [];
+
+    if (annonces.length === 0) {
+      container.innerHTML =
+        '<div class="muted">Aucune annonce envoyée pour cet événement.</div>';
+      return;
+    }
+
+    container.innerHTML = annonces.map(annonce => {
+
+      const date = annonce.date_creation
+        ? new Date(annonce.date_creation).toLocaleString("fr-FR")
+        : "";
+
+      return `
+        <div class="item-card announcement-card">
+          <h4>${escapeHTML((annonce.titre)}</h4>
+          <p>${escapeHTML((annonce.message)}</p>
+          <small class="muted">${escapeHTML((date)}</small>
+
+          <div class="announcement-report"
+               id="announcement-report-${escapeHTML((annonce.id)}">
+            <span class="muted">Chargement des statistiques...</span>
+          </div>
+
+         <button
+  type="button"
+  class="btn"
+  onclick="loadAnnouncementReport('${escapeHTML(String(annonce.id))}')">
+  Voir les lectures
+</button>
+        </div>
+      `;
+
+    }).join("");
+
+    annonces.forEach(annonce => {
+      loadAnnouncementReport(annonce.id);
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    container.innerHTML =
+      '<div class="muted">Impossible de charger les annonces.</div>';
+
+  }
+}
+
+    /* =================================================
+   RAPPORT DE LECTURE D'UNE ANNONCE
+================================================= */
+
+async function loadAnnouncementReport(announcementId) {
+
+  const container = $("announcement-report-" + announcementId);
+
+  if (!container) return;
+
+  container.innerHTML =
+    '<span class="muted">Chargement...</span>';
+
+  try {
+
+    const result = await api({
+      action: "announcementReport",
+      event_id: selectedEventId,
+      annonce_id: announcementId
+    });
+
+    const invites = Array.isArray(result.invites)
+      ? result.invites
+      : [];
+
+    container.innerHTML = `
+      <div class="announcement-stats">
+        <p><strong>Destinataires :</strong> ${result.total_destinataires}</p>
+        <p><strong>Ont vu :</strong> ${result.nombre_vues}</p>
+        <p><strong>Pas encore vu :</strong> ${result.nombre_non_vues}</p>
+      </div>
+
+      <div class="announcement-guests">
+        <strong>Détail des invités :</strong>
+
+        ${invites.length
+          ? invites.map(invite => `
+              <div class="announcement-guest-row">
+               <span>${escapeHTML(invite.nom)}</span>
+                <span class="${invite.statut === "VU" ? "status-ok" : "status-pending"}">
+                  ${invite.statut === "VU" ? "✓ Vu" : "◷ Non vu"}
+                </span>
+              </div>
+            `).join("")
+          : '<p class="muted">Aucun destinataire.</p>'
+        }
+      </div>
+    `;
+
+  } catch (error) {
+
+    console.error("Erreur rapport annonce :", error);
+
+    container.innerHTML =
+      '<span class="status-error">Impossible de charger les lectures.</span>';
+
+  }
+}
 /* =====================================================
    AJOUT MULTIPLE D'INVITES
 ===================================================== */
@@ -2928,6 +3084,75 @@ auth.onAuthStateChanged(async user => {
 
 renderWizard();
 updateWizardTheme();
+    /* =================================================
+   ENVOYER UNE ANNONCE URGENTE
+================================================= */
+
+$("announcementForm").addEventListener("submit", async function(e) {
+
+  e.preventDefault();
+
+  if (!selectedEventId) {
+    showStatus(
+      "announcementStatus",
+      "Veuillez d'abord sélectionner un événement.",
+      "error"
+    );
+    return;
+  }
+
+  const titre = $("announcementTitleInput").value.trim();
+  const message = $("announcementMessageInput").value.trim();
+
+  if (!titre || !message) {
+    showStatus(
+      "announcementStatus",
+      "Veuillez remplir le titre et le message.",
+      "error"
+    );
+    return;
+  }
+
+  const button = $("sendAnnouncementBtn");
+
+  button.disabled = true;
+  button.textContent = "Envoi en cours...";
+
+  try {
+
+    const result = await api({
+      action: "createAnnouncement",
+      event_id: selectedEventId,
+      titre: titre,
+      message: message
+    });
+
+    $("announcementForm").reset();
+await loadAnnouncements();
+    showStatus(
+      "announcementStatus",
+      result.message + " " +
+      result.nombre_destinataires +
+      " invité(s) concerné(s).",
+      "ok"
+    );
+
+  } catch (error) {
+
+    showStatus(
+      "announcementStatus",
+      error.message || "Impossible d'envoyer l'annonce.",
+      "error"
+    );
+
+  } finally {
+
+    button.disabled = false;
+    button.textContent = "📢 Envoyer l'annonce";
+
+  }
+
+});
 </script>
 
 </body>
