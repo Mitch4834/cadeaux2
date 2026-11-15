@@ -613,6 +613,83 @@ button { font: inherit; cursor: pointer; }
   .ad-content p { font-size: 11px; }
   .ad-arrow { width: 25px; height: 32px; }
 }
+  /* ================================================
+   POPUP D'ANNONCE URGENTE
+================================================ */
+
+.announcement-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+  background: rgba(30,15,40,.78);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  overflow-y: auto;
+}
+
+.announcement-box {
+  width: 100%;
+  max-width: 500px;
+  background: var(--surface);
+  border-radius: 22px;
+  padding: 30px 25px;
+  text-align: center;
+  box-shadow: 0 15px 50px rgba(0,0,0,.25);
+  animation: attendanceAppear .3s ease;
+}
+
+.announcement-icon {
+  font-size: 45px;
+  margin-bottom: 12px;
+}
+
+.announcement-box h2 {
+  color: var(--primary);
+  font-size: 23px;
+  margin: 0 0 15px;
+}
+
+.announcement-message {
+  color: var(--dark);
+  font-size: 15px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  text-align: left;
+  background: var(--primary-light);
+  padding: 18px;
+  border-radius: 13px;
+  margin: 15px 0;
+}
+
+.announcement-error {
+  color: #C0392B;
+  font-size: 13px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.announcement-button {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 30px;
+  background: var(--primary);
+  color: white;
+  font-weight: bold;
+  margin-top: 12px;
+}
+
+.announcement-button:hover {
+  background: var(--primary-hover);
+}
+
+.announcement-button:disabled {
+  opacity: .6;
+  cursor: wait;
+}
 </style>
 </head>
 
@@ -876,7 +953,37 @@ button { font: inherit; cursor: pointer; }
 
     </div>
   </div>
+<!-- POPUP D'ANNONCE URGENTE -->
 
+<div id="announcementModal" class="announcement-modal hidden">
+  <div class="announcement-box">
+
+    <div class="announcement-icon">📢</div>
+
+    <h2 id="announcementTitle">
+      Information importante
+    </h2>
+
+    <div
+      id="announcementMessage"
+      class="announcement-message">
+    </div>
+
+    <p
+      id="announcementError"
+      class="announcement-error">
+    </p>
+
+    <button
+      type="button"
+      id="announcementConfirmButton"
+      class="announcement-button"
+      onclick="confirmAnnouncementRead()">
+      J’ai compris
+    </button>
+
+  </div>
+</div>
   <div class="footer" data-i18n="organizedWith">
     Organisé avec ❤️ grâce à Fête &amp; Cadeaux
   </div>
@@ -904,6 +1011,9 @@ let currentEvent = null;
 let currentGuest = null;
 let selectedAttendance = "";
 let attendanceSubmitting = false;
+  let pendingAnnouncements = [];
+let currentAnnouncement = null;
+let announcementSubmitting = false;
 
 // Langue utilisée par l'invité
 let currentLanguage = "fr";
@@ -1347,6 +1457,97 @@ function jsonpRequest(requestParams, timeoutDuration = 15000) {
   });
 }
 
+async function loadPendingAnnouncements() {
+  if (!feteId || !inviteId) return;
+
+  try {
+    const result = await jsonpRequest({
+      action: "pendingAnnouncements",
+      fete_id: feteId,
+      invite_id: inviteId
+    });
+
+    if (!result || result.success !== true) {
+      throw new Error(result?.message || "Impossible de récupérer les annonces.");
+    }
+
+    pendingAnnouncements = Array.isArray(result.annonces)
+      ? result.annonces
+      : [];
+
+    showNextAnnouncement();
+
+  } catch (error) {
+    console.error("Erreur annonces :", error);
+  }
+}
+
+function showNextAnnouncement() {
+  if (currentAnnouncement || !pendingAnnouncements.length) return;
+
+  currentAnnouncement = pendingAnnouncements.shift();
+
+  setText(
+    "announcementTitle",
+    currentAnnouncement.titre || "Information importante"
+  );
+
+  setText(
+    "announcementMessage",
+    currentAnnouncement.message || ""
+  );
+
+  setText("announcementError", "");
+
+  const button = getElement("announcementConfirmButton");
+  button.disabled = false;
+  button.textContent = "J’ai compris";
+
+  getElement("announcementModal").classList.remove("hidden");
+}
+
+async function confirmAnnouncementRead() {
+  if (announcementSubmitting || !currentAnnouncement) return;
+
+  const button = getElement("announcementConfirmButton");
+
+  announcementSubmitting = true;
+  button.disabled = true;
+  button.textContent = "Enregistrement...";
+
+  try {
+    const result = await jsonpRequest({
+      action: "markAnnouncementRead",
+      fete_id: feteId,
+      invite_id: inviteId,
+      annonce_id: currentAnnouncement.id
+    });
+
+    if (!result || result.success !== true) {
+      throw new Error(
+        result?.message || "La lecture n'a pas pu être enregistrée."
+      );
+    }
+
+    getElement("announcementModal").classList.add("hidden");
+    currentAnnouncement = null;
+
+    showNextAnnouncement();
+
+  } catch (error) {
+    setText(
+      "announcementError",
+      error.message || "Une erreur est survenue."
+    );
+
+    button.disabled = false;
+    button.textContent = "J’ai compris";
+
+  } finally {
+    announcementSubmitting = false;
+  }
+}
+
 /* ================================================
    GESTION DES ERREURS
 ================================================ */
@@ -1756,11 +1957,18 @@ const guestEventId =
       "EN_ATTENTE"
     ).trim().toUpperCase();
 
-    if (attendance === "OUI" || attendance === "NON") {
-      showAttendanceStatus(attendance);
-    } else {
-      setTimeout(openAttendanceModal, 400);
-    }
+   
+if (attendance === "OUI" || attendance === "NON") {
+  showAttendanceStatus(attendance);
+
+  if (attendance === "OUI") {
+    await loadPendingAnnouncements();
+  }
+
+} else {
+  setTimeout(openAttendanceModal, 400);
+}
+
 
   } catch (error) {
 
