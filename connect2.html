@@ -1828,9 +1828,20 @@ function displayEvent(data) {
 );
   setText("eventVenue", event.place || event.venue || event.Lieu, "Non précisé");
 
-  setText("eventAddress", event.address || event.Adresse, "Non précisée");
-  setText("eventCity", event.city || event.Ville, "Non précisée");
-  setText("eventCountry", event.country || event.Pays, "Non précisé");
+ const eventAddress = event.address || event.Adresse || "";
+const eventCity = event.city || event.Ville || "";
+const eventCountry = event.country || event.Pays || "";
+
+setText("eventAddress", eventAddress, "Non précisée");
+setText("eventCity", eventCity, "Non précisée");
+setText("eventCountry", eventCountry, "Non précisé");
+
+// Construire et afficher l'adresse complète
+const fullAddress = [eventAddress, eventCity, eventCountry]
+  .filter(value => value && value.trim())
+  .join(", ");
+
+setText("eventFullAddress", fullAddress, "Non précisée");
   // Afficher les informations de stationnement
   displayParking(event);  setText(
     "eventMessage",
@@ -2373,6 +2384,34 @@ function formatEventTime(value) {
   }
 
   return text;
+}
+
+  function toggleEventMap() {
+  const container = document.getElementById("eventMapContainer");
+  const button = document.getElementById("showEventMapButton");
+  const frame = document.getElementById("eventMapFrame");
+
+  if (!container || !button || !frame) return;
+
+  const isHidden = container.classList.contains("hidden");
+
+  if (isHidden) {
+    const address = document.getElementById("eventFullAddress").textContent.trim();
+
+    if (!address || address === "Non précisée") {
+      alert("L'adresse de cet événement n'est pas encore disponible.");
+      return;
+    }
+
+    frame.src = "https://www.google.com/maps?q=" +
+      encodeURIComponent(address) + "&output=embed";
+
+    container.classList.remove("hidden");
+    button.textContent = "✖ Masquer la carte";
+  } else {
+    container.classList.add("hidden");
+    button.textContent = "📍 Voir sur la carte";
+  }
 }
 /* ================================================
    INITIALISATION
