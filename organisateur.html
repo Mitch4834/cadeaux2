@@ -682,7 +682,153 @@ button{font-family:inherit}
           </button>
         </div>
 
-        <section class="panel" style="margin-top:18px">
+<!-- =================================================
+     GESTION DES COLLABORATEURS
+================================================= -->
+
+<section class="panel" id="collaboratorPanel"
+         style="margin-top:18px">
+
+  <div class="section-head">
+    <h3>🤝 Collaborateurs</h3>
+    <span class="badge">Accès partagé</span>
+  </div>
+
+  <p class="muted">
+    Invitez une personne à participer à la gestion de cet événement.
+    Elle pourra accéder uniquement aux fonctionnalités que vous lui autorisez.
+  </p>
+
+  <form id="collaboratorForm">
+
+    <div class="form-group">
+      <label for="collaboratorEmail">
+        Adresse e-mail du collaborateur *
+      </label>
+
+      <input
+        type="email"
+        id="collaboratorEmail"
+        required
+        placeholder="exemple@email.com">
+    </div>
+
+    <div class="form-group">
+      <label>Autorisations accordées</label>
+
+      <div class="notice" style="margin-top:8px">
+
+        <label style="display:flex;align-items:center;gap:9px">
+          <input
+            type="checkbox"
+            id="collaboratorFullAccess"
+            style="width:auto">
+          <strong>Accès complet</strong>
+        </label>
+
+        <p class="muted">
+          Toutes les autorisations de gestion de cet événement.
+        </p>
+
+        <hr style="border:0;border-top:1px solid var(--border);margin:14px 0">
+
+        <label style="display:flex;align-items:center;gap:9px">
+          <input
+            type="checkbox"
+            class="collaborator-permission"
+            value="annonces_urgentes"
+            style="width:auto">
+          📢 Gérer les annonces urgentes
+        </label>
+
+        <label style="display:flex;align-items:center;gap:9px;margin-top:12px">
+          <input
+            type="checkbox"
+            class="collaborator-permission"
+            value="rapports"
+            style="width:auto">
+          📊 Consulter les rapports
+        </label>
+
+        <label style="display:flex;align-items:center;gap:9px;margin-top:12px">
+          <input
+            type="checkbox"
+            class="collaborator-permission"
+            value="invites"
+            style="width:auto">
+          👥 Ajouter et gérer les invités
+        </label>
+
+        <label style="display:flex;align-items:center;gap:9px;margin-top:12px">
+          <input
+            type="checkbox"
+            class="collaborator-permission"
+            value="cadeaux"
+            style="width:auto">
+          🎁 Ajouter et gérer les cadeaux
+        </label>
+
+      </div>
+    </div>
+
+    <button
+      type="submit"
+      class="btn"
+      id="createCollaboratorBtn">
+      Générer le lien d'invitation
+    </button>
+
+  </form>
+
+  <div id="collaboratorStatus" class="status"></div>
+
+  <div id="collaboratorLinkBox"
+       class="notice hidden">
+
+    <strong>🔗 Lien d'invitation généré</strong>
+
+    <p class="muted">
+      Copiez ce lien et transmettez-le au collaborateur.
+      Il devra se connecter ou créer un compte avec l'adresse e-mail invitée.
+    </p>
+
+    <input
+      type="text"
+      id="collaboratorInvitationLink"
+      readonly>
+
+    <button
+      type="button"
+      class="btn btn-secondary btn-small"
+      id="copyCollaboratorLink"
+      style="margin-top:10px">
+      📋 Copier le lien
+    </button>
+
+  </div>
+
+  <hr style="border:0;border-top:1px solid var(--border);margin:22px 0">
+
+  <div class="section-head">
+    <h3>Liste des collaborateurs</h3>
+
+    <button
+      type="button"
+      class="btn btn-secondary btn-small"
+      id="refreshCollaborators">
+      Actualiser
+    </button>
+  </div>
+
+  <div id="collaboratorList" class="item-list">
+    <div class="muted">
+      Sélectionnez un événement pour consulter ses collaborateurs.
+    </div>
+  </div>
+
+</section>
+
+        <section class="panel" id="reportPanel" style="margin-top:18px">
           <h3>📊 Rapport de l'événement</h3>
 
           <p class="muted">
@@ -792,8 +938,8 @@ button{font-family:inherit}
 
 </section>
 
-      <section class="panel">
-        <h3>👥 Ajouter un invité</h3>
+      <section class="panel" id="guestPanel">
+  <h3>👥 Ajouter un invité</h3>
 
        
 <form id="guestForm">
@@ -851,9 +997,8 @@ button{font-family:inherit}
         </div>
       </section>
 
-      <section class="panel">
-        <h3>🎁 Ajouter un cadeau</h3>
-
+     <section class="panel" id="giftPanel">
+  <h3>🎁 Ajouter un cadeau</h3>
        
 <form id="giftForm">
 
@@ -2149,7 +2294,8 @@ function renderEvents(){
   });
 }
 
-async function selectEvent(id){
+
+async function selectEvent(id) {
 
   selectedEventId = id;
   selectedEvent = events.find(e => e.id === id) || null;
@@ -2159,49 +2305,130 @@ async function selectEvent(id){
 
   if (!selectedEvent) return;
 
+  // Déterminer les permissions
+  const isCollaborator = selectedEvent.isCollaborator === true;
+  const permissions = selectedEvent.permissions || [];
+
+  const hasPermission = permission =>
+    !isCollaborator ||
+    permissions.includes("FULL") ||
+    permissions.includes(permission);
+
+  // Afficher le panneau collaborateurs uniquement au propriétaire
+  const collaboratorPanel =
+    document.getElementById("collaboratorPanel");
+
+  if (isCollaborator) {
+    collaboratorPanel.classList.add("hidden");
+  } else {
+    collaboratorPanel.classList.remove("hidden");
+    await loadCollaborators();
+  }
+
+  // Charger uniquement les fonctionnalités autorisées
   try {
 
-    const [guestResult, giftResult] = await Promise.all([
-      api({action:"guests", event_id:id}),
-      api({action:"gifts", event_id:id})
-    ]);
+    if (hasPermission("invites")) {
+      const guestResult = await api({
+        action: "guests",
+        event_id: id
+      });
 
-    renderGuests(guestResult.guests || []);
-    renderGifts(giftResult.gifts || []);
+      renderGuests(guestResult.guests || []);
+    } else {
+      renderGuests([]);
+    }
 
-    await loadEventReport();
+    if (hasPermission("cadeaux")) {
+      const giftResult = await api({
+        action: "gifts",
+        event_id: id
+      });
 
-    // Charger l'historique des annonces
-    await loadAnnouncements();
+      renderGifts(giftResult.gifts || []);
+    } else {
+      renderGifts([]);
+    }
 
-  } catch(err) {
+    if (hasPermission("rapports")) {
+      await loadEventReport();
+    }
+
+    if (hasPermission("annonces_urgentes")) {
+      await loadAnnouncements();
+    }
+
+  } catch (err) {
 
     showStatus("globalStatus", err.message, "error");
 
   }
 }
-function renderSelectedEvent() {
 
+function renderSelectedEvent() {
   if (!selectedEventId) return;
 
-  selectedEvent = events.find(
-    event => String(event.id) === String(selectedEventId)
+  selectedEvent = events.find(event =>
+    String(event.id) === String(selectedEventId)
   );
 
   if (!selectedEvent) return;
 
-  // Afficher le formulaire d'annonce
+  const isCollaborator = selectedEvent.isCollaborator === true;
+  const permissions = selectedEvent.permissions || [];
+
+  function hasPermission(permission) {
+    return !isCollaborator ||
+      permissions.includes("FULL") ||
+      permissions.includes(permission);
+  }
+
+  // Gestion des annonces urgentes
+  const announcementPanel = $("announcementPanel");
+  if (announcementPanel) {
+    announcementPanel.classList.toggle(
+      "hidden",
+      !hasPermission("annonces_urgentes")
+    );
+  }
+
+  // Gestion des invités
+  const guestPanel = $("guestPanel");
+  if (guestPanel) {
+    guestPanel.classList.toggle(
+      "hidden",
+      !hasPermission("invites")
+    );
+  }
+
+  // Gestion des cadeaux
+  const giftPanel = $("giftPanel");
+  if (giftPanel) {
+    giftPanel.classList.toggle(
+      "hidden",
+      !hasPermission("cadeaux")
+    );
+  }
+
+  // Gestion des rapports
+  const reportPanel = $("reportPanel");
+  if (reportPanel) {
+    reportPanel.classList.toggle(
+      "hidden",
+      !hasPermission("rapports")
+    );
+  }
+
+  // Activer ou désactiver le formulaire d'annonces
   const announcementForm = $("announcementForm");
 
   if (announcementForm) {
-    announcementForm.querySelectorAll("input, textarea, button")
-      .forEach(element => {
-        element.disabled = false;
-      });
+    announcementForm.querySelectorAll(
+      "input, textarea, button"
+    ).forEach(element => {
+      element.disabled = !hasPermission("annonces_urgentes");
+    });
   }
-
-  // Afficher les annonces de l'événement sélectionné
-  loadAnnouncements();
 }
     
 /* =====================================================
@@ -2520,21 +2747,55 @@ async function loadEventReport(){
 
 $("refreshReport").addEventListener("click",loadEventReport);
 
-async function refreshSelected(){
+async function refreshSelected() {
 
-  if(!selectedEventId) return;
+  if (!selectedEventId || !selectedEvent) return;
 
-  const [a,b]=await Promise.all([
-    api({action:"guests",event_id:selectedEventId}),
-    api({action:"gifts",event_id:selectedEventId})
-  ]);
+  const isCollaborator = selectedEvent.isCollaborator === true;
+  const permissions = selectedEvent.permissions || [];
 
-  renderGuests(a.guests||[]);
-  renderGifts(b.gifts||[]);
+  function hasPermission(permission) {
+    return !isCollaborator ||
+      permissions.includes("FULL") ||
+      permissions.includes(permission);
+  }
 
-  await loadEventReport();
+  try {
+
+    // Actualiser les invités
+    if (hasPermission("invites")) {
+      const a = await api({
+        action: "guests",
+        event_id: selectedEventId
+      });
+
+      renderGuests(a.guests || []);
+    }
+
+    // Actualiser les cadeaux
+    if (hasPermission("cadeaux")) {
+      const b = await api({
+        action: "gifts",
+        event_id: selectedEventId
+      });
+
+      renderGifts(b.gifts || []);
+    }
+
+    // Actualiser les rapports
+    if (hasPermission("rapports")) {
+      await loadEventReport();
+    }
+
+    // Actualiser les annonces
+    if (hasPermission("annonces_urgentes")) {
+      await loadAnnouncements();
+    }
+
+  } catch (err) {
+    showStatus("globalStatus", err.message, "error");
+  }
 }
-
 /* =================================================
    HISTORIQUE DES ANNONCES URGENTES
 ================================================= */
@@ -2549,6 +2810,14 @@ async function loadAnnouncements() {
       '<div class="muted">Sélectionnez un événement.</div>';
     return;
   }
+
+  const isCollaborator = selectedEvent?.isCollaborator === true;
+  const permissions = selectedEvent?.permissions || [];
+
+  const canViewReports =
+    !isCollaborator ||
+    permissions.includes("FULL") ||
+    permissions.includes("rapports");
 
   container.innerHTML =
     '<div class="muted">Chargement des annonces...</div>';
@@ -2576,12 +2845,8 @@ async function loadAnnouncements() {
         ? new Date(annonce.date_creation).toLocaleString("fr-FR")
         : "";
 
-      return `
-        <div class="item-card announcement-card">
-          <h4>${escapeHTML(annonce.titre)}</h4>
-          <p>${escapeHTML(annonce.message)}</p>
-          <small class="muted">${escapeHTML(date)}</small>
-
+      const reportHTML = canViewReports
+        ? `
           <div class="announcement-report"
                id="announcement-report-${escapeHTML(annonce.id)}">
             <span class="muted">Chargement des statistiques...</span>
@@ -2593,14 +2858,27 @@ async function loadAnnouncements() {
             onclick="loadAnnouncementReport('${escapeHTML(String(annonce.id))}')">
             Voir les lectures
           </button>
+        `
+        : "";
+
+      return `
+        <div class="item-card announcement-card">
+          <h4>${escapeHTML(annonce.titre)}</h4>
+          <p>${escapeHTML(annonce.message)}</p>
+          <small class="muted">${escapeHTML(date)}</small>
+
+          ${reportHTML}
         </div>
       `;
 
     }).join("");
 
-    annonces.forEach(annonce => {
-      loadAnnouncementReport(annonce.id);
-    });
+    // Charger les statistiques uniquement si autorisé
+    if (canViewReports) {
+      annonces.forEach(annonce => {
+        loadAnnouncementReport(annonce.id);
+      });
+    }
 
   } catch (error) {
 
@@ -3049,6 +3327,216 @@ $("copyEventLink").addEventListener("click",async()=>{
 
   }
 });
+    /* =====================================================
+   INTERACTIONS DES PERMISSIONS COLLABORATEUR
+===================================================== */
+
+const collaboratorFullAccess =
+  document.getElementById("collaboratorFullAccess");
+
+const collaboratorPermissions =
+  document.querySelectorAll(".collaborator-permission");
+
+// Accès complet : coche ou décoche toutes les permissions
+collaboratorFullAccess.addEventListener("change", () => {
+  collaboratorPermissions.forEach(permission => {
+    permission.checked = collaboratorFullAccess.checked;
+  });
+});
+
+// Modification individuelle : actualise l'accès complet
+collaboratorPermissions.forEach(permission => {
+  permission.addEventListener("change", () => {
+    const allChecked = Array.from(collaboratorPermissions)
+      .every(item => item.checked);
+
+    collaboratorFullAccess.checked = allChecked;
+  });
+});
+    /* =====================================================
+   CRÉATION D'UNE INVITATION COLLABORATEUR
+===================================================== */
+
+document.getElementById("collaboratorForm")
+  .addEventListener("submit", async (e) => {
+
+    e.preventDefault();
+
+    if (!selectedEventId) {
+      alert("Veuillez d'abord sélectionner un événement.");
+      return;
+    }
+
+    const email = document
+      .getElementById("collaboratorEmail")
+      .value.trim();
+
+    const fullAccess = document
+      .getElementById("collaboratorFullAccess")
+      .checked;
+
+    const permissions = fullAccess
+      ? ["FULL"]
+      : Array.from(
+          document.querySelectorAll(".collaborator-permission:checked")
+        ).map(item => item.value);
+
+    const status = document.getElementById("collaboratorStatus");
+    const button = document.getElementById("createCollaboratorBtn");
+    const linkBox = document.getElementById("collaboratorLinkBox");
+
+    if (!permissions.length) {
+      status.textContent = "Veuillez choisir au moins une autorisation.";
+      status.className = "status error";
+      return;
+    }
+
+    button.disabled = true;
+    button.textContent = "Génération en cours...";
+    status.textContent = "";
+    linkBox.classList.add("hidden");
+
+    try {
+      const result = await api({
+        action: "createCollaboratorInvitation",
+        event_id: selectedEventId,
+        collaborator_email: email,
+        permissions: permissions
+      });
+
+      document.getElementById("collaboratorInvitationLink").value =
+        result.invitation_url;
+
+      linkBox.classList.remove("hidden");
+
+      status.textContent = "Lien d'invitation généré avec succès.";
+      status.className = "status success";
+
+      document.getElementById("collaboratorEmail").value = "";
+
+    } catch (error) {
+      status.textContent = error.message || "Une erreur est survenue.";
+      status.className = "status error";
+
+    } finally {
+      button.disabled = false;
+      button.textContent = "Générer le lien d'invitation";
+    }
+  });
+
+/* =====================================================
+   COPIER LE LIEN D'INVITATION
+===================================================== */
+
+document.getElementById("copyCollaboratorLink")
+  .addEventListener("click", async () => {
+
+    const link = document
+      .getElementById("collaboratorInvitationLink")
+      .value;
+
+    if (!link) return;
+
+    try {
+      await navigator.clipboard.writeText(link);
+
+      document.getElementById("collaboratorStatus").textContent =
+        "Lien copié avec succès !";
+
+      document.getElementById("collaboratorStatus").className =
+        "status success";
+
+    } catch (error) {
+      document.getElementById("collaboratorStatus").textContent =
+        "Impossible de copier automatiquement. Veuillez copier le lien manuellement.";
+
+      document.getElementById("collaboratorStatus").className =
+        "status error";
+    }
+  });
+
+    /* =====================================================
+   CHARGEMENT DE LA LISTE DES COLLABORATEURS
+===================================================== */
+
+async function loadCollaborators() {
+
+  const list = document.getElementById("collaboratorList");
+
+  if (!selectedEventId) {
+    list.textContent = "Sélectionnez un événement.";
+    return;
+  }
+
+  list.textContent = "Chargement des collaborateurs...";
+
+  try {
+
+    const result = await api({
+      action: "collaboratorList",
+      event_id: selectedEventId
+    });
+
+    list.innerHTML = "";
+
+    if (!result.collaborators || !result.collaborators.length) {
+      list.textContent = "Aucun collaborateur pour cet événement.";
+      return;
+    }
+
+    result.collaborators.forEach(collaborator => {
+
+      const item = document.createElement("div");
+      item.className = "notice";
+      item.style.marginBottom = "12px";
+
+      const email = document.createElement("strong");
+      email.textContent = collaborator.email;
+
+      const status = document.createElement("p");
+      status.className = "muted";
+      status.textContent =
+        "Statut : " + collaborator.status;
+
+      const permissions = document.createElement("p");
+      permissions.className = "muted";
+
+      const permissionLabels = {
+        FULL: "Accès complet",
+        annonces_urgentes: "Annonces urgentes",
+        rapports: "Rapports",
+        invites: "Gestion des invités",
+        cadeaux: "Gestion des cadeaux"
+      };
+
+      permissions.textContent =
+        "Autorisations : " +
+        (collaborator.permissions || [])
+          .map(p => permissionLabels[p] || p)
+          .join(", ");
+
+      item.appendChild(email);
+      item.appendChild(status);
+      item.appendChild(permissions);
+
+      list.appendChild(item);
+
+    });
+
+  } catch (error) {
+
+    list.textContent =
+      error.message || "Impossible de charger les collaborateurs.";
+
+  }
+}
+
+/* Actualiser la liste */
+
+document.getElementById("refreshCollaborators")
+  .addEventListener("click", loadCollaborators);
+
+ 
 /* =====================================================
    SESSION ORGANISATEUR
 ===================================================== */
