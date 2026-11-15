@@ -2255,8 +2255,7 @@ function escapeHtml(value) {
 function renderEvents() {
 
   const container = $("eventList");
-  console.log("DÉTAIL DES ÉVÉNEMENTS :", JSON.stringify(events, null, 2));
-
+  
   if (!container) {
     console.error("Élément eventsList introuvable.");
     return;
@@ -2283,10 +2282,9 @@ function renderEvents() {
         class="event-item ${isSelected ? "active" : ""}"
         data-event-id="${String(event.id).replace(/"/g, "&quot;")}"
         style="cursor:pointer;"
-      >
-
-        <div>
-          <strong>${escapeHtml(event.nom || event.titre || "Ma fête")}</strong>
+      
+       <div>
+          <strong>${escapeHtml(event.name || event.nom || event.titre || "Ma fête")}</strong>
 
           <div class="muted">
             ${isCollaborator ? "Collaborateur" : "Propriétaire"}
