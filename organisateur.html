@@ -741,16 +741,27 @@ button{font-family:inherit}
       </div>
 
       <div class="form-grid">
-        <div class="form-group">
-          <label>Téléphone</label>
-          <input class="guest-phone" type="tel">
-        </div>
+  <div class="form-group">
+    <label>Téléphone</label>
+    <input class="guest-phone" type="tel">
+  </div>
 
-        <div class="form-group">
-          <label>Email</label>
-          <input class="guest-email" type="email">
-        </div>
-      </div>
+  <div class="form-group">
+    <label>Email</label>
+    <input class="guest-email" type="email">
+  </div>
+</div>
+
+<div class="form-group">
+  <label>🌍 Langue de l'invitation</label>
+  <select class="guest-language">
+    <option value="fr" selected>🇫🇷 Français</option>
+    <option value="ht">🇭🇹 Créole haïtien</option>
+    <option value="en">🇺🇸 Anglais</option>
+    <option value="es">🇪🇸 Espagnol</option>
+    <option value="pt">🇵🇹 Portugais</option>
+  </select>
+</div>
 
     </div>
 
@@ -2503,7 +2514,16 @@ $("addGuestRowBtn").addEventListener("click", () => {
         <label>Téléphone</label>
         <input class="guest-phone" type="tel">
       </div>
-
+<div class="form-group">
+  <label>🌍 Langue de l'invitation</label>
+  <select class="guest-language">
+    <option value="fr" selected>🇫🇷 Français</option>
+    <option value="ht">🇭🇹 Créole haïtien</option>
+    <option value="en">🇺🇸 Anglais</option>
+    <option value="es">🇪🇸 Espagnol</option>
+    <option value="pt">🇵🇹 Portugais</option>
+  </select>
+</div>
       <div class="form-group">
         <label>Email</label>
         <input class="guest-email" type="email">
