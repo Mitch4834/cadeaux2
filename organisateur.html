@@ -1153,6 +1153,10 @@ const wizard = {
     address:"",
     city:"",
     country:"Haïti",
+    parkingAvailability:"",
+parkingFeeType:"gratuit",
+parkingPrice:"",
+parkingDetails:"",
     deadline:"",
     description:"",
     organizer:"",
@@ -1355,6 +1359,46 @@ function renderWizard(){
         </div>
       </div>
 
+<div class="notice">
+  <strong>🚗 Informations sur le stationnement</strong>
+  <br>Indiquez à vos invités où ils pourront garer leur véhicule.
+</div>
+
+<div class="form-group">
+  <label>Disponibilité du parking</label>
+  <select id="wizParkingAvailability">
+    <option value="">Non précisé</option>
+    <option value="sur_place">Parking disponible sur place</option>
+    <option value="proximite">Parking disponible à proximité</option>
+    <option value="rue">Stationnement dans la rue</option>
+    <option value="aucun">Aucun parking disponible</option>
+  </select>
+</div>
+
+<div class="form-group">
+  <label>Tarification du parking</label>
+  <select id="wizParkingFeeType">
+    <option value="gratuit">Gratuit</option>
+    <option value="payant">Payant</option>
+  </select>
+</div>
+
+<div class="form-group">
+  <label>Tarif du parking (facultatif)</label>
+  <input
+    id="wizParkingPrice"
+    type="text"
+    value="${escapeHTML(d.parkingPrice)}"
+    placeholder="Ex. 500 HTG, 10 USD">
+</div>
+
+<div class="form-group">
+  <label>Instructions pour le stationnement</label>
+  <textarea
+    id="wizParkingDetails"
+    placeholder="Ex. L'entrée du parking se trouve derrière l'hôtel...">${escapeHTML(d.parkingDetails)}</textarea>
+</div>
+
       <div class="form-group">
         <label>Un message pour présenter votre événement</label>
         <textarea id="wizDescription"
@@ -1363,10 +1407,26 @@ function renderWizard(){
     `;
 
     ["Place","Address","City","Country","Description"].forEach(key=>{
-      const field = $("wiz"+key);
-      const dataKey = key.charAt(0).toLowerCase()+key.slice(1);
-      field.addEventListener("input",e=>setField(dataKey,e.target.value));
-    });
+  const field = $("wiz"+key);
+  const dataKey = key.charAt(0).toLowerCase()+key.slice(1);
+  field.addEventListener("input",e=>setField(dataKey,e.target.value));
+});
+
+$("wizParkingAvailability").addEventListener("change",e=>{
+  setField("parkingAvailability",e.target.value);
+});
+
+$("wizParkingFeeType").addEventListener("change",e=>{
+  setField("parkingFeeType",e.target.value);
+});
+
+$("wizParkingPrice").addEventListener("input",e=>{
+  setField("parkingPrice",e.target.value);
+});
+
+$("wizParkingDetails").addEventListener("input",e=>{
+  setField("parkingDetails",e.target.value);
+});
   }
 
   else if(wizard.step === 4){
