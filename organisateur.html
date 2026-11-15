@@ -547,6 +547,119 @@ button{font-family:inherit}
 .trial-banner-content small {
   font-size: 12px;
 }
+  
+#eventList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 15px;
+}
+
+.event-card {
+  background: #ffffff;
+  border: 1px solid #e8e8e8;
+  border-radius: 15px;
+  padding: 18px;
+  cursor: pointer;
+  transition: all .2s ease;
+  box-shadow: 0 3px 12px rgba(0,0,0,.035);
+}
+
+.event-card:hover {
+  transform: translateY(-3px);
+  border-color: #729c12;
+  box-shadow: 0 7px 20px rgba(0,0,0,.08);
+}
+
+.event-card.selected {
+  border: 2px solid #729c12;
+  background: #fbfdf7;
+}
+
+.event-card-top,
+.event-card-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.event-type {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .7px;
+  color: #777;
+  text-transform: uppercase;
+}
+
+.event-role {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 20px;
+  padding: 6px 9px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.role-owner {
+  color: #54780b;
+  background: #edf5dc;
+}
+
+.role-collaborator {
+  color: #2464a0;
+  background: #e8f1fc;
+}
+
+.role-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.event-card-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: #292929;
+  margin-top: 17px;
+  overflow-wrap: anywhere;
+}
+
+.event-card-date {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #777;
+  font-size: 13px;
+  margin-top: 12px;
+}
+
+.event-card-bottom {
+  border-top: 1px solid #eeeeee;
+  margin-top: 16px;
+  padding-top: 12px;
+}
+
+.event-card-id {
+  color: #999;
+  font-size: 10px;
+  overflow-wrap: anywhere;
+}
+
+.event-card-action {
+  color: #729c12;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  #eventList {
+    grid-template-columns: 1fr;
+  }
+}
+
 </style>
 </head>
 
