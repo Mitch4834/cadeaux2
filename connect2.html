@@ -739,6 +739,7 @@ button { font: inherit; cursor: pointer; }
   left: 50%;
   bottom: 35px;
   transform: translateX(-50%);
+  z-index: 10;
   background: #fffdf8;
   border: 2px solid var(--accent);
   border-radius: 8px;
@@ -986,6 +987,33 @@ button { font: inherit; cursor: pointer; }
     transform: scale(0.88);
     transform-origin: center center;
   }
+}
+
+/* Multiplier visuellement les confettis */
+.envelope-confetti i {
+  box-shadow:
+    18px -12px 0 currentColor,
+    -16px 15px 0 currentColor;
+}
+
+.envelope-confetti i:nth-child(5n+1) {
+  color: #f44336;
+}
+
+.envelope-confetti i:nth-child(5n+2) {
+  color: #ffc107;
+}
+
+.envelope-confetti i:nth-child(5n+3) {
+  color: #4caf50;
+}
+
+.envelope-confetti i:nth-child(5n+4) {
+  color: #2196f3;
+}
+
+.envelope-confetti i:nth-child(5n) {
+  color: #e91e63;
 }
 
 </style>
