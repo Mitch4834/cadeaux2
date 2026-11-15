@@ -2435,6 +2435,63 @@ function renderSelectedEvent() {
   }
 }
 
+async function loadAnnouncements() {
+
+  const container = $("announcementHistory");
+
+  if (!container) return;
+
+  if (!selectedEventId) {
+    container.innerHTML =
+      '<div class="muted">Aucun événement sélectionné.</div>';
+    return;
+  }
+
+  container.innerHTML =
+    '<div class="muted">Chargement des annonces...</div>';
+
+  try {
+
+    const result = await api({
+      action: "announcementList",
+      event_id: selectedEventId
+    });
+
+    const announcements = result.announcements || [];
+
+    if (!announcements.length) {
+      container.innerHTML =
+        '<div class="muted">Aucune annonce publiée pour cet événement.</div>';
+      return;
+    }
+
+    container.innerHTML = announcements.map(announcement => {
+
+      const title = escapeHtml(announcement.Titre || announcement.titre || "Annonce");
+      const message = escapeHtml(announcement.Message || announcement.message || "");
+      const date = announcement.Date_Creation || announcement.date || "";
+
+      return `
+        <div class="item-card">
+          <strong>${title}</strong>
+          <p>${message}</p>
+          <small class="muted">${escapeHtml(date)}</small>
+        </div>
+      `;
+
+    }).join("");
+
+  } catch (error) {
+
+    console.error("Erreur chargement annonces :", error);
+
+    container.innerHTML =
+      '<div class="muted">Impossible de charger les annonces.</div>';
+
+    showStatus("globalStatus", error.message, "error");
+  }
+}
+
 /* =====================================================
    CHARGEMENT DES EVENEMENTS
 ===================================================== */
