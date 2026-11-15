@@ -2180,6 +2180,30 @@ async function selectEvent(id){
 
   }
 }
+function renderSelectedEvent() {
+
+  if (!selectedEventId) return;
+
+  selectedEvent = events.find(
+    event => String(event.id) === String(selectedEventId)
+  );
+
+  if (!selectedEvent) return;
+
+  // Afficher le formulaire d'annonce
+  const announcementForm = $("announcementForm");
+
+  if (announcementForm) {
+    announcementForm.querySelectorAll("input, textarea, button")
+      .forEach(element => {
+        element.disabled = false;
+      });
+  }
+
+  // Afficher les annonces de l'événement sélectionné
+  loadAnnouncements();
+}
+    
 /* =====================================================
    LIENS PERSONNELS DES INVITES
 ===================================================== */
