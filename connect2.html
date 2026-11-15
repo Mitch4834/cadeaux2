@@ -759,7 +759,38 @@ button { font: inherit; cursor: pointer; }
           <div><div><strong>Pays</strong><span id="eventCountry">Non précisé</span></div></div>
         </div>
       </div>
+      <!-- INFORMATIONS SUR LE STATIONNEMENT -->
+      <section id="parkingSection" class="extra-detail hidden">
 
+        <h3>🚗 Informations sur le stationnement</h3>
+
+        <div class="info-grid">
+
+          <div class="info-item">
+            <div class="info-icon">🅿️</div>
+            <div>
+              <strong>Disponibilité</strong>
+              <span id="eventParkingAvailability"></span>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <div class="info-icon">💰</div>
+            <div>
+              <strong>Tarification</strong>
+              <span id="eventParkingPrice"></span>
+            </div>
+          </div>
+
+        </div>
+
+        <div id="parkingDetailsContainer" class="theme-box hidden"
+             style="margin-top:15px;">
+          <strong>📌 Instructions</strong>
+          <p id="eventParkingDetails"></p>
+        </div>
+
+      </section>
       <section id="descriptionSection" class="extra-detail hidden">
         <h3>📝 À propos de cette fête</h3>
         <p id="eventDescription" class="event-description"></p>
