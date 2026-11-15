@@ -765,9 +765,43 @@ button { font: inherit; cursor: pointer; }
           </div>
 
           <div class="info-item">
-            <div class="info-icon">📍</div>
-            <div><strong data-i18n="venue">Lieu</strong><span id="eventVenue" data-i18n="unspecifiedMale">Non précisé</span></div>
-          </div>
+  <div class="info-icon">📍</div>
+  <div>
+    <strong data-i18n="venue">Lieu</strong>
+    <span id="eventVenue">Non précisé</span>
+  </div>
+</div>
+
+<div class="info-item address-info-item">
+  <div class="info-icon">🗺️</div>
+  <div style="width:100%;">
+    <strong>Adresse complète</strong>
+
+    <span id="eventFullAddress">Non précisée</span>
+
+    <button
+      type="button"
+      id="showEventMapButton"
+      class="primary-button"
+      style="min-width:0; width:100%; margin-top:12px; padding:10px 14px;"
+      onclick="toggleEventMap()">
+      📍 Voir sur la carte
+    </button>
+
+    <div id="eventMapContainer" class="hidden" style="margin-top:15px;">
+      <iframe
+        id="eventMapFrame"
+        title="Localisation de l'événement"
+        width="100%"
+        height="250"
+        style="border:0; border-radius:12px;"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </div>
+</div>
         </div>
       </div>
 
@@ -812,26 +846,6 @@ button { font: inherit; cursor: pointer; }
         </button>
       </div>
     </section>
-
-    <section class="content-section additional-info-box">
-      <h2 class="section-title" data-i18n="additionalInfo">ℹ️ Informations complémentaires</h2>
-
-      <div class="info-grid">
-        <div class="info-item">
-          <div class="info-icon">🗺️</div>
-          <div><strong data-i18n="fullAddress">Adresse complète</strong><span id="eventAddress" data-i18n="unspecified">Non précisée</span></div>
-        </div>
-
-        <div class="info-item">
-          <div class="info-icon">🏙️</div>
-          <div><strong data-i18n="city">Ville</strong><span id="eventCity" data-i18n="unspecified">Non précisée</span></div>
-        </div>
-
-        <div class="info-item">
-          <div class="info-icon">🌎</div>
-          <div><div><strong data-i18n="country">Pays</strong><span id="eventCountry" data-i18n="unspecifiedMale">Non précisé</span></div></div>
-        </div>
-      </div>
 
       <section id="parkingSection" class="extra-detail hidden">
         <h3 data-i18n="parking">🚗 Informations sur le stationnement</h3>
