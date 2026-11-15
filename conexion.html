@@ -362,6 +362,8 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 
 const BACKEND_URL =
+"https://script.google.com/macros/s/AKfycbxS5gjwoAhjZUI79q2xRqh0tDimEWJTPVqNl3PogJdXWBACLtYbKoKtYPN7PbIUwRif/exec";
+  const AUTH_API_URL =
 "https://script.google.com/macros/s/AKfycbw8agh79r0wVxR_nQ9YPZj5QJ6mz1lLsL44ux7wCxiPDp8NdEBFaUl1OlNT8pYYVylGWw/exec";
 
 let currentMode = "login";
@@ -501,7 +503,7 @@ async function syncOrganizer(user) {
   const referralCode =
     localStorage.getItem(referralKey) || "";
 
-  const response = await fetch(BACKEND_URL, {
+  const response = await fetch(AUTH_API_URL, {
     method: "POST",
     headers: {
       "Content-Type": "text/plain;charset=utf-8"
