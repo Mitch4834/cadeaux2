@@ -2255,7 +2255,7 @@ function escapeHtml(value) {
 function renderEvents() {
 
   const container = $("eventList");
-  console.log("ÉVÉNEMENTS REÇUS :", events);
+  console.log("DÉTAIL DES ÉVÉNEMENTS :", JSON.stringify(events, null, 2));
 
   if (!container) {
     console.error("Élément eventsList introuvable.");
