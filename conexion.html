@@ -746,18 +746,18 @@ async function finishLogin(user) {
       invitation.event_id
     );
 
-   showMessage(
-  "Invitation acceptée ! Votre accès à l'événement est enregistré. Préparation de votre espace collaborateur...",
-  "success"
-);
+    showMessage(
+      "Invitation acceptée ! Préparation de votre espace collaborateur...",
+      "success"
+    );
 
-window.location.href = "organisateur.html";
-return;
+    window.location.href = "organisateur.html";
+    return;
+  }
 
   // Parcours habituel de l'organisateur
   window.location.href = "organisateur.html";
 }
-
 
 /* =====================================================
    MOT DE PASSE OUBLIÉ
