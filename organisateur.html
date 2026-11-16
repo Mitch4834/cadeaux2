@@ -3440,7 +3440,7 @@ $("guestForm").addEventListener("submit", async e => {
       </div>
     `;
 
-    await refreshSelected();
+     await selectEvent(selectedEventId);
 
     showStatus(
       "guestStatus",
@@ -3450,7 +3450,7 @@ $("guestForm").addEventListener("submit", async e => {
 
   } catch (err) {
 
-    await refreshSelected();
+     await selectEvent(selectedEventId);
 
     showStatus(
       "guestStatus",
@@ -3646,7 +3646,7 @@ $("giftForm").addEventListener("submit", async e => {
       </div>
     `;
 
-    await refreshSelected();
+    await selectEvent(selectedEventId);
 
     showStatus(
       "giftStatus",
@@ -3656,7 +3656,7 @@ $("giftForm").addEventListener("submit", async e => {
 
   } catch (err) {
 
-    await refreshSelected();
+     await selectEvent(selectedEventId);
 
     showStatus(
       "giftStatus",
