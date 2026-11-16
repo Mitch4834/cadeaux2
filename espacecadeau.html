@@ -1083,7 +1083,11 @@ const translations = {
     createEvent: "Créer mon événement",
     thanks: "Merci de faire partie de cet événement !",
     heroDescriptionType: "Nous sommes heureux de vous accueillir pour cette belle occasion : ",
-heroDescriptionDefault: "Découvrez la liste des cadeaux de cette belle célébration."
+heroDescriptionDefault: "Découvrez la liste des cadeaux de cette belle célébration.",
+    loadGiftsError: "Impossible de charger les cadeaux.",
+invalidGiftsData: "Les données des cadeaux sont incorrectes.",
+    availableCount: "disponible(s)",
+giftUnavailable: "Plus disponible",
   },
   ht: {
     guest: "Chè envite",
@@ -1112,7 +1116,11 @@ heroDescriptionDefault: "Découvrez la liste des cadeaux de cette belle célébr
     createEvent: "Kreye evènman mwen an",
     thanks: "Mèsi paske w fè pati evènman sa a!",
     heroDescriptionType: "Nou kontan akeyi w pou bèl okazyon sa a: ",
-heroDescriptionDefault: "Dekouvri lis kado pou bèl selebrasyon sa a."
+heroDescriptionDefault: "Dekouvri lis kado pou bèl selebrasyon sa a.",
+    loadGiftsError: "Nou pa kapab chaje kado yo.",
+invalidGiftsData: "Enfòmasyon sou kado yo pa kòrèk.",
+    availableCount: "disponib",
+giftUnavailable: "Pa disponib ankò",
   },
   en: {
     guest: "Dear guest",
@@ -1141,7 +1149,11 @@ heroDescriptionDefault: "Dekouvri lis kado pou bèl selebrasyon sa a."
     createEvent: "Create my event",
     thanks: "Thank you for being part of this event!",
     heroDescriptionType: "We are delighted to welcome you for this special occasion: ",
-heroDescriptionDefault: "Explore the gift list for this wonderful celebration."
+heroDescriptionDefault: "Explore the gift list for this wonderful celebration.",
+    loadGiftsError: "Unable to load gifts.",
+invalidGiftsData: "The gift data is incorrect.",
+    availableCount: "available",
+giftUnavailable: "No longer available",
   },
   es: {
     guest: "Estimado invitado",
@@ -1170,7 +1182,11 @@ heroDescriptionDefault: "Explore the gift list for this wonderful celebration."
     createEvent: "Crear mi evento",
     thanks: "¡Gracias por formar parte de este evento!",
     heroDescriptionType: "Nos alegra darte la bienvenida para esta hermosa ocasión: ",
-heroDescriptionDefault: "Descubre la lista de regalos de esta celebración."
+heroDescriptionDefault: "Descubre la lista de regalos de esta celebración.",
+    loadGiftsError: "No se pudieron cargar los regalos.",
+invalidGiftsData: "Los datos de los regalos son incorrectos.",
+    availableCount: "disponible(s)",
+giftUnavailable: "Ya no disponible",
   },
   pt: {
     guest: "Caro convidado",
@@ -1199,7 +1215,11 @@ heroDescriptionDefault: "Descubre la lista de regalos de esta celebración."
     createEvent: "Criar meu evento",
     thanks: "Obrigado por fazer parte deste evento!",
     heroDescriptionType: "Estamos felizes em receber você para esta ocasião especial: ",
-heroDescriptionDefault: "Descubra a lista de presentes desta linda celebração."
+heroDescriptionDefault: "Descubra a lista de presentes desta linda celebração.",
+    loadGiftsError: "Não foi possível carregar os presentes.",
+invalidGiftsData: "Os dados dos presentes estão incorretos.",
+    availableCount: "disponível(is)",
+giftUnavailable: "Não está mais disponível",
   }
 };
 
@@ -1546,6 +1566,7 @@ function displayPersonalInformation() {
    CHARGEMENT DES CADEAUX DE LA FÊTE
 ========================================== */
 
+
 async function loadGifts() {
 
   clearMessage();
@@ -1553,7 +1574,7 @@ async function loadGifts() {
   grid.innerHTML = `
     <div class="loading">
       <div class="spinner"></div>
-      Chargement des cadeaux...
+      ${t("loading")}
     </div>
   `;
 
@@ -1564,12 +1585,12 @@ async function loadGifts() {
 
   if (!result.success) {
     throw new Error(
-      result.message || "Impossible de charger les cadeaux."
+      result.message || t("loadGiftsError")
     );
   }
 
   if (!Array.isArray(result.gifts)) {
-    throw new Error("Les données des cadeaux sont incorrectes.");
+    throw new Error(t("invalidGiftsData"));
   }
 
   gifts = result.gifts;
@@ -1577,9 +1598,11 @@ async function loadGifts() {
   displayGifts();
 }
 
+
 /* ==========================================
    AFFICHAGE DES CADEAUX
 ========================================== */
+
 
 function displayGifts() {
 
@@ -1590,8 +1613,8 @@ function displayGifts() {
     grid.innerHTML = `
       <div class="empty-state">
         <div class="empty-icon">🎁</div>
-        <h3>La liste de cadeaux arrive bientôt</h3>
-        <p>L'organisateur n'a pas encore ajouté de cadeaux à cet événement.</p>
+        <h3>${t("noGifts")}</h3>
+        <p>${t("noGiftsDescription")}</p>
       </div>
     `;
 
@@ -1635,7 +1658,7 @@ function displayGifts() {
 
       const img = document.createElement("img");
       img.src = imageUrl;
-      img.alt = gift.name || "Cadeau";
+      img.alt = gift.name || t("gift");
       img.loading = "lazy";
 
       img.onerror = function() {
@@ -1659,15 +1682,16 @@ function displayGifts() {
     );
 
     status.textContent = taken
-      ? "Indisponible"
-      : "Disponible";
+      ? t("unavailable")
+      : t("available");
 
     const title = document.createElement("h3");
-    title.textContent = gift.name || "Cadeau";
+    title.textContent = gift.name || t("gift");
 
     const description = document.createElement("p");
     description.className = "gift-description";
-    description.textContent = gift.description || "Un joli cadeau pour cette occasion.";
+    description.textContent =
+      gift.description || t("giftDescription");
 
     const meta = document.createElement("div");
     meta.className = "gift-meta";
@@ -1686,13 +1710,13 @@ function displayGifts() {
 
     if (Number.isFinite(remaining) && Number.isFinite(quantity)) {
       availability.textContent =
-        remaining + " / " + quantity + " disponible(s)";
+        remaining + " / " + quantity + " " + t("availableCount");
     } else if (Number.isFinite(remaining)) {
       availability.textContent =
-        remaining + " disponible(s)";
+        remaining + " " + t("availableCount");
     } else {
       availability.textContent =
-        taken ? "Indisponible" : "À réserver";
+        taken ? t("unavailable") : t("reserve");
     }
 
     meta.append(price, availability);
@@ -1701,8 +1725,8 @@ function displayGifts() {
     button.className = "gift-button";
 
     button.textContent = taken
-      ? "Plus disponible"
-      : "Je choisis ce cadeau";
+      ? t("giftUnavailable")
+      : t("chooseGift");
 
     button.disabled = taken || reservationEnCours;
 
@@ -1723,6 +1747,7 @@ function displayGifts() {
     grid.appendChild(card);
   });
 }
+
 
 /* ==========================================
    RÉSERVATION
