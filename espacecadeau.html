@@ -1421,7 +1421,15 @@ function formatDate(value) {
     }
   );
 }
-
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[char]);
+}
 /* ==========================================
    COMMUNICATION AVEC APPS SCRIPT
 ========================================== */
@@ -1658,11 +1666,12 @@ function displayPersonalInformation() {
   ) || t("event");
 
   const date = pick(
-    eventData,
-    "Date_Evenement",
-    "date_evenement",
-    "event_date"
-  );
+  eventData,
+  "date",
+  "Date_Evenement",
+  "date_evenement",
+  "event_date"
+);
 
   const venue = pick(
     eventData,
