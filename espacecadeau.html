@@ -1054,7 +1054,148 @@ let guest = null;
 let eventData = null;
 let gifts = [];
 let reservationEnCours = false;
+let currentLanguage = "fr";
+const translations = {
+  fr: {
+    guest: "Cher invité",
+    event: "Notre événement",
+    venue: "Lieu à préciser",
+    welcome: "Bienvenue",
+    welcomeMessage: "Nous sommes heureux de vous retrouver ici.",
+    eventLabel: "Événement",
+    dateLabel: "Date",
+    venueLabel: "Lieu",
+    loading: "Chargement des cadeaux...",
+    available: "Disponible",
+    unavailable: "Indisponible",
+    gift: "Cadeau",
+    giftDescription: "Un joli cadeau pour cette occasion.",
+    chooseGift: "Je choisis ce cadeau",
+    reserve: "À réserver",
+    noGifts: "La liste de cadeaux arrive bientôt",
+    noGiftsDescription: "Les cadeaux proposés pour cet événement seront bientôt affichés.",
+    confirmReservation: "Souhaitez-vous réserver ce cadeau : ",
+    saving: "Enregistrement de votre réservation...",
+    reservationSuccess: "Votre réservation a été enregistrée avec succès !",
+    reservationError: "Impossible d'enregistrer votre réservation.",
+    linkError: "Veuillez vérifier votre lien personnel ou contacter l'organisateur.",
+    ad: "Publicité",
+    createEvent: "Créer mon événement",
+    thanks: "Merci de faire partie de cet événement !"
+  },
+  ht: {
+    guest: "Chè envite",
+    event: "Evènman nou an",
+    venue: "Kote a poko presize",
+    welcome: "Byenveni",
+    welcomeMessage: "Nou kontan wè w isit la.",
+    eventLabel: "Evènman",
+    dateLabel: "Dat",
+    venueLabel: "Kote",
+    loading: "Ap chaje kado yo...",
+    available: "Disponib",
+    unavailable: "Pa disponib",
+    gift: "Kado",
+    giftDescription: "Yon bèl kado pou okazyon sa a.",
+    chooseGift: "Mwen chwazi kado sa a",
+    reserve: "Pou rezève",
+    noGifts: "Lis kado yo ap vini talè",
+    noGiftsDescription: "Kado ki disponib pou evènman sa a ap parèt talè.",
+    confirmReservation: "Èske ou vle rezève kado sa a: ",
+    saving: "Ap anrejistre rezèvasyon ou a...",
+    reservationSuccess: "Rezèvasyon ou a anrejistre avèk siksè!",
+    reservationError: "Nou pa kapab anrejistre rezèvasyon ou a.",
+    linkError: "Tanpri verifye lyen pèsonèl ou oswa kontakte òganizatè a.",
+    ad: "Piblisite",
+    createEvent: "Kreye evènman mwen an",
+    thanks: "Mèsi paske w fè pati evènman sa a!"
+  },
+  en: {
+    guest: "Dear guest",
+    event: "Our event",
+    venue: "Venue to be announced",
+    welcome: "Welcome",
+    welcomeMessage: "We are happy to have you here.",
+    eventLabel: "Event",
+    dateLabel: "Date",
+    venueLabel: "Venue",
+    loading: "Loading gifts...",
+    available: "Available",
+    unavailable: "Unavailable",
+    gift: "Gift",
+    giftDescription: "A lovely gift for this occasion.",
+    chooseGift: "I choose this gift",
+    reserve: "Reserve",
+    noGifts: "The gift list is coming soon",
+    noGiftsDescription: "Gifts for this event will be displayed soon.",
+    confirmReservation: "Would you like to reserve this gift: ",
+    saving: "Saving your reservation...",
+    reservationSuccess: "Your reservation has been successfully saved!",
+    reservationError: "Unable to save your reservation.",
+    linkError: "Please check your personal link or contact the organizer.",
+    ad: "Advertisement",
+    createEvent: "Create my event",
+    thanks: "Thank you for being part of this event!"
+  },
+  es: {
+    guest: "Estimado invitado",
+    event: "Nuestro evento",
+    venue: "Lugar por confirmar",
+    welcome: "¡Bienvenido",
+    welcomeMessage: "Nos alegra tenerte aquí.",
+    eventLabel: "Evento",
+    dateLabel: "Fecha",
+    venueLabel: "Lugar",
+    loading: "Cargando los regalos...",
+    available: "Disponible",
+    unavailable: "No disponible",
+    gift: "Regalo",
+    giftDescription: "Un bonito regalo para esta ocasión.",
+    chooseGift: "Elijo este regalo",
+    reserve: "Reservar",
+    noGifts: "La lista de regalos estará disponible pronto",
+    noGiftsDescription: "Los regalos de este evento se mostrarán pronto.",
+    confirmReservation: "¿Deseas reservar este regalo: ",
+    saving: "Guardando tu reserva...",
+    reservationSuccess: "¡Tu reserva se ha guardado correctamente!",
+    reservationError: "No se pudo guardar tu reserva.",
+    linkError: "Verifica tu enlace personal o contacta al organizador.",
+    ad: "Publicidad",
+    createEvent: "Crear mi evento",
+    thanks: "¡Gracias por formar parte de este evento!"
+  },
+  pt: {
+    guest: "Caro convidado",
+    event: "Nosso evento",
+    venue: "Local a confirmar",
+    welcome: "Bem-vindo",
+    welcomeMessage: "Estamos felizes por ter você aqui.",
+    eventLabel: "Evento",
+    dateLabel: "Data",
+    venueLabel: "Local",
+    loading: "Carregando os presentes...",
+    available: "Disponível",
+    unavailable: "Indisponível",
+    gift: "Presente",
+    giftDescription: "Um lindo presente para esta ocasião.",
+    chooseGift: "Escolho este presente",
+    reserve: "Reservar",
+    noGifts: "A lista de presentes estará disponível em breve",
+    noGiftsDescription: "Os presentes deste evento serão exibidos em breve.",
+    confirmReservation: "Deseja reservar este presente: ",
+    saving: "Salvando sua reserva...",
+    reservationSuccess: "Sua reserva foi salva com sucesso!",
+    reservationError: "Não foi possível salvar sua reserva.",
+    linkError: "Verifique seu link pessoal ou entre em contato com o organizador.",
+    ad: "Publicidade",
+    createEvent: "Criar meu evento",
+    thanks: "Obrigado por fazer parte deste evento!"
+  }
+};
 
+function t(key) {
+  return translations[currentLanguage]?.[key] || translations.fr[key] || key;
+}
 /* ==========================================
    OUTILS
 ========================================== */
@@ -1297,8 +1438,12 @@ async function initializePage() {
     }
 
     guest = guestResult.guest;
-    eventData = eventObject(eventResult);
+eventData = eventObject(eventResult);
 
+// La langue de l'invité sera utilisée pour traduire la page.
+currentLanguage = String(
+  guest.language || guest.Langue || "fr"
+).toLowerCase().substring(0, 2);
     // Vérification de cohérence
     if (
       guest.event_id &&
@@ -1327,9 +1472,10 @@ async function initializePage() {
    AFFICHAGE PERSONNALISÉ
 ========================================== */
 
+
 function displayPersonalInformation() {
 
-  const guestName = guest.name || "Cher invité";
+  const guestName = guest.name || t("guest");
 
   const eventName = pick(
     eventData,
@@ -1338,7 +1484,7 @@ function displayPersonalInformation() {
     "name",
     "nom",
     "event_name"
-  ) || "Notre événement";
+  ) || t("event");
 
   const date = pick(
     eventData,
@@ -1352,7 +1498,7 @@ function displayPersonalInformation() {
     "Lieu",
     "lieu",
     "venue"
-  ) || "Lieu à préciser";
+  ) || t("venue");
 
   const eventType = pick(
     eventData,
@@ -1360,19 +1506,21 @@ function displayPersonalInformation() {
     "type_evenement"
   );
 
+  document.documentElement.lang = currentLanguage;
+
   document.getElementById("heroTitle").textContent =
     eventName;
 
   document.getElementById("heroDescription").textContent =
     eventType
-      ? "Nous sommes heureux de vous accueillir pour cette belle occasion : " + eventType + "."
-      : "Découvrez la liste des cadeaux de cette belle célébration.";
+      ? t("heroDescriptionType") + eventType + "."
+      : t("heroDescriptionDefault");
 
   document.getElementById("welcomeTitle").textContent =
-    "Bienvenue, " + guestName + " !";
+    t("welcome") + ", " + guestName + " !";
 
   document.getElementById("welcomeMessage").textContent =
-    "Nous sommes ravis de vous compter parmi nos invités. Vous pouvez découvrir les cadeaux proposés et choisir celui que vous souhaitez offrir.";
+    t("welcomeMessage");
 
   document.getElementById("eventName").textContent =
     eventName;
