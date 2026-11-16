@@ -1453,6 +1453,17 @@ mapTitle: "Localisation de l'événement",
 envelopeTitle: "Une invitation spéciale",
 envelopeCaption: "Une belle surprise vous attend...",
 attendanceCardTitle: "Votre carte personnelle",
+    greeting: "Bonjour",
+parkingOnSite: "Parking disponible sur place",
+parkingNearby: "Parking disponible à proximité",
+streetParking: "Stationnement dans la rue",
+noParking: "Aucun parking disponible",
+free: "Gratuit",
+paid: "Payant",
+importantInfo: "Information importante",
+understood: "J’ai compris",
+mapHide: "✖ Masquer la carte",
+mapShow: "📍 Voir sur la carte",
   },
 
   ht: {
@@ -1517,6 +1528,17 @@ mapTitle: "Kote evènman an ye",
 envelopeTitle: "Yon envitasyon espesyal",
 envelopeCaption: "Yon bèl sipriz ap tann ou...",
 attendanceCardTitle: "Kat pèsonèl ou",
+    greeting: "Bonjou",
+parkingOnSite: "Gen pakin sou plas la",
+parkingNearby: "Gen pakin toupre",
+streetParking: "Pakin nan lari",
+noParking: "Pa gen pakin disponib",
+free: "Gratis",
+paid: "Peye",
+importantInfo: "Enfòmasyon enpòtan",
+understood: "Mwen konprann",
+mapHide: "✖ Kache kat la",
+mapShow: "📍 Gade sou kat la",
   },
 
   en: {
@@ -1581,6 +1603,17 @@ mapTitle: "Event location",
 envelopeTitle: "A special invitation",
 envelopeCaption: "A lovely surprise awaits you...",
 attendanceCardTitle: "Your personal card",
+    greeting: "Hello",
+parkingOnSite: "Parking available on site",
+parkingNearby: "Parking available nearby",
+streetParking: "Street parking",
+noParking: "No parking available",
+free: "Free",
+paid: "Paid",
+importantInfo: "Important information",
+understood: "I understand",
+mapHide: "✖ Hide map",
+mapShow: "📍 View on map",
   },
 
   es: {
@@ -1645,6 +1678,17 @@ mapTitle: "Ubicación del evento",
 envelopeTitle: "Una invitación especial",
 envelopeCaption: "Una bonita sorpresa te espera...",
 attendanceCardTitle: "Tu tarjeta personal",
+    greeting: "Hola",
+parkingOnSite: "Aparcamiento disponible en el lugar",
+parkingNearby: "Aparcamiento disponible cerca",
+streetParking: "Aparcamiento en la calle",
+noParking: "No hay aparcamiento disponible",
+free: "Gratis",
+paid: "De pago",
+importantInfo: "Información importante",
+understood: "Entendido",
+mapHide: "✖ Ocultar mapa",
+mapShow: "📍 Ver en el mapa",
   },
 
   pt: {
@@ -1709,6 +1753,17 @@ mapTitle: "Localização do evento",
 envelopeTitle: "Um convite especial",
 envelopeCaption: "Uma linda surpresa espera por você...",
 attendanceCardTitle: "Seu cartão pessoal",
+    greeting: "Olá",
+parkingOnSite: "Estacionamento disponível no local",
+parkingNearby: "Estacionamento disponível nas proximidades",
+streetParking: "Estacionamento na rua",
+noParking: "Não há estacionamento disponível",
+free: "Grátis",
+paid: "Pago",
+importantInfo: "Informação importante",
+understood: "Entendi",
+mapHide: "✖ Ocultar mapa",
+mapShow: "📍 Ver no mapa",
   }
 };
 
@@ -2385,12 +2440,16 @@ const guestEventId =
 
     currentGuest.name = guestName;
 
-    setText("guestGreeting", "Bonjour " + guestName + " !");
-    setText(
-      "attendanceGreeting",
-      "Bonjour " + guestName +
-      " ! Nous sommes heureux de vous compter parmi nos invités."
-    );
+   setText(
+  "guestGreeting",
+  t("greeting") + " " + guestName + " !"
+);
+
+setText(
+  "attendanceGreeting",
+  t("greeting") + " " + guestName +
+  " ! " + t("happyToHaveYou")
+);
 
     const attendance = String(
       currentGuest.attendance ||
@@ -2855,7 +2914,7 @@ function formatEventTime(value) {
   return text;
 }
 
-  function toggleEventMap() {
+function toggleEventMap() {
   const container = document.getElementById("eventMapContainer");
   const button = document.getElementById("showEventMapButton");
   const frame = document.getElementById("eventMapFrame");
@@ -2868,7 +2927,7 @@ function formatEventTime(value) {
     const address = document.getElementById("eventFullAddress").textContent.trim();
 
     if (!address || address === "Non précisée") {
-      alert("L'adresse de cet événement n'est pas encore disponible.");
+      alert(t("addressUnavailable"));
       return;
     }
 
@@ -2876,10 +2935,11 @@ function formatEventTime(value) {
       encodeURIComponent(address) + "&output=embed";
 
     container.classList.remove("hidden");
-    button.textContent = "✖ Masquer la carte";
+    button.textContent = t("mapHide");
+
   } else {
     container.classList.add("hidden");
-    button.textContent = "📍 Voir sur la carte";
+    button.textContent = t("mapShow");
   }
 }
 /* ================================================
