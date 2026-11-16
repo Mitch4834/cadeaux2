@@ -1109,8 +1109,7 @@ button { font: inherit; cursor: pointer; }
 <div class="info-item address-info-item">
   <div class="info-icon">🗺️</div>
   <div style="width:100%;">
-    <strong>Adresse complète</strong>
-
+    <strong data-i18n="fullAddressLabel">Adresse complète</strong>
     <span id="eventFullAddress">Non précisée</span>
 
     <button
@@ -1119,13 +1118,14 @@ button { font: inherit; cursor: pointer; }
       class="primary-button"
       style="display:block; min-width:0; width:100%; max-width:320px; margin:12px auto 0; padding:10px 14px; text-align:center; box-sizing:border-box;"
       onclick="toggleEventMap()">
-      📍 Voir sur la carte
+      <span data-i18n="showMap">📍 Voir sur la carte</span>
     </button>
 
     <div id="eventMapContainer" class="hidden" style="margin-top:15px;">
       <iframe
         id="eventMapFrame"
-        title="Localisation de l'événement"
+       title="Localisation de l'événement"
+data-i18n-title="mapTitle"
         width="100%"
         height="250"
         style="border:0; border-radius:12px;"
@@ -1238,7 +1238,7 @@ button { font: inherit; cursor: pointer; }
 
     <div class="envelope-letter">
       <span>💌</span>
-      <strong>Une invitation spéciale</strong>
+      <strong data-i18n="envelopeTitle">Une invitation spéciale</strong>
       <small>FÊTE &amp; CADEAUX</small>
     </div>
 
@@ -1257,15 +1257,15 @@ button { font: inherit; cursor: pointer; }
     <i></i><i></i><i></i><i></i><i></i>
     <i></i><i></i><i></i><i></i><i></i>
   </div>
-  <p class="envelope-caption">
-    Une belle surprise vous attend...
-  </p>
+  <p class="envelope-caption" data-i18n="envelopeCaption">
+  Une belle surprise vous attend...
+</p>
 </div>
 
     <div class="attendance-box">
 
       <div class="attendance-icon">💌</div>
-      <h2 data-i18n="participation">Votre Carte personelle</h2>
+      <h2 data-i18n="attendanceCardTitle">Votre carte personnelle</h2>
 
       <p id="attendanceGreeting" data-i18n="happyToHaveYou">
         Nous sommes heureux de vous compter parmi nos invités !
@@ -1733,15 +1733,27 @@ function setInvitationLanguage(language) {
 }
 
 function applyStaticTranslations() {
+
+  // Traduire les textes
   document.querySelectorAll("[data-i18n]").forEach(element => {
     const key = element.getAttribute("data-i18n");
     element.textContent = t(key);
   });
 
+  // Traduire les placeholders
   document.querySelectorAll("[data-i18n-placeholder]").forEach(element => {
     const key = element.getAttribute("data-i18n-placeholder");
     element.placeholder = t(key);
   });
+
+  // Traduire les attributs title
+  document.querySelectorAll("[data-i18n-title]").forEach(element => {
+    const key = element.getAttribute("data-i18n-title");
+    element.title = t(key);
+  });
+
+  // Définir la langue de la page
+  document.documentElement.lang = currentLanguage;
 }
 /* ================================================
    OUTILS
