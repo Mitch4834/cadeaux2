@@ -1840,41 +1840,49 @@ function setText(id, value, fallback = "") {
   }
 }
 
+
 function formatEventDate(dateValue) {
   if (!dateValue) return "";
 
   const value = String(dateValue).trim();
 
+  // Correspondance entre langue et format régional
+  const locales = {
+    fr: "fr-FR",
+    ht: "fr-FR",
+    en: "en-US",
+    es: "es-ES",
+    pt: "pt-PT"
+  };
+
+  const locale = locales[currentLanguage] || "fr-FR";
+
   // Date au format YYYY-MM-DD
   const dateOnly = value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+
+  let date;
 
   if (dateOnly) {
     const year = Number(dateOnly[1]);
     const month = Number(dateOnly[2]) - 1;
     const day = Number(dateOnly[3]);
 
-    const date = new Date(year, month, day);
-
-    return date.toLocaleDateString("fr-FR", {
-      weekday: "long",
-      day: "numeric",
-      month: "long",
-      year: "numeric"
-    });
+    // Éviter les décalages de jour liés au fuseau horaire
+    date = new Date(Date.UTC(year, month, day, 12));
+  } else {
+    date = new Date(dateValue);
   }
-
-  // Autres formats contenant une date et éventuellement une heure.
-  const date = new Date(dateValue);
 
   if (isNaN(date.getTime())) {
     return value;
   }
 
-  return date.toLocaleDateString("fr-FR", {
+  return date.toLocaleDateString(locale, {
     weekday: "long",
     day: "numeric",
     month: "long",
-    year: "numeric"
+    year: "numeric",
+    timeZone: "UTC"
   });
 }
 
