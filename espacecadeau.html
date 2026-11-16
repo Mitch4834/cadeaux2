@@ -1391,15 +1391,22 @@ function eventObject(result) {
 
 
 function formatDate(value) {
+
+  console.log("DATE REÇUE :", value);
+  console.log("TYPE DE DATE :", typeof value);
+
   if (!value) return "À préciser";
 
   const date = new Date(value);
 
-  if (isNaN(date.getTime())) return String(value);
+  if (isNaN(date.getTime())) {
+    console.log("DATE INVALIDE :", value);
+    return String(value);
+  }
 
   const locales = {
     fr: "fr-FR",
-    ht: "ht-HT",
+    ht: "fr-FR",
     en: "en-US",
     es: "es-ES",
     pt: "pt-BR"
@@ -1413,21 +1420,6 @@ function formatDate(value) {
       year: "numeric"
     }
   );
-}
-
-
-function showMessage(text, type = "success") {
-  messageBox.className = "message " + type;
-  messageBox.textContent = text;
-  messageBox.scrollIntoView({
-    behavior: "smooth",
-    block: "nearest"
-  });
-}
-
-function clearMessage() {
-  messageBox.className = "message";
-  messageBox.textContent = "";
 }
 
 /* ==========================================
