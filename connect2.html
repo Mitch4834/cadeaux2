@@ -1383,6 +1383,7 @@ let attendanceSubmitting = false;
   let pendingAnnouncements = [];
 let currentAnnouncement = null;
 let announcementSubmitting = false;
+let redirectToGiftsAfterAnnouncements = false;
 
 // Langue utilisée par l'invité
 let currentLanguage = "fr";
@@ -1852,7 +1853,19 @@ async function loadPendingAnnouncements() {
 }
 
 function showNextAnnouncement() {
-  if (currentAnnouncement || !pendingAnnouncements.length) return;
+
+  if (currentAnnouncement) return;
+
+  // Toutes les annonces ont été lues
+  if (!pendingAnnouncements.length) {
+
+    if (redirectToGiftsAfterAnnouncements) {
+      redirectToGiftsAfterAnnouncements = false;
+      setTimeout(goToGiftPage, 1000);
+    }
+
+    return;
+  }
 
   currentAnnouncement = pendingAnnouncements.shift();
 
@@ -2509,9 +2522,21 @@ getElement("attendanceModal").classList.add("hidden");
 showAttendanceStatus(selectedAttendance);
 
 if (selectedAttendance === "OUI") {
+
+  redirectToGiftsAfterAnnouncements = true;
+
   await loadPendingAnnouncements();
+
+  // Si aucune annonce n'est disponible,
+  // diriger directement l'invité vers les cadeaux.
+  if (!currentAnnouncement && pendingAnnouncements.length === 0) {
+    showNextAnnouncement();
+  }
+
 } else {
+
   setTimeout(goToGiftPage, 1200);
+
 }
   } catch (error) {
 
