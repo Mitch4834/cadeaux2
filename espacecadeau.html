@@ -1606,7 +1606,9 @@ async function initializePage() {
     guest = guestResult.guest;
     console.log("OBJET INVITÉ REÇU :", guest);
 eventData = eventObject(eventResult);
-
+console.log("RÉPONSE COMPLÈTE DE LA FÊTE :", eventResult);
+console.log("OBJET ÉVÉNEMENT EXTRAIT :", eventData);
+console.log("CLÉS DISPONIBLES :", Object.keys(eventData || {}));
 // La langue de l'invité sera utilisée pour traduire la page.
 currentLanguage = String(
   guest.language || guest.Langue || "fr"
