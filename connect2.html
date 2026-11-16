@@ -2541,10 +2541,10 @@ function openAttendanceModal() {
   getElement("attendanceSubmit").textContent = "Envoyer ma réponse";
 
   setText(
-    "attendanceGreeting",
-    "Bonjour " + currentGuest.name +
-    " ! Nous sommes heureux de vous compter parmi nos invités."
-  );
+  "attendanceGreeting",
+  t("greeting") + " " + currentGuest.name +
+  " ! " + t("happyToHaveYou")
+);
 
   const modal = getElement("attendanceModal");
   const envelope = getElement("attendanceEnvelope");
