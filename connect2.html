@@ -2538,7 +2538,7 @@ function openAttendanceModal() {
   getElement("attendanceMessage").textContent = "";
 
   getElement("attendanceSubmit").disabled = false;
-  getElement("attendanceSubmit").textContent = "Envoyer ma réponse";
+  getElement("attendanceSubmit").textContent = t("confirm");
 
   setText(
   "attendanceGreeting",
@@ -2683,7 +2683,7 @@ if (selectedAttendance === "OUI") {
     );
 
     button.disabled = false;
-    button.textContent = "Réessayer";
+    button.textContent = t("retry");
 
   } finally {
     attendanceSubmitting = false;
