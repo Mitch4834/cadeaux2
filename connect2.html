@@ -2416,12 +2416,19 @@ async function initializePersonalInvitation() {
       );
     }
 
-    currentGuest = guestResult.guest;
+   currentGuest = guestResult.guest;
 
-// Appliquer la langue choisie par l'organisateur pour cet invité
+console.log("OBJET INVITÉ :", currentGuest);
+console.log("LANGUE language :", currentGuest.language);
+console.log("LANGUE Langue :", currentGuest.Langue);
+console.log("TOUTES LES CLÉS :", Object.keys(currentGuest));
+
 setInvitationLanguage(
   currentGuest.language || currentGuest.Langue || "fr"
 );
+
+console.log("LANGUE FINALE :", currentLanguage);
+
 applyStaticTranslations();
 const guestEventId =
   currentGuest.event_id || currentGuest.Fete_ID || "";
