@@ -1321,6 +1321,42 @@ footerThanks: "Obrigado por contribuir para a alegria deste dia ❤️",
 function t(key) {
   return translations[currentLanguage]?.[key] || translations.fr[key] || key;
 }
+  
+function applyStaticTranslations() {
+
+  const elements = {
+    eventLabel: "eventLabel",
+    dateLabel: "dateLabel",
+    venueLabel: "venueLabel",
+    adLabel1: "adLabel",
+    adLabel2: "adLabel",
+    adText1: "adText1",
+    adText2: "adText2",
+    giftsHeading: "giftsHeading",
+    giftsIntroduction: "giftsIntroduction",
+    legendAvailable: "legendAvailable",
+    legendUnavailable: "legendUnavailable",
+    initialLoading: "initialLoading",
+    footerHeading: "footerHeading",
+    footerDescription: "footerDescription",
+    createEventButton: "createEvent",
+    adText3: "adText3",
+    adText4: "adText4",
+    footerThanks: "footerThanks"
+  };
+
+  Object.entries(elements).forEach(([elementId, translationKey]) => {
+
+    const element = document.getElementById(elementId);
+
+    if (element) {
+      element.textContent = t(translationKey);
+    }
+
+  });
+
+}
+
 /* ==========================================
    OUTILS
 ========================================== */
@@ -1569,6 +1605,7 @@ eventData = eventObject(eventResult);
 currentLanguage = String(
   guest.language || guest.Langue || "fr"
 ).toLowerCase().substring(0, 2);
+    applyStaticTranslations();
     // Vérification de cohérence
     if (
       guest.event_id &&
