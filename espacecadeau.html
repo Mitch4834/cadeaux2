@@ -1389,6 +1389,7 @@ function eventObject(result) {
   );
 }
 
+
 function formatDate(value) {
   if (!value) return "À préciser";
 
@@ -1396,12 +1397,24 @@ function formatDate(value) {
 
   if (isNaN(date.getTime())) return String(value);
 
-  return date.toLocaleDateString("fr-FR", {
-    day: "numeric",
-    month: "long",
-    year: "numeric"
-  });
+  const locales = {
+    fr: "fr-FR",
+    ht: "ht-HT",
+    en: "en-US",
+    es: "es-ES",
+    pt: "pt-BR"
+  };
+
+  return date.toLocaleDateString(
+    locales[currentLanguage] || "fr-FR",
+    {
+      day: "numeric",
+      month: "long",
+      year: "numeric"
+    }
+  );
 }
+
 
 function showMessage(text, type = "success") {
   messageBox.className = "message " + type;
@@ -1606,6 +1619,7 @@ currentLanguage = String(
   guest.language || guest.Langue || "fr"
 ).toLowerCase().substring(0, 2);
     applyStaticTranslations();
+    console.log("LANGUE DE L'INVITÉ :", currentLanguage);
     // Vérification de cohérence
     if (
       guest.event_id &&
