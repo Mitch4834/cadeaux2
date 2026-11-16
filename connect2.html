@@ -2084,9 +2084,12 @@ function showEventError(message) {
   getElement("loadingEvent").classList.add("hidden");
   getElement("eventPage").classList.add("hidden");
   getElement("eventError").classList.remove("hidden");
-  setText("eventErrorMessage", message, "Invitation indisponible.");
-}
 
+  setText(
+    "eventErrorMessage",
+    message || t("unavailableDescription")
+  );
+}
 /* ================================================
    PALETTE IDENTIQUE À CONNECT 1
 ================================================ */
@@ -2174,7 +2177,7 @@ function createPersonCard(person) {
   if (photo) {
     const image = document.createElement("img");
     image.src = photo;
-    image.alt = "Personne à l'honneur";
+   image.alt = t("honoredPerson");
     image.className = "person-photo";
 
     image.onerror = function() {
@@ -2198,7 +2201,7 @@ function createPersonCard(person) {
     [firstName, lastName].filter(Boolean).join(" ");
 
   const title = document.createElement("h3");
-  title.textContent = fullName || "Personne à l'honneur";
+  title.textContent = fullName || t("honoredPerson");
   card.appendChild(title);
 
   const role = getValue(person, "role", "Role", "Rôle", "Lien");
