@@ -1102,7 +1102,7 @@ button { font: inherit; cursor: pointer; }
   <div class="info-icon">📍</div>
   <div>
     <strong data-i18n="venue">Lieu</strong>
-    <span id="eventVenue">Non précisé</span>
+   <span id="eventVenue" data-i18n="notSpecified">Non précisé</span>
   </div>
 </div>
 
@@ -1110,7 +1110,7 @@ button { font: inherit; cursor: pointer; }
   <div class="info-icon">🗺️</div>
   <div style="width:100%;">
     <strong data-i18n="fullAddressLabel">Adresse complète</strong>
-    <span id="eventFullAddress">Non précisée</span>
+    <span id="eventFullAddress" data-i18n="notSpecified">Non précisée</span>
 
     <button
       type="button"
@@ -1145,11 +1145,11 @@ data-i18n-title="mapTitle"
       <div class="guest-icon">💌</div>
       <p data-i18n="personalInvitation">Cette invitation vous est personnellement adressée</p>
 
-      <h2 id="guestGreeting">Bonjour !</h2>
+      <h2 id="guestGreeting" data-i18n="hello">Bonjour !</h2>
 
       <p>
         <span data-i18n="weInviteYou">Nous avons le plaisir de vous inviter à</span>
-        <strong id="guestEventName">cet événement</strong>.
+        <strong id="guestEventName" data-i18n="thisEvent">cet événement</strong>
       </p>
 
       <div id="guestStatus" class="guest-status hidden"></div>
@@ -1464,6 +1464,7 @@ importantInfo: "Information importante",
 understood: "J’ai compris",
 mapHide: "✖ Masquer la carte",
 mapShow: "📍 Voir sur la carte",
+notSpecified: "Non précisé",
   },
 
   ht: {
@@ -1539,6 +1540,8 @@ importantInfo: "Enfòmasyon enpòtan",
 understood: "Mwen konprann",
 mapHide: "✖ Kache kat la",
 mapShow: "📍 Gade sou kat la",
+
+    
   },
 
   en: {
@@ -1614,6 +1617,8 @@ importantInfo: "Important information",
 understood: "I understand",
 mapHide: "✖ Hide map",
 mapShow: "📍 View on map",
+notSpecified: "Not specified",
+
   },
 
   es: {
@@ -1689,6 +1694,7 @@ importantInfo: "Información importante",
 understood: "Entendido",
 mapHide: "✖ Ocultar mapa",
 mapShow: "📍 Ver en el mapa",
+notSpecified: "No especificado",
   },
 
   pt: {
@@ -1764,6 +1770,7 @@ importantInfo: "Informação importante",
 understood: "Entendi",
 mapHide: "✖ Ocultar mapa",
 mapShow: "📍 Ver no mapa",
+notSpecified: "Não especificado",
   }
 };
 
@@ -2305,8 +2312,7 @@ function displayEvent(data) {
   formatEventTime(event.time || event.Heure_Evenement),
   "Non précisée"
 );
-  setText("eventVenue", event.place || event.venue || event.Lieu, "Non précisé");
-
+  setText("eventVenue", event.place || event.venue || event.Lieu, t("notSpecified"));
  const eventAddress = event.address || event.Adresse || "";
 const eventCity = event.city || event.Ville || "";
 const eventCountry = event.country || event.Pays || "";
@@ -2320,7 +2326,7 @@ const fullAddress = [eventAddress, eventCity, eventCountry]
   .filter(value => value && value.trim())
   .join(", ");
 
-setText("eventFullAddress", fullAddress, "Non précisée");
+setText("eventFullAddress", fullAddress, t("notSpecified"));
   // Afficher les informations de stationnement
   displayParking(event);  setText(
     "eventMessage",
