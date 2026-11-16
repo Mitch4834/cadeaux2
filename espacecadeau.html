@@ -1430,6 +1430,25 @@ function escapeHTML(value) {
     "'": "&#39;"
   })[char]);
 }
+  /* ==========================================
+   GESTION DES MESSAGES
+========================================== */
+
+function clearMessage() {
+  if (!messageBox) return;
+
+  messageBox.textContent = "";
+  messageBox.className = "";
+  messageBox.style.display = "none";
+}
+
+function showMessage(message, type = "success") {
+  if (!messageBox) return;
+
+  messageBox.textContent = message;
+  messageBox.className = "message " + type;
+  messageBox.style.display = "block";
+}
 /* ==========================================
    COMMUNICATION AVEC APPS SCRIPT
 ========================================== */
