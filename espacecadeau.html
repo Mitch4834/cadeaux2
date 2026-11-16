@@ -901,6 +901,7 @@ button {
 </style>
 </head>
 
+
 <body>
 
 <header class="hero">
@@ -927,7 +928,7 @@ button {
     <div class="event-detail">
       <div class="event-detail-icon">🎉</div>
       <div>
-        <div class="event-detail-label">Événement</div>
+        <div class="event-detail-label" id="eventLabel">Événement</div>
         <div class="event-detail-value" id="eventName">Chargement...</div>
       </div>
     </div>
@@ -935,7 +936,7 @@ button {
     <div class="event-detail">
       <div class="event-detail-icon">📅</div>
       <div>
-        <div class="event-detail-label">Date</div>
+        <div class="event-detail-label" id="dateLabel">Date</div>
         <div class="event-detail-value" id="eventDate">-</div>
       </div>
     </div>
@@ -943,35 +944,35 @@ button {
     <div class="event-detail">
       <div class="event-detail-icon">📍</div>
       <div>
-        <div class="event-detail-label">Lieu</div>
+        <div class="event-detail-label" id="venueLabel">Lieu</div>
         <div class="event-detail-value" id="eventVenue">-</div>
       </div>
     </div>
   </section>
-<!-- ESPACE PUBLICITAIRE 1 -->
-<section class="advertising-area">
-  <div class="advertising-banner" id="giftPageAdTop">
 
-    <div class="advertising-placeholder">
-      <span class="advertising-label">Publicité</span>
-      Votre publicité pourrait apparaître ici.
-      <br>
-      Contactez Fête & Cadeaux pour présenter votre marque.
+  <!-- ESPACE PUBLICITAIRE 1 -->
+  <section class="advertising-area">
+    <div class="advertising-banner" id="giftPageAdTop">
+      <div class="advertising-placeholder">
+        <span class="advertising-label" id="adLabel1">Publicité</span>
+        <span id="adText1">Votre publicité pourrait apparaître ici.</span>
+        <br>
+        <span id="adText2">Contactez Fête & Cadeaux pour présenter votre marque.</span>
+      </div>
     </div>
+  </section>
 
-  </div>
-</section>
   <section class="section-heading">
-    <h2>Notre liste de cadeaux 🎁</h2>
-    <p>
+    <h2 id="giftsHeading">Notre liste de cadeaux 🎁</h2>
+    <p id="giftsIntroduction">
       Découvrez les cadeaux proposés et sélectionnez celui
       que vous souhaitez offrir.
     </p>
   </section>
 
   <div class="legend">
-    <span><i class="dot"></i> Disponible</span>
-    <span><i class="dot unavailable"></i> Indisponible</span>
+    <span><i class="dot"></i> <span id="legendAvailable">Disponible</span></span>
+    <span><i class="dot unavailable"></i> <span id="legendUnavailable">Indisponible</span></span>
   </div>
 
   <div id="message" class="message"></div>
@@ -979,7 +980,7 @@ button {
   <section class="gift-grid" id="giftGrid">
     <div class="loading">
       <div class="spinner"></div>
-      Chargement de votre espace cadeau...
+      <span id="initialLoading">Chargement de votre espace cadeau...</span>
     </div>
   </section>
 
@@ -987,14 +988,13 @@ button {
 
 <footer class="footer">
 
-  <!-- ESPACE POUR LES ORGANISATEURS -->
   <div class="footer-cta">
 
-    <h2>
+    <h2 id="footerHeading">
       Et si la prochaine belle célébration était la vôtre ?
     </h2>
 
-    <p>
+    <p id="footerDescription">
       Mariage, anniversaire, fiançailles, baby shower...
       Organisez votre événement et laissez vos invités
       confirmer leur présence et réserver leurs cadeaux
@@ -1004,6 +1004,7 @@ button {
     <a
       href="https://mitch4834.github.io/cadeaux2/"
       class="create-event-button"
+      id="createEventButton"
     >
       🎉 Créer mon événement
     </a>
@@ -1013,19 +1014,17 @@ button {
   <!-- ESPACE PUBLICITAIRE 2 -->
   <div class="advertising-area">
     <div class="advertising-banner" id="giftPageAdFooter">
-
       <div class="advertising-placeholder">
-        <span class="advertising-label">Publicité</span>
-        Votre marque mérite d'être visible !
+        <span class="advertising-label" id="adLabel2">Publicité</span>
+        <span id="adText3">Votre marque mérite d'être visible !</span>
         <br>
-        Réservez cet espace publicitaire.
+        <span id="adText4">Réservez cet espace publicitaire.</span>
       </div>
-
     </div>
   </div>
 
   <div class="footer-brand">
-    Merci de contribuer au bonheur de cette journée ❤️
+    <span id="footerThanks">Merci de contribuer au bonheur de cette journée ❤️</span>
     <br>
     <strong>Fête & Cadeaux</strong>
   </div>
@@ -1033,6 +1032,7 @@ button {
 </footer>
 
 <script>
+
 /* ==========================================
    CONFIGURATION
 ========================================== */
@@ -1088,6 +1088,25 @@ heroDescriptionDefault: "Découvrez la liste des cadeaux de cette belle célébr
 invalidGiftsData: "Les données des cadeaux sont incorrectes.",
     availableCount: "disponible(s)",
 giftUnavailable: "Plus disponible",
+    greeting: "Bonjour",
+reservationFinal: "Votre cadeau est bien réservé. Merci",
+    eventLabel: "Événement",
+dateLabel: "Date",
+venueLabel: "Lieu",
+adLabel: "Publicité",
+adText1: "Votre publicité pourrait apparaître ici.",
+adText2: "Contactez Fête & Cadeaux pour présenter votre marque.",
+giftsHeading: "Notre liste de cadeaux 🎁",
+giftsIntroduction: "Découvrez les cadeaux proposés et sélectionnez celui que vous souhaitez offrir.",
+legendAvailable: "Disponible",
+legendUnavailable: "Indisponible",
+initialLoading: "Chargement de votre espace cadeau...",
+footerHeading: "Et si la prochaine belle célébration était la vôtre ?",
+footerDescription: "Mariage, anniversaire, fiançailles, baby shower... Organisez votre événement et laissez vos invités confirmer leur présence et réserver leurs cadeaux en toute simplicité.",
+createEvent: "🎉 Créer mon événement",
+adText3: "Votre marque mérite d'être visible !",
+adText4: "Réservez cet espace publicitaire.",
+footerThanks: "Merci de contribuer au bonheur de cette journée ❤️",
   },
   ht: {
     guest: "Chè envite",
@@ -1121,6 +1140,25 @@ heroDescriptionDefault: "Dekouvri lis kado pou bèl selebrasyon sa a.",
 invalidGiftsData: "Enfòmasyon sou kado yo pa kòrèk.",
     availableCount: "disponib",
 giftUnavailable: "Pa disponib ankò",
+    greeting: "Bonjou",
+reservationFinal: "Kado ou a byen rezève. Mèsi",
+    eventLabel: "Evènman",
+dateLabel: "Dat",
+venueLabel: "Kote",
+adLabel: "Piblisite",
+adText1: "Piblisite ou a ka parèt isit la.",
+adText2: "Kontakte Fête & Cadeaux pou prezante mak ou.",
+giftsHeading: "Lis kado nou an 🎁",
+giftsIntroduction: "Dekouvri kado yo pwopoze epi chwazi sa ou ta renmen ofri a.",
+legendAvailable: "Disponib",
+legendUnavailable: "Pa disponib",
+initialLoading: "Ap chaje espas kado ou a...",
+footerHeading: "E si pwochen bèl selebrasyon an se pou ou?",
+footerDescription: "Maryaj, anivèsè, fiyansay, baby shower... Òganize evènman ou epi kite envite yo konfime prezans yo epi rezève kado yo fasilman.",
+createEvent: "🎉 Kreye evènman mwen an",
+adText3: "Mak ou merite jwenn plis vizibilite!",
+adText4: "Rezève espas piblisite sa a.",
+footerThanks: "Mèsi paske w kontribye nan lajwa jounen sa a ❤️",
   },
   en: {
     guest: "Dear guest",
@@ -1154,6 +1192,25 @@ heroDescriptionDefault: "Explore the gift list for this wonderful celebration.",
 invalidGiftsData: "The gift data is incorrect.",
     availableCount: "available",
 giftUnavailable: "No longer available",
+    greeting: "Hello",
+reservationFinal: "Your gift has been reserved. Thank you",
+    eventLabel: "Event",
+dateLabel: "Date",
+venueLabel: "Venue",
+adLabel: "Advertisement",
+adText1: "Your advertisement could appear here.",
+adText2: "Contact Fête & Cadeaux to showcase your brand.",
+giftsHeading: "Our Gift List 🎁",
+giftsIntroduction: "Explore the available gifts and select the one you would like to give.",
+legendAvailable: "Available",
+legendUnavailable: "Unavailable",
+initialLoading: "Loading your gift space...",
+footerHeading: "What if the next wonderful celebration were yours?",
+footerDescription: "Wedding, birthday, engagement, baby shower... Organize your event and let your guests confirm their attendance and reserve gifts with ease.",
+createEvent: "🎉 Create my event",
+adText3: "Your brand deserves to be seen!",
+adText4: "Reserve this advertising space.",
+footerThanks: "Thank you for contributing to the joy of this special day ❤️",
   },
   es: {
     guest: "Estimado invitado",
@@ -1187,6 +1244,25 @@ heroDescriptionDefault: "Descubre la lista de regalos de esta celebración.",
 invalidGiftsData: "Los datos de los regalos son incorrectos.",
     availableCount: "disponible(s)",
 giftUnavailable: "Ya no disponible",
+    greeting: "Hola",
+reservationFinal: "Tu regalo está reservado. ¡Gracias",
+    eventLabel: "Evento",
+dateLabel: "Fecha",
+venueLabel: "Lugar",
+adLabel: "Publicidad",
+adText1: "Tu publicidad podría aparecer aquí.",
+adText2: "Contacta con Fête & Cadeaux para presentar tu marca.",
+giftsHeading: "Nuestra lista de regalos 🎁",
+giftsIntroduction: "Descubre los regalos propuestos y selecciona el que deseas ofrecer.",
+legendAvailable: "Disponible",
+legendUnavailable: "No disponible",
+initialLoading: "Cargando tu espacio de regalos...",
+footerHeading: "¿Y si la próxima gran celebración fuera la tuya?",
+footerDescription: "Boda, cumpleaños, compromiso, baby shower... Organiza tu evento y permite que tus invitados confirmen su asistencia y reserven regalos fácilmente.",
+createEvent: "🎉 Crear mi evento",
+adText3: "¡Tu marca merece ser visible!",
+adText4: "Reserva este espacio publicitario.",
+footerThanks: "Gracias por contribuir a la felicidad de este día ❤️",
   },
   pt: {
     guest: "Caro convidado",
@@ -1220,6 +1296,25 @@ heroDescriptionDefault: "Descubra a lista de presentes desta linda celebração.
 invalidGiftsData: "Os dados dos presentes estão incorretos.",
     availableCount: "disponível(is)",
 giftUnavailable: "Não está mais disponível",
+    greeting: "Olá",
+reservationFinal: "Seu presente está reservado. Obrigado",
+    eventLabel: "Evento",
+dateLabel: "Data",
+venueLabel: "Local",
+adLabel: "Publicidade",
+adText1: "Sua publicidade poderia aparecer aqui.",
+adText2: "Entre em contato com Fête & Cadeaux para apresentar sua marca.",
+giftsHeading: "Nossa lista de presentes 🎁",
+giftsIntroduction: "Descubra os presentes disponíveis e selecione aquele que deseja oferecer.",
+legendAvailable: "Disponível",
+legendUnavailable: "Indisponível",
+initialLoading: "Carregando seu espaço de presentes...",
+footerHeading: "E se a próxima grande celebração fosse sua?",
+footerDescription: "Casamento, aniversário, noivado, chá de bebê... Organize seu evento e permita que seus convidados confirmem presença e reservem presentes com facilidade.",
+createEvent: "🎉 Criar meu evento",
+adText3: "Sua marca merece ser vista!",
+adText4: "Reserve este espaço publicitário.",
+footerThanks: "Obrigado por contribuir para a alegria deste dia ❤️",
   }
 };
 
@@ -1753,6 +1848,7 @@ function displayGifts() {
    RÉSERVATION
 ========================================== */
 
+
 async function chooseGift(giftId) {
 
   if (reservationEnCours) return;
@@ -1763,11 +1859,11 @@ async function chooseGift(giftId) {
 
   if (!gift || gift.taken) return;
 
-  const guestName = guest.name || "Cher invité";
+  const guestName = guest.name || t("guest");
 
   const confirmed = confirm(
-    "Bonjour " + guestName + " !\n\n" +
-    "Souhaitez-vous réserver ce cadeau : " +
+    t("greeting") + " " + guestName + " !\n\n" +
+    t("confirmReservation") +
     gift.name + " ?"
   );
 
@@ -1778,7 +1874,7 @@ async function chooseGift(giftId) {
   displayGifts();
 
   showMessage(
-    "Enregistrement de votre réservation...",
+    t("saving"),
     "success"
   );
 
@@ -1794,30 +1890,31 @@ async function chooseGift(giftId) {
 
     if (!result.success) {
       throw new Error(
-        result.message || "La réservation n'a pas abouti."
+        result.message || t("reservationError")
       );
     }
 
     showMessage(
-      "🎉 Félicitations " + guestName +
-      " ! Votre réservation pour « " +
-      gift.name +
-      " » a bien été enregistrée. Merci pour votre générosité !",
+      "🎉 " + t("reservationSuccess") +
+      " " + gift.name + " !",
       "success"
     );
 
     await loadGifts();
 
     showMessage(
-      "🎉 Votre cadeau « " + gift.name +
-      " » est bien réservé. Merci " +
+      "🎉 " + t("reservationFinal") +
+      " « " + gift.name + " ». " +
       guestName + " !",
       "success"
     );
 
   } catch (error) {
 
-    showMessage(error.message, "error");
+    showMessage(
+      error.message || t("reservationError"),
+      "error"
+    );
 
     try {
       const refresh = await apiRequest({
@@ -1846,6 +1943,7 @@ async function chooseGift(giftId) {
    ERREUR DE LIEN
 ========================================== */
 
+
 function showPageError(title, description) {
 
   document.querySelector("main").innerHTML = `
@@ -1853,21 +1951,10 @@ function showPageError(title, description) {
       <div style="font-size:45px">⚠️</div>
       <h2>${escapeHTML(title)}</h2>
       <p>${escapeHTML(description)}</p>
-      <p>Veuillez vérifier votre lien personnel ou contacter l'organisateur.</p>
+      <p>${escapeHTML(t("linkError"))}</p>
     </div>
   `;
 }
-
-function escapeHTML(value) {
-  return String(value).replace(/[&<>"']/g, char => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#039;"
-  })[char]);
-}
-
 
 
 
