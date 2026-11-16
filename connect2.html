@@ -515,6 +515,14 @@ button { font: inherit; cursor: pointer; }
 .attendance-buttons .attendance-yes { background: #27864B; }
 .attendance-buttons .attendance-no { background: #A63D45; }
 
+  .attendance-buttons button.selected {
+  background: #929292 !important;
+  opacity: 0.75;
+  filter: grayscale(45%);
+  box-shadow: inset 0 2px 5px rgba(0,0,0,.15);
+  transform: none;
+}
+
 .attendance-box textarea {
   width: 100%;
   padding: 13px;
@@ -2454,6 +2462,15 @@ function selectAttendance(choice) {
   if (choice !== "OUI" && choice !== "NON") return;
 
   selectedAttendance = choice;
+
+  // Griser le bouton choisi
+  getElement("attendanceModal")
+    .querySelector(".attendance-yes")
+    .classList.toggle("selected", choice === "OUI");
+
+  getElement("attendanceModal")
+    .querySelector(".attendance-no")
+    .classList.toggle("selected", choice === "NON");
 
   getElement("attendanceMessage").textContent = "";
 
