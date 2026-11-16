@@ -1466,6 +1466,11 @@ mapHide: "✖ Masquer la carte",
 mapShow: "📍 Voir sur la carte",
 notSpecified: "Non précisé",
 confirm: "Confirmer",
+    serverNotResponding: "Le serveur ne répond pas.",
+serverContactError: "Impossible de contacter le serveur.",
+announcementLoadError: "Impossible de récupérer les annonces.",
+announcementSaveError: "La lecture n'a pas pu être enregistrée.",
+genericError: "Une erreur est survenue. Veuillez réessayer.",
   },
 
   ht: {
@@ -1542,6 +1547,11 @@ understood: "Mwen konprann",
 mapHide: "✖ Kache kat la",
 mapShow: "📍 Gade sou kat la",
 confirm: "Konfime",
+ serverNotResponding: "Sèvè a pa reponn.",
+serverContactError: "Enposib pou kontakte sèvè a.",
+announcementLoadError: "Enposib pou jwenn anons yo.",
+announcementSaveError: "Lekti a pa t kapab anrejistre.",
+genericError: "Yon erè rive. Tanpri eseye ankò.",
     
   },
 
@@ -1620,6 +1630,11 @@ mapHide: "✖ Hide map",
 mapShow: "📍 View on map",
 notSpecified: "Not specified",
 confirm: "Confirm",
+    serverNotResponding: "The server is not responding.",
+serverContactError: "Unable to contact the server.",
+announcementLoadError: "Unable to retrieve announcements.",
+announcementSaveError: "The announcement could not be marked as read.",
+genericError: "An error occurred. Please try again.",
   },
 
   es: {
@@ -1697,6 +1712,11 @@ mapHide: "✖ Ocultar mapa",
 mapShow: "📍 Ver en el mapa",
 notSpecified: "No especificado",
 confirm: "Confirmar",
+    serverNotResponding: "El servidor no responde.",
+serverContactError: "No se puede contactar con el servidor.",
+announcementLoadError: "No se pudieron recuperar los anuncios.",
+announcementSaveError: "No se pudo registrar la lectura.",
+genericError: "Se produjo un error. Por favor, inténtelo de nuevo.",
   },
 
   pt: {
@@ -1774,6 +1794,11 @@ mapHide: "✖ Ocultar mapa",
 mapShow: "📍 Ver no mapa",
 notSpecified: "Não especificado",
 confirm: "Confirmar",
+    serverNotResponding: "O servidor não está respondendo.",
+serverContactError: "Não foi possível contactar o servidor.",
+announcementLoadError: "Não foi possível obter os avisos.",
+announcementSaveError: "Não foi possível registrar a leitura.",
+genericError: "Ocorreu um erro. Tente novamente.",
   }
 };
 
@@ -1922,7 +1947,7 @@ function jsonpRequest(requestParams, timeoutDuration = 15000) {
 
     const timeout = setTimeout(() => {
       cleanup();
-      reject(new Error("Le serveur ne répond pas."));
+      reject(new Error(t("serverNotResponding")));
     }, timeoutDuration);
 
     function cleanup() {
@@ -1940,7 +1965,7 @@ function jsonpRequest(requestParams, timeoutDuration = 15000) {
 
     script.onerror = function() {
       cleanup();
-      reject(new Error("Impossible de contacter le serveur."));
+      reject(new Error(t("serverContactError")));
     };
 
     script.src = url.toString();
@@ -1959,7 +1984,7 @@ async function loadPendingAnnouncements() {
     });
 
     if (!result || result.success !== true) {
-      throw new Error(result?.message || "Impossible de récupérer les annonces.");
+      throw new Error(result?.message || t("announcementLoadError"));
     }
 
     pendingAnnouncements = Array.isArray(result.annonces)
@@ -1992,7 +2017,7 @@ function showNextAnnouncement() {
 
   setText(
     "announcementTitle",
-    currentAnnouncement.titre || "Information importante"
+    currentAnnouncement.titre || t("importantInfo")
   );
 
   setText(
@@ -2004,7 +2029,7 @@ function showNextAnnouncement() {
 
   const button = getElement("announcementConfirmButton");
   button.disabled = false;
-  button.textContent = "J’ai compris";
+  button.textContent = t("understood");
 
   getElement("announcementModal").classList.remove("hidden");
 }
@@ -2016,7 +2041,7 @@ async function confirmAnnouncementRead() {
 
   announcementSubmitting = true;
   button.disabled = true;
-  button.textContent = "Enregistrement...";
+  button.textContent = t("sending");
 
   try {
     const result = await jsonpRequest({
@@ -2028,7 +2053,7 @@ async function confirmAnnouncementRead() {
 
     if (!result || result.success !== true) {
       throw new Error(
-        result?.message || "La lecture n'a pas pu être enregistrée."
+        result?.message || t("announcementSaveError")
       );
     }
 
@@ -2040,11 +2065,11 @@ async function confirmAnnouncementRead() {
   } catch (error) {
     setText(
       "announcementError",
-      error.message || "Une erreur est survenue."
+      error.message || t("genericError")
     );
 
     button.disabled = false;
-    button.textContent = "J’ai compris";
+    button.textContent = t("understood");
 
   } finally {
     announcementSubmitting = false;
