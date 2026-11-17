@@ -3320,9 +3320,19 @@ async function loadEventReport() {
   }
 }
 
-// Actualiser toute la page depuis le rapport
-$("refreshReport").addEventListener("click", () => {
-  window.location.reload();
+// Actualiser uniquement le rapport
+$("refreshReport").addEventListener("click", async () => {
+
+  const button = $("refreshReport");
+
+  button.disabled = true;
+  button.textContent = "Actualisation en cours...";
+
+  await loadEventReport();
+
+  button.disabled = false;
+  button.textContent = "Actualiser le rapport";
+
 });
 
     /* =================================================
