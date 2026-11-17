@@ -3320,7 +3320,10 @@ async function loadEventReport() {
   }
 }
 
-
+// Actualiser toute la page depuis le rapport
+$("refreshReport").addEventListener("click", () => {
+  window.location.reload();
+});
 
     /* =================================================
    RAPPORT DE LECTURE D'UNE ANNONCE
