@@ -1216,7 +1216,7 @@ if (!firebase.apps.length) {
 const auth = firebase.auth();
 
 const API_URL =
-  "https://script.google.com/macros/s/AKfycbxS5gjwoAhjZUI79q2xRqh0tDimEWJTPVqNl3PogJdXWBACLtYbKoKtYPN7PbIUwRif/exec";
+  "https://script.google.com/macros/s/AKfycbwDao-Q3_w2uP6pICkmhRHI_chY3GCZZ1iFUn_O6ju5RxEQzXMCfUkgiOnV29hyd-n8/exec";
     const AUTH_API_URL =
   "https://script.google.com/macros/s/AKfycbxgOdKO9NTBTHlVQYqfw6N0GJEqUZdh0mXd5L4Nv9q6_iqw8qKIIQVw_nDPK2GU00EJyw/exec";
     /* =====================================================
@@ -3049,18 +3049,33 @@ function renderGuests(guests) {
    CADEAUX
 ===================================================== */
 
+
 function renderGifts(gifts){
 
-  $("giftCount").textContent=gifts.length;
+  $("giftCount").textContent = gifts.length;
 
-  $("giftList").innerHTML=gifts.length
-    ? gifts.map(g=>`
+  const isCollaborator = selectedEvent &&
+    selectedEvent.isCollaborator === true;
+
+  const permissions = selectedEvent
+    ? selectedEvent.permissions || []
+    : [];
+
+  const canManageGifts =
+    !isCollaborator ||
+    permissions.includes("FULL") ||
+    permissions.includes("cadeaux");
+
+  $("giftList").innerHTML = gifts.length
+    ? gifts.map((g, index) => `
       <div class="item">
         <div class="item-info">
 
-          <strong>${escapeHTML(g.emoji)} ${escapeHTML(g.name)}</strong>
+          <strong>
+            ${escapeHTML(g.emoji)} ${escapeHTML(g.name)}
+          </strong>
 
-          <small>${escapeHTML(g.description||"Aucune description")}</small>
+          <small>${escapeHTML(g.description || "Aucune description")}</small>
 
           <small>
             Quantité : ${g.quantity}
@@ -3068,27 +3083,55 @@ function renderGifts(gifts){
             · Restants : ${g.remaining}
           </small>
 
-          ${g.price?`<small>Prix indicatif : ${escapeHTML(g.price)}</small>`:""}
+          ${g.price ? `<small>Prix indicatif : ${escapeHTML(g.price)}</small>` : ""}
 
-          ${g.image?`
+          ${g.image ? `
             <small>
               <a href="${escapeHTML(g.image)}"
                 target="_blank" rel="noopener">Voir l'image</a>
-            </small>`:""}
+            </small>` : ""}
+
+          ${g.taken
+            ? '<small style="color:#b45309;font-weight:bold;">Cadeau épuisé</small>'
+            : '<small style="color:#15803d;font-weight:bold;">Disponible</small>'}
 
         </div>
 
-        <button class="btn btn-danger"
-          type="button"
-          data-delete-gift="${escapeHTML(g.id)}">
-          Désactiver
-        </button>
+        <div class="gift-actions">
+
+          ${canManageGifts ? `
+            <button class="btn"
+              type="button"
+              data-move-gift="${escapeHTML(g.id)}"
+              data-direction="up"
+              ${index === 0 ? "disabled" : ""}>
+              ↑ Monter
+            </button>
+
+            <button class="btn"
+              type="button"
+              data-move-gift="${escapeHTML(g.id)}"
+              data-direction="down"
+              ${index === gifts.length - 1 ? "disabled" : ""}>
+              ↓ Descendre
+            </button>
+
+            <button class="btn btn-danger"
+              type="button"
+              data-delete-gift="${escapeHTML(g.id)}">
+              Désactiver
+            </button>
+          ` : ""}
+
+        </div>
       </div>
     `).join("")
     : '<div class="muted">Aucun cadeau enregistré pour cette fête.</div>';
 
- $("giftList").querySelectorAll("[data-delete-gift]").forEach(btn=>{
-    btn.addEventListener("click",async()=>{
+  // Déplacement des cadeaux
+  $("giftList").querySelectorAll("[data-move-gift]").forEach(btn => {
+
+    btn.addEventListener("click", async () => {
 
       if (!selectedEvent || !selectedEventId) {
         return showStatus(
@@ -3098,42 +3141,86 @@ function renderGifts(gifts){
         );
       }
 
-      const isCollaborator = selectedEvent.isCollaborator === true;
-      const permissions = selectedEvent.permissions || [];
+      const giftId = btn.dataset.moveGift;
+      const direction = btn.dataset.direction;
 
-      const canDeleteGift =
-        !isCollaborator ||
-        permissions.includes("FULL") ||
-        permissions.includes("cadeaux");
+      const orderedIds = gifts.map(g => String(g.id));
+      const currentIndex = orderedIds.indexOf(giftId);
 
-      if (!canDeleteGift) {
+      const targetIndex = direction === "up"
+        ? currentIndex - 1
+        : currentIndex + 1;
+
+      if (
+        currentIndex < 0 ||
+        targetIndex < 0 ||
+        targetIndex >= orderedIds.length
+      ) return;
+
+      [orderedIds[currentIndex], orderedIds[targetIndex]] =
+        [orderedIds[targetIndex], orderedIds[currentIndex]];
+
+      try {
+
+        await api({
+          action: "reorderGifts",
+          event_id: selectedEventId,
+          gift_ids: orderedIds
+        });
+
+        await selectEvent(selectedEventId);
+
+        showStatus(
+          "giftStatus",
+          "Ordre des cadeaux mis à jour.",
+          "success"
+        );
+
+      } catch(e) {
+
+        showStatus("giftStatus", e.message, "error");
+
+      }
+
+    });
+
+  });
+
+  // Désactivation des cadeaux
+  $("giftList").querySelectorAll("[data-delete-gift]").forEach(btn => {
+
+    btn.addEventListener("click", async () => {
+
+      if (!selectedEvent || !selectedEventId) {
         return showStatus(
           "giftStatus",
-          "Vous n'avez pas l'autorisation de désactiver les cadeaux.",
+          "Sélectionnez d'abord un événement.",
           "error"
         );
       }
 
-      if(!confirm("Désactiver ce cadeau ?")) return;
+      if (!confirm("Désactiver ce cadeau ?")) return;
 
-
-      try{
+      try {
 
         await api({
-          action:"deleteGift",
-          event_id:selectedEventId,
-          id:btn.dataset.deleteGift
+          action: "deleteGift",
+          event_id: selectedEventId,
+          id: btn.dataset.deleteGift
         });
 
-       await selectEvent(selectedEventId);
+        await selectEvent(selectedEventId);
 
-      }catch(e){
+      } catch(e) {
 
-        showStatus("giftStatus",e.message,"error");
+        showStatus("giftStatus", e.message, "error");
 
       }
+
     });
+
   });
+
 }
 
 /* =====================================================
