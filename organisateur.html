@@ -3160,7 +3160,21 @@ function renderGifts(gifts){
       [orderedIds[currentIndex], orderedIds[targetIndex]] =
         [orderedIds[targetIndex], orderedIds[currentIndex]];
 
+    
       try {
+
+        // Bloquer temporairement les boutons de déplacement
+        $("giftList")
+          .querySelectorAll("[data-move-gift]")
+          .forEach(button => {
+            button.disabled = true;
+          });
+
+        showStatus(
+          "giftStatus",
+          "⏳ Déplacement du cadeau en cours...",
+          "info"
+        );
 
         await api({
           action: "reorderGifts",
@@ -3181,6 +3195,7 @@ function renderGifts(gifts){
         showStatus("giftStatus", e.message, "error");
 
       }
+
 
     });
 
