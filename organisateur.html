@@ -2917,6 +2917,11 @@ async function copyGuestInvitationLink(link) {
    INVITES
 ===================================================== */
 
+
+/* =====================================================
+   INVITES
+===================================================== */
+
 function renderGuests(guests) {
 
   $("guestCount").textContent = guests.length;
@@ -2927,12 +2932,37 @@ function renderGuests(guests) {
 
         const personalLink = getGuestInvitationLink(g.id);
 
+        const attendance = String(g.attendance || "EN_ATTENTE")
+          .trim()
+          .toUpperCase();
+
+        let attendanceStatus = "Cet invité est en attente";
+        let attendanceColor = "#b7791f";
+
+        if (attendance === "OUI") {
+          attendanceStatus = "Cet invité sera présent";
+          attendanceColor = "#729c12";
+        } else if (attendance === "NON") {
+          attendanceStatus = "Cet invité sera absent";
+          attendanceColor = "#d9534f";
+        }
+
         return `
           <div class="item">
 
             <div class="item-info">
 
               <strong>${escapeHTML(g.name)}</strong>
+
+              <small style="
+                display:block;
+                margin-top:5px;
+                margin-bottom:8px;
+                color:${attendanceColor};
+                font-weight:600;
+              ">
+                ${attendanceStatus}
+              </small>
 
               <small>
                 ${escapeHTML(g.phone || "")}
@@ -3008,65 +3038,69 @@ function renderGuests(guests) {
   // Boutons de désactivation
 
   $("guestList")
-  .querySelectorAll("[data-delete-guest]")
-  .forEach(btn => {
+    .querySelectorAll("[data-delete-guest]")
+    .forEach(btn => {
 
-    btn.addEventListener("click", async () => {
+      btn.addEventListener("click", async () => {
 
-      if (!selectedEvent || !selectedEventId) {
-        return showStatus(
-          "guestStatus",
-          "Sélectionnez d'abord un événement.",
-          "error"
-        );
-      }
+        if (!selectedEvent || !selectedEventId) {
+          return showStatus(
+            "guestStatus",
+            "Sélectionnez d'abord un événement.",
+            "error"
+          );
+        }
 
-      const isCollaborator = selectedEvent.isCollaborator === true;
-      const permissions = selectedEvent.permissions || [];
+        const isCollaborator =
+          selectedEvent.isCollaborator === true;
 
-      const canDeleteGuest =
-        !isCollaborator ||
-        permissions.includes("FULL") ||
-        permissions.includes("invites");
+        const permissions =
+          selectedEvent.permissions || [];
 
-      if (!canDeleteGuest) {
-        return showStatus(
-          "guestStatus",
-          "Vous n'avez pas l'autorisation de désactiver les invités.",
-          "error"
-        );
-      }
+        const canDeleteGuest =
+          !isCollaborator ||
+          permissions.includes("FULL") ||
+          permissions.includes("invites");
 
-      if (!confirm("Désactiver cet invité ?")) return;
-      try {
+        if (!canDeleteGuest) {
+          return showStatus(
+            "guestStatus",
+            "Vous n'avez pas l'autorisation de désactiver les invités.",
+            "error"
+          );
+        }
 
-        await api({
-          action: "deleteGuest",
-          event_id: selectedEventId,
-          id: btn.dataset.deleteGuest
-        });
+        if (!confirm("Désactiver cet invité ?")) return;
 
-        await selectEvent(selectedEventId);
+        try {
 
-        showStatus(
-          "guestStatus",
-          "Invité désactivé avec succès.",
-          "ok"
-        );
+          await api({
+            action: "deleteGuest",
+            event_id: selectedEventId,
+            id: btn.dataset.deleteGuest
+          });
 
-      } catch (error) {
+          await selectEvent(selectedEventId);
 
-        showStatus(
-          "guestStatus",
-          error.message,
-          "error"
-        );
+          showStatus(
+            "guestStatus",
+            "Invité désactivé avec succès.",
+            "ok"
+          );
 
-      }
+        } catch (error) {
+
+          showStatus(
+            "guestStatus",
+            error.message,
+            "error"
+          );
+
+        }
+
+      });
 
     });
-
-  });
 
 }
 
