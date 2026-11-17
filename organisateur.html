@@ -3335,6 +3335,83 @@ $("refreshReport").addEventListener("click", async () => {
 
 });
 
+/* =================================================
+   CHARGER L'HISTORIQUE DES ANNONCES
+================================================= */
+
+async function loadAnnouncements() {
+
+  const history = $("announcementHistory");
+
+  if (!history) return;
+
+  if (!selectedEventId || !selectedEvent) {
+    history.innerHTML =
+      '<div class="muted">Sélectionnez un événement.</div>';
+    return;
+  }
+
+  history.innerHTML =
+    '<div class="muted">Chargement des annonces...</div>';
+
+  try {
+
+    const result = await api({
+      action: "announcementList",
+      event_id: selectedEventId
+    });
+
+    const annonces = Array.isArray(result.annonces)
+      ? result.annonces
+      : [];
+
+    if (!annonces.length) {
+      history.innerHTML =
+        '<div class="muted">Aucune annonce pour cet événement.</div>';
+      return;
+    }
+
+    history.innerHTML = annonces.map(annonce => {
+
+      const id = escapeHTML(String(annonce.id || ""));
+
+      return `
+        <div class="announcement-item">
+
+          <h4>${escapeHTML(annonce.titre || "")}</h4>
+
+          <p>${escapeHTML(annonce.message || "")}</p>
+
+          <small class="muted">
+            ${escapeHTML(annonce.date_creation || "")}
+          </small>
+
+          <div
+            id="announcement-report-${id}"
+            class="announcement-report">
+            <span class="muted">Chargement des statistiques...</span>
+          </div>
+
+        </div>
+      `;
+
+    }).join("");
+
+    // Charger les statistiques de chaque annonce
+    annonces.forEach(annonce => {
+      loadAnnouncementReport(annonce.id);
+    });
+
+  } catch (error) {
+
+    console.error("Erreur chargement annonces :", error);
+
+    history.innerHTML =
+      '<div class="status-error">Impossible de charger les annonces.</div>';
+
+  }
+}
+
     /* =================================================
    RAPPORT DE LECTURE D'UNE ANNONCE
 ================================================= */
