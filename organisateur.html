@@ -661,6 +661,31 @@ button{font-family:inherit}
   }
 }
 
+/* Animation de chargement des cadeaux */
+.gift-loading {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #712a90;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.gift-loading-spinner {
+  width: 15px;
+  height: 15px;
+  border: 2px solid #e5f0d7;
+  border-top-color: #712a90;
+  border-radius: 50%;
+  animation: giftSpin 0.7s linear infinite;
+}
+
+@keyframes giftSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 
 </style>
 </head>
@@ -3184,12 +3209,13 @@ function renderGifts(gifts){
 
         await selectEvent(selectedEventId);
 
-        showStatus(
-          "giftStatus",
-          "Ordre des cadeaux mis à jour.",
-          "success"
-        );
-
+      $("giftStatus").innerHTML = `
+  <span class="gift-loading">
+    <span class="gift-loading-spinner"></span>
+    Déplacement du cadeau en cours...
+  </span>
+`;
+$("giftStatus").className = "status";
       } catch(e) {
 
         showStatus("giftStatus", e.message, "error");
