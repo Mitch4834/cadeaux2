@@ -1103,14 +1103,13 @@ button { font: inherit; cursor: pointer; }
         </p>
       </div>
       
-<div class="view-gifts-area">
-  <button
-    type="button"
-    class="primary-button view-gifts-button"
-    onclick="goToGiftPage()">
-    🎁 View Gifts
-  </button>
-</div>
+ <button type="button"
+          id="goToGiftsButton"
+          class="primary-button hidden"
+          onclick="goToGiftPage()"
+          data-i18n="accessGifts">
+          🎁 Accéder aux cadeaux
+        </button>
       <div class="main-info">
         <h2 class="section-title" data-i18n="honored">💜 À l'honneur</h2>
         <div id="peopleContainer" class="people-grid"></div>
