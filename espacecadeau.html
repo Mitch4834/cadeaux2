@@ -1026,6 +1026,7 @@ const messageBox = document.getElementById("message");
 let guest = null;
 let eventData = null;
 let gifts = [];
+let myReservations = [];
 let reservationEnCours = false;
 let currentLanguage = "fr";
 const translations = {
@@ -1708,11 +1709,9 @@ function displayPersonalInformation() {
       return;
     }
 
-    element.textContent = value;
+        element.textContent = value;
 
   });
-}
-
 }
 
 /* ==========================================
