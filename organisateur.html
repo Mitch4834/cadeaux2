@@ -1250,7 +1250,7 @@ if (!firebase.apps.length) {
 const auth = firebase.auth();
 
 const API_URL =
-  "https://script.google.com/macros/s/AKfycby3fqX0hwcGGuTCbB7XE9zoHWc67Xk1j1a_g-hOjS9Skc-ULdcAIS2jkMYwXoh9wRuX/exec";
+  "https://script.google.com/macros/s/AKfycbzkY1nGhEPMnkQJBNaWQCbpv4ODJL-lfEgjegNIYjDDm4mJkxy280bRV1GgB2ayP64/exec";
     const AUTH_API_URL =
   "https://script.google.com/macros/s/AKfycbxgOdKO9NTBTHlVQYqfw6N0GJEqUZdh0mXd5L4Nv9q6_iqw8qKIIQVw_nDPK2GU00EJyw/exec";
     /* =====================================================
@@ -3898,7 +3898,7 @@ $("giftForm").addEventListener("submit", async e => {
       const price = entry.querySelector(".gift-price").value;
       const emoji = entry.querySelector(".gift-emoji").value.trim();
       const image = entry.querySelector(".gift-image").value.trim();
-
+const purchaseLink = entry.querySelector(".gift-purchase-link").value.trim();
       await api({
         action: "addGift",
         event_id: selectedEventId,
@@ -3907,7 +3907,8 @@ $("giftForm").addEventListener("submit", async e => {
         quantity: quantity,
         price: price,
         emoji: emoji,
-        image: image
+        image: image,
+        purchaseLink: purchaseLink
       });
 
       successCount++;
