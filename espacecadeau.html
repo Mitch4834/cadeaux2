@@ -1995,8 +1995,12 @@ function displayGifts() {
     price.className = "gift-price";
 
     const giftPrice = pick(gift, "price", "prix");
-
-    price.textContent =
+const purchaseLink = pick(
+  gift,
+  "purchaseLink",
+  "Lien_Achat",
+  "amazonLink"
+);    price.textContent =
       giftPrice !== "" && giftPrice !== null
         ? giftPrice + " "
         : "";
@@ -2027,15 +2031,29 @@ function displayGifts() {
 
     button.addEventListener("click", function() {
       chooseGift(gift.id);
-    });
+    });let amazonButton = null;
 
-    content.append(
-      status,
-      title,
-      description,
-      meta,
-      button
-    );
+if (purchaseLink) {
+  amazonButton = document.createElement("a");
+
+  amazonButton.className = "amazon-button";
+  amazonButton.href = purchaseLink;
+  amazonButton.target = "_blank";
+  amazonButton.rel = "nofollow sponsored noopener";
+  amazonButton.textContent = "Acheter sur Amazon";
+}
+
+content.append(
+  status,
+  title,
+  description,
+  meta,
+  button
+);
+
+if (amazonButton) {
+  content.appendChild(amazonButton);
+}
 
     card.append(imageContainer, content);
 
