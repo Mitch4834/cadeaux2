@@ -1644,6 +1644,7 @@ currentLanguage = String(
 ========================================== */
 
 
+
 function displayPersonalInformation() {
 
   const guestName = guest.name || t("guest");
@@ -1658,12 +1659,12 @@ function displayPersonalInformation() {
   ) || t("event");
 
   const date = pick(
-  eventData,
-  "date",
-  "Date_Evenement",
-  "date_evenement",
-  "event_date"
-);
+    eventData,
+    "date",
+    "Date_Evenement",
+    "date_evenement",
+    "event_date"
+  );
 
   const venue = pick(
     eventData,
@@ -1680,28 +1681,38 @@ function displayPersonalInformation() {
 
   document.documentElement.lang = currentLanguage;
 
-  document.getElementById("heroTitle").textContent =
-    eventName;
+  const elements = {
+    heroTitle: eventName,
 
-  document.getElementById("heroDescription").textContent =
-    eventType
+    heroDescription: eventType
       ? t("heroDescriptionType") + eventType + "."
-      : t("heroDescriptionDefault");
+      : t("heroDescriptionDefault"),
 
-  document.getElementById("welcomeTitle").textContent =
-    t("welcome") + ", " + guestName + " !";
+    welcomeTitle: t("welcome") + ", " + guestName + " !",
 
-  document.getElementById("welcomeMessage").textContent =
-    t("welcomeMessage");
+    welcomeMessage: t("welcomeMessage"),
 
-  document.getElementById("eventName").textContent =
-    eventName;
+    eventName: eventName,
 
-  document.getElementById("eventDate").textContent =
-    formatDate(date);
+    eventDate: formatDate(date),
 
-  document.getElementById("eventVenue").textContent =
-    venue;
+    eventVenue: venue
+  };
+
+  Object.entries(elements).forEach(([id, value]) => {
+
+    const element = document.getElementById(id);
+
+    if (!element) {
+      console.error("Élément HTML introuvable :", id);
+      return;
+    }
+
+    element.textContent = value;
+
+  });
+}
+
 }
 
 /* ==========================================
