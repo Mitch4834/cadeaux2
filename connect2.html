@@ -1023,7 +1023,31 @@ button { font: inherit; cursor: pointer; }
 .envelope-confetti i:nth-child(5n) {
   color: #e91e63;
 }
+.view-gifts-area {
+  display: flex;
+  justify-content: center;
+  margin: 25px auto 30px;
+  padding: 0 15px;
+}
 
+.view-gifts-button {
+  width: 100%;
+  max-width: 300px;
+  padding: 15px 25px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #712A90, #8D4EAA);
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(113, 42, 144, .2);
+  transition: transform .2s ease;
+}
+
+.view-gifts-button:hover {
+  transform: translateY(-3px);
+}
 </style>
 </head>
 
@@ -1078,7 +1102,15 @@ button { font: inherit; cursor: pointer; }
           Vous êtes chaleureusement invité à partager ce moment spécial.
         </p>
       </div>
-
+      
+<div class="view-gifts-area">
+  <button
+    type="button"
+    class="primary-button view-gifts-button"
+    onclick="goToGiftPage()">
+    🎁 View Gifts
+  </button>
+</div>
       <div class="main-info">
         <h2 class="section-title" data-i18n="honored">💜 À l'honneur</h2>
         <div id="peopleContainer" class="people-grid"></div>
