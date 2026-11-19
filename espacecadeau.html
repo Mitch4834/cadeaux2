@@ -933,23 +933,7 @@ button {
       </div>
     </div>
 
-    <div class="event-detail">
-      <div class="event-detail-icon">📅</div>
-      <div>
-        <div class="event-detail-label" id="dateLabel">Date</div>
-        <div class="event-detail-value" id="eventDate">-</div>
-      </div>
-    </div>
-
-    <div class="event-detail">
-      <div class="event-detail-icon">📍</div>
-      <div>
-        <div class="event-detail-label" id="venueLabel">Lieu</div>
-        <div class="event-detail-value" id="eventVenue">-</div>
-      </div>
-    </div>
-  </section>
-
+   
 
   <section class="section-heading">
     <h2 id="giftsHeading">Notre liste de cadeaux 🎁</h2>
@@ -1753,9 +1737,151 @@ async function loadGifts() {
 
   gifts = result.gifts;
 
-  displayGifts();
+// Charger uniquement les réservations de cet invité.
+const reservationResult = await apiRequest({
+  action: "myReservations",
+  fete_id: feteId,
+  invite_id: inviteId
+});
+
+myReservations = reservationResult.success &&
+  Array.isArray(reservationResult.reservations)
+    ? reservationResult.reservations
+    : [];
+
+displayMyReservations();
+displayGifts();
 }
 
+
+/* ==========================================
+   AFFICHAGE DES CADEAUX CHOISIS PAR L'INVITÉ
+========================================== */
+
+function displayMyReservations() {
+
+  let section = document.getElementById("myReservationsSection");
+
+  if (section) {
+    section.remove();
+  }
+
+  if (!myReservations.length) return;
+
+  section = document.createElement("section");
+  section.id = "myReservationsSection";
+
+  section.style.cssText = `
+    margin: 20px 0 30px;
+    padding: 22px;
+    border: 2px solid #D6B77A;
+    border-radius: 16px;
+    background: #FFF9ED;
+  `;
+
+  const titles = {
+    fr: "🎁 Les cadeaux que vous avez choisis",
+    ht: "🎁 Kado ou te chwazi yo",
+    en: "🎁 The gifts you have chosen",
+    es: "🎁 Los regalos que has elegido",
+    pt: "🎁 Os presentes que você escolheu"
+  };
+
+  const heading = document.createElement("h2");
+  heading.textContent = titles[currentLanguage] || titles.fr;
+  heading.style.cssText = `
+    margin: 0 0 18px;
+    font-size: 21px;
+    color: #35213D;
+  `;
+
+  section.appendChild(heading);
+
+  myReservations.forEach(gift => {
+
+    const card = document.createElement("div");
+
+    card.style.cssText = `
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 12px;
+      margin-bottom: 12px;
+      background: white;
+      border-radius: 12px;
+      border: 1px solid #eee;
+    `;
+
+    if (gift.image) {
+      const img = document.createElement("img");
+      img.src = gift.image;
+      img.alt = gift.name;
+      img.style.cssText = `
+        width: 85px;
+        height: 85px;
+        object-fit: cover;
+        border-radius: 10px;
+        flex-shrink: 0;
+      `;
+      card.appendChild(img);
+    } else {
+      const emoji = document.createElement("div");
+      emoji.textContent = gift.emoji || "🎁";
+      emoji.style.cssText = `
+        width: 85px;
+        height: 85px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #F8F4FA;
+        border-radius: 10px;
+        font-size: 35px;
+        flex-shrink: 0;
+      `;
+      card.appendChild(emoji);
+    }
+
+    const details = document.createElement("div");
+
+    const name = document.createElement("strong");
+    name.textContent = gift.name || "Cadeau";
+    name.style.cssText = `
+      display: block;
+      color: #35213D;
+      font-size: 16px;
+      margin-bottom: 5px;
+    `;
+
+    details.appendChild(name);
+
+    if (gift.description) {
+      const description = document.createElement("p");
+      description.textContent = gift.description;
+      description.style.cssText = `
+        margin: 0;
+        font-size: 13px;
+        color: #666;
+      `;
+      details.appendChild(description);
+    }
+
+    if (gift.price) {
+      const price = document.createElement("p");
+      price.textContent = gift.price;
+      price.style.cssText = `
+        margin: 5px 0 0;
+        font-weight: bold;
+        color: #729C12;
+      `;
+      details.appendChild(price);
+    }
+
+    card.appendChild(details);
+    section.appendChild(card);
+  });
+
+  grid.parentNode.insertBefore(section, grid);
+}
 
 /* ==========================================
    AFFICHAGE DES CADEAUX
