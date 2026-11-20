@@ -1034,7 +1034,7 @@ button {
 ========================================== */
 
 const API_URL =
-  "https://script.google.com/macros/s/AKfycbzkY1nGhEPMnkQJBNaWQCbpv4ODJL-lfEgjegNIYjDDm4mJkxy280bRV1GgB2ayP64/exec";
+  "https://script.google.com/macros/s/AKfycbzmOhW01isGMwouCeeyedVeYDFQ72luUGdkN7BZDH1FuNFq5jjOL9EyL_qjQSr1Oeu3/exec";
 
 const TIMEOUT = 15000;
 
@@ -1908,8 +1908,26 @@ function displayMyReservations() {
       `;
       details.appendChild(price);
     }
+const purchaseLink = pick(
+  gift,
+  "purchaseLink",
+  "Lien_Achat",
+  "amazonLink"
+);
 
-    card.appendChild(details);
+if (purchaseLink) {
+  const amazonButton = document.createElement("a");
+
+  amazonButton.className = "amazon-button";
+  amazonButton.href = purchaseLink;
+  amazonButton.target = "_blank";
+  amazonButton.rel = "nofollow sponsored noopener";
+  amazonButton.textContent = "Acheter sur Amazon";
+  amazonButton.style.maxWidth = "220px";
+  amazonButton.style.marginTop = "10px";
+
+  details.appendChild(amazonButton);
+}    card.appendChild(details);
     section.appendChild(card);
   });
 
