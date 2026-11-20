@@ -1104,6 +1104,7 @@ createEvent: "🎉 Créer mon événement",
 adText3: "Votre marque mérite d'être visible !",
 adText4: "Réservez cet espace publicitaire.",
 footerThanks: "Merci de contribuer au bonheur de cette journée ❤️",
+    buyOnAmazon: "Acheter sur Amazon",
   },
   ht: {
     guest: "Chè envite",
@@ -1156,6 +1157,7 @@ createEvent: "🎉 Kreye evènman mwen an",
 adText3: "Mak ou merite jwenn plis vizibilite!",
 adText4: "Rezève espas piblisite sa a.",
 footerThanks: "Mèsi paske w kontribye nan lajwa jounen sa a ❤️",
+    buyOnAmazon: "Achte sou Amazon",
   },
   en: {
     guest: "Dear guest",
@@ -1208,6 +1210,7 @@ createEvent: "🎉 Create my event",
 adText3: "Your brand deserves to be seen!",
 adText4: "Reserve this advertising space.",
 footerThanks: "Thank you for contributing to the joy of this special day ❤️",
+    buyOnAmazon: "Buy on Amazon",
   },
   es: {
     guest: "Estimado invitado",
@@ -1260,6 +1263,7 @@ createEvent: "🎉 Crear mi evento",
 adText3: "¡Tu marca merece ser visible!",
 adText4: "Reserva este espacio publicitario.",
 footerThanks: "Gracias por contribuir a la felicidad de este día ❤️",
+    buyOnAmazon: "Comprar en Amazon",
   },
   pt: {
     guest: "Caro convidado",
@@ -1312,6 +1316,7 @@ createEvent: "🎉 Criar meu evento",
 adText3: "Sua marca merece ser vista!",
 adText4: "Reserve este espaço publicitário.",
 footerThanks: "Obrigado por contribuir para a alegria deste dia ❤️",
+    buyOnAmazon: "Comprar na Amazon",
   }
 };
 
@@ -1922,7 +1927,7 @@ if (purchaseLink) {
   amazonButton.href = purchaseLink;
   amazonButton.target = "_blank";
   amazonButton.rel = "nofollow sponsored noopener";
-  amazonButton.textContent = "Acheter sur Amazon";
+  amazonButton.textContent = t("buyOnAmazon");
   amazonButton.style.maxWidth = "220px";
   amazonButton.style.marginTop = "10px";
 
@@ -2080,7 +2085,7 @@ if (purchaseLink) {
   amazonButton.href = purchaseLink;
   amazonButton.target = "_blank";
   amazonButton.rel = "nofollow sponsored noopener";
-  amazonButton.textContent = "Acheter sur Amazon";
+  amazonButton.textContent = t("buyOnAmazon");
 }
 
 content.append(
