@@ -1151,7 +1151,7 @@ document.querySelectorAll(".tab[data-filter]").forEach(button => {
 
   button.addEventListener("click", () => {
 
-    document.querySelectorAll(".tab").forEach(tab => {
+    document.querySelectorAll(".tab[data-filter]").forEach(tab => {
       tab.classList.remove("active");
     });
 
