@@ -266,14 +266,59 @@ button:disabled{opacity:.5;cursor:not-allowed}
       </div>
     </div>
 
-    <div class="panel">
-      <div class="tabs">
-        <button class="tab active" data-filter="En attente">En attente</button>
-        <button class="tab" data-filter="Actif">Actifs</button>
-        <button class="tab" data-filter="Refusé">Refusés</button>
-        <button class="tab" data-filter="Tous">Tous</button>
-      </div>
+  <div class="panel">
 
+  <!-- NAVIGATION PRINCIPALE -->
+  <div class="tabs">
+
+    <button class="tab active" id="partnersTab">
+      Gestion des partenaires
+    </button>
+
+    <button class="tab" id="testimonialsTab">
+      Témoignages
+    </button>
+
+  </div>
+
+  <!-- SECTION PARTENAIRES -->
+  <section id="partnersSection">
+
+    <div class="tabs">
+      <button class="tab active" data-filter="En attente">En attente</button>
+      <button class="tab" data-filter="Actif">Actifs</button>
+      <button class="tab" data-filter="Refusé">Refusés</button>
+      <button class="tab" data-filter="Tous">Tous</button>
+    </div>
+
+    <div style="display:flex;justify-content:flex-end;margin-bottom:15px">
+      <button id="refreshBtn" class="secondary">
+        Actualiser la liste
+      </button>
+    </div>
+
+    <div id="partnersList">
+      <div class="empty">Chargement des partenaires...</div>
+    </div>
+
+  </section>
+
+  <!-- SECTION TÉMOIGNAGES -->
+  <section id="testimonialsSection" class="hidden">
+
+    <h2>Modération des témoignages</h2>
+
+    <p class="subtitle">
+      Consulte les avis des invités et décide lesquels peuvent être publiés.
+    </p>
+
+    <div id="testimonialsList">
+      <div class="empty">Les témoignages apparaîtront ici.</div>
+    </div>
+
+  </section>
+
+</div>
       <div style="display:flex;justify-content:flex-end;margin-bottom:15px">
         <button id="refreshBtn" class="secondary">Actualiser la liste</button>
       </div>
@@ -303,7 +348,7 @@ const firebaseConfig = {
 };
 
 const AUTH_API_URL =
-"https://script.google.com/macros/s/AKfycbwfCVd8fnqjlX7D9ODNXWYZbIdvCW1ZlV5pkNeZLJjd1WSq6Oj4NsbNBdVayPgTDHnjOw/exec";
+"https://script.google.com/macros/s/AKfycbzTtFqwVnS3U6R7OjowVuZF0tnZVIfv4m_AXGrk4hU86xyyMUPXvQiKizhVor6CYjFS9g/exec";
 
 const ADMIN_EMAIL = "michelblaise312@gmail.com";
 
@@ -584,7 +629,231 @@ async function loadPartners() {
   }
 
 }
+/* =====================================================
+   CHARGEMENT DES TÉMOIGNAGES
+===================================================== */
 
+let testimonials = [];
+
+async function loadTestimonials() {
+
+  $("testimonialsList").innerHTML =
+    '<div class="empty">Chargement des témoignages...</div>';
+
+  try {
+
+    const result = await apiRequest("adminListTestimonials");
+
+    testimonials = Array.isArray(result.testimonials)
+      ? result.testimonials
+      : [];
+
+    renderTestimonials();
+
+  } catch(error) {
+
+    console.error("Erreur chargement témoignages :", error);
+
+    $("testimonialsList").innerHTML =
+      '<div class="empty">Impossible de charger les témoignages.</div>';
+
+    showMessage(
+      "mainMessage",
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+  /* =====================================================
+   AFFICHAGE DES TÉMOIGNAGES
+===================================================== */
+
+function renderTestimonials() {
+
+  const list = $("testimonialsList");
+
+  if (!testimonials.length) {
+
+    list.innerHTML =
+      '<div class="empty">Aucun témoignage de plateforme pour le moment.</div>';
+
+    return;
+  }
+
+  list.innerHTML = testimonials.map(item => {
+
+    const id = escapeHTML(item.id);
+    const note = Math.max(0, Math.min(5, Number(item.note) || 0));
+    const message = escapeHTML(item.message);
+    const status = escapeHTML(item.statut || "EN_ATTENTE");
+
+    const hasConsent = item.consentementPublic === true;
+
+    let statusClass = "pending";
+    let statusLabel = "En attente";
+
+    if (status === "APPROUVE") {
+      statusClass = "active";
+      statusLabel = "Approuvé";
+    } else if (status === "REJETE") {
+      statusClass = "refused";
+      statusLabel = "Rejeté";
+    }
+
+    const stars = "★".repeat(note) + "☆".repeat(5 - note);
+
+    return `
+      <article class="partner">
+
+        <div class="partner-top">
+
+          <div>
+            <h3>${stars}</h3>
+            <p>${message}</p>
+          </div>
+
+          <span class="status ${statusClass}">
+            ${statusLabel}
+          </span>
+
+        </div>
+
+        <div class="partner-details">
+
+          <p>
+            <strong>Consentement :</strong>
+            ${hasConsent ? "Autorisé" : "Non autorisé"}
+          </p>
+
+          <p>
+            <strong>Date :</strong>
+            ${formatDate(item.dateCreation)}
+          </p>
+
+          <p>
+            <strong>Identifiant événement :</strong>
+            ${escapeHTML(item.feteId)}
+          </p>
+
+        </div>
+
+        ${
+          !hasConsent
+            ? '<p style="color:#ae303b;font-size:13px">Ce témoignage ne peut pas être publié sans consentement.</p>'
+            : ''
+        }
+
+        <div class="actions">
+
+          ${
+            status !== "APPROUVE" && hasConsent
+              ? `<button class="approve"
+                   data-testimonial-action="APPROUVE"
+                   data-id="${id}">
+                   ✓ Approuver
+                 </button>`
+              : ''
+          }
+
+          ${
+            status !== "REJETE"
+              ? `<button class="reject"
+                   data-testimonial-action="REJETE"
+                   data-id="${id}">
+                   ✕ Rejeter
+                 </button>`
+              : ''
+          }
+
+        </div>
+
+      </article>
+    `;
+
+  }).join("");
+
+}
+  /* =====================================================
+   MODÉRATION DES TÉMOIGNAGES
+===================================================== */
+
+$("testimonialsList").addEventListener("click", async event => {
+
+  const button = event.target.closest(
+    "button[data-testimonial-action]"
+  );
+
+  if (!button) return;
+
+  const testimonialId = button.dataset.id;
+  const statut = button.dataset.testimonialAction;
+
+  const testimonial = testimonials.find(
+    item => String(item.id) === testimonialId
+  );
+
+  if (!testimonial) {
+    alert("Témoignage introuvable.");
+    return;
+  }
+
+  if (
+    statut === "APPROUVE" &&
+    testimonial.consentementPublic !== true
+  ) {
+    alert("Ce témoignage ne peut pas être publié sans consentement.");
+    return;
+  }
+
+  const actionLabel =
+    statut === "APPROUVE" ? "approuver" : "rejeter";
+
+  if (!confirm(
+    "Voulez-vous vraiment " + actionLabel +
+    " ce témoignage ?"
+  )) {
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "Traitement...";
+
+  try {
+
+    const result = await apiRequest(
+      "adminUpdateTestimonial",
+      {
+        testimonial_id: testimonialId,
+        statut: statut
+      }
+    );
+
+    showMessage(
+      "mainMessage",
+      result.message || "Modération effectuée.",
+      "success"
+    );
+
+    await loadTestimonials();
+
+  } catch(error) {
+
+    button.disabled = false;
+
+    button.textContent =
+      statut === "APPROUVE" ? "✓ Approuver" : "✕ Rejeter";
+
+    showMessage(
+      "mainMessage",
+      error.message,
+      "error"
+    );
+
+  }
+
+});
 /* =====================================================
    NORMALISATION DES STATUTS
 ===================================================== */
@@ -878,7 +1147,7 @@ function renderPartners() {
    FILTRES
 ===================================================== */
 
-document.querySelectorAll(".tab").forEach(button => {
+document.querySelectorAll(".tab[data-filter]").forEach(button => {{
 
   button.addEventListener("click", () => {
 
@@ -1108,7 +1377,29 @@ $("partnersList").addEventListener("click", async event => {
   }
 
 });
+/* =====================================================
+   NAVIGATION PARTENAIRES / TÉMOIGNAGES
+===================================================== */
 
+$("partnersTab").addEventListener("click", () => {
+
+  $("partnersTab").classList.add("active");
+  $("testimonialsTab").classList.remove("active");
+
+  $("partnersSection").classList.remove("hidden");
+  $("testimonialsSection").classList.add("hidden");
+
+});
+
+$("testimonialsTab").addEventListener("click", () => {
+
+  $("testimonialsTab").classList.add("active");
+  $("partnersTab").classList.remove("active");
+
+  $("testimonialsSection").classList.remove("hidden");
+  $("partnersSection").classList.add("hidden");
+  loadTestimonials();
+});
 /* =====================================================
    ACTUALISATION
 ===================================================== */
