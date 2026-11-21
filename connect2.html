@@ -1103,16 +1103,23 @@ button { font: inherit; cursor: pointer; }
         </p>
       </div>
       
- <div class="view-gifts-area">
+ 
+<div id="viewGiftsArea" class="view-gifts-area">
   <button
     type="button"
     class="primary-button view-gifts-button"
     onclick="goToGiftPage()"
-     data-i18n="accessGifts">
-    ">
+    data-i18n="accessGifts">
     🎁 Accéder aux cadeaux
   </button>
 </div>
+
+<div
+  id="guestTestimonialsArea"
+  class="hidden"
+  style="width:100%; margin-top:20px;">
+</div>
+
       <div class="main-info">
         <h2 class="section-title" data-i18n="honored">💜 À l'honneur</h2>
         <div id="peopleContainer" class="people-grid"></div>
@@ -1899,6 +1906,26 @@ function getValue(object, ...keys) {
   return "";
 }
 
+function isEventPast(event) {
+  if (!event) return false;
+
+  const eventDate = String(
+    event.date || event.Date_Evenement || ""
+  ).trim().substring(0, 10);
+
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(eventDate)) {
+    return false;
+  }
+
+  const today = new Date();
+  const todayText =
+    today.getFullYear() + "-" +
+    String(today.getMonth() + 1).padStart(2, "0") + "-" +
+    String(today.getDate()).padStart(2, "0");
+
+  return todayText > eventDate;
+}
+
 function setText(id, value, fallback = "") {
   const element = getElement(id);
   if (element) {
@@ -2357,9 +2384,22 @@ function displayEvent(data) {
     throw new Error("Les informations de cet événement sont indisponibles.");
   }
 
-  const event = data.event;
-  currentEvent = event;
+  
+const event = data.event;
+currentEvent = event;
 
+// Masquer l'accès aux cadeaux à partir du lendemain de la fête.
+const giftsArea = getElement("viewGiftsArea");
+
+if (giftsArea) {
+  giftsArea.classList.toggle("hidden", isEventPast(event));
+}
+// Masquer également le deuxième bouton d'accès aux cadeaux.
+const personalGiftsButton = getElement("goToGiftsButton");
+
+if (personalGiftsButton) {
+  personalGiftsButton.classList.toggle("hidden", isEventPast(event));
+}
   // Appliquer la palette avant l'affichage.
   applyEventPalette(event);
 
@@ -2538,13 +2578,34 @@ setText(
 );
 
     const attendance = String(
-      currentGuest.attendance ||
-      currentGuest.Confirmation_Participation ||
-      "EN_ATTENTE"
-    ).trim().toUpperCase();
+  currentGuest.attendance ||
+  currentGuest.Confirmation_Participation ||
+  "EN_ATTENTE"
+).trim().toUpperCase();
 
-   
-if (attendance === "OUI" || attendance === "NON") {
+if (isEventPast(currentEvent)) {
+
+  const finalAttendance =
+  attendance === "OUI"
+    ? "PRÉSENT"
+    : attendance === "NON"
+      ? "ABSENT"
+      : "RATÉ";
+
+  const statusElement = getElement("guestStatus");
+
+  statusElement.textContent =
+  finalAttendance === "PRÉSENT"
+    ? "✅ Vous étiez présent à cet événement."
+    : finalAttendance === "ABSENT"
+      ? "ℹ️ Vous étiez absent à cet événement."
+      : "💌 Vous avez raté cet événement. Nous espérons vous retrouver lors d'une prochaine occasion !";
+
+  getElement("openAttendanceButton").classList.add("hidden");
+  getElement("goToGiftsButton").classList.add("hidden");
+
+} else if (attendance === "OUI" || attendance === "NON") {
+
   showAttendanceStatus(attendance);
 
   if (attendance === "OUI") {
@@ -2554,7 +2615,6 @@ if (attendance === "OUI" || attendance === "NON") {
 } else {
   setTimeout(openAttendanceModal, 400);
 }
-
 
   } catch (error) {
 
