@@ -348,7 +348,7 @@ const firebaseConfig = {
 };
 
 const AUTH_API_URL =
-"https://script.google.com/macros/s/AKfycbzTtFqwVnS3U6R7OjowVuZF0tnZVIfv4m_AXGrk4hU86xyyMUPXvQiKizhVor6CYjFS9g/exec";
+"https://script.google.com/macros/s/AKfycbz13XSqzvY3eZHwrkDK25ZfqkA66w6rHWyDjs9tnvC3lfAJGaBb0cSy4jOaRXGwfVnI2A/exec";
 
 const ADMIN_EMAIL = "michelblaise312@gmail.com";
 
@@ -670,26 +670,30 @@ async function loadTestimonials() {
    AFFICHAGE DES TÉMOIGNAGES
 ===================================================== */
 
+
 function renderTestimonials() {
 
   const list = $("testimonialsList");
 
   if (!testimonials.length) {
-
     list.innerHTML =
-      '<div class="empty">Aucun témoignage de plateforme pour le moment.</div>';
-
+      '<div class="empty">Aucun témoignage pour le moment.</div>';
     return;
   }
 
   list.innerHTML = testimonials.map(item => {
 
     const id = escapeHTML(item.id);
+    const type = String(item.type || "PLATEFORME").trim().toUpperCase();
+
     const note = Math.max(0, Math.min(5, Number(item.note) || 0));
-    const message = escapeHTML(item.message);
-    const status = escapeHTML(item.statut || "EN_ATTENTE");
+    const message = escapeHTML(item.message || "");
+    const status = String(item.statut || "EN_ATTENTE").trim().toUpperCase();
 
     const hasConsent = item.consentementPublic === true;
+    const isPlatform = type === "PLATEFORME";
+
+    const stars = "★".repeat(note) + "☆".repeat(5 - note);
 
     let statusClass = "pending";
     let statusLabel = "En attente";
@@ -700,15 +704,29 @@ function renderTestimonials() {
     } else if (status === "REJETE") {
       statusClass = "refused";
       statusLabel = "Rejeté";
+    } else if (!isPlatform || status === "CONFIDENTIEL") {
+      statusClass = "pending";
+      statusLabel = "Privé – Organisateur";
     }
 
-    const stars = "★".repeat(note) + "☆".repeat(5 - note);
+    const publicationMode = String(
+      item.modePublication || "NON"
+    ).toUpperCase();
+
+    let publicationLabel = "Non communiqué";
+
+    if (publicationMode === "NOM") {
+      publicationLabel = "Avec le nom";
+    } else if (publicationMode === "ANONYME") {
+      publicationLabel = "Anonyme";
+    } else if (publicationMode === "NON") {
+      publicationLabel = "Aucune publication";
+    }
 
     return `
       <article class="partner">
 
         <div class="partner-top">
-
           <div>
             <h3>${stars}</h3>
             <p>${message}</p>
@@ -717,10 +735,43 @@ function renderTestimonials() {
           <span class="status ${statusClass}">
             ${statusLabel}
           </span>
-
         </div>
 
         <div class="partner-details">
+
+          <p>
+            <strong>Type :</strong>
+            ${isPlatform ? "Témoignage sur la plateforme" : "Témoignage sur l'événement"}
+          </p>
+
+          <p>
+  <strong>Invité :</strong>
+  ${escapeHTML(item.inviteName || "Invité inconnu")}
+</p>
+          <p>
+            <strong>Nom :</strong>
+            ${escapeHTML(item.nomPublic || "Non renseigné")}
+          </p>
+
+          <p>
+            <strong>Pays :</strong>
+            ${escapeHTML(item.pays || "Non renseigné")}
+          </p>
+
+          <p>
+            <strong>Région :</strong>
+            ${escapeHTML(item.region || "Non renseignée")}
+          </p>
+
+          <p>
+            <strong>Ville :</strong>
+            ${escapeHTML(item.ville || "Non renseignée")}
+          </p>
+
+          <p>
+            <strong>Mode de publication :</strong>
+            ${publicationLabel}
+          </p>
 
           <p>
             <strong>Consentement :</strong>
@@ -728,46 +779,57 @@ function renderTestimonials() {
           </p>
 
           <p>
-            <strong>Date :</strong>
+            <strong>Date de création :</strong>
             ${formatDate(item.dateCreation)}
           </p>
 
           <p>
-            <strong>Identifiant événement :</strong>
-            ${escapeHTML(item.feteId)}
+            <strong>Dernière modification :</strong>
+            ${formatDate(item.dateModification)}
           </p>
+
+          <p>
+  <strong>Événement :</strong>
+  ${escapeHTML(item.feteName || "Événement inconnu")}
+</p>
 
         </div>
 
         ${
-          !hasConsent
+          isPlatform && !hasConsent
             ? '<p style="color:#ae303b;font-size:13px">Ce témoignage ne peut pas être publié sans consentement.</p>'
             : ''
         }
 
-        <div class="actions">
+        ${
+          isPlatform
+            ? `
+              <div class="actions">
 
-          ${
-            status !== "APPROUVE" && hasConsent
-              ? `<button class="approve"
-                   data-testimonial-action="APPROUVE"
-                   data-id="${id}">
-                   ✓ Approuver
-                 </button>`
-              : ''
-          }
+                ${
+                  status !== "APPROUVE" && hasConsent
+                    ? `<button class="approve"
+                         data-testimonial-action="APPROUVE"
+                         data-id="${id}">
+                         ✓ Approuver
+                       </button>`
+                    : ''
+                }
 
-          ${
-            status !== "REJETE"
-              ? `<button class="reject"
-                   data-testimonial-action="REJETE"
-                   data-id="${id}">
-                   ✕ Rejeter
-                 </button>`
-              : ''
-          }
+                ${
+                  status !== "REJETE"
+                    ? `<button class="reject"
+                         data-testimonial-action="REJETE"
+                         data-id="${id}">
+                         ✕ Rejeter
+                       </button>`
+                    : ''
+                }
 
-        </div>
+              </div>
+            `
+            : '<p style="color:#666;font-size:13px">🔒 Ce témoignage est confidentiel et ne nécessite aucune validation.</p>'
+        }
 
       </article>
     `;
@@ -775,6 +837,7 @@ function renderTestimonials() {
   }).join("");
 
 }
+
   /* =====================================================
    MODÉRATION DES TÉMOIGNAGES
 ===================================================== */
@@ -798,6 +861,15 @@ $("testimonialsList").addEventListener("click", async event => {
     alert("Témoignage introuvable.");
     return;
   }
+  // Un témoignage sur l'événement ne peut jamais être modéré.
+if (
+  String(testimonial.type || "").trim().toUpperCase() !== "PLATEFORME"
+) {
+  alert(
+    "Ce témoignage concerne l'événement. Il est privé et ne nécessite aucune validation."
+  );
+  return;
+}
 
   if (
     statut === "APPROUVE" &&
