@@ -2561,13 +2561,7 @@ setText("eventFullAddress", fullAddress, t("notSpecified"));
   getElement("eventPage").classList.remove("hidden");
 }
 // Vérifier si la période des témoignages est ouverte
-const testimonialEventDate = currentEvent
-  ? (currentEvent.date || currentEvent.Date_Evenement)
-  : null;
 
-if (isTestimonialPeriodOpen(testimonialEventDate)) {
-  openTestimonialModal();
-}
 /* ================================================
    IDENTIFICATION PERSONNELLE
 ================================================ */
@@ -2643,6 +2637,19 @@ console.log(
   "RÉSULTAT FINAL DES TÉMOIGNAGES :",
   guestTestimonials
 );
+
+// Vérifier si l'invité a déjà envoyé un témoignage
+const hasSubmittedTestimonial =
+  guestTestimonials.plateforme !== null ||
+  guestTestimonials.evenement !== null;
+
+// Ouvrir automatiquement le formulaire si nécessaire
+if (
+  guestTestimonials.available &&
+  !hasSubmittedTestimonial
+) {
+  setTimeout(openTestimonialModal, 800);
+}
     const guestName =
       currentGuest.name ||
       currentGuest.Nom ||
@@ -2710,6 +2717,8 @@ if (isEventPast(currentEvent)) {
     );
   }
 }
+
+
 /* =====================================================
    CHARGEMENT DES TÉMOIGNAGES DE L'INVITÉ
 ===================================================== */
@@ -2727,13 +2736,16 @@ async function loadGuestTestimonials() {
       result?.message || "Impossible de vérifier vos témoignages."
     );
   }
-console.log(
-  "RÉPONSE COMPLÈTE DU BACKEND :",
-  JSON.stringify(result, null, 2)
-);
-  return Array.isArray(result.testimonials)
-    ? result.testimonials
-    : [];
+
+  return {
+    available: result.available === true,
+    plateforme: result.testimonials?.PLATEFORME || null,
+    evenement: result.testimonials?.EVENEMENT || null,
+    eventDate: result.eventDate,
+    opens: result.opens,
+    closes: result.closes
+  };
+
 }
 /* ================================================
    STATUT DE L'INVITÉ
@@ -3262,6 +3274,79 @@ function isTestimonialPeriodOpen(eventDate) {
   );
 
   return daysAfter >= 1 && daysAfter <= 15;
+}
+  /* =====================================================
+   ENVOI DU TÉMOIGNAGE
+===================================================== */
+
+const testimonialForm = document.getElementById("testimonialForm");
+
+if (testimonialForm) {
+
+  testimonialForm.addEventListener("submit", async function(event) {
+
+    event.preventDefault();
+
+    const type = document.getElementById("testimonialType").value;
+    const rating = document.getElementById("testimonialRating").value;
+    const message = document.getElementById("testimonialMessage").value.trim();
+
+    const consent = document.getElementById("testimonialConsent").checked;
+
+    const button = document.getElementById("testimonialSubmitButton");
+    const status = document.getElementById("testimonialMessageStatus");
+
+    if (!type || !rating || !message) {
+      status.textContent = "Veuillez remplir tous les champs.";
+      return;
+    }
+
+    
+
+    button.disabled = true;
+    button.textContent = "Enregistrement...";
+
+    try {
+
+      const result = await jsonpRequest({
+        action: "submitTestimonial",
+        fete_id: feteId,
+        invite_id: inviteId,
+        type: type,
+        rating: rating,
+        message: message,
+        consentement_public: consent
+      });
+
+      if (!result || result.success !== true) {
+        throw new Error(
+          result?.message || "Impossible d'enregistrer votre témoignage."
+        );
+      }
+
+      status.textContent = result.message || "Témoignage enregistré avec succès.";
+
+      testimonialForm.reset();
+
+      closeTestimonialModal();
+
+      alert(result.message || "Merci pour votre témoignage !");
+
+    } catch(error) {
+
+      console.error("Erreur témoignage :", error);
+
+      status.textContent = error.message;
+
+    } finally {
+
+      button.disabled = false;
+      button.textContent = "Envoyer mon témoignage";
+
+    }
+
+  });
+
 }
 /* ================================================
    INITIALISATION
