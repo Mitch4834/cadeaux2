@@ -3061,7 +3061,10 @@ const attendanceForTestimonial = String(
 ).trim().toUpperCase();
 console.log("STATUT PARTICIPATION :", attendanceForTestimonial);
 console.log("TÉMOIGNAGES DISPONIBLES :", guestTestimonials.available);
-console.log("TÉMOIGNAGE PLATEFORME :", guestTestimonials.plateforme);
+console.log(
+  "DÉTAILS TÉMOIGNAGE PLATEFORME :",
+  JSON.stringify(guestTestimonials.plateforme, null, 2)
+);
 console.log("TÉMOIGNAGE ÉVÉNEMENT :", guestTestimonials.evenement);
 if (guestTestimonials.available) {
 
