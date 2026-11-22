@@ -3053,14 +3053,38 @@ console.log(
 
 // Vérifier si l'invité a déjà envoyé un témoignage
 // Déterminer automatiquement le témoignage à demander
-const shouldOpenTestimonial =
-  guestTestimonials.available &&
-  prepareTestimonialForGuest(guestTestimonials);
 
-// Ouvrir le popup si un témoignage est nécessaire
-if (shouldOpenTestimonial) {
-  setTimeout(openTestimonialModal, 800);
+const attendanceForTestimonial = String(
+  currentGuest.attendance ||
+  currentGuest.Confirmation_Participation ||
+  "EN_ATTENTE"
+).trim().toUpperCase();
+
+if (guestTestimonials.available) {
+
+  if (attendanceForTestimonial === "EN_ATTENTE") {
+
+    setTimeout(() => {
+      const missedModal =
+        document.getElementById("missedEventModal");
+
+      if (missedModal) {
+        missedModal.classList.remove("hidden");
+      }
+    }, 800);
+
+  } else {
+
+    const shouldOpenTestimonial =
+      prepareTestimonialForGuest(guestTestimonials);
+
+    if (shouldOpenTestimonial) {
+      setTimeout(openTestimonialModal, 800);
+    }
+
+  }
 }
+
     const guestName =
       currentGuest.name ||
       currentGuest.Nom ||
@@ -4009,6 +4033,26 @@ if (hasNextTestimonial) {
 
   });
 
+}
+
+/* =========================================
+   FERMETURE DU MESSAGE INVITÉ ABSENT
+========================================= */
+
+const closeMissedEventButton =
+  document.getElementById("closeMissedEventButton");
+
+if (closeMissedEventButton) {
+  closeMissedEventButton.addEventListener("click", function() {
+
+    const modal =
+      document.getElementById("missedEventModal");
+
+    if (modal) {
+      modal.classList.add("hidden");
+    }
+
+  });
 }
 
 /* ================================================
