@@ -3059,7 +3059,10 @@ const attendanceForTestimonial = String(
   currentGuest.Confirmation_Participation ||
   "EN_ATTENTE"
 ).trim().toUpperCase();
-
+console.log("STATUT PARTICIPATION :", attendanceForTestimonial);
+console.log("TÉMOIGNAGES DISPONIBLES :", guestTestimonials.available);
+console.log("TÉMOIGNAGE PLATEFORME :", guestTestimonials.plateforme);
+console.log("TÉMOIGNAGE ÉVÉNEMENT :", guestTestimonials.evenement);
 if (guestTestimonials.available) {
 
   if (attendanceForTestimonial === "EN_ATTENTE") {
