@@ -1048,6 +1048,163 @@ button { font: inherit; cursor: pointer; }
 .view-gifts-button:hover {
   transform: translateY(-3px);
 }
+  
+/* =========================================
+   POPUP TÉMOIGNAGE - FÊTE & CADEAUX
+========================================= */
+
+#testimonialModal {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(20, 20, 20, 0.65);
+  backdrop-filter: blur(5px);
+  overflow-y: auto;
+}
+
+#testimonialModal.hidden {
+  display: none !important;
+}
+
+#testimonialModal .attendance-box {
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #ffffff;
+  border-radius: 22px;
+  padding: 30px 25px;
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.25);
+  animation: testimonialAppear 0.35s ease;
+}
+
+@keyframes testimonialAppear {
+  from {
+    opacity: 0;
+    transform: translateY(25px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+#testimonialModal .attendance-icon {
+  font-size: 42px;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+#testimonialModal h2 {
+  text-align: center;
+  color: #729c12;
+  font-size: 25px;
+  margin: 0 0 12px;
+}
+
+#testimonialModal p {
+  text-align: center;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 22px;
+}
+
+#testimonialForm label {
+  display: block;
+  font-weight: 600;
+  color: #333;
+  margin: 15px 0 8px;
+}
+
+#testimonialForm select,
+#testimonialForm textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #d9dfd0;
+  border-radius: 11px;
+  padding: 13px;
+  font-size: 15px;
+  background: #fff;
+  color: #333;
+  outline: none;
+}
+
+#testimonialForm select:focus,
+#testimonialForm textarea:focus {
+  border-color: #729c12;
+  box-shadow: 0 0 0 3px rgba(114, 156, 18, 0.12);
+}
+
+#testimonialForm textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+#testimonialConsentContainer label {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+#testimonialConsent {
+  width: 17px;
+  height: 17px;
+  margin-top: 2px;
+  accent-color: #729c12;
+  flex-shrink: 0;
+}
+
+#testimonialSubmitButton {
+  width: 100%;
+  border: none;
+  border-radius: 12px;
+  padding: 15px;
+  margin-top: 18px;
+  background: #729c12;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+#testimonialSubmitButton:hover {
+  background: #5e8110;
+}
+
+#testimonialSubmitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+#testimonialMessageStatus {
+  color: #729c12;
+  font-size: 14px;
+  margin-top: 12px;
+}
+
+@media (max-width: 480px) {
+  #testimonialModal {
+    padding: 12px;
+  }
+
+  #testimonialModal .attendance-box {
+    padding: 24px 18px;
+    border-radius: 18px;
+  }
+
+  #testimonialModal h2 {
+    font-size: 22px;
+  }
+}
+
 </style>
 </head>
 
