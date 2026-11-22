@@ -1364,6 +1364,79 @@ data-i18n-title="mapTitle"
 
     </div>
   </div>
+  <!-- POPUP DE TÉMOIGNAGE -->
+<div id="testimonialModal" class="attendance-modal hidden">
+
+  <div class="attendance-box">
+
+    <div class="attendance-icon">💚</div>
+
+    <h2>Votre avis nous intéresse !</h2>
+
+    <p>
+      Nous espérons que vous avez passé un merveilleux moment.
+      Partagez votre expérience avec nous.
+    </p>
+
+    <form id="testimonialForm">
+
+      <label for="testimonialType">
+        Quel témoignage souhaitez-vous laisser ?
+      </label>
+
+      <select id="testimonialType" required>
+        <option value="">Choisir un type de témoignage</option>
+        <option value="PLATEFORME">Mon expérience avec Fête & Cadeaux</option>
+        <option value="EVENEMENT">Mon expérience de cet événement</option>
+      </select>
+
+      <label for="testimonialRating">
+        Votre note
+      </label>
+
+      <select id="testimonialRating" required>
+        <option value="">Choisir une note</option>
+        <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
+        <option value="4">⭐⭐⭐⭐ Très bien</option>
+        <option value="3">⭐⭐⭐ Bien</option>
+        <option value="2">⭐⭐ Moyen</option>
+        <option value="1">⭐ Décevant</option>
+      </select>
+
+      <label for="testimonialMessage">
+        Votre témoignage
+      </label>
+
+      <textarea
+        id="testimonialMessage"
+        rows="5"
+        maxlength="1000"
+        required
+        placeholder="Racontez-nous votre expérience...">
+      </textarea>
+
+      <div id="testimonialConsentContainer">
+        <label>
+          <input
+            type="checkbox"
+            id="testimonialConsent">
+          J'autorise Fête & Cadeaux à publier mon témoignage.
+        </label>
+      </div>
+
+      <p id="testimonialMessageStatus"></p>
+
+      <button
+        type="submit"
+        id="testimonialSubmitButton"
+        class="attendance-submit">
+        Envoyer mon témoignage
+      </button>
+
+    </form>
+
+  </div>
+</div>
 <!-- POPUP D'ANNONCE URGENTE -->
 
 <div id="announcementModal" class="announcement-modal hidden">
@@ -2487,7 +2560,12 @@ setText("eventFullAddress", fullAddress, t("notSpecified"));
   getElement("eventError").classList.add("hidden");
   getElement("eventPage").classList.remove("hidden");
 }
+// Vérifier si la période des témoignages est ouverte
+const testimonialEventDate = event.date || event.Date_Evenement;
 
+if (isTestimonialPeriodOpen(testimonialEventDate)) {
+  openTestimonialModal();
+}
 /* ================================================
    IDENTIFICATION PERSONNELLE
 ================================================ */
@@ -2625,7 +2703,28 @@ if (isEventPast(currentEvent)) {
     );
   }
 }
+/* =====================================================
+   CHARGEMENT DES TÉMOIGNAGES DE L'INVITÉ
+===================================================== */
 
+async function loadGuestTestimonials() {
+
+  const result = await jsonpRequest({
+    action: "guestTestimonials",
+    fete_id: feteId,
+    invite_id: inviteId
+  });
+
+  if (!result || result.success !== true) {
+    throw new Error(
+      result?.message || "Impossible de vérifier vos témoignages."
+    );
+  }
+
+  return Array.isArray(result.testimonials)
+    ? result.testimonials
+    : [];
+}
 /* ================================================
    STATUT DE L'INVITÉ
 ================================================ */
@@ -3087,6 +3186,72 @@ function toggleEventMap() {
     container.classList.add("hidden");
     button.textContent = t("mapShow");
   }
+}
+  /* =====================================================
+   GESTION DU CONSENTEMENT AU TÉMOIGNAGE
+===================================================== */
+
+const testimonialType = document.getElementById("testimonialType");
+const testimonialConsentContainer = document.getElementById("testimonialConsentContainer");
+const testimonialConsent = document.getElementById("testimonialConsent");
+
+if (testimonialType && testimonialConsentContainer) {
+
+  function updateTestimonialConsent() {
+
+    const isPlatform = testimonialType.value === "PLATEFORME";
+
+    testimonialConsentContainer.classList.toggle("hidden", !isPlatform);
+
+    if (!isPlatform && testimonialConsent) {
+      testimonialConsent.checked = false;
+    }
+
+  }
+
+  testimonialType.addEventListener("change", updateTestimonialConsent);
+
+  updateTestimonialConsent();
+
+}
+  /* =====================================================
+   OUVERTURE ET FERMETURE DU POPUP TÉMOIGNAGE
+===================================================== */
+
+function openTestimonialModal() {
+  const modal = document.getElementById("testimonialModal");
+
+  if (modal) {
+    modal.classList.remove("hidden");
+  }
+}
+
+function closeTestimonialModal() {
+  const modal = document.getElementById("testimonialModal");
+
+  if (modal) {
+    modal.classList.add("hidden");
+  }
+}
+  /* =====================================================
+   VÉRIFICATION DE LA PÉRIODE DES TÉMOIGNAGES
+===================================================== */
+
+function isTestimonialPeriodOpen(eventDate) {
+
+  if (!eventDate) return false;
+
+  const eventDay = new Date(eventDate);
+  eventDay.setHours(0, 0, 0, 0);
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const daysAfter = Math.floor(
+    (today - eventDay) / (1000 * 60 * 60 * 24)
+  );
+
+  return daysAfter >= 1 && daysAfter <= 15;
 }
 /* ================================================
    INITIALISATION
