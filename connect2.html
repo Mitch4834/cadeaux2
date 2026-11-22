@@ -1049,8 +1049,9 @@ button { font: inherit; cursor: pointer; }
   transform: translateY(-3px);
 }
   
+
 /* =========================================
-   POPUP TÉMOIGNAGE - FÊTE & CADEAUX
+   POPUP TÉMOIGNAGE - PALETTE DYNAMIQUE
 ========================================= */
 
 #testimonialModal {
@@ -1075,7 +1076,8 @@ button { font: inherit; cursor: pointer; }
   max-width: 480px;
   max-height: 90vh;
   overflow-y: auto;
-  background: #ffffff;
+  background: var(--background, #ffffff);
+  color: var(--text, #333333);
   border-radius: 22px;
   padding: 30px 25px;
   box-shadow: 0 15px 50px rgba(0, 0, 0, 0.25);
@@ -1101,14 +1103,14 @@ button { font: inherit; cursor: pointer; }
 
 #testimonialModal h2 {
   text-align: center;
-  color: #729c12;
+  color: var(--primary, #729c12);
   font-size: 25px;
   margin: 0 0 12px;
 }
 
 #testimonialModal p {
   text-align: center;
-  color: #666;
+  color: var(--text, #333333);
   line-height: 1.6;
   margin-bottom: 22px;
 }
@@ -1116,7 +1118,7 @@ button { font: inherit; cursor: pointer; }
 #testimonialForm label {
   display: block;
   font-weight: 600;
-  color: #333;
+  color: var(--text, #333333);
   margin: 15px 0 8px;
 }
 
@@ -1124,19 +1126,19 @@ button { font: inherit; cursor: pointer; }
 #testimonialForm textarea {
   width: 100%;
   box-sizing: border-box;
-  border: 1px solid #d9dfd0;
+  border: 1px solid var(--accent, #cccccc);
   border-radius: 11px;
   padding: 13px;
   font-size: 15px;
-  background: #fff;
-  color: #333;
+  background: var(--background, #ffffff);
+  color: var(--text, #333333);
   outline: none;
 }
 
 #testimonialForm select:focus,
 #testimonialForm textarea:focus {
-  border-color: #729c12;
-  box-shadow: 0 0 0 3px rgba(114, 156, 18, 0.12);
+  border-color: var(--primary, #729c12);
+  box-shadow: 0 0 0 3px var(--secondary, #e5f0d7);
 }
 
 #testimonialForm textarea {
@@ -1157,7 +1159,7 @@ button { font: inherit; cursor: pointer; }
   width: 17px;
   height: 17px;
   margin-top: 2px;
-  accent-color: #729c12;
+  accent-color: var(--primary, #729c12);
   flex-shrink: 0;
 }
 
@@ -1167,16 +1169,16 @@ button { font: inherit; cursor: pointer; }
   border-radius: 12px;
   padding: 15px;
   margin-top: 18px;
-  background: #729c12;
-  color: #fff;
+  background: var(--primary, #729c12);
+  color: #ffffff;
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: opacity 0.2s ease;
 }
 
 #testimonialSubmitButton:hover {
-  background: #5e8110;
+  opacity: 0.85;
 }
 
 #testimonialSubmitButton:disabled {
@@ -1185,7 +1187,7 @@ button { font: inherit; cursor: pointer; }
 }
 
 #testimonialMessageStatus {
-  color: #729c12;
+  color: var(--primary, #729c12);
   font-size: 14px;
   margin-top: 12px;
 }
@@ -1204,6 +1206,7 @@ button { font: inherit; cursor: pointer; }
     font-size: 22px;
   }
 }
+
 
 </style>
 </head>
