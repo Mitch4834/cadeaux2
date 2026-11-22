@@ -2727,7 +2727,10 @@ async function loadGuestTestimonials() {
       result?.message || "Impossible de vérifier vos témoignages."
     );
   }
-console.log("TÉMOIGNAGES DE L'INVITÉ :", result);
+console.log(
+  "RÉPONSE COMPLÈTE DU BACKEND :",
+  JSON.stringify(result, null, 2)
+);
   return Array.isArray(result.testimonials)
     ? result.testimonials
     : [];
