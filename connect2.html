@@ -1595,14 +1595,69 @@ data-i18n-title="mapTitle"
         placeholder="Racontez-nous votre expérience...">
       </textarea>
 
-      <div id="testimonialConsentContainer">
-        <label>
-          <input
-            type="checkbox"
-            id="testimonialConsent">
-          J'autorise Fête & Cadeaux à publier mon témoignage.
-        </label>
-      </div>
+      
+<div id="testimonialIdentityContainer">
+
+  <h3>Comment souhaitez-vous apparaître ?</h3>
+
+  <label for="testimonialAuthorName">Votre nom</label>
+  <input
+    type="text"
+    id="testimonialAuthorName"
+    maxlength="100"
+    placeholder="Votre nom">
+
+  <label for="testimonialCountry">Votre pays *</label>
+<select id="testimonialCountry" required>
+  <option value="">Sélectionnez votre pays</option>
+  <option value="Haïti">Haïti</option>
+  <option value="États-Unis">États-Unis</option>
+  <option value="Canada">Canada</option>
+  <option value="France">France</option>
+  <option value="Espagne">Espagne</option>
+  <option value="Mali">Mali</option>
+  <option value="Côte d’Ivoire">Côte d’Ivoire</option>
+  <option value="Bénin">Bénin</option>
+  <option value="Sénégal">Sénégal</option>
+  <option value="Autre">Autre pays</option>
+</select>
+
+<label for="testimonialRegion" id="testimonialRegionLabel">
+  Département / Région *
+</label>
+<input
+  type="text"
+  id="testimonialRegion"
+  maxlength="100"
+  required
+  placeholder="Votre département ou région">
+
+ <label for="testimonialCity">Votre ville *</label>
+<input
+  type="text"
+  id="testimonialCity"
+  maxlength="100"
+  required
+  placeholder="Votre ville">
+
+  <label for="testimonialPublication">
+    Souhaitez-vous publier votre témoignage ?
+  </label>
+
+  <select id="testimonialPublication">
+    <option value="NOM">
+      Oui, avec mon nom
+    </option>
+    <option value="ANONYME">
+      Oui, de façon anonyme
+    </option>
+    <option value="NON">
+      Non, je préfère le garder privé
+    </option>
+  </select>
+
+</div>
+
 
       <p id="testimonialMessageStatus"></p>
 
@@ -3452,6 +3507,65 @@ function prepareTestimonialForGuest(testimonials) {
   if (!type) return false;
 
   document.getElementById("testimonialType").value = type;
+  
+// Préremplir les informations de l'invité
+const authorName = document.getElementById("testimonialAuthorName");
+const authorCountry = document.getElementById("testimonialCountry");
+const authorCity = document.getElementById("testimonialCity");
+const identityContainer = document.getElementById("testimonialIdentityContainer");
+
+if (authorName) {
+  authorName.value =
+    currentGuest.name ||
+    currentGuest.Nom ||
+    currentGuest.nom ||
+    "";
+}
+
+if (authorCountry) {
+  authorCountry.value =
+    currentGuest.country ||
+    currentGuest.Pays ||
+    currentGuest.pays ||
+    "";
+}
+
+if (authorCity) {
+  authorCity.value =
+    currentGuest.city ||
+    currentGuest.Ville ||
+    currentGuest.ville ||
+    "";
+}
+
+// Les informations publiques concernent uniquement
+// le témoignage sur la plateforme.
+if (identityContainer) {
+
+  const showIdentity = type === "PLATEFORME";
+
+  identityContainer.classList.toggle(
+    "hidden",
+    !showIdentity
+  );
+
+  [
+    "testimonialAuthorName",
+    "testimonialCountry",
+    "testimonialRegion",
+    "testimonialCity",
+    "testimonialPublication"
+  ].forEach(id => {
+
+    const field = document.getElementById(id);
+
+    if (field) {
+      field.required = showIdentity;
+    }
+
+  });
+}
+
 
   const title = document.getElementById("testimonialTitle");
   const description = document.getElementById("testimonialDescription");
@@ -3484,6 +3598,57 @@ function prepareTestimonialForGuest(testimonials) {
   }
 
   return true;
+}
+
+/* =====================================================
+   ADAPTATION DU CHAMP RÉGION SELON LE PAYS
+===================================================== */
+
+const testimonialCountrySelect =
+  document.getElementById("testimonialCountry");
+
+const testimonialRegionLabel =
+  document.getElementById("testimonialRegionLabel");
+
+const testimonialRegionInput =
+  document.getElementById("testimonialRegion");
+
+function updateTestimonialRegionLabel() {
+
+  if (!testimonialCountrySelect || !testimonialRegionLabel) return;
+
+  const country = testimonialCountrySelect.value;
+
+  const labels = {
+    "Haïti": "Département *",
+    "États-Unis": "État *",
+    "Canada": "Province ou territoire *",
+    "France": "Région *",
+    "Espagne": "Communauté autonome *",
+    "Mali": "Région *",
+    "Côte d’Ivoire": "District ou région *",
+    "Bénin": "Département *",
+    "Sénégal": "Région *",
+    "Autre": "État / Province / Région *"
+  };
+
+  testimonialRegionLabel.textContent =
+    labels[country] || "État / Province / Région *";
+
+  if (testimonialRegionInput) {
+    testimonialRegionInput.placeholder =
+      "Indiquez votre " +
+      testimonialRegionLabel.textContent.replace(" *", "").toLowerCase();
+  }
+}
+
+if (testimonialCountrySelect) {
+  testimonialCountrySelect.addEventListener(
+    "change",
+    updateTestimonialRegionLabel
+  );
+
+  updateTestimonialRegionLabel();
 }
 
 
@@ -3564,11 +3729,26 @@ if (testimonialForm) {
 
     event.preventDefault();
 
-    const type = document.getElementById("testimonialType").value;
-    const rating = document.getElementById("testimonialRating").value;
-    const message = document.getElementById("testimonialMessage").value.trim();
+    
+const type = document.getElementById("testimonialType").value;
+const rating = document.getElementById("testimonialRating").value;
+const message = document.getElementById("testimonialMessage").value.trim();
 
-    const consent = document.getElementById("testimonialConsent").checked;
+const authorName =
+  document.getElementById("testimonialAuthorName").value.trim();
+
+const country =
+  document.getElementById("testimonialCountry").value;
+
+const region =
+  document.getElementById("testimonialRegion").value.trim();
+
+const city =
+  document.getElementById("testimonialCity").value.trim();
+
+const publication =
+  document.getElementById("testimonialPublication").value;
+
 
     const button = document.getElementById("testimonialSubmitButton");
     const status = document.getElementById("testimonialMessageStatus");
@@ -3583,15 +3763,21 @@ if (testimonialForm) {
 
     try {
 
-      const result = await jsonpRequest({
-        action: "submitTestimonial",
-        fete_id: feteId,
-        invite_id: inviteId,
-        type: type,
-        rating: rating,
-        message: message,
-        consentement_public: consent
-      });
+      
+const result = await jsonpRequest({
+  action: "submitTestimonial",
+  fete_id: feteId,
+  invite_id: inviteId,
+  type: type,
+  rating: rating,
+  message: message,
+  nom_public: authorName,
+  pays: country,
+  region: region,
+  ville: city,
+  mode_publication: publication
+});
+
 
       if (!result || result.success !== true) {
         throw new Error(
@@ -3599,32 +3785,35 @@ if (testimonialForm) {
         );
       }
 
-      status.textContent =
-        result.message || "Témoignage enregistré avec succès.";
+      
+status.textContent =
+  result.message || "Témoignage enregistré avec succès.";
 
-      // Recharger les témoignages enregistrés
-      const updatedTestimonials = await loadGuestTestimonials();
+// Recharger les témoignages enregistrés
+const updatedTestimonials = await loadGuestTestimonials();
 
-      // Vérifier s'il reste un témoignage à demander
-      const hasNextTestimonial =
-        prepareTestimonialForGuest(updatedTestimonials);
+// Vérifier s'il reste un témoignage à demander
+const hasNextTestimonial =
+  prepareTestimonialForGuest(updatedTestimonials);
 
-      if (hasNextTestimonial) {
+if (hasNextTestimonial) {
 
-        testimonialForm.reset();
+  testimonialForm.reset();
 
-        // Réaffecter le type après la réinitialisation
-        prepareTestimonialForGuest(updatedTestimonials);
+  // Réaffecter le type et actualiser le formulaire
+  prepareTestimonialForGuest(updatedTestimonials);
 
-        status.textContent = "";
+  status.textContent =
+    "Merci ! Passons maintenant au témoignage suivant.";
 
-      } else {
+} else {
 
-        closeTestimonialModal();
+  closeTestimonialModal();
 
-        alert("Merci ! Vos témoignages ont bien été enregistrés.");
+  alert("Merci ! Vos témoignages ont bien été enregistrés.");
 
-      }
+}
+
 
     } catch(error) {
 
