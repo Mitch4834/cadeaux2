@@ -1293,6 +1293,64 @@ button { font: inherit; cursor: pointer; }
   }
 }
 
+/* =========================================
+   CHAMPS IDENTITÉ DU TÉMOIGNAGE
+========================================= */
+
+#testimonialIdentityContainer {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#testimonialIdentityContainer h3 {
+  color: var(--primary, #729c12);
+  font-size: 17px;
+  margin: 22px 0 15px;
+}
+
+#testimonialIdentityContainer label {
+  display: block;
+  text-align: left;
+  font-weight: 600;
+  color: var(--text, #333333);
+  margin: 15px 0 7px;
+}
+
+#testimonialIdentityContainer input,
+#testimonialIdentityContainer select {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 13px 14px;
+  border: 1px solid var(--accent, #cccccc);
+  border-radius: 11px;
+  background: var(--background, #ffffff);
+  color: var(--text, #333333);
+  font-family: inherit;
+  font-size: 15px;
+  line-height: 1.4;
+  outline: none;
+}
+
+#testimonialIdentityContainer select {
+  height: 48px;
+  cursor: pointer;
+  appearance: auto;
+}
+
+#testimonialIdentityContainer input:focus,
+#testimonialIdentityContainer select:focus {
+  border-color: var(--primary, #729c12);
+  box-shadow: 0 0 0 3px var(--secondary, #e5f0d7);
+}
+
+#testimonialIdentityContainer select option {
+  background: #ffffff;
+  color: #333333;
+}
+
 </style>
 </head>
 
