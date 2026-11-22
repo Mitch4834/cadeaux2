@@ -3525,6 +3525,11 @@ function isTestimonialPeriodOpen(eventDate) {
    ENVOI DU TÉMOIGNAGE
 ===================================================== */
 
+
+/* =====================================================
+   ENVOI DU TÉMOIGNAGE
+===================================================== */
+
 const testimonialForm = document.getElementById("testimonialForm");
 
 if (testimonialForm) {
@@ -3547,8 +3552,6 @@ if (testimonialForm) {
       return;
     }
 
-    
-
     button.disabled = true;
     button.textContent = "Enregistrement...";
 
@@ -3570,39 +3573,41 @@ if (testimonialForm) {
         );
       }
 
-      status.textContent = result.message || "Témoignage enregistré avec succès.";
+      status.textContent =
+        result.message || "Témoignage enregistré avec succès.";
 
-    
-// Recharger les témoignages enregistrés
-const updatedTestimonials = await loadGuestTestimonials();
+      // Recharger les témoignages enregistrés
+      const updatedTestimonials = await loadGuestTestimonials();
 
-// Déterminer s'il reste un témoignage à demander
-const hasNextTestimonial =
-  prepareTestimonialForGuest(updatedTestimonials);
+      // Vérifier s'il reste un témoignage à demander
+      const hasNextTestimonial =
+        prepareTestimonialForGuest(updatedTestimonials);
 
-if (hasNextTestimonial) {
+      if (hasNextTestimonial) {
 
-  // Préparer le formulaire suivant
-  testimonialForm.reset();
+        testimonialForm.reset();
 
-  // Réaffecter le type après la réinitialisation
-  prepareTestimonialForGuest(updatedTestimonials);
+        // Réaffecter le type après la réinitialisation
+        prepareTestimonialForGuest(updatedTestimonials);
 
-  status.textContent = "";
+        status.textContent = "";
 
-  // Le popup reste ouvert pour le deuxième témoignage
-  button.disabled = false;
-  button.textContent = "Envoyer mon témoignage";
+      } else {
 
-} else {
+        closeTestimonialModal();
 
-  // Tous les témoignages nécessaires sont enregistrés
-  closeTestimonialModal();
+        alert("Merci ! Vos témoignages ont bien été enregistrés.");
 
-  alert("Merci ! Vos témoignages ont bien été enregistrés.");
+      }
 
-}
- finally {
+    } catch(error) {
+
+      console.error("Erreur témoignage :", error);
+
+      status.textContent =
+        error.message || "Une erreur est survenue.";
+
+    } finally {
 
       button.disabled = false;
       button.textContent = "Envoyer mon témoignage";
@@ -3612,6 +3617,7 @@ if (hasNextTestimonial) {
   });
 
 }
+
 /* ================================================
    INITIALISATION
 ================================================ */
