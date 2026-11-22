@@ -2637,7 +2637,12 @@ const guestEventId =
     }
 
     displayEvent(eventResult);
+const guestTestimonials = await loadGuestTestimonials();
 
+console.log(
+  "RÉSULTAT FINAL DES TÉMOIGNAGES :",
+  guestTestimonials
+);
     const guestName =
       currentGuest.name ||
       currentGuest.Nom ||
