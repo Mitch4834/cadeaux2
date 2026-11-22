@@ -2561,7 +2561,9 @@ setText("eventFullAddress", fullAddress, t("notSpecified"));
   getElement("eventPage").classList.remove("hidden");
 }
 // Vérifier si la période des témoignages est ouverte
-const testimonialEventDate = event.date || event.Date_Evenement;
+const testimonialEventDate = currentEvent
+  ? (currentEvent.date || currentEvent.Date_Evenement)
+  : null;
 
 if (isTestimonialPeriodOpen(testimonialEventDate)) {
   openTestimonialModal();
