@@ -1524,6 +1524,36 @@ data-i18n-title="mapTitle"
 
     </div>
   </div>
+  
+<!-- MESSAGE POUR L'INVITÉ QUI A MANQUÉ L'ÉVÉNEMENT -->
+<div id="missedEventModal" class="attendance-modal hidden">
+  <div class="attendance-box">
+    <div class="attendance-icon">💚</div>
+
+    <h2>Vous nous avez manqué !</h2>
+
+    <p>
+      Nous sommes désolés que vous n'ayez pas pu participer
+      à cet événement. Mais vous pouvez encore revivre ces
+      beaux moments à travers les photos partagées !
+    </p>
+
+    <button
+      type="button"
+      id="viewEventGalleryButton"
+      class="attendance-submit">
+      Revivre l'événement en images
+    </button>
+
+    <button
+      type="button"
+      id="closeMissedEventButton"
+      class="attendance-submit">
+      Fermer
+    </button>
+  </div>
+</div>
+
   <!-- POPUP DE TÉMOIGNAGE -->
 <div id="testimonialModal" class="attendance-modal hidden">
 
@@ -1540,16 +1570,7 @@ data-i18n-title="mapTitle"
 
     <form id="testimonialForm">
 
-      <label for="testimonialType">
-        Quel témoignage souhaitez-vous laisser ?
-      </label>
-
-      <select id="testimonialType" required>
-        <option value="">Choisir un type de témoignage</option>
-        <option value="PLATEFORME">Mon expérience avec Fête & Cadeaux</option>
-        <option value="EVENEMENT">Mon expérience de cet événement</option>
-      </select>
-
+      <input type="hidden" id="testimonialType" value="">
       <label for="testimonialRating">
         Votre note
       </label>
@@ -2799,15 +2820,13 @@ console.log(
 );
 
 // Vérifier si l'invité a déjà envoyé un témoignage
-const hasSubmittedTestimonial =
-  guestTestimonials.plateforme !== null ||
-  guestTestimonials.evenement !== null;
-
-// Ouvrir automatiquement le formulaire si nécessaire
-if (
+// Déterminer automatiquement le témoignage à demander
+const shouldOpenTestimonial =
   guestTestimonials.available &&
-  !hasSubmittedTestimonial
-) {
+  prepareTestimonialForGuest(guestTestimonials);
+
+// Ouvrir le popup si un témoignage est nécessaire
+if (shouldOpenTestimonial) {
   setTimeout(openTestimonialModal, 800);
 }
     const guestName =
@@ -3396,6 +3415,52 @@ if (testimonialType && testimonialConsentContainer) {
   updateTestimonialConsent();
 
 }
+  
+/* =====================================================
+   DÉTECTION AUTOMATIQUE DU TÉMOIGNAGE À DEMANDER
+===================================================== */
+
+function prepareTestimonialForGuest(testimonials) {
+
+  const attendance = String(
+    currentGuest.attendance ||
+    currentGuest.Confirmation_Participation ||
+    "EN_ATTENTE"
+  ).trim().toUpperCase();
+
+  const plateforme = testimonials.plateforme;
+  const evenement = testimonials.evenement;
+
+  let type = "";
+
+  if (attendance === "OUI") {
+
+    // L'invité était présent : plateforme d'abord,
+    // puis événement si le premier témoignage existe déjà.
+
+    if (!plateforme) {
+      type = "PLATEFORME";
+    } else if (!evenement) {
+      type = "EVENEMENT";
+    }
+
+  } else if (attendance === "NON") {
+
+    // L'invité était absent : plateforme uniquement.
+
+    if (!plateforme) {
+      type = "PLATEFORME";
+    }
+
+  }
+
+  if (!type) return false;
+
+  document.getElementById("testimonialType").value = type;
+
+  return true;
+}
+
   /* =====================================================
    OUVERTURE ET FERMETURE DU POPUP TÉMOIGNAGE
 ===================================================== */
@@ -3415,6 +3480,27 @@ function closeTestimonialModal() {
     modal.classList.add("hidden");
   }
 }
+  
+/* =====================================================
+   POPUP INVITÉ AYANT MANQUÉ L'ÉVÉNEMENT
+===================================================== */
+
+function openMissedEventModal() {
+  const modal = document.getElementById("missedEventModal");
+
+  if (modal) {
+    modal.classList.remove("hidden");
+  }
+}
+
+function closeMissedEventModal() {
+  const modal = document.getElementById("missedEventModal");
+
+  if (modal) {
+    modal.classList.add("hidden");
+  }
+}
+
   /* =====================================================
    VÉRIFICATION DE LA PÉRIODE DES TÉMOIGNAGES
 ===================================================== */
@@ -3486,19 +3572,37 @@ if (testimonialForm) {
 
       status.textContent = result.message || "Témoignage enregistré avec succès.";
 
-      testimonialForm.reset();
+    
+// Recharger les témoignages enregistrés
+const updatedTestimonials = await loadGuestTestimonials();
 
-      closeTestimonialModal();
+// Déterminer s'il reste un témoignage à demander
+const hasNextTestimonial =
+  prepareTestimonialForGuest(updatedTestimonials);
 
-      alert(result.message || "Merci pour votre témoignage !");
+if (hasNextTestimonial) {
 
-    } catch(error) {
+  // Préparer le formulaire suivant
+  testimonialForm.reset();
 
-      console.error("Erreur témoignage :", error);
+  // Réaffecter le type après la réinitialisation
+  prepareTestimonialForGuest(updatedTestimonials);
 
-      status.textContent = error.message;
+  status.textContent = "";
 
-    } finally {
+  // Le popup reste ouvert pour le deuxième témoignage
+  button.disabled = false;
+  button.textContent = "Envoyer mon témoignage";
+
+} else {
+
+  // Tous les témoignages nécessaires sont enregistrés
+  closeTestimonialModal();
+
+  alert("Merci ! Vos témoignages ont bien été enregistrés.");
+
+}
+ finally {
 
       button.disabled = false;
       button.textContent = "Envoyer mon témoignage";
