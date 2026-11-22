@@ -1561,12 +1561,11 @@ data-i18n-title="mapTitle"
 
     <div class="attendance-icon">💚</div>
 
-    <h2>Votre avis nous intéresse !</h2>
+   <h2 id="testimonialTitle">Votre avis nous intéresse !</h2>
 
-    <p>
-      Nous espérons que vous avez passé un merveilleux moment.
-      Partagez votre expérience avec nous.
-    </p>
+<p id="testimonialDescription">
+  Partagez votre expérience avec nous.
+</p>
 
     <form id="testimonialForm">
 
@@ -3420,6 +3419,7 @@ if (testimonialType && testimonialConsentContainer) {
    DÉTECTION AUTOMATIQUE DU TÉMOIGNAGE À DEMANDER
 ===================================================== */
 
+
 function prepareTestimonialForGuest(testimonials) {
 
   const attendance = String(
@@ -3435,9 +3435,6 @@ function prepareTestimonialForGuest(testimonials) {
 
   if (attendance === "OUI") {
 
-    // L'invité était présent : plateforme d'abord,
-    // puis événement si le premier témoignage existe déjà.
-
     if (!plateforme) {
       type = "PLATEFORME";
     } else if (!evenement) {
@@ -3445,8 +3442,6 @@ function prepareTestimonialForGuest(testimonials) {
     }
 
   } else if (attendance === "NON") {
-
-    // L'invité était absent : plateforme uniquement.
 
     if (!plateforme) {
       type = "PLATEFORME";
@@ -3458,8 +3453,39 @@ function prepareTestimonialForGuest(testimonials) {
 
   document.getElementById("testimonialType").value = type;
 
+  const title = document.getElementById("testimonialTitle");
+  const description = document.getElementById("testimonialDescription");
+  const message = document.getElementById("testimonialMessage");
+
+  if (type === "PLATEFORME") {
+
+    title.textContent = "Votre expérience avec Fête & Cadeaux";
+
+    description.textContent =
+      "Comment avez-vous vécu votre expérience sur notre plateforme ? " +
+      Parlez-nous de votre utilisation, de la simplicité du service " +
+      "et de ce que vous avez apprécié.";
+
+    message.placeholder =
+      "Racontez-nous votre expérience avec Fête & Cadeaux...";
+
+  } else if (type === "EVENEMENT") {
+
+    title.textContent = "Votre expérience de l'événement";
+
+    description.textContent =
+      "Vous avez participé à cet événement ! " +
+      "Racontez-nous les moments que vous avez appréciés, " +
+      "l'ambiance et vos impressions.";
+
+    message.placeholder =
+      "Racontez-nous votre expérience de cet événement...";
+
+  }
+
   return true;
 }
+
 
   /* =====================================================
    OUVERTURE ET FERMETURE DU POPUP TÉMOIGNAGE
