@@ -3128,13 +3128,12 @@ if (isEventPast(currentEvent)) {
 
   const statusElement = getElement("guestStatus");
 
-  statusElement.textContent =
+statusElement.textContent =
   finalAttendance === "PRÉSENT"
-    ? "✅ Vous étiez présent à cet événement."
+    ? t("confirmed")
     : finalAttendance === "ABSENT"
-      ? "ℹ️ Vous étiez absent à cet événement."
-      : "💌 Vous avez raté cet événement. Nous espérons vous retrouver lors d'une prochaine occasion !";
-
+      ? t("absent")
+      : t("missedEvent");
   getElement("openAttendanceButton").classList.add("hidden");
   getElement("goToGiftsButton").classList.add("hidden");
 
