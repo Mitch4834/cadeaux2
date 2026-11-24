@@ -2332,7 +2332,7 @@ genericError: "Ocorreu um erro. Tente novamente.",
 // Récupérer une traduction
 function t(key) {
   return translations[currentLanguage]?.[key] ||
-         translations.fr[key] ||
+         translations.en?.[key] ||
          key;
 }
 
