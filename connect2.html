@@ -3204,9 +3204,9 @@ function showAttendanceStatus(status) {
   statusElement.classList.remove("hidden");
 
   if (status === "OUI") {
-    statusElement.textContent = "✅ Votre présence est confirmée";
+    statusElement.textContent = t("confirmed");
   } else {
-    statusElement.textContent = "ℹ️ Vous avez indiqué votre absence";
+    statusElement.textContent = t("absent");
   }
 
   getElement("openAttendanceButton").classList.add("hidden");
