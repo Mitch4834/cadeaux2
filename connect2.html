@@ -2340,10 +2340,11 @@ function t(key) {
 function setInvitationLanguage(language) {
   const supported = ["fr", "ht", "en", "es", "pt"];
 
-  currentLanguage = String(language || "fr").trim().toLowerCase();
+  currentLanguage = String(language || "en").trim().toLowerCase();
 
-  if (!supported.includes(currentLanguage)) {
-    currentLanguage = "fr";
+ if (!supported.includes(currentLanguage)) {
+  currentLanguage = "en";
+}
   }
 
   document.documentElement.lang = currentLanguage;
