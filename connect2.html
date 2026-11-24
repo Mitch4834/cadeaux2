@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Your Personal Invitation | Events & Gifts</title>
+<title>Your Personal Invitation | Party & Gifts</title>
 <meta name="description" content="Votre invitation personnelle sur Fête & Cadeaux.">
 
 <style>
@@ -1364,14 +1364,14 @@ button { font: inherit; cursor: pointer; }
   <div id="loadingEvent" class="loading">
     <div class="loading-spinner"></div>
     <h2 data-i18n="loading">Preparing Your Invitation...</h2>
-    <p data-i18n="loadingDescription">Nous récupérons les informations de votre événement.</p>
+    <p data-i18n="loadingDescription">We're retrieving your event details.</p>
   </div>
 
   <div id="eventError" class="error-box hidden">
     <div style="font-size:42px">💌</div>
-    <h2 data-i18n="unavailable">Invitation indisponible</h2>
+    <h2 data-i18n="unavailable">Invitation Unavailable</h2>
     <p id="eventErrorMessage" data-i18n="unavailableDescription">
-      Nous ne pouvons pas afficher cette invitation.
+      We’re unable to display this invitation.
     </p>
   </div>
 
@@ -1379,18 +1379,18 @@ button { font: inherit; cursor: pointer; }
 
     <section class="advertising-section" id="topAdvertising">
       <div class="advertising-heading">
-        <span data-i18n="partners">Nos partenaires</span>
-        <small data-i18n="advertising">PUBLICITÉ</small>
+        <span data-i18n="partners">Our Partners</span>
+        <small data-i18n="advertising">ADVERTISEMENT</small>
       </div>
 
       <div class="ad-carousel">
         <button class="ad-arrow" type="button"
-          onclick="moveAd('top',-1)" aria-label="Publicité précédente">‹</button>
+          onclick="moveAd('top',-1)" aria-label="Previous Advertisement">‹</button>
         <div class="ad-viewport">
           <div class="ad-track" id="topAdsTrack"></div>
         </div>
         <button class="ad-arrow" type="button"
-          onclick="moveAd('top',1)" aria-label="Publicité suivante">›</button>
+          onclick="moveAd('top',1)" aria-label="Next Advertisement">›</button>
       </div>
       <div class="ad-indicators" id="topAdsIndicators"></div>
     </section>
@@ -1399,10 +1399,10 @@ button { font: inherit; cursor: pointer; }
 
       <div class="event-hero">
         <div class="hero-icon">🎉</div>
-        <div class="event-type" id="eventType" data-i18n="event">ÉVÉNEMENT</div>
-        <h1 id="eventName">Bienvenue à la fête !</h1>
+        <div class="event-type" id="eventType" data-i18n="event">EVENT</div>
+        <h1 id="eventName">Welcome to the Celebration! !</h1>
         <p id="eventHeroDescription" data-i18n="heroDescription">
-          Vous êtes chaleureusement invité à partager ce moment spécial.
+          You are warmly invited to share this special moment.
         </p>
       </div>
       
@@ -1413,7 +1413,7 @@ button { font: inherit; cursor: pointer; }
     class="primary-button view-gifts-button"
     onclick="goToGiftPage()"
     data-i18n="accessGifts">
-    🎁 Accéder aux cadeaux
+    🎁 Access the Gifts
   </button>
 </div>
 
@@ -1424,37 +1424,37 @@ button { font: inherit; cursor: pointer; }
 </div>
 
       <div class="main-info">
-        <h2 class="section-title" data-i18n="honored">💜 À l'honneur</h2>
+        <h2 class="section-title" data-i18n="honored">💜 In the Spotlight</h2>
         <div id="peopleContainer" class="people-grid"></div>
       </div>
 
       <div class="main-info">
-        <h2 class="section-title" data-i18n="essential">📅 Les informations essentielles</h2>
+        <h2 class="section-title" data-i18n="essential">📅 Essential Information</h2>
 
         <div class="info-grid">
           <div class="info-item">
             <div class="info-icon">📅</div>
-            <div><strong data-i18n="date">Date</strong><span id="eventDate" data-i18n="unspecified">Non précisée</span></div>
+            <div><strong data-i18n="date">Date</strong><span id="eventDate" data-i18n="unspecified">Not Specified</span></div>
           </div>
 
           <div class="info-item">
             <div class="info-icon">🕒</div>
-            <div><strong data-i18n="time">Heure</strong><span id="eventTime" data-i18n="unspecified">Non précisée</span></div>
+            <div><strong data-i18n="time">Time</strong><span id="eventTime" data-i18n="unspecified">Not Specified</span></div>
           </div>
 
           <div class="info-item">
   <div class="info-icon">📍</div>
   <div>
-    <strong data-i18n="venue">Lieu</strong>
-   <span id="eventVenue" data-i18n="notSpecified">Non précisé</span>
+    <strong data-i18n="venue">Location</strong>
+   <span id="eventVenue" data-i18n="notSpecified">Not Specified</span>
   </div>
 </div>
 
 <div class="info-item address-info-item">
   <div class="info-icon">🗺️</div>
   <div style="width:100%;">
-    <strong data-i18n="fullAddressLabel">Adresse complète</strong>
-    <span id="eventFullAddress" data-i18n="notSpecified">Non précisée</span>
+    <strong data-i18n="fullAddressLabel">Full Address</strong>
+    <span id="eventFullAddress" data-i18n="notSpecified">Not Specified</span>
 
     <button
       type="button"
@@ -1462,13 +1462,13 @@ button { font: inherit; cursor: pointer; }
       class="primary-button"
       style="display:block; min-width:0; width:100%; max-width:320px; margin:12px auto 0; padding:10px 14px; text-align:center; box-sizing:border-box;"
       onclick="toggleEventMap()">
-      <span data-i18n="showMap">📍 Voir sur la carte</span>
+      <span data-i18n="showMap">📍 Full Address</span>
     </button>
 
     <div id="eventMapContainer" class="hidden" style="margin-top:15px;">
       <iframe
         id="eventMapFrame"
-       title="Localisation de l'événement"
+       title="Event Location"
 data-i18n-title="mapTitle"
         width="100%"
         height="250"
@@ -1487,13 +1487,13 @@ data-i18n-title="mapTitle"
 
     <section class="guest-card">
       <div class="guest-icon">💌</div>
-      <p data-i18n="personalInvitation">Cette invitation vous est personnellement adressée</p>
+      <p data-i18n="personalInvitation">This invitation is personally addressed to you.</p>
 
-      <h2 id="guestGreeting" data-i18n="hello">Bonjour !</h2>
+      <h2 id="guestGreeting" data-i18n="hello">Hello! !</h2>
 
       <p>
-        <span data-i18n="weInviteYou">Nous avons le plaisir de vous inviter à</span>
-        <strong id="guestEventName" data-i18n="thisEvent">cet événement</strong>
+        <span data-i18n="weInviteYou">We are pleased to invite you to</span>
+        <strong id="guestEventName" data-i18n="thisEvent">this event</strong>
       </p>
 
       <div id="guestStatus" class="guest-status hidden"></div>
@@ -1504,7 +1504,7 @@ data-i18n-title="mapTitle"
           class="primary-button"
           onclick="openAttendanceModal()"
           data-i18n="confirmPresence">
-          Confirmer ma présence
+          Confirm My Attendance
         </button>
 
         <button type="button"
@@ -1512,19 +1512,19 @@ data-i18n-title="mapTitle"
           class="primary-button hidden"
           onclick="goToGiftPage()"
           data-i18n="accessGifts">
-          🎁 Accéder aux cadeaux
+          🎁 View Gifts
         </button>
       </div>
     </section>
 
       <section id="parkingSection" class="extra-detail hidden">
-        <h3 data-i18n="parking">🚗 Informations sur le stationnement</h3>
+        <h3 data-i18n="parking">🚗 Parking Information</h3>
 
         <div class="info-grid">
           <div class="info-item">
             <div class="info-icon">🅿️</div>
             <div>
-              <strong data-i18n="availability">Disponibilité</strong>
+              <strong data-i18n="availability">Availability</strong>
               <span id="eventParkingAvailability"></span>
             </div>
           </div>
