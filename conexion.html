@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Connexion organisateur | Fête & Cadeaux</title>
+<title>Organizer Login | Fête & Cadeaux</title>
 
 <style>
 :root {
@@ -249,27 +249,27 @@ a:hover { text-decoration: underline; }
   <section class="presentation">
     <div class="logo">🎁 Fête & Cadeaux</div>
 
-    <h1>Organisez vos événements en toute simplicité.</h1>
+    <h1>Organize your events with ease.</h1>
 
     <p>
-      Créez vos événements, gérez vos invités et permettez-leur
-      de choisir les cadeaux qu'ils souhaitent vous offrir.
+      Create your events, manage your guests, and let them
+      choose the gifts they would like to give you.
     </p>
 
     <div class="features">
-      ✓ Création d'événements<br>
-      ✓ Invitations personnalisées<br>
-      ✓ Confirmation des invités<br>
-      ✓ Réservation des cadeaux<br>
-      ✓ Gestion centralisée
+      ✓ Event creation<br>
+      ✓ Personalized invitations<br>
+      ✓ Guest confirmations<br>
+      ✓ Gift reservations<br>
+      ✓ Centralized management
     </div>
   </section>
 
   <section class="form-area">
 
-    <h2 id="formTitle">Bienvenue !</h2>
+    <h2 id="formTitle">Welcome!</h2>
     <div class="subtitle" id="formSubtitle">
-      Connectez-vous à votre espace organisateur.
+      Sign in to your organizer dashboard.
     </div>
 
     <div id="message" class="message"></div>
@@ -277,62 +277,62 @@ a:hover { text-decoration: underline; }
     <div class="tabs">
       <button class="tab active" id="loginTab"
         type="button" onclick="showMode('login')">
-        Connexion
+        Login
       </button>
 
       <button class="tab" id="registerTab"
         type="button" onclick="showMode('register')">
-        Inscription
+        Sign Up
       </button>
     </div>
 
     <button class="google-btn" type="button"
       id="googleButton" onclick="googleLogin()">
-      <strong>G</strong> &nbsp; Continuer avec Google
+      <strong>G</strong> &nbsp; Continue with Google
     </button>
 
-    <div class="separator">OU AVEC VOTRE E-MAIL</div>
+    <div class="separator">OR WITH YOUR EMAIL</div>
 
     <form id="authForm">
 
       <div class="field hidden" id="nameField">
-        <label for="name">Nom complet</label>
+        <label for="name">Full Name</label>
         <input type="text" id="name"
-          placeholder="Votre nom complet">
+          placeholder="Your full name">
       </div>
 
       <div class="field">
-        <label for="email">Adresse e-mail</label>
+        <label for="email">Email Address</label>
         <input type="email" id="email"
-          placeholder="exemple@email.com" required>
+          placeholder="example@email.com" required>
       </div>
 
       <div class="field">
-        <label for="password">Mot de passe</label>
+        <label for="password">Password</label>
         <input type="password" id="password"
-          placeholder="Minimum 6 caractères"
+          placeholder="At least 6 characters"
           minlength="6" required>
       </div>
 
       <div class="field hidden" id="confirmField">
-        <label for="confirmPassword">Confirmer le mot de passe</label>
+        <label for="confirmPassword">Confirm Password</label>
         <input type="password" id="confirmPassword"
-          placeholder="Confirmez votre mot de passe">
+          placeholder="Confirm your password">
       </div>
 
       <div class="forgot" id="forgotLink">
-        <a onclick="forgotPassword()">Mot de passe oublié ?</a>
+        <a onclick="forgotPassword()">Forgot your password?</a>
       </div>
 
       <button class="submit-btn" type="submit" id="submitButton">
-        Se connecter
+        Log In
       </button>
 
     </form>
 
     <div class="footer">
-      En continuant, vous acceptez les conditions d'utilisation
-      de Fête & Cadeaux.
+      By continuing, you agree to Fête & Cadeaux's
+      Terms of Use.
     </div>
 
   </section>
@@ -344,7 +344,7 @@ a:hover { text-decoration: underline; }
 <script>
 
 /* =====================================================
-   CONFIGURATION FIREBASE
+   FIREBASE CONFIGURATION
 ===================================================== */
 
 const firebaseConfig = {
@@ -363,12 +363,14 @@ const auth = firebase.auth();
 
 const BACKEND_URL =
 "https://script.google.com/macros/s/AKfycbxS5gjwoAhjZUI79q2xRqh0tDimEWJTPVqNl3PogJdXWBACLtYbKoKtYPN7PbIUwRif/exec";
-  const AUTH_API_URL =
+
+const AUTH_API_URL =
 "https://script.google.com/macros/s/AKfycbw8agh79r0wVxR_nQ9YPZj5QJ6mz1lLsL44ux7wCxiPDp8NdEBFaUl1OlNT8pYYVylGWw/exec";
 
 let currentMode = "login";
+
 /* =====================================================
-   INVITATION COLLABORATEUR
+   COLLABORATOR INVITATION
 ===================================================== */
 
 const collaboratorInvitationToken =
@@ -383,16 +385,16 @@ if (collaboratorInvitationToken) {
   );
 
   document.getElementById("formTitle").textContent =
-    "Vous êtes invité à collaborer !";
+    "You've been invited to collaborate!";
 
   document.getElementById("formSubtitle").textContent =
-    "Connectez-vous ou créez votre compte avec l'adresse e-mail invitée pour rejoindre cet événement.";
+    "Sign in or create an account using the invited email address to join this event.";
 
   showMode("login");
 }
 
 /* =====================================================
-   AFFICHAGE DES MESSAGES
+   DISPLAY MESSAGES
 ===================================================== */
 
 function showMessage(message, type) {
@@ -413,14 +415,14 @@ function setLoading(loading) {
   document.getElementById("googleButton").disabled = loading;
 
   document.getElementById("submitButton").textContent =
-    loading ? "Veuillez patienter..." :
-    currentMode === "register" ? "Créer mon compte" :
-    "Se connecter";
+    loading ? "Please wait..." :
+    currentMode === "register" ? "Create My Account" :
+    "Log In";
 }
 
 
 /* =====================================================
-   CHANGEMENT DE MODE
+   SWITCH BETWEEN LOGIN AND REGISTRATION
 ===================================================== */
 
 function showMode(mode) {
@@ -445,53 +447,52 @@ function showMode(mode) {
     .classList.toggle("hidden", register);
 
   document.getElementById("formTitle").textContent =
-    register ? "Créer votre compte" : "Bienvenue !";
+    register ? "Create Your Account" : "Welcome!";
 
   document.getElementById("formSubtitle").textContent =
     register
-      ? "Rejoignez Fête & Cadeaux."
-      : "Connectez-vous à votre espace organisateur.";
+      ? "Join Fête & Cadeaux."
+      : "Sign in to your organizer dashboard.";
 
   setLoading(false);
 }
 
 
 /* =====================================================
-   TRADUCTION DES ERREURS FIREBASE
+   FIREBASE ERROR TRANSLATIONS
 ===================================================== */
 
 function firebaseError(error) {
   const errors = {
     "auth/email-already-in-use":
-      "Cette adresse e-mail possède déjà un compte.",
+      "An account already exists with this email address.",
     "auth/invalid-email":
-      "Adresse e-mail invalide.",
+      "Invalid email address.",
     "auth/weak-password":
-      "Choisissez un mot de passe plus solide.",
+      "Please choose a stronger password.",
     "auth/user-not-found":
-      "Aucun compte trouvé avec cette adresse.",
+      "No account found with this email address.",
     "auth/wrong-password":
-      "Mot de passe incorrect.",
+      "Incorrect password.",
     "auth/invalid-credential":
-      "Adresse e-mail ou mot de passe incorrect.",
+      "Incorrect email address or password.",
     "auth/too-many-requests":
-      "Trop de tentatives. Réessayez plus tard.",
+      "Too many attempts. Please try again later.",
     "auth/popup-closed-by-user":
-      "La fenêtre Google a été fermée.",
+      "The Google sign-in window was closed.",
     "auth/unauthorized-domain":
-      "Ce domaine doit être autorisé dans Firebase."
+      "This domain must be authorized in Firebase."
   };
 
   return errors[error.code] ||
     error.message ||
-    "Une erreur est survenue.";
+    "An error occurred.";
 }
 
 
 /* =====================================================
-   SYNCHRONISATION AVEC LE BACKEND
+   BACKEND SYNCHRONIZATION
 ===================================================== */
-
 
 async function syncOrganizer(user) {
 
@@ -499,7 +500,7 @@ async function syncOrganizer(user) {
 
   const referralKey = "fete_cadeaux_referral";
 
-  // Récupérer le code partenaire enregistré
+  // Retrieve the saved partner referral code
   const referralCode =
     localStorage.getItem(referralKey) || "";
 
@@ -516,31 +517,31 @@ async function syncOrganizer(user) {
   });
 
   if (!response.ok) {
-    throw new Error("Impossible de contacter le serveur.");
+    throw new Error("Unable to contact the server.");
   }
 
   const result = await response.json();
 
   if (!result.success) {
     throw new Error(
-      result.message || "Synchronisation impossible."
+      result.message || "Synchronization failed."
     );
   }
 
-  // Supprimer le code uniquement si le backend
-  // confirme qu'il a bien traité l'attribution.
+  // Remove the code only if the backend
+  // confirms that the referral has been processed.
   if (referralCode) {
 
     if (result.referral_processed !== true) {
       throw new Error(
-        "Votre compte est synchronisé, mais le code partenaire n'a pas encore été confirmé. Il est conservé dans votre navigateur."
+        "Your account has been synchronized, but the partner referral code has not yet been confirmed. It has been kept in your browser."
       );
     }
 
     localStorage.removeItem(referralKey);
 
     console.log(
-      "Code partenaire enregistré et retiré du navigateur :",
+      "Partner referral code successfully registered and removed from browser:",
       referralCode
     );
   }
@@ -550,7 +551,7 @@ async function syncOrganizer(user) {
 
 
 /* =====================================================
-   CONNEXION EMAIL / INSCRIPTION
+   EMAIL LOGIN / REGISTRATION
 ===================================================== */
 
 document.getElementById("authForm")
@@ -577,11 +578,11 @@ document.getElementById("authForm")
         document.getElementById("confirmPassword").value;
 
       if (!name) {
-        throw new Error("Veuillez saisir votre nom.");
+        throw new Error("Please enter your name.");
       }
 
       if (password !== confirm) {
-        throw new Error("Les mots de passe ne correspondent pas.");
+        throw new Error("Passwords do not match.");
       }
 
       const credential =
@@ -597,7 +598,7 @@ document.getElementById("authForm")
       await credential.user.sendEmailVerification();
 
       showMessage(
-        "Compte créé ! Consultez votre boîte e-mail et cliquez sur le lien de vérification avant de vous connecter.",
+        "Account created! Check your inbox and click the verification link before signing in.",
         "success"
       );
 
@@ -619,7 +620,7 @@ document.getElementById("authForm")
         await auth.signOut();
 
         showMessage(
-          "Votre adresse e-mail n'est pas encore vérifiée. Consultez votre boîte de réception.",
+          "Your email address has not been verified yet. Please check your inbox.",
           "error"
         );
 
@@ -642,7 +643,7 @@ document.getElementById("authForm")
 
 
 /* =====================================================
-   CONNEXION GOOGLE
+   GOOGLE SIGN-IN
 ===================================================== */
 
 async function googleLogin() {
@@ -675,8 +676,9 @@ async function googleLogin() {
   }
 }
 
+
 /* =====================================================
-   ACCEPTATION DE L'INVITATION COLLABORATEUR
+   ACCEPT COLLABORATOR INVITATION
 ===================================================== */
 
 async function acceptCollaboratorInvitation(user, token) {
@@ -696,32 +698,35 @@ async function acceptCollaboratorInvitation(user, token) {
   });
 
   if (!response.ok) {
-    throw new Error("Impossible de vérifier l'invitation.");
+    throw new Error("Unable to verify the invitation.");
   }
 
   const result = await response.json();
 
   if (!result.success) {
     throw new Error(
-      result.message || "Impossible d'accepter l'invitation."
+      result.message || "Unable to accept the invitation."
     );
   }
 
   return result;
-}/* =====================================================
-   FINALISATION DE CONNEXION
+}
+
+
+/* =====================================================
+   LOGIN COMPLETION
 ===================================================== */
 
 async function finishLogin(user) {
 
   if (!user.emailVerified) {
     throw new Error(
-      "Veuillez vérifier votre adresse e-mail."
+      "Please verify your email address."
     );
   }
 
   showMessage(
-    "Connexion réussie. Préparation de votre espace...",
+    "Login successful. Preparing your dashboard...",
     "success"
   );
 
@@ -731,7 +736,7 @@ async function finishLogin(user) {
     "fete_cadeaux_collaborator_invitation"
   );
 
-  // Parcours collaborateur
+  // Collaborator login flow
   if (invitationToken) {
 
     const invitation = await acceptCollaboratorInvitation(
@@ -749,7 +754,7 @@ async function finishLogin(user) {
     );
 
     showMessage(
-      "Invitation acceptée ! Préparation de votre espace collaborateur...",
+      "Invitation accepted! Preparing your collaborator dashboard...",
       "success"
     );
 
@@ -757,12 +762,13 @@ async function finishLogin(user) {
     return;
   }
 
-  // Parcours habituel de l'organisateur
+  // Regular organizer login flow
   window.location.href = "organisateur.html";
 }
 
+
 /* =====================================================
-   MOT DE PASSE OUBLIÉ
+   FORGOT PASSWORD
 ===================================================== */
 
 async function forgotPassword() {
@@ -774,7 +780,7 @@ async function forgotPassword() {
 
   if (!email) {
     showMessage(
-      "Saisissez votre adresse e-mail avant de demander la réinitialisation.",
+      "Enter your email address before requesting a password reset.",
       "error"
     );
     return;
@@ -785,7 +791,7 @@ async function forgotPassword() {
     await auth.sendPasswordResetEmail(email);
 
     showMessage(
-      "Si un compte correspond à cette adresse, un e-mail de réinitialisation vous sera envoyé.",
+      "If an account exists with this email address, a password reset email will be sent to you.",
       "success"
     );
 
