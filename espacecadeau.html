@@ -1117,6 +1117,7 @@ nextAd: "Publicité suivante",
     discoverAdvertiser: "Découvrez notre annonceur",
     learnMore: "En savoir plus",
     showAdvertisement: "Afficher la publicité",
+    myChosenGifts: "🎁 Les cadeaux que vous avez choisis",
   },
   ht: {
     guest: "Chè envite",
@@ -1184,7 +1185,7 @@ nextAd: "Piblisite apre a",
     discoverAdvertiser: "Dekouvri piblisitè nou an",
     learnMore: "Aprann plis",
     showAdvertisement: "Montre piblisite a",
-
+    myChosenGifts: "🎁 Kado ou te chwazi yo",
   },
   en: {
     guest: "Dear guest",
@@ -1254,6 +1255,7 @@ nextAd: "Next advertisement",
     discoverAdvertiser: "Discover our advertiser",
     learnMore: "Learn more",
     showAdvertisement: "Show advertisement",
+    myChosenGifts: "🎁 The gifts you have chosen",
   },
   es: {
     guest: "Estimado invitado",
@@ -1323,6 +1325,7 @@ nextAd: "Publicidad siguiente",
     discoverAdvertiser: "Descubre a nuestro anunciante",
     learnMore: "Más información",
     showAdvertisement: "Mostrar publicidad",
+    myChosenGifts: "🎁 Los regalos que has elegido",
   },
   pt: {
     guest: "Caro convidado",
@@ -1392,6 +1395,7 @@ nextAd: "Publicidade seguinte",
     discoverAdvertiser: "Conheça nosso anunciante",
     learnMore: "Saiba mais",
     showAdvertisement: "Mostrar publicidade",
+    myChosenGifts: "🎁 Os presentes que você escolheu",
   }
 };
 
@@ -1896,16 +1900,10 @@ function displayMyReservations() {
     background: #FFF9ED;
   `;
 
-  const titles = {
-    fr: "🎁 Les cadeaux que vous avez choisis",
-    ht: "🎁 Kado ou te chwazi yo",
-    en: "🎁 The gifts you have chosen",
-    es: "🎁 Los regalos que has elegido",
-    pt: "🎁 Os presentes que você escolheu"
-  };
-
   const heading = document.createElement("h2");
-  heading.textContent = titles[currentLanguage] || titles.fr;
+heading.textContent = t("myChosenGifts");
+
+  
   heading.style.cssText = `
     margin: 0 0 18px;
     font-size: 21px;
@@ -1961,7 +1959,7 @@ function displayMyReservations() {
     const details = document.createElement("div");
 
     const name = document.createElement("strong");
-    name.textContent = gift.name || "Cadeau";
+    name.textContent = gift.name || t("gift");
     name.style.cssText = `
       display: block;
       color: #35213D;
