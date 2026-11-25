@@ -2112,8 +2112,9 @@ else if(wizard.step === 8){
   }
 }
 
+
 /* =====================================================
-   PERSONNES A L'HONNEUR
+   PEOPLE BEING CELEBRATED
 ===================================================== */
 function renderWizardPeople(){
 
@@ -2122,49 +2123,80 @@ function renderWizardPeople(){
   container.innerHTML = wizard.people.map((p,index)=>`
     <div class="person-row" data-person-index="${index}">
       <div class="section-head">
-        <h4>Personne ${index+1}</h4>
+        <h4>Person ${index+1}</h4>
         ${wizard.people.length>1
           ? `<button type="button" class="btn btn-danger btn-small"
-               data-remove-person="${index}">Retirer</button>`
+               data-remove-person="${index}">Remove</button>`
           : ""}
       </div>
 
       <div class="form-grid">
         <div class="form-group">
-          <label>Prénom</label>
+          <label>First Name</label>
           <input data-person-field="firstName"
             value="${escapeHTML(p.firstName)}"
-            placeholder="Prénom">
+            placeholder="First name">
         </div>
 
         <div class="form-group">
-          <label>Nom</label>
+          <label>Last Name</label>
           <input data-person-field="lastName"
             value="${escapeHTML(p.lastName)}"
-            placeholder="Nom">
+            placeholder="Last name">
         </div>
 
         <div class="form-group">
-          <label>Rôle</label>
+          <label>Role</label>
           <input data-person-field="role"
             value="${escapeHTML(p.role)}"
-            placeholder="Ex. Mariée, enfant célébré...">
+            placeholder="e.g. Bride, birthday celebrant...">
         </div>
 
         <div class="form-group">
-          <label>Date de naissance</label>
+          <label>Date of Birth</label>
           <input type="date" data-person-field="birthDate"
             value="${escapeHTML(p.birthDate)}">
         </div>
       </div>
 
       <div class="form-group">
-        <label>Description facultative</label>
+        <label>Optional Description</label>
         <input data-person-field="description"
           value="${escapeHTML(p.description)}"
-          placeholder="Quelques mots sur cette personne">
+          placeholder="A few words about this person">
       </div>
     </div>
+  `).join("");
+
+  container.querySelectorAll("[data-person-index]").forEach(row=>{
+    const index = Number(row.dataset.personIndex);
+
+    row.querySelectorAll("[data-person-field]").forEach(input=>{
+      input.addEventListener("input",()=>{
+        wizard.people[index][input.dataset.personField] = input.value;
+      });
+    });
+  });
+
+  container.querySelectorAll("[data-remove-person]").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      wizard.people.splice(Number(btn.dataset.removePerson),1);
+      renderWizardPeople();
+    });
+  });
+
+  $("wizardAddPerson").addEventListener("click",()=>{
+    wizard.people.push({
+      firstName:"",
+      lastName:"",
+      role:"",
+      birthDate:"",
+      description:""
+    });
+    renderWizardPeople();
+  });
+}
+
   `).join("");
 
   container.querySelectorAll("[data-person-index]").forEach(row=>{
