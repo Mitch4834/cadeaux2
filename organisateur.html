@@ -1369,7 +1369,7 @@ async function api(params) {
   const user = auth.currentUser;
 
   if (!user) {
-    throw new Error("Votre session a expiré. Veuillez vous reconnecter.");
+    throw new Error("Your session has expired. Please sign in again.");
   }
 
   const idToken = await user.getIdToken();
@@ -1389,7 +1389,7 @@ async function api(params) {
   });
 
   if (!response.ok) {
-    throw new Error("Erreur de communication avec le serveur.");
+    throw new Error("Server communication error.");
   }
 
   const text = await response.text();
@@ -1400,12 +1400,13 @@ async function api(params) {
     data = JSON.parse(text);
   } catch (error) {
     throw new Error(
-      "Réponse du serveur illisible. Vérifiez le déploiement Apps Script."
-    );
+  "The server response could not be read. Please check the Apps Script deployment."
+);
+   
   }
 
   if (!data.success) {
-    throw new Error(data.message || "Une erreur est survenue.");
+   throw new Error(data.message || "An error occurred.");
   }
 
   return data;
@@ -1439,7 +1440,7 @@ async function loadTrialStatus() {
 
   if (!response.ok || !data.success) {
     throw new Error(
-      data.message || "Impossible de récupérer votre période d'essai."
+      data.message || "Unable to retrieve your trial period."
     );
   }
 
@@ -1463,7 +1464,7 @@ async function loadTrialStatus() {
     }
 
     dateElement.textContent = endDate.toLocaleDateString(
-      "fr-FR",
+      "en-US",
       {
         day: "numeric",
         month: "long",
@@ -1639,473 +1640,477 @@ function renderWizard(){
   const content = $("wizardContent");
   const d = wizard.data;
 
-  $("wizardStepBadge").textContent =
-    wizard.step === 0 ? "Bienvenue" : `Étape ${wizard.step} sur ${wizard.total}`;
-
-  $("wizardProgress").style.width =
-    (wizard.step / wizard.total * 100) + "%";
-
-  $("wizardProgressText").textContent =
-    wizard.step === 0
-      ? "Votre événement commence ici."
-      : `Vous avancez dans la création de votre événement.`;
-
-  $("wizardBack").style.visibility =
-    wizard.step === 0 ? "hidden" : "visible";
-
-  $("wizardNext").textContent =
-    wizard.step === wizard.total ? "Créer mon événement 🎉" :
-    wizard.step === 0 ? "Commençons →" : "Continuer →";
-
-  if(wizard.step === 0){
-    content.innerHTML = `
-      <h2>Bonjour ! Quel événement souhaitez-vous organiser ?</h2>
-      <p class="wizard-description">
-        Je vais vous accompagner étape par étape pour créer un espace
-        personnalisé où vos invités pourront confirmer leur présence
-        et choisir les cadeaux qu'ils souhaitent vous offrir.
-      </p>
-
-      <div class="notice">
-        <strong>En quelques minutes, votre événement sera prêt.</strong>
-        <br>Vous pourrez ensuite gérer vos invités, vos cadeaux et votre invitation.
-      </div>
-
-      <div style="margin-top:22px">
-        <strong>Commençons ensemble !</strong>
-      </div>
-    `;
-  }
-
-  else if(wizard.step === 1){
-    content.innerHTML = `
-      <h2>Quel événement préparez-vous ?</h2>
-      <p class="wizard-description">
-        Choisissez le type de célébration que vous souhaitez organiser.
-      </p>
-
-      <div class="event-type-grid">
-        ${eventTypes.map(t => `
-          <button type="button"
-            class="type-card ${d.type===t.name?"selected":""}"
-            data-type="${escapeHTML(t.name)}">
-            <span class="type-emoji">${t.emoji}</span>
-            <strong>${escapeHTML(t.name)}</strong>
-          </button>
-        `).join("")}
-      </div>
-
-      <div class="form-group" style="margin-top:20px">
-        <label>Comment souhaitez-vous appeler votre événement ? *</label>
-        <input id="wizName"
-          value="${escapeHTML(d.name)}"
-          placeholder="Ex. Anniversaire de Sarah">
-      </div>
-    `;
-
-    content.querySelectorAll("[data-type]").forEach(btn => {
-      btn.addEventListener("click",() => {
-        d.type = btn.dataset.type;
-        renderWizard();
-      });
-    });
-
-    $("wizName").addEventListener("input",e => setField("name",e.target.value));
-  }
-
-  else if(wizard.step === 2){
-    content.innerHTML = `
-      <h2>Quand aura lieu votre événement ?</h2>
-      <p class="wizard-description">
-        Indiquez la date et l'heure prévues. Vous pourrez aussi fixer
-        une date limite pour les réservations de cadeaux.
-      </p>
-
-      <div class="form-group">
-        <label>Date de l'événement</label>
-        <input id="wizDate" type="date" value="${escapeHTML(d.date)}">
-      </div>
-
-      <div class="form-group">
-        <label>Heure de l'événement</label>
-        <input id="wizTime" type="time" value="${escapeHTML(d.time)}">
-      </div>
-
-      <div class="form-group">
-        <label>Date limite de réservation des cadeaux</label>
-        <input id="wizDeadline" type="date" value="${escapeHTML(d.deadline)}">
-        <small class="muted">Cette date peut être laissée vide.</small>
-      </div>
-    `;
-
-    $("wizDate").addEventListener("change",e=>setField("date",e.target.value));
-    $("wizTime").addEventListener("change",e=>setField("time",e.target.value));
-    $("wizDeadline").addEventListener("change",e=>setField("deadline",e.target.value));
-  }
-
-  else if(wizard.step === 3){
-    content.innerHTML = `
-      <h2>Où se déroulera votre événement ?</h2>
-      <p class="wizard-description">
-        Donnez à vos invités les informations nécessaires pour vous retrouver.
-      </p>
-
-      <div class="form-group">
-        <label>Nom du lieu</label>
-        <input id="wizPlace" value="${escapeHTML(d.place)}"
-          placeholder="Ex. Hôtel Montana">
-      </div>
-
-      <div class="form-group">
-        <label>Adresse</label>
-        <input id="wizAddress" value="${escapeHTML(d.address)}"
-          placeholder="Adresse complète">
-      </div>
-
-      <div class="form-grid">
-        <div class="form-group">
-          <label>Ville</label>
-          <input id="wizCity" value="${escapeHTML(d.city)}"
-            placeholder="Ex. Port-au-Prince">
-        </div>
-
-        <div class="form-group">
-          <label>Pays</label>
-          <input id="wizCountry" value="${escapeHTML(d.country)}"
-            placeholder="Haïti">
-        </div>
-      </div>
-
-<div class="notice">
-  <strong>🚗 Informations sur le stationnement</strong>
-  <br>Indiquez à vos invités où ils pourront garer leur véhicule.
-</div>
-
-<div class="form-group">
-  <label>Disponibilité du parking</label>
-  <select id="wizParkingAvailability">
-    <option value="">Non précisé</option>
-    <option value="sur_place">Parking disponible sur place</option>
-    <option value="proximite">Parking disponible à proximité</option>
-    <option value="rue">Stationnement dans la rue</option>
-    <option value="aucun">Aucun parking disponible</option>
-  </select>
-</div>
-
-<div class="form-group">
-  <label>Tarification du parking</label>
-  <select id="wizParkingFeeType">
-    <option value="gratuit">Gratuit</option>
-    <option value="payant">Payant</option>
-  </select>
-</div>
-
-<div class="form-group">
-  <label>Tarif du parking (facultatif)</label>
-  <input
-    id="wizParkingPrice"
-    type="text"
-    value="${escapeHTML(d.parkingPrice)}"
-    placeholder="Ex. 500 HTG, 10 USD">
-</div>
-
-<div class="form-group">
-  <label>Instructions pour le stationnement</label>
-  <textarea
-    id="wizParkingDetails"
-    placeholder="Ex. L'entrée du parking se trouve derrière l'hôtel...">${escapeHTML(d.parkingDetails)}</textarea>
-</div>
-
-      <div class="form-group">
-        <label>Un message pour présenter votre événement</label>
-        <textarea id="wizDescription"
-          placeholder="Quelques mots pour accueillir vos invités...">${escapeHTML(d.description)}</textarea>
-      </div>
-    `;
-
-    ["Place","Address","City","Country","Description"].forEach(key=>{
-  const field = $("wiz"+key);
-  const dataKey = key.charAt(0).toLowerCase()+key.slice(1);
-  field.addEventListener("input",e=>setField(dataKey,e.target.value));
-});
-
-$("wizParkingAvailability").addEventListener("change",e=>{
-  setField("parkingAvailability",e.target.value);
-});
-
-$("wizParkingFeeType").addEventListener("change",e=>{
-  setField("parkingFeeType",e.target.value);
-});
-
-$("wizParkingPrice").addEventListener("input",e=>{
-  setField("parkingPrice",e.target.value);
-});
-
-$("wizParkingDetails").addEventListener("input",e=>{
-  setField("parkingDetails",e.target.value);
-});
-  }
-
-  else if(wizard.step === 4){
-    content.innerHTML = `
-      <h2>Qui souhaitez-vous mettre à l'honneur ?</h2>
-      <p class="wizard-description">
-        Ajoutez les personnes célébrées. Vous pouvez ajouter une personne,
-        un couple ou plusieurs personnes.
-      </p>
-
-      <div id="wizardPeople"></div>
-
-      <button type="button" class="btn btn-secondary btn-small"
-        id="wizardAddPerson">
-        + Ajouter une personne
-      </button>
-    `;
-
-    renderWizardPeople();
-  }
-
-  else if(wizard.step === 5){
-    content.innerHTML = `
-      <h2>Quelle ambiance souhaitez-vous créer ?</h2>
-      <p class="wizard-description">
-        Choisissez les couleurs qui accompagneront votre invitation
-        et l'expérience de vos invités.
-      </p>
-
-      <div class="palette-grid">
-        ${palettes.map(p=>`
-          <button type="button"
-            class="palette-card ${d.palette===p.id?"selected":""}"
-            data-palette="${p.id}">
-            <div class="palette-colors">
-              <span style="background:${p.primary}"></span>
-              <span style="background:${p.secondary}"></span>
-              <div class="color-row">
-  <label>Couleur d'accent</label>
-  <input type="color" id="wizAccent" value="${d.accentColor}">
-</div>
-              <span style="background:${p.text}"></span>
-              <span style="background:${p.background};border:1px solid #ddd"></span>
-            </div>
-            <strong>${escapeHTML(p.name)}</strong>
-          </button>
-        `).join("")}
-      </div>
-
-      <div class="color-custom">
-        <strong>Personnaliser mes couleurs</strong>
-        <p class="muted">Modifiez les couleurs selon vos préférences.</p>
-
-        <div class="color-row">
-          <label>Couleur principale</label>
-          <input type="color" id="wizPrimary" value="${d.color}">
-        </div>
-
-        <div class="color-row">
-          <label>Couleur secondaire</label>
-          <input type="color" id="wizSecondary" value="${d.secondaryColor}">
-        </div>
-
-        <div class="color-row">
-          <label>Couleur du texte</label>
-          <input type="color" id="wizText" value="${d.textColor}">
-        </div>
-
-        <div class="color-row">
-          <label>Couleur de fond</label>
-          <input type="color" id="wizBackground" value="${d.backgroundColor}">
-        </div>
-      </div>
-
-      <div style="margin-top:18px">
-        <strong>Aperçu de votre invitation</strong>
-        <div class="preview-event" style="margin-top:10px">
-          <div class="preview-banner" id="themePreviewBanner">
-            <small>VOUS ÊTES INVITÉ(E)</small>
-            <h3>${escapeHTML(d.name || "Votre événement")}</h3>
-            <small>${escapeHTML(d.type || "Votre célébration")}</small>
-          </div>
-          <div class="preview-body" id="themePreviewBody">
-            <p>Nous serions heureux de partager ce moment avec vous.</p>
-            <span class="preview-button" id="themePreviewButton">Voir l'invitation</span>
-          </div>
-        </div>
-      </div>
-    `;
-
-    content.querySelectorAll("[data-palette]").forEach(btn=>{
-      btn.addEventListener("click",()=>updatePalette(btn.dataset.palette));
-    });
-
-    $("wizPrimary").addEventListener("input",e=>{
-      d.color=e.target.value;
-      d.palette="custom";
-      updateWizardTheme();
-      updatePalettePreview();
-    });
-
-    $("wizSecondary").addEventListener("input",e=>{
-      d.secondaryColor=e.target.value;
-      d.palette="custom";
-      updateWizardTheme();
-      updatePalettePreview();
-    });
-$("wizAccent").addEventListener("input",e=>{
-  d.accentColor=e.target.value;
-  d.palette="custom";
-  updateWizardTheme();
-  updatePalettePreview();
-});
-    $("wizText").addEventListener("input",e=>{
-      d.textColor=e.target.value;
-      d.palette="custom";
-      updateWizardTheme();
-      updatePalettePreview();
-    });
-
-    $("wizBackground").addEventListener("input",e=>{
-      d.backgroundColor=e.target.value;
-      d.palette="custom";
-      updateWizardTheme();
-      updatePalettePreview();
-    });
-
-    updatePalettePreview();
-  }
-
-  else if(wizard.step === 6){
-    content.innerHTML = `
-      <h2>Comment souhaitez-vous gérer les cadeaux ?</h2>
-      <p class="wizard-description">
-        Choisissez la manière dont vos invités pourront participer à votre événement.
-      </p>
-
-      <div class="form-group">
-        <label>Mode de participation</label>
-        <select id="wizPurchase">
-          <option value="reservation" ${d.purchaseMode==="reservation"?"selected":""}>
-            Réservation seule
-          </option>
-          <option value="achat" ${d.purchaseMode==="achat"?"selected":""}>
-            Achat sur la plateforme
-          </option>
-          <option value="les deux" ${d.purchaseMode==="les deux"?"selected":""}>
-            Réservation et achat
-          </option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Visibilité des réservations</label>
-        <select id="wizVisibility">
-          <option value="publique" ${d.visibility==="publique"?"selected":""}>
-            Publique : les invités peuvent voir les réservations
-          </option>
-          <option value="privee" ${d.visibility==="privee"?"selected":""}>
-            Privée : les réservations restent confidentielles
-          </option>
-        </select>
-      </div>
-
-      <div class="notice">
-        <strong>À savoir</strong><br>
-        Vous pourrez ajouter vos cadeaux depuis votre tableau de bord
-        après la création de l'événement.
-      </div>
-    `;
-
-    $("wizPurchase").addEventListener("change",e=>setField("purchaseMode",e.target.value));
-    $("wizVisibility").addEventListener("change",e=>setField("visibility",e.target.value));
-  }
-
-  else if(wizard.step === 7){
-    content.innerHTML = `
-      <h2>Comment pouvons-nous vous contacter ?</h2>
-      <p class="wizard-description">
-        Ces informations permettront de vous identifier comme organisateur.
-      </p>
-
-      <div class="form-group">
-        <label>Votre nom</label>
-        <input id="wizOrganizer" value="${escapeHTML(d.organizer)}"
-          placeholder="Votre nom et prénom">
-      </div>
-
-      <div class="form-group">
-        <label>Téléphone</label>
-        <input id="wizPhone" type="tel" value="${escapeHTML(d.phone)}"
-          placeholder="Votre numéro de téléphone">
-      </div>
-
-      <div class="form-group">
-        <label>Adresse email</label>
-        <input id="wizEmail" type="email" value="${escapeHTML(d.email)}"
-          placeholder="vous@exemple.com">
-      </div>
-    `;
-
-    $("wizOrganizer").addEventListener("input",e=>setField("organizer",e.target.value));
-    $("wizPhone").addEventListener("input",e=>setField("phone",e.target.value));
-    $("wizEmail").addEventListener("input",e=>setField("email",e.target.value));
-  }
-
-  else if(wizard.step === 8){
-    content.innerHTML = `
-      <h2>Votre événement est presque prêt ! 🎉</h2>
-      <p class="wizard-description">
-        Vérifiez les informations avant de créer votre espace événementiel.
-      </p>
-
-      <div class="preview-event" style="margin-bottom:18px">
-        <div class="preview-banner" style="background:${d.color}">
-          <small>VOTRE ÉVÉNEMENT</small>
-          <h3>${escapeHTML(d.name)}</h3>
-          <small>${escapeHTML(d.type)}</small>
-        </div>
-        <div class="preview-body" style="background:${d.backgroundColor};color:${d.textColor}">
-          <p>${escapeHTML(d.date || "Date à définir")}</p>
-          <p>${escapeHTML(d.place || "Lieu à définir")}</p>
-        </div>
-      </div>
-
-      <div class="review-item">
-        <small>Événement</small>
-        <strong>${escapeHTML(d.name)} — ${escapeHTML(d.type)}</strong>
-      </div>
-
-      <div class="review-item">
-        <small>Date et heure</small>
-        <strong>${escapeHTML(d.date || "Non renseignée")} ${escapeHTML(d.time || "")}</strong>
-      </div>
-
-      <div class="review-item">
-        <small>Lieu</small>
-        <strong>${escapeHTML([d.place,d.city,d.country].filter(Boolean).join(", ") || "Non renseigné")}</strong>
-      </div>
-
-      <div class="review-item">
-        <small>Personnes à l'honneur</small>
-        <strong>${escapeHTML(wizard.people.filter(p=>p.firstName||p.lastName).map(p=>(p.firstName+" "+p.lastName).trim()).join(", ") || "Non renseignées")}</strong>
-      </div>
-
-      <div class="review-item">
-        <small>Gestion des cadeaux</small>
-        <strong>${escapeHTML(d.purchaseMode)} · ${escapeHTML(d.visibility)}</strong>
-      </div>
-
-      <div class="review-item">
-        <small>Organisateur</small>
-        <strong>${escapeHTML(d.organizer || "Non renseigné")} ${d.phone ? "· "+escapeHTML(d.phone) : ""}</strong>
-      </div>
-
-      <div class="notice">
-        En cliquant sur « Créer mon événement », votre espace sera enregistré.
-        Vous pourrez ensuite ajouter vos invités et votre liste de cadeaux.
-      </div>
-    `;
-  }
+ 
+$("wizardStepBadge").textContent =
+  wizard.step === 0 ? "Welcome" : `Step ${wizard.step} of ${wizard.total}`;
+
+$("wizardProgress").style.width =
+  (wizard.step / wizard.total * 100) + "%";
+
+$("wizardProgressText").textContent =
+  wizard.step === 0
+    ? "Your event starts here."
+    : "You're making progress on your event.";
+
+$("wizardBack").style.visibility =
+  wizard.step === 0 ? "hidden" : "visible";
+
+$("wizardNext").textContent =
+  wizard.step === wizard.total ? "Create My Event 🎉" :
+  wizard.step === 0 ? "Let's Get Started →" : "Continue →";
+
+if(wizard.step === 0){
+  content.innerHTML = `
+    <h2>Hello! What event would you like to organize?</h2>
+    <p class="wizard-description">
+      I'll guide you step by step to create a personalized space
+      where your guests can confirm their attendance
+      and choose the gifts they would like to give you.
+    </p>
+
+    <div class="notice">
+      <strong>Your event will be ready in just a few minutes.</strong>
+      <br>You can then manage your guests, gifts, and invitation.
+    </div>
+
+    <div style="margin-top:22px">
+      <strong>Let's get started together!</strong>
+    </div>
+  `;
 }
+
+else if(wizard.step === 1){
+  content.innerHTML = `
+    <h2>What event are you planning?</h2>
+    <p class="wizard-description">
+      Choose the type of celebration you would like to organize.
+    </p>
+
+    <div class="event-type-grid">
+      ${eventTypes.map(t => `
+        <button type="button"
+          class="type-card ${d.type===t.name?"selected":""}"
+          data-type="${escapeHTML(t.name)}">
+          <span class="type-emoji">${t.emoji}</span>
+          <strong>${escapeHTML(t.name)}</strong>
+        </button>
+      `).join("")}
+    </div>
+
+    <div class="form-group" style="margin-top:20px">
+      <label>What would you like to name your event? *</label>
+      <input id="wizName"
+        value="${escapeHTML(d.name)}"
+        placeholder="e.g. Sarah's Birthday">
+    </div>
+  `;
+
+  content.querySelectorAll("[data-type]").forEach(btn => {
+    btn.addEventListener("click",() => {
+      d.type = btn.dataset.type;
+      renderWizard();
+    });
+  });
+
+  $("wizName").addEventListener("input",e => setField("name",e.target.value));
+}
+
+else if(wizard.step === 2){
+  content.innerHTML = `
+    <h2>When will your event take place?</h2>
+    <p class="wizard-description">
+      Enter the planned date and time. You can also set
+      a deadline for gift reservations.
+    </p>
+
+    <div class="form-group">
+      <label>Event date</label>
+      <input id="wizDate" type="date" value="${escapeHTML(d.date)}">
+    </div>
+
+    <div class="form-group">
+      <label>Event time</label>
+      <input id="wizTime" type="time" value="${escapeHTML(d.time)}">
+    </div>
+
+    <div class="form-group">
+      <label>Gift reservation deadline</label>
+      <input id="wizDeadline" type="date" value="${escapeHTML(d.deadline)}">
+      <small class="muted">This field is optional.</small>
+    </div>
+  `;
+
+  $("wizDate").addEventListener("change",e=>setField("date",e.target.value));
+  $("wizTime").addEventListener("change",e=>setField("time",e.target.value));
+  $("wizDeadline").addEventListener("change",e=>setField("deadline",e.target.value));
+}
+
+else if(wizard.step === 3){
+  content.innerHTML = `
+    <h2>Where will your event take place?</h2>
+    <p class="wizard-description">
+      Give your guests the information they need to find the venue.
+    </p>
+
+    <div class="form-group">
+      <label>Venue name</label>
+      <input id="wizPlace" value="${escapeHTML(d.place)}"
+        placeholder="e.g. Montana Hotel">
+    </div>
+
+    <div class="form-group">
+      <label>Address</label>
+      <input id="wizAddress" value="${escapeHTML(d.address)}"
+        placeholder="Full address">
+    </div>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label>City</label>
+        <input id="wizCity" value="${escapeHTML(d.city)}"
+          placeholder="e.g. Port-au-Prince">
+      </div>
+
+      <div class="form-group">
+        <label>Country</label>
+        <input id="wizCountry" value="${escapeHTML(d.country)}"
+          placeholder="Haiti">
+      </div>
+    </div>
+
+    <div class="notice">
+      <strong>🚗 Parking Information</strong>
+      <br>Let your guests know where they can park their vehicles.
+    </div>
+
+    <div class="form-group">
+      <label>Parking availability</label>
+      <select id="wizParkingAvailability">
+        <option value="">Not specified</option>
+        <option value="sur_place">Parking available at the venue</option>
+        <option value="proximite">Parking available nearby</option>
+        <option value="rue">Street parking</option>
+        <option value="aucun">No parking available</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Parking fee</label>
+      <select id="wizParkingFeeType">
+        <option value="gratuit">Free</option>
+        <option value="payant">Paid</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Parking fee (optional)</label>
+      <input
+        id="wizParkingPrice"
+        type="text"
+        value="${escapeHTML(d.parkingPrice)}"
+        placeholder="e.g. 500 HTG, 10 USD">
+    </div>
+
+    <div class="form-group">
+      <label>Parking instructions</label>
+      <textarea
+        id="wizParkingDetails"
+        placeholder="e.g. The parking entrance is behind the hotel...">${escapeHTML(d.parkingDetails)}</textarea>
+    </div>
+
+    <div class="form-group">
+      <label>A message to introduce your event</label>
+      <textarea id="wizDescription"
+        placeholder="A few words to welcome your guests...">${escapeHTML(d.description)}</textarea>
+    </div>
+  `;
+
+  ["Place","Address","City","Country","Description"].forEach(key=>{
+    const field = $("wiz"+key);
+    const dataKey = key.charAt(0).toLowerCase()+key.slice(1);
+    field.addEventListener("input",e=>setField(dataKey,e.target.value));
+  });
+
+  $("wizParkingAvailability").addEventListener("change",e=>{
+    setField("parkingAvailability",e.target.value);
+  });
+
+  $("wizParkingFeeType").addEventListener("change",e=>{
+    setField("parkingFeeType",e.target.value);
+  });
+
+  $("wizParkingPrice").addEventListener("input",e=>{
+    setField("parkingPrice",e.target.value);
+  });
+
+  $("wizParkingDetails").addEventListener("input",e=>{
+    setField("parkingDetails",e.target.value);
+  });
+}
+
+else if(wizard.step === 4){
+  content.innerHTML = `
+    <h2>Who would you like to celebrate?</h2>
+    <p class="wizard-description">
+      Add the people being celebrated. You can add one person,
+      a couple, or several people.
+    </p>
+
+    <div id="wizardPeople"></div>
+
+    <button type="button" class="btn btn-secondary btn-small"
+      id="wizardAddPerson">
+      + Add a Person
+    </button>
+  `;
+
+  renderWizardPeople();
+}
+
+else if(wizard.step === 5){
+  content.innerHTML = `
+    <h2>What atmosphere would you like to create?</h2>
+    <p class="wizard-description">
+      Choose the colors that will define your invitation
+      and your guests' experience.
+    </p>
+
+    <div class="palette-grid">
+      ${palettes.map(p=>`
+        <button type="button"
+          class="palette-card ${d.palette===p.id?"selected":""}"
+          data-palette="${p.id}">
+          <div class="palette-colors">
+            <span style="background:${p.primary}"></span>
+            <span style="background:${p.secondary}"></span>
+            <span style="background:${p.text}"></span>
+            <span style="background:${p.background};border:1px solid #ddd"></span>
+          </div>
+          <strong>${escapeHTML(p.name)}</strong>
+        </button>
+      `).join("")}
+    </div>
+
+    <div class="color-custom">
+      <strong>Customize My Colors</strong>
+      <p class="muted">Adjust the colors to match your preferences.</p>
+
+      <div class="color-row">
+        <label>Primary color</label>
+        <input type="color" id="wizPrimary" value="${d.color}">
+      </div>
+
+      <div class="color-row">
+        <label>Secondary color</label>
+        <input type="color" id="wizSecondary" value="${d.secondaryColor}">
+      </div>
+
+      <div class="color-row">
+        <label>Accent color</label>
+        <input type="color" id="wizAccent" value="${d.accentColor}">
+      </div>
+
+      <div class="color-row">
+        <label>Text color</label>
+        <input type="color" id="wizText" value="${d.textColor}">
+      </div>
+
+      <div class="color-row">
+        <label>Background color</label>
+        <input type="color" id="wizBackground" value="${d.backgroundColor}">
+      </div>
+    </div>
+
+    <div style="margin-top:18px">
+      <strong>Invitation Preview</strong>
+      <div class="preview-event" style="margin-top:10px">
+        <div class="preview-banner" id="themePreviewBanner">
+          <small>YOU ARE INVITED</small>
+          <h3>${escapeHTML(d.name || "Your Event")}</h3>
+          <small>${escapeHTML(d.type || "Your Celebration")}</small>
+        </div>
+        <div class="preview-body" id="themePreviewBody">
+          <p>We would be delighted to share this moment with you.</p>
+          <span class="preview-button" id="themePreviewButton">View Invitation</span>
+        </div>
+      </div>
+    </div>
+  `;
+
+  content.querySelectorAll("[data-palette]").forEach(btn=>{
+    btn.addEventListener("click",()=>updatePalette(btn.dataset.palette));
+  });
+
+  $("wizPrimary").addEventListener("input",e=>{
+    d.color=e.target.value;
+    d.palette="custom";
+    updateWizardTheme();
+    updatePalettePreview();
+  });
+
+  $("wizSecondary").addEventListener("input",e=>{
+    d.secondaryColor=e.target.value;
+    d.palette="custom";
+    updateWizardTheme();
+    updatePalettePreview();
+  });
+
+  $("wizAccent").addEventListener("input",e=>{
+    d.accentColor=e.target.value;
+    d.palette="custom";
+    updateWizardTheme();
+    updatePalettePreview();
+  });
+
+  $("wizText").addEventListener("input",e=>{
+    d.textColor=e.target.value;
+    d.palette="custom";
+    updateWizardTheme();
+    updatePalettePreview();
+  });
+
+  $("wizBackground").addEventListener("input",e=>{
+    d.backgroundColor=e.target.value;
+    d.palette="custom";
+    updateWizardTheme();
+    updatePalettePreview();
+  });
+
+  updatePalettePreview();
+}
+
+else if(wizard.step === 6){
+  content.innerHTML = `
+    <h2>How would you like to manage gifts?</h2>
+    <p class="wizard-description">
+      Choose how your guests will be able to contribute to your event.
+    </p>
+
+    <div class="form-group">
+      <label>Gift participation method</label>
+      <select id="wizPurchase">
+        <option value="reservation" ${d.purchaseMode==="reservation"?"selected":""}>
+          Reservations only
+        </option>
+        <option value="achat" ${d.purchaseMode==="achat"?"selected":""}>
+          Purchase on the platform
+        </option>
+        <option value="les deux" ${d.purchaseMode==="les deux"?"selected":""}>
+          Reservations and purchases
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Reservation visibility</label>
+      <select id="wizVisibility">
+        <option value="publique" ${d.visibility==="publique"?"selected":""}>
+          Public: guests can see reservations
+        </option>
+        <option value="privee" ${d.visibility==="privee"?"selected":""}>
+          Private: reservations remain confidential
+        </option>
+      </select>
+    </div>
+
+    <div class="notice">
+      <strong>Please note</strong><br>
+      You can add your gifts from your dashboard
+      after creating your event.
+    </div>
+  `;
+
+  $("wizPurchase").addEventListener("change",e=>setField("purchaseMode",e.target.value));
+  $("wizVisibility").addEventListener("change",e=>setField("visibility",e.target.value));
+}
+
+else if(wizard.step === 7){
+  content.innerHTML = `
+    <h2>How can we contact you?</h2>
+    <p class="wizard-description">
+      This information will help us identify you as the event organizer.
+    </p>
+
+    <div class="form-group">
+      <label>Your name</label>
+      <input id="wizOrganizer" value="${escapeHTML(d.organizer)}"
+        placeholder="Your first and last name">
+    </div>
+
+    <div class="form-group">
+      <label>Phone number</label>
+      <input id="wizPhone" type="tel" value="${escapeHTML(d.phone)}"
+        placeholder="Your phone number">
+    </div>
+
+    <div class="form-group">
+      <label>Email address</label>
+      <input id="wizEmail" type="email" value="${escapeHTML(d.email)}"
+        placeholder="you@example.com">
+    </div>
+  `;
+
+  $("wizOrganizer").addEventListener("input",e=>setField("organizer",e.target.value));
+  $("wizPhone").addEventListener("input",e=>setField("phone",e.target.value));
+  $("wizEmail").addEventListener("input",e=>setField("email",e.target.value));
+}
+
+else if(wizard.step === 8){
+  content.innerHTML = `
+    <h2>Your event is almost ready! 🎉</h2>
+    <p class="wizard-description">
+      Review your information before creating your event space.
+    </p>
+
+    <div class="preview-event" style="margin-bottom:18px">
+      <div class="preview-banner" style="background:${d.color}">
+        <small>YOUR EVENT</small>
+        <h3>${escapeHTML(d.name)}</h3>
+        <small>${escapeHTML(d.type)}</small>
+      </div>
+      <div class="preview-body" style="background:${d.backgroundColor};color:${d.textColor}">
+        <p>${escapeHTML(d.date || "Date to be determined")}</p>
+        <p>${escapeHTML(d.place || "Venue to be determined")}</p>
+      </div>
+    </div>
+
+    <div class="review-item">
+      <small>Event</small>
+      <strong>${escapeHTML(d.name)} — ${escapeHTML(d.type)}</strong>
+    </div>
+
+    <div class="review-item">
+      <small>Date and time</small>
+      <strong>${escapeHTML(d.date || "Not provided")} ${escapeHTML(d.time || "")}</strong>
+    </div>
+
+    <div class="review-item">
+      <small>Location</small>
+      <strong>${escapeHTML([d.place,d.city,d.country].filter(Boolean).join(", ") || "Not provided")}</strong>
+    </div>
+
+    <div class="review-item">
+      <small>People being celebrated</small>
+      <strong>${escapeHTML(wizard.people.filter(p=>p.firstName||p.lastName).map(p=>(p.firstName+" "+p.lastName).trim()).join(", ") || "Not provided")}</strong>
+    </div>
+
+    <div class="review-item">
+      <small>Gift management</small>
+      <strong>${escapeHTML(d.purchaseMode)} · ${escapeHTML(d.visibility)}</strong>
+    </div>
+
+    <div class="review-item">
+      <small>Organizer</small>
+      <strong>${escapeHTML(d.organizer || "Not provided")} ${d.phone ? "· "+escapeHTML(d.phone) : ""}</strong>
+    </div>
+
+    <div class="notice">
+      By clicking "Create My Event", your event space will be saved.
+      You can then add your guests and gift list.
+    </div>
+  `;
+}
+
 
 /* =====================================================
    PERSONNES A L'HONNEUR
@@ -2214,12 +2219,12 @@ function validateWizardStep(){
 
   if(wizard.step===1){
     if(!d.type){
-      alert("Veuillez choisir le type de votre événement.");
+      alert("Please select your event type.");
       return false;
     }
 
     if(!d.name.trim()){
-      alert("Veuillez donner un nom à votre événement.");
+      alert("Please enter a name for your event.");
       return false;
     }
   }
@@ -2228,13 +2233,14 @@ function validateWizardStep(){
     const validPeople = wizard.people.filter(p=>p.firstName.trim() || p.lastName.trim());
 
     if(!validPeople.length){
-      alert("Veuillez indiquer au moins une personne à l'honneur.");
+      alert("Please enter at least one person being celebrated.
+");
       return false;
     }
   }
 
   if(wizard.step===7 && d.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email)){
-    alert("Veuillez saisir une adresse email valide.");
+    alert("Please enter a valid email address.");
     return false;
   }
 
@@ -2310,7 +2316,7 @@ async function createEventFromWizard(){
 
   const btn = $("wizardNext");
   btn.disabled = true;
-  btn.textContent = "Création en cours...";
+  btn.textContent = "Creating...";
 
   const d = wizard.data;
 
@@ -2365,7 +2371,7 @@ parkingDetails: d.parkingDetails,
 
     showStatus(
       "globalStatus",
-      "Félicitations ! Votre événement a été créé avec succès.",
+      "Congratulations! Your event has been created successfully.",
       "ok"
     );
 
