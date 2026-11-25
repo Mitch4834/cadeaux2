@@ -1102,6 +1102,14 @@ adText4: "Réservez cet espace publicitaire.",
 footerThanks: "Merci de contribuer au bonheur de cette journée ❤️",
     buyOnAmazon: "Acheter sur Amazon",
     dateToSpecify: "Date à préciser",
+    serverNotResponding: "Le serveur ne répond pas.",
+invalidServerResponse: "Réponse invalide du serveur.",
+serverContactError: "Impossible de contacter le serveur.",
+    incompletePersonalLink: "Votre lien personnel ne contient pas les informations nécessaires pour accéder à cet espace.",
+eventLoadError: "Impossible de charger l'événement.",
+invalidPersonalInvitation: "Votre invitation personnelle est invalide.",
+    incompleteLinkTitle: "Lien incomplet",
+accessDeniedTitle: "Accès impossible",
   },
   ht: {
     guest: "Chè envite",
@@ -1156,6 +1164,12 @@ adText4: "Rezève espas piblisite sa a.",
 footerThanks: "Mèsi paske w kontribye nan lajwa jounen sa a ❤️",
     buyOnAmazon: "Achte sou Amazon",
     dateToSpecify: "Dat pou presize",
+    serverNotResponding: "Sèvè a pa reponn.",
+invalidServerResponse: "Repons sèvè a pa valab.",
+serverContactError: "Nou pa kapab kontakte sèvè a.",
+    incompletePersonalLink: "Lyen pèsonèl ou a pa gen enfòmasyon ki nesesè pou antre nan espas sa a.",
+eventLoadError: "Nou pa kapab chaje evènman an.",
+invalidPersonalInvitation: "Envitasyon pèsonèl ou a pa valab.",
   },
   en: {
     guest: "Dear guest",
@@ -1210,6 +1224,14 @@ adText4: "Reserve this advertising space.",
 footerThanks: "Thank you for contributing to the joy of this special day ❤️",
     buyOnAmazon: "Buy on Amazon",
     dateToSpecify: "Date to be announced",
+    serverNotResponding: "The server is not responding.",
+invalidServerResponse: "Invalid server response.",
+serverContactError: "Unable to contact the server.",
+    incompletePersonalLink: "Your personal link does not contain the information required to access this page.",
+eventLoadError: "Unable to load the event.",
+invalidPersonalInvitation: "Your personal invitation is invalid.",
+    incompleteLinkTitle: "Incomplete link",
+accessDeniedTitle: "Access denied",
   },
   es: {
     guest: "Estimado invitado",
@@ -1264,6 +1286,14 @@ adText4: "Reserva este espacio publicitario.",
 footerThanks: "Gracias por contribuir a la felicidad de este día ❤️",
     buyOnAmazon: "Comprar en Amazon",
     dateToSpecify: "Fecha por confirmar",
+    serverNotResponding: "El servidor no responde.",
+invalidServerResponse: "Respuesta no válida del servidor.",
+serverContactError: "No se pudo contactar con el servidor.",
+    incompletePersonalLink: "Tu enlace personal no contiene la información necesaria para acceder a este espacio.",
+eventLoadError: "No se pudo cargar el evento.",
+invalidPersonalInvitation: "Tu invitación personal no es válida.",
+    incompleteLinkTitle: "Enlace incompleto",
+accessDeniedTitle: "Acceso no disponible",
   },
   pt: {
     guest: "Caro convidado",
@@ -1318,6 +1348,14 @@ adText4: "Reserve este espaço publicitário.",
 footerThanks: "Obrigado por contribuir para a alegria deste dia ❤️",
     buyOnAmazon: "Comprar na Amazon",
     dateToSpecify: "Data a confirmar",
+    serverNotResponding: "O servidor não está respondendo.",
+invalidServerResponse: "Resposta inválida do servidor.",
+serverContactError: "Não foi possível entrar em contato com o servidor.",
+    incompletePersonalLink: "Seu link pessoal não contém as informações necessárias para acessar esta página.",
+eventLoadError: "Não foi possível carregar o evento.",
+invalidPersonalInvitation: "Seu convite pessoal é inválido.",
+    incompleteLinkTitle: "Link incompleto",
+accessDeniedTitle: "Acesso impossível",
   }
 };
 
@@ -1470,7 +1508,7 @@ function apiRequest(requestParams) {
 
     const timeout = setTimeout(() => {
       cleanup();
-      reject(new Error("Le serveur ne répond pas."));
+      reject(new Error(t("serverNotResponding")));
     }, TIMEOUT);
 
     function cleanup() {
@@ -1487,7 +1525,7 @@ function apiRequest(requestParams) {
       cleanup();
 
       if (!result) {
-        reject(new Error("Réponse invalide du serveur."));
+        reject(new Error(t("invalidServerResponse")));
         return;
       }
 
@@ -1496,7 +1534,7 @@ function apiRequest(requestParams) {
 
     script.onerror = function() {
       cleanup();
-      reject(new Error("Impossible de contacter le serveur."));
+     reject(new Error(t("serverContactError")));
     };
 
     const query = new URLSearchParams({
@@ -1595,8 +1633,8 @@ async function initializePage() {
 
   if (!feteId || !inviteId) {
     showPageError(
-      "Lien incomplet",
-      "Votre lien personnel ne contient pas les informations nécessaires pour accéder à cet espace."
+  t("incompleteLinkTitle"),
+      t("incompletePersonalLink")
     );
     return;
   }
@@ -1623,13 +1661,13 @@ async function initializePage() {
 
     if (!eventResult.success) {
       throw new Error(
-        eventResult.message || "Impossible de charger la fête."
+        eventResult.message || t("eventLoadError")
       );
     }
 
     if (!guestResult.success || !guestResult.guest) {
       throw new Error(
-        guestResult.message || "Votre invitation personnelle est invalide."
+        guestResult.message || t("invalidPersonalInvitation")
       );
     }
 
@@ -1666,7 +1704,7 @@ if (!translations[currentLanguage]) {
   } catch (error) {
 
     showPageError(
-      "Accès impossible",
+  t("accessDeniedTitle"),
       error.message
     );
 
