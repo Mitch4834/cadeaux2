@@ -2038,7 +2038,15 @@ countrySpain: "Espagne",
 countryMali: "Mali",
 countryIvoryCoast: "Côte d’Ivoire",
 countryBenin: "Bénin",
-countrySenegal: "Sénégal",  },
+countrySenegal: "Sénégal",  
+  parkingOnSite: "Parking disponible sur place",
+parkingNearby: "Parking disponible à proximité",
+streetParking: "Stationnement dans la rue",
+noParking: "Aucun parking disponible",
+parkingFree: "Gratuit",
+parkingPaid: "Payant",
+
+  },
 
   ht: {
     loading: "Preparasyon envitasyon ou...",
@@ -2158,7 +2166,12 @@ countryMali: "Mali",
 countryIvoryCoast: "Kotdivwa",
 countryBenin: "Benin",
 countrySenegal: "Senegal",
-    
+  parkingOnSite: "Pakenn disponib sou plas",
+parkingNearby: "Pakenn disponib toupre",
+streetParking: "Pakin nan lari",
+noParking: "Pa gen pakin disponib",
+parkingFree: "Gratis",
+parkingPaid: "Peye",  
   },
 
   en: {
@@ -2279,6 +2292,12 @@ countryMali: "Mali",
 countryIvoryCoast: "Ivory Coast",
 countryBenin: "Benin",
 countrySenegal: "Senegal",
+    parkingOnSite: "Parking available on-site",
+parkingNearby: "Parking available nearby",
+streetParking: "Street parking",
+noParking: "No parking available",
+parkingFree: "Free",
+parkingPaid: "Paid",
   },
 
   es: {
@@ -2400,6 +2419,12 @@ countryMali: "Malí",
 countryIvoryCoast: "Costa de Marfil",
 countryBenin: "Benín",
 countrySenegal: "Senegal",
+    parkingOnSite: "Aparcamiento disponible en el lugar",
+parkingNearby: "Aparcamiento disponible cerca",
+streetParking: "Estacionamiento en la calle",
+noParking: "No hay aparcamiento disponible",
+parkingFree: "Gratis",
+parkingPaid: "De pago",
   },
 
   pt: {
@@ -2521,6 +2546,12 @@ countryMali: "Mali",
 countryIvoryCoast: "Costa do Marfim",
 countryBenin: "Benim",
 countrySenegal: "Senegal",
+    parkingOnSite: "Estacionamento disponível no local",
+parkingNearby: "Estacionamento disponível nas proximidades",
+streetParking: "Estacionamento na rua",
+noParking: "Não há estacionamento disponível",
+parkingFree: "Gratuito",
+parkingPaid: "Pago",
   }
 };
 
@@ -3009,27 +3040,27 @@ function displayParking(event) {
   );
 
   const availabilityLabels = {
-    sur_place: "Parking available on-site",
-    proximite: "Parking available nearby",
-    rue: "Street parking",
-    aucun: "No parking available"
-  };
+  sur_place: t("parkingOnSite"),
+  proximite: t("parkingNearby"),
+  rue: t("streetParking"),
+  aucun: t("noParking")
+};
 
-  const availabilityText =
-    availabilityLabels[String(availability).toLowerCase()] ||
-    availability;
+const availabilityText =
+  availabilityLabels[String(availability).toLowerCase()] ||
+  availability;
 
-  let feeText = "";
+let feeText = "";
 
-  if (String(feeType).toLowerCase() === "Free") {
-    feeText = "Gratuit";
-  } else if (String(feeType).toLowerCase() === "Paid") {
-    feeText = price
-      ? "Paid — " + price
-      : "Paid";
-  } else {
-    feeText = price || "";
-  }
+if (String(feeType).toLowerCase() === "free") {
+  feeText = t("parkingFree");
+} else if (String(feeType).toLowerCase() === "paid") {
+  feeText = price
+    ? t("parkingPaid") + " — " + price
+    : t("parkingPaid");
+} else {
+  feeText = price || "";
+}
 
   const hasInformation =
     availabilityText || feeText || details;
