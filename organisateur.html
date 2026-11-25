@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Espace organisateur | Fête & Cadeaux</title>
+<title>Organizer Dashboard | Party & Gifts</title>
 
 <style>
 :root{
@@ -287,7 +288,8 @@ button{font-family:inherit}
     width: 100%;
   }
 }
-/* ASSISTANT DE CREATION */
+
+/* EVENT CREATION ASSISTANT */
 
 .wizard-panel{overflow:hidden}
 
@@ -519,7 +521,8 @@ button{font-family:inherit}
   .wizard-content h2{font-size:21px}
   .wizard-actions .btn{min-width:0}
 }
-  .trial-banner {
+
+.trial-banner {
   display: flex;
   align-items: flex-start;
   gap: 14px;
@@ -547,7 +550,6 @@ button{font-family:inherit}
 .trial-banner-content small {
   font-size: 12px;
 }
-  
 
 #eventList {
   display: grid;
@@ -661,7 +663,7 @@ button{font-family:inherit}
   }
 }
 
-/* Animation de chargement des cadeaux */
+/* Gift loading animation */
 .gift-loading {
   display: inline-flex;
   align-items: center;
@@ -685,69 +687,68 @@ button{font-family:inherit}
     transform: rotate(360deg);
   }
 }
-
-
 </style>
 </head>
 
 <body>
 
 <header>
-  <h1>🎁 Fête & Cadeaux</h1>
+  <h1>🎁 Party & Gifts</h1>
 
   <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-    <span id="organizerIdentity">Vérification de votre compte...</span>
+    <span id="organizerIdentity">Verifying your account...</span>
 
     <button type="button" class="btn btn-secondary btn-small"
       id="logoutBtn">
-      Déconnexion
+      Log Out
     </button>
   </div>
 </header>
+
 <main class="container">
 
   <section class="welcome">
-    <h2>Bienvenue dans votre espace organisateur</h2>
-    <p>Créez votre événement, personnalisez votre invitation et gérez les cadeaux de vos invités.</p>
+    <h2>Welcome to Your Organizer Dashboard</h2>
+    <p>Create your event, customize your invitation, and manage your guests' gifts.</p>
   </section>
+
   <div id="trialBanner" class="trial-banner hidden">
-  <div class="trial-banner-icon">🎉</div>
+    <div class="trial-banner-icon">🎉</div>
 
-  <div class="trial-banner-content">
-    <strong>Votre période d'essai gratuit est active !</strong>
+    <div class="trial-banner-content">
+      <strong>Your free trial is active!</strong>
 
-    <p>
-      Profitez de 30 jours pour ajouter vos invités et vos cadeaux
-      gratuitement.
-    </p>
+      <p>
+        Enjoy 30 days to add your guests and gifts for free.
+      </p>
 
-    <small>
-      Votre période d'essai se termine le :
-      <strong id="trialEndDate">En attente...</strong>
-    </small>
+      <small>
+        Your free trial ends on:
+        <strong id="trialEndDate">Pending...</strong>
+      </small>
+    </div>
   </div>
-</div>
 
   <div id="globalStatus" class="status"></div>
 
   <section class="stats">
     <div class="stat-card">
-      <small>Événements créés</small>
+      <small>Events Created</small>
       <strong id="eventCount">0</strong>
     </div>
     <div class="stat-card">
-      <small>Invités dans l'événement sélectionné</small>
+      <small>Guests in Selected Event</small>
       <strong id="guestCount">0</strong>
     </div>
     <div class="stat-card">
-      <small>Cadeaux dans l'événement sélectionné</small>
+      <small>Gifts in Selected Event</small>
       <strong id="giftCount">0</strong>
     </div>
   </section>
 
   <div class="layout">
 
-    <!-- COLONNE GAUCHE -->
+    <!-- LEFT COLUMN -->
 
     <div class="stack">
 
@@ -757,11 +758,11 @@ button{font-family:inherit}
           <div class="wizard-brand">
             <div class="wizard-icon">✨</div>
             <div>
-              <strong>Assistant événementiel</strong>
-              <div class="muted">Construisons votre événement ensemble</div>
+              <strong>Event Planning Assistant</strong>
+              <div class="muted">Let's build your event together</div>
             </div>
           </div>
-          <span class="badge" id="wizardStepBadge">Étape 1</span>
+          <span class="badge" id="wizardStepBadge">Step 1</span>
         </div>
 
         <div class="wizard-progress">
@@ -769,18 +770,18 @@ button{font-family:inherit}
         </div>
 
         <div class="wizard-step-label" id="wizardProgressText">
-          Commençons par quelques questions.
+          Let's start with a few questions.
         </div>
 
         <div class="wizard-content" id="wizardContent"></div>
 
         <div class="wizard-actions">
           <button type="button" class="btn btn-secondary" id="wizardBack">
-            ← Retour
+            ← Back
           </button>
 
           <button type="button" class="btn" id="wizardNext">
-            Continuer →
+            Continue →
           </button>
         </div>
 
@@ -788,73 +789,73 @@ button{font-family:inherit}
 
       <section class="panel">
         <div class="section-head">
-          <h3>📅 Mes événements</h3>
-          <span class="badge" id="selectedBadge">Aucun sélectionné</span>
+          <h3>📅 My Events</h3>
+          <span class="badge" id="selectedBadge">None Selected</span>
         </div>
 
         <div id="eventList" class="event-list">
-          <div class="muted">Chargement...</div>
+          <div class="muted">Loading...</div>
         </div>
       </section>
 
     </div>
 
-    <!-- COLONNE DROITE -->
+    <!-- RIGHT COLUMN -->
 
     <div class="stack">
 
       <section class="panel">
 
         <div class="section-head">
-          <h3>Gestion de l'événement</h3>
-          <span id="currentEventType" class="badge">Sélectionnez une fête</span>
+          <h3>Event Management</h3>
+          <span id="currentEventType" class="badge">Select an Event</span>
         </div>
 
         <p id="currentEventName" class="muted">
-          Choisissez un événement dans la liste pour gérer ses invités et ses cadeaux.
+          Select an event from the list to manage its guests and gifts.
         </p>
 
         <div id="eventLinkBox" class="notice hidden">
-          <strong>Lien d'invitation de cet événement</strong>
+          <strong>Invitation Link for This Event</strong>
           <p id="eventLink" style="overflow-wrap:anywhere"></p>
           <button class="btn btn-secondary btn-small" id="copyEventLink" type="button">
-            Copier le lien
+            Copy Link
           </button>
         </div>
 
 <!-- =================================================
-     GESTION DES COLLABORATEURS
+     COLLABORATOR MANAGEMENT
 ================================================= -->
 
 <section class="panel" id="collaboratorPanel"
          style="margin-top:18px">
 
   <div class="section-head">
-    <h3>🤝 Collaborateurs</h3>
-    <span class="badge">Accès partagé</span>
+    <h3>🤝 Collaborators</h3>
+    <span class="badge">Shared Access</span>
   </div>
 
   <p class="muted">
-    Invitez une personne à participer à la gestion de cet événement.
-    Elle pourra accéder uniquement aux fonctionnalités que vous lui autorisez.
+    Invite someone to help manage this event.
+    They will only be able to access the features you authorize.
   </p>
 
   <form id="collaboratorForm">
 
     <div class="form-group">
       <label for="collaboratorEmail">
-        Adresse e-mail du collaborateur *
+        Collaborator's Email Address *
       </label>
 
       <input
         type="email"
         id="collaboratorEmail"
         required
-        placeholder="exemple@email.com">
+        placeholder="example@email.com">
     </div>
 
     <div class="form-group">
-      <label>Autorisations accordées</label>
+      <label>Granted Permissions</label>
 
       <div class="notice" style="margin-top:8px">
 
@@ -863,11 +864,11 @@ button{font-family:inherit}
             type="checkbox"
             id="collaboratorFullAccess"
             style="width:auto">
-          <strong>Accès complet</strong>
+          <strong>Full Access</strong>
         </label>
 
         <p class="muted">
-          Toutes les autorisations de gestion de cet événement.
+          All event management permissions.
         </p>
 
         <hr style="border:0;border-top:1px solid var(--border);margin:14px 0">
@@ -878,7 +879,7 @@ button{font-family:inherit}
             class="collaborator-permission"
             value="annonces_urgentes"
             style="width:auto">
-          📢 Gérer les annonces urgentes
+          📢 Manage Urgent Announcements
         </label>
 
         <label style="display:flex;align-items:center;gap:9px;margin-top:12px">
@@ -887,7 +888,7 @@ button{font-family:inherit}
             class="collaborator-permission"
             value="rapports"
             style="width:auto">
-          📊 Consulter les rapports
+          📊 View Reports
         </label>
 
         <label style="display:flex;align-items:center;gap:9px;margin-top:12px">
@@ -896,7 +897,7 @@ button{font-family:inherit}
             class="collaborator-permission"
             value="invites"
             style="width:auto">
-          👥 Ajouter et gérer les invités
+          👥 Add and Manage Guests
         </label>
 
         <label style="display:flex;align-items:center;gap:9px;margin-top:12px">
@@ -905,16 +906,17 @@ button{font-family:inherit}
             class="collaborator-permission"
             value="cadeaux"
             style="width:auto">
-          🎁 Ajouter et gérer les cadeaux
+          🎁 Add and Manage Gifts
         </label>
-<label style="display:flex;align-items:center;gap:9px;margin-top:12px">
-  <input
-    type="checkbox"
-    class="collaborator-permission"
-    value="temoignages"
-    style="width:auto">
-  ⭐ Consulter les témoignages des invités
-</label>
+
+        <label style="display:flex;align-items:center;gap:9px;margin-top:12px">
+          <input
+            type="checkbox"
+            class="collaborator-permission"
+            value="temoignages"
+            style="width:auto">
+          ⭐ View Guest Testimonials
+        </label>
       </div>
     </div>
 
@@ -922,7 +924,7 @@ button{font-family:inherit}
       type="submit"
       class="btn"
       id="createCollaboratorBtn">
-      Générer le lien d'invitation
+      Generate Invitation Link
     </button>
 
   </form>
@@ -932,11 +934,11 @@ button{font-family:inherit}
   <div id="collaboratorLinkBox"
        class="notice hidden">
 
-    <strong>🔗 Lien d'invitation généré</strong>
+    <strong>🔗 Invitation Link Generated</strong>
 
     <p class="muted">
-      Copiez ce lien et transmettez-le au collaborateur.
-      Il devra se connecter ou créer un compte avec l'adresse e-mail invitée.
+      Copy this link and share it with the collaborator.
+      They must sign in or create an account using the invited email address.
     </p>
 
     <input
@@ -949,7 +951,7 @@ button{font-family:inherit}
       class="btn btn-secondary btn-small"
       id="copyCollaboratorLink"
       style="margin-top:10px">
-      📋 Copier le lien
+      📋 Copy Link
     </button>
 
   </div>
@@ -957,54 +959,54 @@ button{font-family:inherit}
   <hr style="border:0;border-top:1px solid var(--border);margin:22px 0">
 
   <div class="section-head">
-    <h3>Liste des collaborateurs</h3>
+    <h3>Collaborators List</h3>
 
     <button
       type="button"
       class="btn btn-secondary btn-small"
       id="refreshCollaborators">
-      Actualiser
+      Refresh
     </button>
   </div>
 
   <div id="collaboratorList" class="item-list">
     <div class="muted">
-      Sélectionnez un événement pour consulter ses collaborateurs.
+      Select an event to view its collaborators.
     </div>
   </div>
 
 </section>
 
         <section class="panel" id="reportPanel" style="margin-top:18px">
-          <h3>📊 Rapport de l'événement</h3>
+          <h3>📊 Event Report</h3>
 
           <p class="muted">
-            Suivi des confirmations de participation et des réservations de cadeaux.
+            Track attendance confirmations and gift reservations.
           </p>
 
           <div class="stats">
             <div class="stat-card">
-              <small>Invités inscrits</small>
+              <small>Registered Guests</small>
               <strong id="reportGuests">0</strong>
             </div>
             <div class="stat-card">
-              <small>Présences confirmées</small>
+              <small>Confirmed Attendance</small>
               <strong id="reportConfirmed">0</strong>
             </div>
             <div class="stat-card">
-              <small>En attente</small>
+              <small>Pending Responses</small>
               <strong id="reportPending">0</strong>
             </div>
             <div class="stat-card">
-              <small>Absences annoncées</small>
+              <small>Declined Invitations</small>
               <strong id="reportDeclined">0</strong>
             </div>
             <div class="stat-card">
-              <small>Cadeaux disponibles dans la liste</small>
+              <small>Available Gifts</small>
               <strong id="reportGifts">0</strong>
             </div>
             <div class="stat-card">
-              <small>Réservations effectuées</small>
+              <small>Gift Reservations</small>
               <strong id="reportReservations">0</strong>
             </div>
           </div>
@@ -1012,30 +1014,30 @@ button{font-family:inherit}
           <div id="reportStatus" class="status"></div>
 
           <button class="btn btn-secondary" type="button" id="refreshReport">
-            Actualiser le rapport
+            Refresh Report
           </button>
         </section>
+
 <!-- =================================================
-     TÉMOIGNAGES DES INVITÉS
+     GUEST TESTIMONIALS
 ================================================= -->
 
 <section class="panel" id="testimonialPanel" style="margin-top:18px">
 
   <div class="section-head">
-    <h3>⭐ Témoignages des invités</h3>
-    <span class="badge">Avis sur l'événement</span>
+    <h3>⭐ Guest Testimonials</h3>
+    <span class="badge">Event Reviews</span>
   </div>
 
   <p class="muted">
-    Découvrez les impressions et les appréciations des invités
-    concernant votre événement.
+    Read guests' impressions and feedback about your event.
   </p>
 
   <div id="testimonialStatus" class="status"></div>
 
   <div id="testimonialList" class="item-list">
     <div class="muted">
-      Sélectionnez un événement pour consulter ses témoignages.
+      Select an event to view its testimonials.
     </div>
   </div>
 
@@ -1043,33 +1045,33 @@ button{font-family:inherit}
     type="button"
     class="btn btn-secondary"
     id="refreshTestimonials">
-    Actualiser les témoignages
+    Refresh Testimonials
   </button>
 
 </section>
       </section>
 
 <!-- =================================================
-     ANNONCES URGENTES
+     URGENT ANNOUNCEMENTS
 ================================================= -->
 
 <section class="panel" id="announcementPanel">
 
   <div class="section-head">
-    <h3>📢 Annonces urgentes</h3>
-    <span class="badge">Invités confirmés</span>
+    <h3>📢 Urgent Announcements</h3>
+    <span class="badge">Confirmed Guests</span>
   </div>
 
   <p class="muted">
-    Envoyez une information importante aux invités ayant confirmé
-    leur participation à cet événement.
+    Send important updates to guests who have confirmed
+    their attendance at this event.
   </p>
 
   <form id="announcementForm">
 
     <div class="form-group">
       <label for="announcementTitleInput">
-        Titre de l'annonce *
+        Announcement Title *
       </label>
 
       <input
@@ -1077,7 +1079,7 @@ button{font-family:inherit}
         id="announcementTitleInput"
         maxlength="150"
         required
-        placeholder="Ex. Changement de lieu">
+        placeholder="e.g. Change of Venue">
     </div>
 
     <div class="form-group">
@@ -1089,14 +1091,14 @@ button{font-family:inherit}
         id="announcementMessageInput"
         maxlength="3000"
         required
-        placeholder="Rédigez votre information importante..."></textarea>
+        placeholder="Write your important announcement..."></textarea>
     </div>
 
     <button
       type="submit"
       class="btn"
       id="sendAnnouncementBtn">
-      📢 Envoyer l'annonce
+      📢 Send Announcement
     </button>
 
   </form>
@@ -1104,22 +1106,21 @@ button{font-family:inherit}
   <div id="announcementStatus" class="status"></div>
 
   <div class="notice">
-    L'annonce apparaîtra sous forme de popup dans l'invitation
-    personnelle des invités concernés.
+    The announcement will appear as a popup in the personal invitation
+    of the guests concerned.
   </div>
 
   <div id="announcementHistory" class="item-list">
     <div class="muted">
-      Sélectionnez un événement pour gérer ses annonces.
+      Select an event to manage its announcements.
     </div>
   </div>
 
 </section>
 
       <section class="panel" id="guestPanel">
-  <h3>👥 Ajouter un invité</h3>
+  <h3>👥 Add a Guest</h3>
 
-       
 <form id="guestForm">
 
   <div id="guestEntries">
@@ -1127,57 +1128,58 @@ button{font-family:inherit}
     <div class="guest-entry">
 
       <div class="form-group">
-        <label>Nom et prénom *</label>
-        <input class="guest-name" required placeholder="Ex. Jean Dupont">
+        <label>Full Name *</label>
+        <input class="guest-name" required placeholder="e.g. John Smith">
       </div>
-<small>${attendanceStatus}</small>
+
+      <small>${attendanceStatus}</small>
+
       <div class="form-grid">
-  <div class="form-group">
-    <label>Téléphone</label>
-    <input class="guest-phone" type="tel">
-  </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input class="guest-phone" type="tel">
+        </div>
 
-  <div class="form-group">
-    <label>Email</label>
-    <input class="guest-email" type="email">
-  </div>
-</div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input class="guest-email" type="email">
+        </div>
+      </div>
 
-<div class="form-group">
-  <label>🌍 Langue de l'invitation</label>
-  <select class="guest-language">
-    <option value="fr" selected>🇫🇷 Français</option>
-    <option value="ht">🇭🇹 Créole haïtien</option>
-    <option value="en">🇺🇸 Anglais</option>
-    <option value="es">🇪🇸 Espagnol</option>
-    <option value="pt">🇵🇹 Portugais</option>
-  </select>
-</div>
+      <div class="form-group">
+        <label>🌍 Invitation Language</label>
+        <select class="guest-language">
+          <option value="fr" selected>🇫🇷 French</option>
+          <option value="ht">🇭🇹 Haitian Creole</option>
+          <option value="en">🇺🇸 English</option>
+          <option value="es">🇪🇸 Spanish</option>
+          <option value="pt">🇵🇹 Portuguese</option>
+        </select>
+      </div>
 
     </div>
 
   </div>
 
   <button class="btn btn-secondary" type="button" id="addGuestRowBtn">
-    + Ajouter un invité
+    + Add Another Guest
   </button>
 
   <button class="btn" type="submit" id="addGuestBtn">
-    Créer toutes les invitations
+    Create All Invitations
   </button>
 
 </form>
 
-
         <div id="guestStatus" class="status"></div>
         <div class="item-list" id="guestList">
-          <div class="muted">Aucun événement sélectionné.</div>
+          <div class="muted">No event selected.</div>
         </div>
       </section>
 
      <section class="panel" id="giftPanel">
-  <h3>🎁 Ajouter un cadeau</h3>
-       
+  <h3>🎁 Add a Gift</h3>
+
 <form id="giftForm">
 
   <div id="giftEntries">
@@ -1185,24 +1187,24 @@ button{font-family:inherit}
     <div class="gift-entry">
 
       <div class="form-group">
-        <label>Nom du cadeau *</label>
-        <input class="gift-name" required placeholder="Ex. Téléphone portable">
+        <label>Gift Name *</label>
+        <input class="gift-name" required placeholder="e.g. Mobile Phone">
       </div>
 
       <div class="form-group">
         <label>Description</label>
-        <textarea class="gift-description" placeholder="Description du cadeau"></textarea>
+        <textarea class="gift-description" placeholder="Gift description"></textarea>
       </div>
 
       <div class="form-grid">
 
         <div class="form-group">
-          <label>Quantité *</label>
+          <label>Quantity *</label>
           <input class="gift-quantity" type="number" min="1" value="1" required>
         </div>
 
         <div class="form-group">
-          <label>Prix</label>
+          <label>Price</label>
           <input class="gift-price" type="number" min="0" step="0.01" placeholder="0.00">
         </div>
 
@@ -1216,43 +1218,44 @@ button{font-family:inherit}
         </div>
 
         <div class="form-group">
-          <label>Image (URL)</label>
+          <label>Image URL</label>
           <input class="gift-image" type="url" placeholder="https://...">
         </div>
 
       </div>
-<div class="form-group">
-  <label>🔗 Lien affilié Amazon (facultatif)</label>
-  <input
-    class="gift-purchase-link"
-    type="url"
-    placeholder="https://www.amazon.com/dp/...?tag=votre-identifiant">
-  <small class="muted">
-    Collez ici votre lien affilié Amazon Associates.
-  </small>
-</div>
+
+      <div class="form-group">
+        <label>🔗 Amazon Affiliate Link (Optional)</label>
+        <input
+          class="gift-purchase-link"
+          type="url"
+          placeholder="https://www.amazon.com/dp/...?tag=your-affiliate-id">
+        <small class="muted">
+          Paste your Amazon Associates affiliate link here.
+        </small>
+      </div>
+
     </div>
 
   </div>
 
   <button class="btn btn-secondary" type="button" id="addGiftRowBtn">
-    + Ajouter un cadeau
+    + Add Another Gift
   </button>
 
   <button class="btn" type="submit" id="addGiftBtn">
-    Enregistrer tous les cadeaux
+    Save All Gifts
   </button>
 
 </form>
 
-
         <p class="muted">
-          Les images doivent être hébergées en ligne et ajoutées avec leur URL.
+          Images must be hosted online and added using their URL.
         </p>
 
         <div id="giftStatus" class="status"></div>
         <div class="item-list" id="giftList">
-          <div class="muted">Aucun événement sélectionné.</div>
+          <div class="muted">No event selected.</div>
         </div>
       </section>
 
@@ -1260,12 +1263,16 @@ button{font-family:inherit}
   </div>
 
   <div class="notice">
-    Les invités et les cadeaux sont automatiquement associés à l’événement correspondant. Ainsi, les listes, les réservations et les informations de chaque fête restent bien séparées, sans risque de mélange entre plusieurs événements.
+    Guests and gifts are automatically linked to their corresponding event.
+    This keeps each event's guest lists, reservations, and information
+    separate, without mixing data between different events.
   </div>
 
 </main>
+
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+
   <script>
 /* =====================================================
    FIREBASE ET API — ESPACE ORGANISATEUR
