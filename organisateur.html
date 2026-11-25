@@ -2813,14 +2813,15 @@ async function loadTestimonials() {
 
   } catch (error) {
 
-    console.error("Erreur chargement témoignages :", error);
+  console.error("Error loading testimonials:", error);
 
-    container.innerHTML =
-      '<div class="muted">Impossible de charger les témoignages.</div>';
+container.innerHTML =
+  '<div class="muted">Unable to load testimonials.</div>';
 
-    if (status) {
-      status.textContent = error.message;
-      status.className = "status error";
+if (status) {
+  status.textContent = error.message;
+  status.className = "status error";
+
     }
 
   }
@@ -2975,19 +2976,19 @@ async function selectEvent(id) {
 
     }
 
-    // Annonces urgentes
-    if (hasPermission("annonces_urgentes")) {
+    // Urgent Announcements
+if (hasPermission("annonces_urgentes")) {
 
-      await loadAnnouncements();
+  await loadAnnouncements();
 
-    } else if ($("announcementHistory")) {
+} else if ($("announcementHistory")) {
 
-      $("announcementHistory").innerHTML =
-        '<div class="muted">Vous ne disposez pas de l’autorisation pour consulter les annonces.</div>';
+  $("announcementHistory").innerHTML =
+    '<div class="muted">You do not have permission to view announcements.</div>';
 
-    }
-    
-// Témoignages des invités
+}
+
+// Guest Testimonials
 if (hasPermission("temoignages")) {
 
   await loadTestimonials();
@@ -2995,19 +2996,21 @@ if (hasPermission("temoignages")) {
 } else if ($("testimonialList")) {
 
   $("testimonialList").innerHTML =
-    '<div class="muted">Vous ne disposez pas de l’autorisation pour consulter les témoignages.</div>';
+    '<div class="muted">You do not have permission to view testimonials.</div>';
 
-}  } catch (err) {
+}
 
-    console.error(err);
+} catch (err) {
 
-    showStatus(
-      "globalStatus",
-      err.message,
-      "error"
-    );
+  console.error(err);
 
-  }
+  showStatus(
+    "globalStatus",
+    err.message,
+    "error"
+  );
+
+}
 }
 /* =====================================================
    LIENS PERSONNELS DES INVITES
@@ -3040,7 +3043,7 @@ async function copyGuestInvitationLink(link) {
   if (!link) {
     showStatus(
       "guestStatus",
-      "Impossible de générer le lien de cet invité.",
+      "Unable to generate this guest's invitation link.",
       "error"
     );
     return;
@@ -3069,13 +3072,13 @@ async function copyGuestInvitationLink(link) {
       textarea.remove();
 
       if (!copied) {
-        throw new Error("Copie impossible.");
+        throw new Error("Copy failed.");
       }
     }
 
     showStatus(
       "guestStatus",
-      "Lien personnel copié ! Vous pouvez maintenant l'envoyer à votre invité.",
+      "Personal invitation link copied! You can now send it to your guest.",
       "ok"
     );
 
@@ -3083,7 +3086,7 @@ async function copyGuestInvitationLink(link) {
 
     showStatus(
       "guestStatus",
-      "La copie automatique a échoué. Sélectionnez et copiez le lien affiché.",
+      "Automatic copying failed. Please select and copy the displayed link.",
       "error"
     );
 
@@ -3093,10 +3096,6 @@ async function copyGuestInvitationLink(link) {
    INVITES
 ===================================================== */
 
-
-/* =====================================================
-   INVITES
-===================================================== */
 
 function renderGuests(guests) {
 
@@ -3112,14 +3111,14 @@ function renderGuests(guests) {
           .trim()
           .toUpperCase();
 
-        let attendanceStatus = "Cet invité est en attente";
+        let attendanceStatus = "This guest is awaiting confirmation";
         let attendanceColor = "#b7791f";
 
         if (attendance === "OUI") {
-          attendanceStatus = "Cet invité sera présent";
+          attendanceStatus = "This guest will attend";
           attendanceColor = "#729c12";
         } else if (attendance === "NON") {
-          attendanceStatus = "Cet invité sera absent";
+          attendanceStatus = "This guest will not attend";
           attendanceColor = "#d9534f";
         }
 
@@ -3146,12 +3145,12 @@ function renderGuests(guests) {
               </small>
 
               <small>
-                ID invité : ${escapeHTML(g.id)}
+                Guest ID: ${escapeHTML(g.id)}
               </small>
 
               <div class="guest-personal-link">
 
-                <small>🔗 LIEN PERSONNEL D'INVITATION</small>
+                <small>🔗 PERSONAL INVITATION LINK</small>
 
                 <a
                   href="${escapeHTML(personalLink)}"
@@ -3171,7 +3170,7 @@ function renderGuests(guests) {
                 type="button"
                 data-copy-guest="${escapeHTML(personalLink)}">
 
-                📋 Copier le lien
+                📋 Copy Link
 
               </button>
 
@@ -3180,7 +3179,7 @@ function renderGuests(guests) {
                 type="button"
                 data-delete-guest="${escapeHTML(g.id)}">
 
-                Désactiver
+                Deactivate
 
               </button>
 
@@ -3191,10 +3190,10 @@ function renderGuests(guests) {
 
       }).join("")
 
-    : '<div class="muted">Aucun invité enregistré pour cette fête.</div>';
+    : '<div class="muted">No guests have been registered for this event.</div>';
 
 
-  // Boutons de copie des liens personnels
+  // Personal invitation link copy buttons
 
   $("guestList")
     .querySelectorAll("[data-copy-guest]")
@@ -3211,7 +3210,7 @@ function renderGuests(guests) {
     });
 
 
-  // Boutons de désactivation
+  // Guest deactivation buttons
 
   $("guestList")
     .querySelectorAll("[data-delete-guest]")
@@ -3222,7 +3221,7 @@ function renderGuests(guests) {
         if (!selectedEvent || !selectedEventId) {
           return showStatus(
             "guestStatus",
-            "Sélectionnez d'abord un événement.",
+            "Please select an event first.",
             "error"
           );
         }
@@ -3241,12 +3240,12 @@ function renderGuests(guests) {
         if (!canDeleteGuest) {
           return showStatus(
             "guestStatus",
-            "Vous n'avez pas l'autorisation de désactiver les invités.",
+            "You do not have permission to deactivate guests.",
             "error"
           );
         }
 
-        if (!confirm("Désactiver cet invité ?")) return;
+        if (!confirm("Deactivate this guest?")) return;
 
         try {
 
@@ -3260,7 +3259,7 @@ function renderGuests(guests) {
 
           showStatus(
             "guestStatus",
-            "Invité désactivé avec succès.",
+            "Guest successfully deactivated.",
             "ok"
           );
 
@@ -3280,9 +3279,11 @@ function renderGuests(guests) {
 
 }
 
+
 /* =====================================================
    CADEAUX
 ===================================================== */
+
 
 
 
@@ -3318,23 +3319,23 @@ function renderGifts(gifts){
               </strong>
 
               <small>
-                ${escapeHTML(g.description || "Aucune description")}
+                ${escapeHTML(g.description || "No description")}
               </small>
 
               <small>
-                Quantité : ${g.quantity}
-                · Réservés : ${g.reserved}
-                · Restants : ${g.remaining}
+                Quantity: ${g.quantity}
+                · Reserved: ${g.reserved}
+                · Remaining: ${g.remaining}
               </small>
 
               ${g.price
-                ? `<small>Prix indicatif : ${escapeHTML(g.price)}</small>`
+                ? `<small>Estimated price: ${escapeHTML(g.price)}</small>`
                 : ""}
 
               ${g.image ? `
                 <small>
                   <a href="${escapeHTML(g.image)}"
-                    target="_blank" rel="noopener">Voir l'image</a>
+                    target="_blank" rel="noopener">View image</a>
                 </small>` : ""}
 
               <div style="
@@ -3345,7 +3346,7 @@ function renderGifts(gifts){
               ">
 
                 <strong style="font-size:13px;">
-                  👥 Invité(s) ayant réservé :
+                  👥 Guest(s) who reserved:
                 </strong>
 
                 ${
@@ -3361,7 +3362,7 @@ function renderGifts(gifts){
                     `
                     : `
                       <small style="display:block;margin-top:5px;">
-                        Aucun invité n'a encore réservé ce cadeau.
+                        No guest has reserved this gift yet.
                       </small>
                     `
                 }
@@ -3369,8 +3370,8 @@ function renderGifts(gifts){
               </div>
 
               ${g.taken
-                ? '<small style="color:#b45309;font-weight:bold;">Cadeau épuisé</small>'
-                : '<small style="color:#15803d;font-weight:bold;">Disponible</small>'}
+                ? '<small style="color:#b45309;font-weight:bold;">Gift fully reserved</small>'
+                : '<small style="color:#15803d;font-weight:bold;">Available</small>'}
 
             </div>
 
@@ -3382,7 +3383,7 @@ function renderGifts(gifts){
                   data-move-gift="${escapeHTML(g.id)}"
                   data-direction="up"
                   ${index === 0 ? "disabled" : ""}>
-                  ↑ Monter
+                  ↑ Move Up
                 </button>
 
                 <button class="btn"
@@ -3390,13 +3391,13 @@ function renderGifts(gifts){
                   data-move-gift="${escapeHTML(g.id)}"
                   data-direction="down"
                   ${index === gifts.length - 1 ? "disabled" : ""}>
-                  ↓ Descendre
+                  ↓ Move Down
                 </button>
 
                 <button class="btn btn-danger"
                   type="button"
                   data-delete-gift="${escapeHTML(g.id)}">
-                  Désactiver
+                  Deactivate
                 </button>
               ` : ""}
 
@@ -3406,10 +3407,10 @@ function renderGifts(gifts){
 
       }).join("")
 
-    : '<div class="muted">Aucun cadeau enregistré pour cette fête.</div>';
+    : '<div class="muted">No gifts have been registered for this event.</div>';
 
 
-  // Déplacement des cadeaux
+  // Gift reordering
   $("giftList").querySelectorAll("[data-move-gift]").forEach(btn => {
 
     btn.addEventListener("click", async () => {
@@ -3417,7 +3418,7 @@ function renderGifts(gifts){
       if (!selectedEvent || !selectedEventId) {
         return showStatus(
           "giftStatus",
-          "Sélectionnez d'abord un événement.",
+          "Please select an event first.",
           "error"
         );
       }
@@ -3451,7 +3452,7 @@ function renderGifts(gifts){
 
         showStatus(
           "giftStatus",
-          "⏳ Déplacement du cadeau en cours...",
+          "⏳ Moving gift...",
           "info"
         );
 
@@ -3466,7 +3467,7 @@ function renderGifts(gifts){
         $("giftStatus").innerHTML = `
           <span class="gift-loading">
             <span class="gift-loading-spinner"></span>
-            Déplacement du cadeau en cours...
+            Moving gift...
           </span>
         `;
         $("giftStatus").className = "status";
@@ -3482,7 +3483,7 @@ function renderGifts(gifts){
   });
 
 
-  // Désactivation des cadeaux
+  // Gift deactivation
   $("giftList").querySelectorAll("[data-delete-gift]").forEach(btn => {
 
     btn.addEventListener("click", async () => {
@@ -3490,12 +3491,12 @@ function renderGifts(gifts){
       if (!selectedEvent || !selectedEventId) {
         return showStatus(
           "giftStatus",
-          "Sélectionnez d'abord un événement.",
+          "Please select an event first.",
           "error"
         );
       }
 
-      if (!confirm("Désactiver ce cadeau ?")) return;
+      if (!confirm("Deactivate this gift?")) return;
 
       try {
 
@@ -3518,6 +3519,7 @@ function renderGifts(gifts){
   });
 
 }
+
 
 /* =====================================================
    RAPPORT
