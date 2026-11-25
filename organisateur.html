@@ -2185,7 +2185,7 @@ function renderWizardPeople(){
     });
   });
 
-  $("wizardAddPerson").addEventListener("click",()=>{
+    $("wizardAddPerson").addEventListener("click",()=>{
     wizard.people.push({
       firstName:"",
       lastName:"",
@@ -2197,36 +2197,7 @@ function renderWizardPeople(){
   });
 }
 
-  `).join("");
-
-  container.querySelectorAll("[data-person-index]").forEach(row=>{
-    const index = Number(row.dataset.personIndex);
-
-    row.querySelectorAll("[data-person-field]").forEach(input=>{
-      input.addEventListener("input",()=>{
-        wizard.people[index][input.dataset.personField] = input.value;
-      });
-    });
-  });
-
-  container.querySelectorAll("[data-remove-person]").forEach(btn=>{
-    btn.addEventListener("click",()=>{
-      wizard.people.splice(Number(btn.dataset.removePerson),1);
-      renderWizardPeople();
-    });
-  });
-
-  $("wizardAddPerson").addEventListener("click",()=>{
-    wizard.people.push({
-      firstName:"",
-      lastName:"",
-      role:"",
-      birthDate:"",
-      description:""
-    });
-    renderWizardPeople();
-  });
-}
+function updatePalettePreview(){
 
 function updatePalettePreview(){
 
