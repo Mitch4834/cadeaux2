@@ -3526,6 +3526,7 @@ function renderGifts(gifts){
 ===================================================== */
 
 
+
 async function loadEventReport() {
 
   if (!selectedEventId || !selectedEvent) return;
@@ -3538,11 +3539,11 @@ async function loadEventReport() {
     permissions.includes("FULL") ||
     permissions.includes("rapports");
 
-  // Vérification des permissions
+  // Permission check
   if (!canViewReports) {
     showStatus(
       "reportStatus",
-      "Vous n'avez pas l'autorisation de consulter les rapports.",
+      "You do not have permission to view reports.",
       "error"
     );
     return;
@@ -3577,24 +3578,25 @@ async function loadEventReport() {
   }
 }
 
-// Actualiser uniquement le rapport
+// Refresh report only
 $("refreshReport").addEventListener("click", async () => {
 
   const button = $("refreshReport");
 
   button.disabled = true;
-  button.textContent = "Actualisation en cours...";
+  button.textContent = "Refreshing...";
 
   await loadEventReport();
 
   button.disabled = false;
-  button.textContent = "Actualiser le rapport";
+  button.textContent = "Refresh Report";
 
 });
 
 /* =================================================
    CHARGER L'HISTORIQUE DES ANNONCES
 ================================================= */
+
 
 async function loadAnnouncements() {
 
@@ -3604,12 +3606,12 @@ async function loadAnnouncements() {
 
   if (!selectedEventId || !selectedEvent) {
     history.innerHTML =
-      '<div class="muted">Sélectionnez un événement.</div>';
+      '<div class="muted">Please select an event.</div>';
     return;
   }
 
   history.innerHTML =
-    '<div class="muted">Chargement des annonces...</div>';
+    '<div class="muted">Loading announcements...</div>';
 
   try {
 
@@ -3624,7 +3626,7 @@ async function loadAnnouncements() {
 
     if (!annonces.length) {
       history.innerHTML =
-        '<div class="muted">Aucune annonce pour cet événement.</div>';
+        '<div class="muted">No announcements for this event.</div>';
       return;
     }
 
@@ -3646,7 +3648,7 @@ async function loadAnnouncements() {
           <div
             id="announcement-report-${id}"
             class="announcement-report">
-            <span class="muted">Chargement des statistiques...</span>
+            <span class="muted">Loading statistics...</span>
           </div>
 
         </div>
@@ -3654,17 +3656,17 @@ async function loadAnnouncements() {
 
     }).join("");
 
-    // Charger les statistiques de chaque annonce
+    // Load statistics for each announcement
     annonces.forEach(annonce => {
       loadAnnouncementReport(annonce.id);
     });
 
   } catch (error) {
 
-    console.error("Erreur chargement annonces :", error);
+    console.error("Error loading announcements:", error);
 
     history.innerHTML =
-      '<div class="status-error">Impossible de charger les annonces.</div>';
+      '<div class="status-error">Unable to load announcements.</div>';
 
   }
 }
@@ -3672,6 +3674,7 @@ async function loadAnnouncements() {
     /* =================================================
    RAPPORT DE LECTURE D'UNE ANNONCE
 ================================================= */
+
 
 
 async function loadAnnouncementReport(announcementId) {
@@ -3690,15 +3693,15 @@ async function loadAnnouncementReport(announcementId) {
     permissions.includes("FULL") ||
     permissions.includes("rapports");
 
-  // Bloquer l'accès aux statistiques
+  // Restrict access to statistics
   if (!canViewReports) {
     container.innerHTML =
-      '<span class="muted">Vous n’avez pas l’autorisation de consulter ces statistiques.</span>';
+      '<span class="muted">You do not have permission to view these statistics.</span>';
     return;
   }
 
   container.innerHTML =
-    '<span class="muted">Chargement...</span>';
+    '<span class="muted">Loading...</span>';
 
   try {
 
@@ -3714,43 +3717,45 @@ async function loadAnnouncementReport(announcementId) {
 
     container.innerHTML = `
       <div class="announcement-stats">
-        <p><strong>Destinataires :</strong> ${result.total_destinataires}</p>
-        <p><strong>Ont vu :</strong> ${result.nombre_vues}</p>
-        <p><strong>Pas encore vu :</strong> ${result.nombre_non_vues}</p>
+        <p><strong>Recipients:</strong> ${result.total_destinataires}</p>
+        <p><strong>Viewed:</strong> ${result.nombre_vues}</p>
+        <p><strong>Not viewed yet:</strong> ${result.nombre_non_vues}</p>
       </div>
 
       <div class="announcement-guests">
-        <strong>Détail des invités :</strong>
+        <strong>Guest Details:</strong>
 
         ${invites.length
           ? invites.map(invite => `
               <div class="announcement-guest-row">
                 <span>${escapeHTML(invite.nom)}</span>
                 <span class="${invite.statut === "VU" ? "status-ok" : "status-pending"}">
-                  ${invite.statut === "VU" ? "✓ Vu" : "◷ Non vu"}
+                  ${invite.statut === "VU" ? "✓ Viewed" : "◷ Not viewed"}
                 </span>
               </div>
             `).join("")
-          : '<p class="muted">Aucun destinataire.</p>'
+          : '<p class="muted">No recipients.</p>'
         }
       </div>
     `;
 
   } catch (error) {
 
-    console.error("Erreur rapport annonce :", error);
+    console.error("Announcement report error:", error);
 
     container.innerHTML =
-      '<span class="status-error">Impossible de charger les lectures.</span>';
+      '<span class="status-error">Unable to load viewing statistics.</span>';
 
   }
 }
+
 
 /* =====================================================
    AJOUT MULTIPLE D'INVITES
 ===================================================== */
 
-// Ajouter un nouveau formulaire identique
+
+// Add another identical guest form
 $("addGuestRowBtn").addEventListener("click", () => {
 
   const container = $("guestEntries");
@@ -3762,25 +3767,27 @@ $("addGuestRowBtn").addEventListener("click", () => {
     <hr>
 
     <div class="form-group">
-      <label>Nom et prénom *</label>
-      <input class="guest-name" required placeholder="Ex. Marie Pierre">
+      <label>Full Name *</label>
+      <input class="guest-name" required placeholder="e.g. Marie Pierre">
     </div>
 
     <div class="form-grid">
       <div class="form-group">
-        <label>Téléphone</label>
+        <label>Phone</label>
         <input class="guest-phone" type="tel">
       </div>
-<div class="form-group">
-  <label>🌍 Langue de l'invitation</label>
-  <select class="guest-language">
-    <option value="fr" selected>🇫🇷 Français</option>
-    <option value="ht">🇭🇹 Créole haïtien</option>
-    <option value="en">🇺🇸 Anglais</option>
-    <option value="es">🇪🇸 Espagnol</option>
-    <option value="pt">🇵🇹 Portugais</option>
-  </select>
-</div>
+
+      <div class="form-group">
+        <label>🌍 Invitation Language</label>
+        <select class="guest-language">
+          <option value="fr" selected>🇫🇷 French</option>
+          <option value="ht">🇭🇹 Haitian Creole</option>
+          <option value="en">🇺🇸 English</option>
+          <option value="es">🇪🇸 Spanish</option>
+          <option value="pt">🇵🇹 Portuguese</option>
+        </select>
+      </div>
+
       <div class="form-group">
         <label>Email</label>
         <input class="guest-email" type="email">
@@ -3788,7 +3795,7 @@ $("addGuestRowBtn").addEventListener("click", () => {
     </div>
 
     <button type="button" class="btn btn-danger remove-guest-btn">
-      Retirer cet invité
+      Remove this guest
     </button>
   `;
 
@@ -3804,7 +3811,7 @@ $("addGuestRowBtn").addEventListener("click", () => {
 });
 
 
-// Créer toutes les invitations
+// Create all invitations
 $("guestForm").addEventListener("submit", async e => {
 
   e.preventDefault();
@@ -3812,7 +3819,7 @@ $("guestForm").addEventListener("submit", async e => {
   if (!selectedEvent || !selectedEventId) {
     return showStatus(
       "guestStatus",
-      "Sélectionnez d'abord un événement.",
+      "Please select an event first.",
       "error"
     );
   }
@@ -3828,7 +3835,7 @@ $("guestForm").addEventListener("submit", async e => {
   if (!canManageGuests) {
     return showStatus(
       "guestStatus",
-      "Vous n'avez pas l'autorisation de gérer les invités.",
+      "You do not have permission to manage guests.",
       "error"
     );
   }
@@ -3836,7 +3843,7 @@ $("guestForm").addEventListener("submit", async e => {
   if (!selectedEventId) {
     return showStatus(
       "guestStatus",
-      "Sélectionnez d'abord un événement.",
+      "Please select an event first.",
       "error"
     );
   }
@@ -3848,7 +3855,7 @@ $("guestForm").addEventListener("submit", async e => {
   if (!entries.length) {
     return showStatus(
       "guestStatus",
-      "Ajoutez au moins un invité.",
+      "Please add at least one guest.",
       "error"
     );
   }
@@ -3887,13 +3894,13 @@ $("guestForm").addEventListener("submit", async e => {
     $("guestEntries").innerHTML = `
       <div class="guest-entry">
         <div class="form-group">
-          <label>Nom et prénom *</label>
-          <input class="guest-name" required placeholder="Ex. Jean Dupont">
+          <label>Full Name *</label>
+          <input class="guest-name" required placeholder="e.g. John Smith">
         </div>
 
         <div class="form-grid">
           <div class="form-group">
-            <label>Téléphone</label>
+            <label>Phone</label>
             <input class="guest-phone" type="tel">
           </div>
 
@@ -3901,36 +3908,37 @@ $("guestForm").addEventListener("submit", async e => {
             <label>Email</label>
             <input class="guest-email" type="email">
           </div>
+
           <div class="form-group">
-  <label>🌍 Langue de l'invitation</label>
-  <select class="guest-language">
-    <option value="fr" selected>🇫🇷 Français</option>
-    <option value="ht">🇭🇹 Créole haïtien</option>
-    <option value="en">🇺🇸 Anglais</option>
-    <option value="es">🇪🇸 Espagnol</option>
-    <option value="pt">🇵🇹 Portugais</option>
-  </select>
-</div>
+            <label>🌍 Invitation Language</label>
+            <select class="guest-language">
+              <option value="fr" selected>🇫🇷 French</option>
+              <option value="ht">🇭🇹 Haitian Creole</option>
+              <option value="en">🇺🇸 English</option>
+              <option value="es">🇪🇸 Spanish</option>
+              <option value="pt">🇵🇹 Portuguese</option>
+            </select>
+          </div>
         </div>
       </div>
     `;
 
-     await selectEvent(selectedEventId);
+    await selectEvent(selectedEventId);
 
     showStatus(
       "guestStatus",
-      successCount + " invitation(s) créée(s) avec succès !",
+      successCount + " invitation(s) successfully created!",
       "ok"
     );
 
   } catch (err) {
 
-     await selectEvent(selectedEventId);
+    await selectEvent(selectedEventId);
 
     showStatus(
       "guestStatus",
       successCount > 0
-        ? successCount + " invité(s) ajouté(s). Une erreur a interrompu la suite : " + err.message
+        ? successCount + " guest(s) added. An error interrupted the remaining process: " + err.message
         : err.message,
       "error"
     );
@@ -3945,12 +3953,12 @@ $("guestForm").addEventListener("submit", async e => {
 });
 
 
-
 /* =====================================================
    AJOUT MULTIPLE DE CADEAUX
 ===================================================== */
 
-// Ajouter un nouveau formulaire cadeau
+
+// Add a new gift form
 $("addGiftRowBtn").addEventListener("click", () => {
 
   const container = $("giftEntries");
@@ -3962,23 +3970,23 @@ $("addGiftRowBtn").addEventListener("click", () => {
     <hr>
 
     <div class="form-group">
-      <label>Nom du cadeau *</label>
-      <input class="gift-name" required placeholder="Ex. Téléphone portable">
+      <label>Gift Name *</label>
+      <input class="gift-name" required placeholder="e.g. Mobile phone">
     </div>
 
     <div class="form-group">
       <label>Description</label>
-      <textarea class="gift-description" placeholder="Description du cadeau"></textarea>
+      <textarea class="gift-description" placeholder="Gift description"></textarea>
     </div>
 
     <div class="form-grid">
       <div class="form-group">
-        <label>Quantité *</label>
+        <label>Quantity *</label>
         <input class="gift-quantity" type="number" min="1" value="1" required>
       </div>
 
       <div class="form-group">
-        <label>Prix</label>
+        <label>Price</label>
         <input class="gift-price" type="number" min="0" step="0.01" placeholder="0.00">
       </div>
     </div>
@@ -3996,7 +4004,7 @@ $("addGiftRowBtn").addEventListener("click", () => {
     </div>
 
     <button type="button" class="btn btn-danger remove-gift-btn">
-      Retirer ce cadeau
+      Remove this gift
     </button>
   `;
 
@@ -4010,14 +4018,14 @@ $("addGiftRowBtn").addEventListener("click", () => {
 });
 
 
-// Enregistrer tous les cadeaux
+// Save all gifts
 $("giftForm").addEventListener("submit", async e => {
 
   e.preventDefault();
   if (!selectedEvent || !selectedEventId) {
     return showStatus(
       "giftStatus",
-      "Sélectionnez d'abord un événement.",
+      "Please select an event first.",
       "error"
     );
   }
@@ -4033,14 +4041,14 @@ $("giftForm").addEventListener("submit", async e => {
   if (!canManageGifts) {
     return showStatus(
       "giftStatus",
-      "Vous n'avez pas l'autorisation de gérer les cadeaux.",
+      "You do not have permission to manage gifts.",
       "error"
     );
   }
   if (!selectedEventId) {
     return showStatus(
       "giftStatus",
-      "Sélectionnez d'abord un événement.",
+      "Please select an event first.",
       "error"
     );
   }
@@ -4067,7 +4075,8 @@ $("giftForm").addEventListener("submit", async e => {
       const price = entry.querySelector(".gift-price").value;
       const emoji = entry.querySelector(".gift-emoji").value.trim();
       const image = entry.querySelector(".gift-image").value.trim();
-const purchaseLink = entry.querySelector(".gift-purchase-link").value.trim();
+      const purchaseLink = entry.querySelector(".gift-purchase-link").value.trim();
+
       await api({
         action: "addGift",
         event_id: selectedEventId,
@@ -4087,23 +4096,23 @@ const purchaseLink = entry.querySelector(".gift-purchase-link").value.trim();
     $("giftEntries").innerHTML = `
       <div class="gift-entry">
         <div class="form-group">
-          <label>Nom du cadeau *</label>
-          <input class="gift-name" required placeholder="Ex. Téléphone portable">
+          <label>Gift Name *</label>
+          <input class="gift-name" required placeholder="e.g. Mobile phone">
         </div>
 
         <div class="form-group">
           <label>Description</label>
-          <textarea class="gift-description" placeholder="Description du cadeau"></textarea>
+          <textarea class="gift-description" placeholder="Gift description"></textarea>
         </div>
 
         <div class="form-grid">
           <div class="form-group">
-            <label>Quantité *</label>
+            <label>Quantity *</label>
             <input class="gift-quantity" type="number" min="1" value="1" required>
           </div>
 
           <div class="form-group">
-            <label>Prix</label>
+            <label>Price</label>
             <input class="gift-price" type="number" min="0" step="0.01" placeholder="0.00">
           </div>
         </div>
@@ -4119,16 +4128,17 @@ const purchaseLink = entry.querySelector(".gift-purchase-link").value.trim();
             <input class="gift-image" type="url" placeholder="https://...">
           </div>
         </div>
-<div class="form-group">
-  <label>🔗 Lien affilié Amazon (facultatif)</label>
-  <input
-    class="gift-purchase-link"
-    type="url"
-    placeholder="https://www.amazon.com/dp/...?tag=votre-identifiant">
-  <small class="muted">
-    Collez ici votre lien affilié Amazon Associates.
-  </small>
-</div>
+
+        <div class="form-group">
+          <label>🔗 Amazon Affiliate Link (optional)</label>
+          <input
+            class="gift-purchase-link"
+            type="url"
+            placeholder="https://www.amazon.com/dp/...?tag=your-tracking-id">
+          <small class="muted">
+            Paste your Amazon Associates affiliate link here.
+          </small>
+        </div>
       </div>
     `;
 
@@ -4136,18 +4146,18 @@ const purchaseLink = entry.querySelector(".gift-purchase-link").value.trim();
 
     showStatus(
       "giftStatus",
-      successCount + " cadeau(x) enregistré(s) avec succès !",
+      successCount + " gift(s) successfully saved!",
       "ok"
     );
 
   } catch (err) {
 
-     await selectEvent(selectedEventId);
+    await selectEvent(selectedEventId);
 
     showStatus(
       "giftStatus",
       successCount > 0
-        ? successCount + " cadeau(x) enregistré(s). Une erreur a interrompu la suite : " + err.message
+        ? successCount + " gift(s) saved. An error interrupted the remaining process: " + err.message
         : err.message,
       "error"
     );
@@ -4165,22 +4175,25 @@ const purchaseLink = entry.querySelector(".gift-purchase-link").value.trim();
    COPIER LE LIEN
 ===================================================== */
 
-$("copyEventLink").addEventListener("click",async()=>{
 
-  const text=$("eventLink").textContent;
+$("copyEventLink").addEventListener("click", async () => {
 
-  try{
+  const text = $("eventLink").textContent;
+
+  try {
 
     await navigator.clipboard.writeText(text);
 
-    showStatus("globalStatus","Lien copié.","ok");
+    showStatus("globalStatus", "Link copied.", "ok");
 
-  }catch(e){
+  } catch (e) {
 
-    showStatus("globalStatus","Copiez manuellement le lien affiché.","error");
+    showStatus("globalStatus", "Please copy the displayed link manually.", "error");
 
   }
+
 });
+
     /* =====================================================
    INTERACTIONS DES PERMISSIONS COLLABORATEUR
 ===================================================== */
@@ -4211,13 +4224,14 @@ collaboratorPermissions.forEach(permission => {
    CRÉATION D'UNE INVITATION COLLABORATEUR
 ===================================================== */
 
+
 document.getElementById("collaboratorForm")
   .addEventListener("submit", async (e) => {
 
     e.preventDefault();
 
     if (!selectedEventId) {
-      alert("Veuillez d'abord sélectionner un événement.");
+      alert("Please select an event first.");
       return;
     }
 
@@ -4240,13 +4254,13 @@ document.getElementById("collaboratorForm")
     const linkBox = document.getElementById("collaboratorLinkBox");
 
     if (!permissions.length) {
-      status.textContent = "Veuillez choisir au moins une autorisation.";
+      status.textContent = "Please select at least one permission.";
       status.className = "status error";
       return;
     }
 
     button.disabled = true;
-    button.textContent = "Génération en cours...";
+    button.textContent = "Generating...";
     status.textContent = "";
     linkBox.classList.add("hidden");
 
@@ -4263,24 +4277,25 @@ document.getElementById("collaboratorForm")
 
       linkBox.classList.remove("hidden");
 
-      status.textContent = "Lien d'invitation généré avec succès.";
+      status.textContent = "Invitation link successfully generated.";
       status.className = "status success";
 
       document.getElementById("collaboratorEmail").value = "";
 
     } catch (error) {
-      status.textContent = error.message || "Une erreur est survenue.";
+      status.textContent = error.message || "An error occurred.";
       status.className = "status error";
 
     } finally {
       button.disabled = false;
-      button.textContent = "Générer le lien d'invitation";
+      button.textContent = "Generate Invitation Link";
     }
   });
 
 /* =====================================================
    COPIER LE LIEN D'INVITATION
 ===================================================== */
+
 
 document.getElementById("copyCollaboratorLink")
   .addEventListener("click", async () => {
@@ -4295,34 +4310,36 @@ document.getElementById("copyCollaboratorLink")
       await navigator.clipboard.writeText(link);
 
       document.getElementById("collaboratorStatus").textContent =
-        "Lien copié avec succès !";
+        "Link copied successfully!";
 
       document.getElementById("collaboratorStatus").className =
         "status success";
 
     } catch (error) {
       document.getElementById("collaboratorStatus").textContent =
-        "Impossible de copier automatiquement. Veuillez copier le lien manuellement.";
+        "Unable to copy automatically. Please copy the link manually.";
 
       document.getElementById("collaboratorStatus").className =
         "status error";
     }
   });
 
+
     /* =====================================================
    CHARGEMENT DE LA LISTE DES COLLABORATEURS
 ===================================================== */
+
 
 async function loadCollaborators() {
 
   const list = document.getElementById("collaboratorList");
 
   if (!selectedEventId) {
-    list.textContent = "Sélectionnez un événement.";
+    list.textContent = "Please select an event.";
     return;
   }
 
-  list.textContent = "Chargement des collaborateurs...";
+  list.textContent = "Loading collaborators...";
 
   try {
 
@@ -4334,7 +4351,7 @@ async function loadCollaborators() {
     list.innerHTML = "";
 
     if (!result.collaborators || !result.collaborators.length) {
-      list.textContent = "Aucun collaborateur pour cet événement.";
+      list.textContent = "No collaborators for this event.";
       return;
     }
 
@@ -4350,22 +4367,22 @@ async function loadCollaborators() {
       const status = document.createElement("p");
       status.className = "muted";
       status.textContent =
-        "Statut : " + collaborator.status;
+        "Status: " + collaborator.status;
 
       const permissions = document.createElement("p");
       permissions.className = "muted";
 
       const permissionLabels = {
-  FULL: "Accès complet",
-  annonces_urgentes: "Annonces urgentes",
-  rapports: "Rapports",
-  invites: "Gestion des invités",
-  cadeaux: "Gestion des cadeaux",
-  temoignages: "Consultation des témoignages"
-};
+        FULL: "Full access",
+        annonces_urgentes: "Urgent announcements",
+        rapports: "Reports",
+        invites: "Guest management",
+        cadeaux: "Gift management",
+        temoignages: "View testimonials"
+      };
 
       permissions.textContent =
-        "Autorisations : " +
+        "Permissions: " +
         (collaborator.permissions || [])
           .map(p => permissionLabels[p] || p)
           .join(", ");
@@ -4381,26 +4398,28 @@ async function loadCollaborators() {
   } catch (error) {
 
     list.textContent =
-      error.message || "Impossible de charger les collaborateurs.";
+      error.message || "Unable to load collaborators.";
 
   }
 }
 
-/* Actualiser la liste */
+/* Refresh the list */
 
 document.getElementById("refreshCollaborators")
   .addEventListener("click", loadCollaborators);
 
+
 /* =====================================================
    ACTUALISER LES TÉMOIGNAGES
 ===================================================== */
+
 
 $("refreshTestimonials").addEventListener("click", async () => {
 
   if (!selectedEventId || !selectedEvent) {
     return showStatus(
       "testimonialStatus",
-      "Veuillez d'abord sélectionner un événement.",
+      "Please select an event first.",
       "error"
     );
   }
@@ -4416,7 +4435,7 @@ $("refreshTestimonials").addEventListener("click", async () => {
   if (!canViewTestimonials) {
     return showStatus(
       "testimonialStatus",
-      "Vous n'avez pas l'autorisation de consulter les témoignages.",
+      "You do not have permission to view testimonials.",
       "error"
     );
   }
@@ -4424,19 +4443,21 @@ $("refreshTestimonials").addEventListener("click", async () => {
   const button = $("refreshTestimonials");
 
   button.disabled = true;
-  button.textContent = "Actualisation...";
+  button.textContent = "Refreshing...";
 
   try {
     await loadTestimonials();
   } finally {
     button.disabled = false;
-    button.textContent = "Actualiser les témoignages";
+    button.textContent = "Refresh Testimonials";
   }
 
 });
+
 /* =====================================================
    SESSION ORGANISATEUR
 ===================================================== */
+
 
 $("logoutBtn").addEventListener("click", async () => {
   try {
@@ -4457,24 +4478,25 @@ auth.onAuthStateChanged(async user => {
   currentOrganizer = user;
 
   $("organizerIdentity").textContent =
-    user.displayName || user.email || "Organisateur";
+    user.displayName || user.email || "Organizer";
 
   try {
 
-  // Récupérer la période d'essai
-  try {
-    await loadTrialStatus();
-  } catch (trialError) {
-    console.error(
-      "Erreur de récupération de l'essai :",
-      trialError
-    );
-  }
+    // Retrieve the trial period status
+    try {
+      await loadTrialStatus();
+    } catch (trialError) {
+      console.error(
+        "Error retrieving trial status:",
+        trialError
+      );
+    }
 
-  await loadEvents();
+    await loadEvents();
+
     showStatus(
       "globalStatus",
-      "Bienvenue dans votre espace organisateur.",
+      "Welcome to your organizer dashboard.",
       "ok"
     );
 
@@ -4489,6 +4511,7 @@ auth.onAuthStateChanged(async user => {
   }
 
 });
+
 /* =====================================================
    INITIALISATION DU TABLEAU DE BORD
 ===================================================== */
@@ -4499,6 +4522,7 @@ updateWizardTheme();
    ENVOYER UNE ANNONCE URGENTE
 ================================================= */
 
+
 $("announcementForm").addEventListener("submit", async function(e) {
 
   e.preventDefault();
@@ -4506,7 +4530,7 @@ $("announcementForm").addEventListener("submit", async function(e) {
   if (!selectedEvent || !selectedEventId) {
     return showStatus(
       "announcementStatus",
-      "Veuillez d'abord sélectionner un événement.",
+      "Please select an event first.",
       "error"
     );
   }
@@ -4522,7 +4546,7 @@ $("announcementForm").addEventListener("submit", async function(e) {
   if (!canSendAnnouncement) {
     return showStatus(
       "announcementStatus",
-      "Vous n'avez pas l'autorisation d'envoyer des annonces urgentes.",
+      "You do not have permission to send urgent announcements.",
       "error"
     );
   }
@@ -4533,7 +4557,7 @@ $("announcementForm").addEventListener("submit", async function(e) {
   if (!titre || !message) {
     showStatus(
       "announcementStatus",
-      "Veuillez remplir le titre et le message.",
+      "Please fill in both the title and the message.",
       "error"
     );
     return;
@@ -4542,7 +4566,7 @@ $("announcementForm").addEventListener("submit", async function(e) {
   const button = $("sendAnnouncementBtn");
 
   button.disabled = true;
-  button.textContent = "Envoi en cours...";
+  button.textContent = "Sending...";
 
   try {
 
@@ -4561,7 +4585,7 @@ $("announcementForm").addEventListener("submit", async function(e) {
       "announcementStatus",
       result.message + " " +
       result.nombre_destinataires +
-      " invité(s) concerné(s).",
+      " guest(s) affected.",
       "ok"
     );
 
@@ -4569,16 +4593,19 @@ $("announcementForm").addEventListener("submit", async function(e) {
 
     showStatus(
       "announcementStatus",
-      error.message || "Impossible d'envoyer l'annonce.",
+      error.message || "Unable to send the announcement.",
       "error"
     );
 
   } finally {
 
     button.disabled = false;
-    button.textContent = "📢 Envoyer l'annonce";
+    button.textContent = "📢 Send Announcement";
 
   }
+
+});
+
 
 });
 </script>
