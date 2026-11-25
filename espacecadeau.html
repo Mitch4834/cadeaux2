@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mon espace cadeaux | Fête & Cadeaux</title>
+<title>My Gift Space | Party & Gifts</title>
 
 <style>
 :root {
@@ -928,10 +928,10 @@ button {
 
 <header class="hero">
   <div class="hero-content">
-    <div class="brand">🎁 Fête & Cadeaux</div>
-    <h1 id="heroTitle">Une belle fête se prépare !</h1>
+    <div class="brand">🎁 Party & Gifts</div>
+    <h1 id="heroTitle">A wonderful celebration is on the way!</h1>
     <p id="heroDescription">
-      Découvrez la liste de cadeaux de notre événement.
+      Explore our event gift list.
     </p>
   </div>
 </header>
@@ -940,9 +940,9 @@ button {
 
   <section class="welcome-card">
     <div class="welcome-icon">💝</div>
-    <h2 id="welcomeTitle">Bienvenue dans votre espace cadeau</h2>
+    <h2 id="welcomeTitle">Welcome to your gift page</h2>
     <p id="welcomeMessage">
-      Choisissez le cadeau que vous souhaitez offrir.
+      Choose the gift you would like to give.
     </p>
   </section>
 
@@ -950,8 +950,8 @@ button {
   <div class="event-detail">
     <div class="event-detail-icon">🎉</div>
     <div>
-      <div class="event-detail-label" id="eventLabel">Événement</div>
-      <div class="event-detail-value" id="eventName">Chargement...</div>
+      <div class="event-detail-label" id="eventLabel">Event</div>
+      <div class="event-detail-value" id="eventName">Loading...</div>
     </div>
   </div>
 </section>
@@ -959,16 +959,15 @@ button {
    
 
   <section class="section-heading">
-    <h2 id="giftsHeading">Notre liste de cadeaux 🎁</h2>
+    <h2 id="giftsHeading">Our Gift List 🎁</h2>
     <p id="giftsIntroduction">
-      Découvrez les cadeaux proposés et sélectionnez celui
-      que vous souhaitez offrir.
+      Explore the available gifts and select the one you would like to give.
     </p>
   </section>
 
   <div class="legend">
-    <span><i class="dot"></i> <span id="legendAvailable">Disponible</span></span>
-    <span><i class="dot unavailable"></i> <span id="legendUnavailable">Indisponible</span></span>
+    <span><i class="dot"></i> <span id="legendAvailable">Available</span></span>
+    <span><i class="dot unavailable"></i> <span id="legendUnavailable">Unavailable</span></span>
   </div>
 
   <div id="message" class="message"></div>
@@ -976,7 +975,7 @@ button {
   <section class="gift-grid" id="giftGrid">
     <div class="loading">
       <div class="spinner"></div>
-      <span id="initialLoading">Chargement de votre espace cadeau...</span>
+      <span id="initialLoading">Loading your gift page...</span>
     </div>
   </section>
 
@@ -987,14 +986,11 @@ button {
   <div class="footer-cta">
 
     <h2 id="footerHeading">
-      Et si la prochaine belle célébration était la vôtre ?
+      What if your next great celebration was yours?
     </h2>
 
     <p id="footerDescription">
-      Mariage, anniversaire, fiançailles, baby shower...
-      Organisez votre événement et laissez vos invités
-      confirmer leur présence et réserver leurs cadeaux
-      en toute simplicité.
+      Wedding, birthday, engagement, baby shower...Organize your event and let your guests easily confirm their attendance and reserve their gifts.
     </p>
 
     <a
@@ -1002,7 +998,7 @@ button {
       class="create-event-button"
       id="createEventButton"
     >
-      🎉 Créer mon événement
+      🎉 Create My Event
     </a>
 
   </div>
@@ -1011,18 +1007,18 @@ button {
   <div class="advertising-area">
     <div class="advertising-banner" id="giftPageAdFooter">
       <div class="advertising-placeholder">
-        <span class="advertising-label" id="adLabel2">Publicité</span>
-        <span id="adText3">Votre marque mérite d'être visible !</span>
+        <span class="advertising-label" id="adLabel2">Advertisement</span>
+        <span id="adText3">Your brand deserves to be seen!</span>
         <br>
-        <span id="adText4">Réservez cet espace publicitaire.</span>
+        <span id="adText4">Reserve this advertising space.</span>
       </div>
     </div>
   </div>
 
   <div class="footer-brand">
-    <span id="footerThanks">Merci de contribuer au bonheur de cette journée ❤️</span>
+    <span id="footerThanks">Thank you for making this day even more special ❤️</span>
     <br>
-    <strong>Fête & Cadeaux</strong>
+    <strong>Party & Gifts</strong>
   </div>
 
 </footer>
@@ -1321,7 +1317,7 @@ footerThanks: "Obrigado por contribuir para a alegria deste dia ❤️",
 };
 
 function t(key) {
-  return translations[currentLanguage]?.[key] || translations.fr[key] || key;
+  return translations[currentLanguage]?.[key] || translations.en[key] || key;
 }
   
 function applyStaticTranslations() {
