@@ -1110,6 +1110,13 @@ eventLoadError: "Impossible de charger l'événement.",
 invalidPersonalInvitation: "Votre invitation personnelle est invalide.",
     incompleteLinkTitle: "Lien incomplet",
 accessDeniedTitle: "Accès impossible",
+    previousAd: "Publicité précédente",
+nextAd: "Publicité suivante",
+    advertisement: "PUBLICITÉ",
+    advertiser: "Annonceur",
+    discoverAdvertiser: "Découvrez notre annonceur",
+    learnMore: "En savoir plus",
+    showAdvertisement: "Afficher la publicité",
   },
   ht: {
     guest: "Chè envite",
@@ -1170,6 +1177,14 @@ serverContactError: "Nou pa kapab kontakte sèvè a.",
     incompletePersonalLink: "Lyen pèsonèl ou a pa gen enfòmasyon ki nesesè pou antre nan espas sa a.",
 eventLoadError: "Nou pa kapab chaje evènman an.",
 invalidPersonalInvitation: "Envitasyon pèsonèl ou a pa valab.",
+    previousAd: "Piblisite anvan an",
+nextAd: "Piblisite apre a",
+    advertisement: "PWOMOSYON",
+    advertiser: "Piblisitè",
+    discoverAdvertiser: "Dekouvri piblisitè nou an",
+    learnMore: "Aprann plis",
+    showAdvertisement: "Montre piblisite a",
+
   },
   en: {
     guest: "Dear guest",
@@ -1232,6 +1247,13 @@ eventLoadError: "Unable to load the event.",
 invalidPersonalInvitation: "Your personal invitation is invalid.",
     incompleteLinkTitle: "Incomplete link",
 accessDeniedTitle: "Access denied",
+    previousAd: "Previous advertisement",
+nextAd: "Next advertisement",
+    advertisement: "ADVERTISEMENT",
+    advertiser: "Advertiser",
+    discoverAdvertiser: "Discover our advertiser",
+    learnMore: "Learn more",
+    showAdvertisement: "Show advertisement",
   },
   es: {
     guest: "Estimado invitado",
@@ -1294,6 +1316,13 @@ eventLoadError: "No se pudo cargar el evento.",
 invalidPersonalInvitation: "Tu invitación personal no es válida.",
     incompleteLinkTitle: "Enlace incompleto",
 accessDeniedTitle: "Acceso no disponible",
+    previousAd: "Publicidad anterior",
+nextAd: "Publicidad siguiente",
+    advertisement: "PUBLICIDAD",
+    advertiser: "Anunciante",
+    discoverAdvertiser: "Descubre a nuestro anunciante",
+    learnMore: "Más información",
+    showAdvertisement: "Mostrar publicidad",
   },
   pt: {
     guest: "Caro convidado",
@@ -1356,6 +1385,13 @@ eventLoadError: "Não foi possível carregar o evento.",
 invalidPersonalInvitation: "Seu convite pessoal é inválido.",
     incompleteLinkTitle: "Link incompleto",
 accessDeniedTitle: "Acesso impossível",
+    previousAd: "Publicidade anterior",
+nextAd: "Publicidade seguinte",
+    advertisement: "PUBLICIDADE",
+    advertiser: "Anunciante",
+    discoverAdvertiser: "Conheça nosso anunciante",
+    learnMore: "Saiba mais",
+    showAdvertisement: "Mostrar publicidade",
   }
 };
 
@@ -2209,9 +2245,9 @@ async function chooseGift(giftId) {
     await loadGifts();
 
     showMessage(
-      "🎉 " + t("reservationFinal") +
-      " « " + gift.name + " ». " +
-      guestName + " !",
+    "🎉 " + t("reservationFinal") +
+" \"" + gift.name + "\". " +
+guestName + "!"
       "success"
     );
 
@@ -2362,13 +2398,13 @@ function createAdvertisingCarousel(ads, container, id) {
   previous.type = "button";
   previous.className = "ad-arrow ad-prev";
   previous.textContent = "‹";
-  previous.setAttribute("aria-label", "Publicité précédente");
+  previous.setAttribute("aria-label="${t("previousAd")}"");
 
   const next = document.createElement("button");
   next.type = "button";
   next.className = "ad-arrow ad-next";
   next.textContent = "›";
-  next.setAttribute("aria-label", "Publicité suivante");
+  next.setAttribute("aria-label="${t("nextAd")}"");
 
   ads.forEach((ad, index) => {
 
@@ -2415,7 +2451,7 @@ function createAdvertisingCarousel(ads, container, id) {
 
       image.className = "ad-slide-image";
       image.src = imageUrl;
-      image.alt = advertiser || "Publicité";
+      image.alt =advertiser || t("advertiser");
       image.loading = "lazy";
 
       image.onerror = function() {
@@ -2430,10 +2466,10 @@ function createAdvertisingCarousel(ads, container, id) {
 
     const label = document.createElement("span");
     label.className = "advertising-label";
-    label.textContent = "PUBLICITÉ";
+    label.textContent = "t("advertisement")";
 
     const title = document.createElement("h3");
-    title.textContent = advertiser || "Découvrez notre annonceur";
+    title.textContent = advertiser || t("discoverAdvertiser");
 
     content.append(label, title);
 
@@ -2451,7 +2487,7 @@ function createAdvertisingCarousel(ads, container, id) {
       link.href = destination;
       link.target = "_blank";
       link.rel = "noopener noreferrer";
-      link.textContent = buttonText || "En savoir plus";
+      link.textContent = buttonText || t("learnMore");
 
       content.appendChild(link);
     }
@@ -2466,7 +2502,7 @@ function createAdvertisingCarousel(ads, container, id) {
 
     indicator.setAttribute(
       "aria-label",
-      "Afficher la publicité " + (index + 1)
+      t("showAdvertisement") + " " + (index + 1)
     );
 
     indicator.addEventListener("click", function() {
