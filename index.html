@@ -668,7 +668,52 @@ const ORGANIZER_URL = "organisateur.html";
 
   </div>
 </section>
+<!-- STATISTICS -->
+<section class="stats-section">
+  <div class="container">
 
+    <div class="section-heading-wrap">
+      <span class="section-label">Our Community</span>
+      <h2 class="section-heading">Party & Gifts in Numbers</h2>
+      <p class="section-description">
+        Discover the activity and engagement of our event community.
+      </p>
+    </div>
+
+    <div class="stats-grid">
+
+      <div class="stat-card">
+        <span class="stat-icon">🎉</span>
+        <strong id="statEvents">0</strong>
+        <p>Events Created</p>
+      </div>
+
+      <div class="stat-card">
+        <span class="stat-icon">👥</span>
+        <strong id="statGuests">0</strong>
+        <p>Guests Invited</p>
+      </div>
+
+      <div class="stat-card">
+        <span class="stat-icon">🎁</span>
+        <strong id="statReservations">0</strong>
+        <p>Gift Reservations</p>
+      </div>
+
+      <div class="stat-card">
+        <span class="stat-icon">💌</span>
+        <strong id="statAttendance">0</strong>
+        <p>Confirmed Attendances</p>
+      </div>
+
+    </div>
+
+    <p id="statsStatus" class="stats-status" aria-live="polite">
+      Loading statistics...
+    </p>
+
+  </div>
+</section>
 
 <!-- FEATURES -->
 
@@ -926,52 +971,41 @@ const ORGANIZER_URL = "organisateur.html";
 </section>
 
   
-<!-- STATISTICS -->
-<section class="stats-section">
+<!-- TESTIMONIALS -->
+<section class="testimonials-section">
   <div class="container">
 
     <div class="section-heading-wrap">
-      <span class="section-label">Our Community</span>
-      <h2 class="section-heading">Party & Gifts in Numbers</h2>
+      <span class="section-label">Testimonials</span>
+      <h2 class="section-heading">
+        What Our Users Think About Party & Gifts
+      </h2>
       <p class="section-description">
-        Discover the activity and engagement of our event community.
+        Every experience matters. Share yours and help others discover
+        a simpler way to organize their celebrations.
       </p>
     </div>
 
-    <div class="stats-grid">
+    <div class="testimonial-cta">
+      <h3>Have You Used Party & Gifts?</h3>
+      <p>
+        Whether you organized an event or attended one,
+        we'd love to hear about your experience.
+        Your feedback helps us improve the platform.
+      </p>
 
-      <div class="stat-card">
-        <span class="stat-icon">🎉</span>
-        <strong id="statEvents">0</strong>
-        <p>Events Created</p>
-      </div>
-
-      <div class="stat-card">
-        <span class="stat-icon">👥</span>
-        <strong id="statGuests">0</strong>
-        <p>Guests Invited</p>
-      </div>
-
-      <div class="stat-card">
-        <span class="stat-icon">🎁</span>
-        <strong id="statReservations">0</strong>
-        <p>Gift Reservations</p>
-      </div>
-
-      <div class="stat-card">
-        <span class="stat-icon">💌</span>
-        <strong id="statAttendance">0</strong>
-        <p>Confirmed Attendances</p>
-      </div>
-
+      <button
+        type="button"
+        class="testimonial-button"
+        onclick="openTestimonialModal()">
+        💜 Share Your Testimonial
+      </button>
     </div>
-
-    <p id="statsStatus" class="stats-status" aria-live="polite">
-      Loading statistics...
-    </p>
 
   </div>
 </section>
+
+
 
 <!-- APPEL À L'ACTION -->
 <section class="cta">
