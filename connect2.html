@@ -1694,36 +1694,40 @@ data-i18n-title="mapTitle"
   </div>
 </div>
 
-  <!-- POPUP DE TÉMOIGNAGE -->
+ 
+<!-- POPUP DE TÉMOIGNAGE -->
 <div id="testimonialModal" class="attendance-modal hidden">
 
   <div class="attendance-box">
 
     <div class="attendance-icon">💚</div>
 
-   <h2 id="testimonialTitle">We'd Love to Hear Your Feedback!</h2>
+    <h2 id="testimonialTitle" data-i18n="testimonialTitle">
+      We'd Love to Hear Your Feedback!
+    </h2>
 
-<p id="testimonialDescription">
-  Share Your Experience With Us.
-</p>
+    <p id="testimonialDescription" data-i18n="testimonialDescription">
+      Share Your Experience With Us.
+    </p>
 
     <form id="testimonialForm">
 
       <input type="hidden" id="testimonialType" value="">
-      <label for="testimonialRating">
+
+      <label for="testimonialRating" data-i18n="testimonialRating">
         Your Rating
       </label>
 
       <select id="testimonialRating" required>
-        <option value="">Select a Rating</option>
-        <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
-        <option value="4">⭐⭐⭐⭐ Very Good</option>
-        <option value="3">⭐⭐⭐ Good</option>
-        <option value="2">⭐⭐ Average</option>
-        <option value="1">⭐ Disappointing</option>
+        <option value="" data-i18n="selectRating">Select a Rating</option>
+        <option value="5" data-i18n="ratingExcellent">⭐⭐⭐⭐⭐ Excellent</option>
+        <option value="4" data-i18n="ratingVeryGood">⭐⭐⭐⭐ Very Good</option>
+        <option value="3" data-i18n="ratingGood">⭐⭐⭐ Good</option>
+        <option value="2" data-i18n="ratingAverage">⭐⭐ Average</option>
+        <option value="1" data-i18n="ratingDisappointing">⭐ Disappointing</option>
       </select>
 
-      <label for="testimonialMessage">
+      <label for="testimonialMessage" data-i18n="testimonialMessage">
         Your Testimonial
       </label>
 
@@ -1732,79 +1736,94 @@ data-i18n-title="mapTitle"
         rows="5"
         maxlength="1000"
         required
+        data-i18n-placeholder="testimonialMessagePlaceholder"
         placeholder="Tell Us About Your Experience...">
       </textarea>
 
-      
-<div id="testimonialIdentityContainer">
+      <div id="testimonialIdentityContainer">
 
-  <h3>How Would You Like to Be Identified?</h3>
+        <h3 data-i18n="testimonialIdentityTitle">
+          How Would You Like to Be Identified?
+        </h3>
 
-  <label for="testimonialAuthorName">Your Name</label>
-  <input
-    type="text"
-    id="testimonialAuthorName"
-    maxlength="100"
-    placeholder="Your Name">
+        <label for="testimonialAuthorName" data-i18n="yourName">
+          Your Name
+        </label>
 
-  <label for="testimonialCountry">Your Country *</label>
-<select id="testimonialCountry" required>
-  <option value="">Select Your Country</option>
-  <option value="Haïti">Haïti</option>
-  <option value="United States">United States</option>
-  <option value="Canada">Canada</option>
-  <option value="France">France</option>
-  <option value="Spain">Spain</option>
-  <option value="Mali">Mali</option>
-  <option value="Ivory Coast">Ivory Coast</option>
-  <option value="Benin">Benin</option>
-  <option value="Senegal">Senegal</option>
-  <option value="Other Country">Other Country</option>
-</select>
+        <input
+          type="text"
+          id="testimonialAuthorName"
+          maxlength="100"
+          data-i18n-placeholder="yourName"
+          placeholder="Your Name">
 
-<label for="testimonialRegion" id="testimonialRegionLabel">
-  Département / Région *
-</label>
-<input
-  type="text"
-  id="testimonialRegion"
-  maxlength="100"
-  required
-  placeholder="Your Department or Region">
+        <label for="testimonialCountry" data-i18n="yourCountry">
+          Your Country *
+        </label>
 
- <label for="testimonialCity">Your City *</label>
-<input
-  type="text"
-  id="testimonialCity"
-  maxlength="100"
-  required
-  placeholder="Your City">
+        <select id="testimonialCountry" required>
+          <option value="" data-i18n="selectCountry">Select Your Country</option>
+          <option value="Haiti">Haiti</option>
+          <option value="United States">United States</option>
+          <option value="Canada">Canada</option>
+          <option value="France">France</option>
+          <option value="Spain">Spain</option>
+          <option value="Mali">Mali</option>
+          <option value="Ivory Coast">Ivory Coast</option>
+          <option value="Benin">Benin</option>
+          <option value="Senegal">Senegal</option>
+          <option value="Other Country" data-i18n="otherCountry">Other Country</option>
+        </select>
 
-  <label for="testimonialPublication">
-    Would You Like to Publish Your Testimonial?
-  </label>
+        <label for="testimonialRegion" id="testimonialRegionLabel" data-i18n="departmentRegion">
+          Department / Region *
+        </label>
 
-  <select id="testimonialPublication">
-    <option value="NAME">
-      Yes, With My Name
-    </option>
-    <option value="ANONYME">
-      Yes, Anonymously
-    </option>
-    <option value="NO">
-      No, I Prefer to Keep It Private
-    </option>
-  </select>
+        <input
+          type="text"
+          id="testimonialRegion"
+          maxlength="100"
+          required
+          data-i18n-placeholder="departmentRegionPlaceholder"
+          placeholder="Your Department or Region">
 
-</div>
+        <label for="testimonialCity" data-i18n="yourCity">
+          Your City *
+        </label>
 
+        <input
+          type="text"
+          id="testimonialCity"
+          maxlength="100"
+          required
+          data-i18n-placeholder="yourCity"
+          placeholder="Your City">
+
+        <label for="testimonialPublication" data-i18n="testimonialPublication">
+          Would You Like to Publish Your Testimonial?
+        </label>
+
+        <select id="testimonialPublication">
+          <option value="NAME" data-i18n="publishWithName">
+            Yes, With My Name
+          </option>
+          <option value="ANONYME" data-i18n="publishAnonymously">
+            Yes, Anonymously
+          </option>
+          <option value="NO" data-i18n="keepPrivate">
+            No, I Prefer to Keep It Private
+          </option>
+        </select>
+
+      </div>
 
       <p id="testimonialMessageStatus"></p>
 
       <button
         type="submit"
         id="testimonialSubmitButton"
-        class="attendance-submit">
+        class="attendance-submit"
+        data-i18n="submitTestimonial">
         Submit My Testimonial
       </button>
 
@@ -1812,7 +1831,6 @@ data-i18n-title="mapTitle"
 
   </div>
 </div>
-  
 
 
 <!-- POPUP D'ANNONCE URGENTE -->
@@ -1962,6 +1980,30 @@ serverContactError: "Impossible de contacter le serveur.",
 announcementLoadError: "Impossible de récupérer les annonces.",
 announcementSaveError: "La lecture n'a pas pu être enregistrée.",
 genericError: "Une erreur est survenue. Veuillez réessayer.",
+    testimonialTitle: "Votre avis nous intéresse !",
+testimonialDescription: "Partagez votre expérience avec nous.",
+testimonialRating: "Votre note",
+selectRating: "Choisir une note",
+ratingExcellent: "⭐⭐⭐⭐⭐ Excellent",
+ratingVeryGood: "⭐⭐⭐⭐ Très bien",
+ratingGood: "⭐⭐⭐ Bien",
+ratingAverage: "⭐⭐ Moyen",
+ratingDisappointing: "⭐ Décevant",
+testimonialMessage: "Votre témoignage",
+testimonialMessagePlaceholder: "Racontez-nous votre expérience...",
+testimonialIdentityTitle: "Comment souhaitez-vous apparaître ?",
+yourName: "Votre nom",
+yourCountry: "Votre pays *",
+selectCountry: "Sélectionnez votre pays",
+otherCountry: "Autre pays",
+departmentRegion: "Département / Région *",
+departmentRegionPlaceholder: "Votre département ou région",
+yourCity: "Votre ville *",
+testimonialPublication: "Souhaitez-vous publier votre témoignage ?",
+publishWithName: "Oui, avec mon nom",
+publishAnonymously: "Oui, de façon anonyme",
+keepPrivate: "Non, je préfère le garder privé",
+submitTestimonial: "Envoyer mon témoignage",
   absent: "ℹ️ Vous avez indiqué votre absence",
   missedEvent: "💌 Vous avez raté cet événement. Nous espérons vous retrouver lors d'une prochaine occasion !",
   },
@@ -2045,6 +2087,30 @@ serverContactError: "Enposib pou kontakte sèvè a.",
 announcementLoadError: "Enposib pou jwenn anons yo.",
 announcementSaveError: "Lekti a pa t kapab anrejistre.",
 genericError: "Yon erè rive. Tanpri eseye ankò.",
+    testimonialTitle: "Opinyon ou enpòtan pou nou!",
+testimonialDescription: "Pataje eksperyans ou avèk nou.",
+testimonialRating: "Nòt ou",
+selectRating: "Chwazi yon nòt",
+ratingExcellent: "⭐⭐⭐⭐⭐ Ekselan",
+ratingVeryGood: "⭐⭐⭐⭐ Trè byen",
+ratingGood: "⭐⭐⭐ Byen",
+ratingAverage: "⭐⭐ Mwayen",
+ratingDisappointing: "⭐ Desevan",
+testimonialMessage: "Temwayaj ou",
+testimonialMessagePlaceholder: "Rakonte nou eksperyans ou...",
+testimonialIdentityTitle: "Ki jan ou ta renmen parèt?",
+yourName: "Non ou",
+yourCountry: "Peyi ou *",
+selectCountry: "Chwazi peyi ou",
+otherCountry: "Lòt peyi",
+departmentRegion: "Depatman / Rejyon *",
+departmentRegionPlaceholder: "Depatman oswa rejyon ou",
+yourCity: "Vil ou *",
+testimonialPublication: "Èske ou ta renmen pibliye temwayaj ou?",
+publishWithName: "Wi, avèk non mwen",
+publishAnonymously: "Wi, san non mwen",
+keepPrivate: "Non, mwen prefere kenbe l prive",
+submitTestimonial: "Voye temwayaj mwen",
   absent: "ℹ️ Ou fè konnen ou pap vini",
   missedEvent: "💌 Ou rate evènman sa a. Nou espere wè ou nan yon lòt okazyon!",
     
@@ -2130,6 +2196,30 @@ serverContactError: "Unable to contact the server.",
 announcementLoadError: "Unable to retrieve announcements.",
 announcementSaveError: "The announcement could not be marked as read.",
 genericError: "An error occurred. Please try again.",
+    testimonialTitle: "We'd Love to Hear Your Feedback!",
+testimonialDescription: "Share Your Experience With Us.",
+testimonialRating: "Your Rating",
+selectRating: "Select a Rating",
+ratingExcellent: "⭐⭐⭐⭐⭐ Excellent",
+ratingVeryGood: "⭐⭐⭐⭐ Very Good",
+ratingGood: "⭐⭐⭐ Good",
+ratingAverage: "⭐⭐ Average",
+ratingDisappointing: "⭐ Disappointing",
+testimonialMessage: "Your Testimonial",
+testimonialMessagePlaceholder: "Tell Us About Your Experience...",
+testimonialIdentityTitle: "How Would You Like to Be Identified?",
+yourName: "Your Name",
+yourCountry: "Your Country *",
+selectCountry: "Select Your Country",
+otherCountry: "Other Country",
+departmentRegion: "Department / Region *",
+departmentRegionPlaceholder: "Your Department or Region",
+yourCity: "Your City *",
+testimonialPublication: "Would You Like to Publish Your Testimonial?",
+publishWithName: "Yes, With My Name",
+publishAnonymously: "Yes, Anonymously",
+keepPrivate: "No, I Prefer to Keep It Private",
+submitTestimonial: "Submit My Testimonial",
  absent: "ℹ️ You have indicated that you cannot attend",
   missedEvent: "💌 You missed this event. We hope to see you at another occasion!",
   },
@@ -2214,6 +2304,30 @@ serverContactError: "No se puede contactar con el servidor.",
 announcementLoadError: "No se pudieron recuperar los anuncios.",
 announcementSaveError: "No se pudo registrar la lectura.",
 genericError: "Se produjo un error. Por favor, inténtelo de nuevo.",
+    testimonialTitle: "¡Nos interesa tu opinión!",
+testimonialDescription: "Comparte tu experiencia con nosotros.",
+testimonialRating: "Tu valoración",
+selectRating: "Selecciona una valoración",
+ratingExcellent: "⭐⭐⭐⭐⭐ Excelente",
+ratingVeryGood: "⭐⭐⭐⭐ Muy bien",
+ratingGood: "⭐⭐⭐ Bien",
+ratingAverage: "⭐⭐ Regular",
+ratingDisappointing: "⭐ Decepcionante",
+testimonialMessage: "Tu testimonio",
+testimonialMessagePlaceholder: "Cuéntanos tu experiencia...",
+testimonialIdentityTitle: "¿Cómo te gustaría aparecer?",
+yourName: "Tu nombre",
+yourCountry: "Tu país *",
+selectCountry: "Selecciona tu país",
+otherCountry: "Otro país",
+departmentRegion: "Departamento / Región *",
+departmentRegionPlaceholder: "Tu departamento o región",
+yourCity: "Tu ciudad *",
+testimonialPublication: "¿Deseas publicar tu testimonio?",
+publishWithName: "Sí, con mi nombre",
+publishAnonymously: "Sí, de forma anónima",
+keepPrivate: "No, prefiero mantenerlo privado",
+submitTestimonial: "Enviar mi testimonio",
 absent: "ℹ️ Has indicado que no podrás asistir",
  missedEvent: "💌 Te perdiste este evento. ¡Esperamos verte en otra ocasión!",
   },
@@ -2298,6 +2412,30 @@ serverContactError: "Não foi possível contactar o servidor.",
 announcementLoadError: "Não foi possível obter os avisos.",
 announcementSaveError: "Não foi possível registrar a leitura.",
 genericError: "Ocorreu um erro. Tente novamente.",
+    testimonialTitle: "Sua opinião é importante para nós!",
+testimonialDescription: "Compartilhe sua experiência conosco.",
+testimonialRating: "Sua avaliação",
+selectRating: "Escolha uma avaliação",
+ratingExcellent: "⭐⭐⭐⭐⭐ Excelente",
+ratingVeryGood: "⭐⭐⭐⭐ Muito bom",
+ratingGood: "⭐⭐⭐ Bom",
+ratingAverage: "⭐⭐ Regular",
+ratingDisappointing: "⭐ Decepcionante",
+testimonialMessage: "Seu depoimento",
+testimonialMessagePlaceholder: "Conte-nos sua experiência...",
+testimonialIdentityTitle: "Como você gostaria de aparecer?",
+yourName: "Seu nome",
+yourCountry: "Seu país *",
+selectCountry: "Selecione seu país",
+otherCountry: "Outro país",
+departmentRegion: "Departamento / Região *",
+departmentRegionPlaceholder: "Seu departamento ou região",
+yourCity: "Sua cidade *",
+testimonialPublication: "Você gostaria de publicar seu depoimento?",
+publishWithName: "Sim, com meu nome",
+publishAnonymously: "Sim, anonimamente",
+keepPrivate: "Não, prefiro mantê-lo privado",
+submitTestimonial: "Enviar meu depoimento",
 absent: "ℹ️ Você informou que não poderá comparecer",
     missedEvent: "💌 Você perdeu este evento. Esperamos encontrar você em outra ocasião!",
   }
