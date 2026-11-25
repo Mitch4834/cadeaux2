@@ -1545,30 +1545,30 @@ data-i18n-title="mapTitle"
       </section>
 
       <section id="descriptionSection" class="extra-detail hidden">
-        <h3 data-i18n="aboutEvent">📝 À propos de cette fête</h3>
+        <h3 data-i18n="aboutEvent">📝 	About This Event</h3>
         <p id="eventDescription" class="event-description"></p>
       </section>
 
       <section id="themeSection" class="extra-detail hidden">
-        <h3 data-i18n="eventTheme">🎨 Thème de l'événement</h3>
+        <h3 data-i18n="eventTheme">🎨 Event Theme</h3>
         <div id="eventTheme" class="theme-box"></div>
       </section>
     </section>
 
     <section class="advertising-section advertising-bottom" id="bottomAdvertising">
       <div class="advertising-heading">
-        <span data-i18n="advertisers">Découvrez nos annonceurs</span>
-        <small data-i18n="advertising">PUBLICITÉ</small>
+        <span data-i18n="advertisers">Discover Our Advertisers</span>
+        <small data-i18n="advertising">ADVERTISEMENT</small>
       </div>
 
       <div class="ad-carousel">
         <button class="ad-arrow" type="button"
-          onclick="moveAd('bottom',-1)" aria-label="Publicité précédente">‹</button>
+          onclick="moveAd('bottom',-1)" aria-label="Previous advertisement">‹</button>
         <div class="ad-viewport">
           <div class="ad-track" id="bottomAdsTrack"></div>
         </div>
         <button class="ad-arrow" type="button"
-          onclick="moveAd('bottom',1)" aria-label="Publicité suivante">›</button>
+          onclick="moveAd('bottom',1)" aria-label="Next advertisement">›</button>
       </div>
       <div class="ad-indicators" id="bottomAdsIndicators"></div>
     </section>
@@ -1582,8 +1582,8 @@ data-i18n-title="mapTitle"
 
     <div class="envelope-letter">
       <span>💌</span>
-      <strong data-i18n="envelopeTitle">Une invitation spéciale</strong>
-      <small>FÊTE &amp; CADEAUX</small>
+      <strong data-i18n="envelopeTitle">A Special Invitation</strong>
+      <small>Party &amp; Gifts</small>
     </div>
 
     <div class="envelope">
@@ -1602,56 +1602,55 @@ data-i18n-title="mapTitle"
     <i></i><i></i><i></i><i></i><i></i>
   </div>
   <p class="envelope-caption" data-i18n="envelopeCaption">
-  Une belle surprise vous attend...
+  A lovely surprise awaits you...
 </p>
 </div>
 
     <div class="attendance-box">
 
       <div class="attendance-icon">💌</div>
-      <h2 data-i18n="attendanceCardTitle">Votre carte personnelle</h2>
+      <h2 data-i18n="attendanceCardTitle">Your Personal Invitation</h2>
 
       <p id="attendanceGreeting" data-i18n="happyToHaveYou">
-        Nous sommes heureux de vous compter parmi nos invités !
+        We are delighted to have you as our guest!
       </p>
 
       <div class="theme-box" style="margin:15px 0;">
-        <strong id="popupEventName">Nom de l'événement</strong>
+        <strong id="popupEventName">Event Name</strong>
         <p>📅 <span id="popupEventDate" data-i18n="date">Date</span></p>
-        <p>🕒 <span id="popupEventTime" data-i18n="time">Heure</span></p>
-        <p>📍 <span id="popupEventVenue" data-i18n="venue">Lieu</span></p>
+        <p>🕒 <span id="popupEventTime" data-i18n="time">Time</span></p>
+        <p>📍 <span id="popupEventVenue" data-i18n="venue">Venue</span></p>
       </div>
 
       <p class="attendance-question" data-i18n="attendanceQuestion">
-        Serez-vous présent(e) à cet événement ?
+        Will you attend this event?
       </p>
 
       <div class="attendance-buttons">
         <button type="button" class="attendance-yes"
           onclick="selectAttendance('OUI')"
           data-i18n="yes">
-          ✅ Oui, je serai présent(e)
+          ✅ Yes, I will attend
         </button>
 
         <button type="button" class="attendance-no"
           onclick="selectAttendance('NON')"
           data-i18n="no">
-          ❌ Non, je ne pourrai pas venir
+          ❌ No, I won't be able to attend
         </button>
       </div>
 
       <div id="absenceReasonContainer" class="hidden">
         <label for="absenceReason" data-i18n="absenceReason">
-          Quel est le motif de votre absence ?
+          What is the reason for your absence?
         </label>
         <textarea id="absenceReason"
           data-i18n-placeholder="absencePlaceholder"
-          placeholder="Expliquez brièvement le motif de votre absence..."
+          placeholder="Briefly explain the reason for your absence..."
           rows="4"></textarea>
 
         <div class="gift-note" data-i18n="giftNote">
-          🎁 Même si vous ne pouvez pas assister à l'événement,
-          vous pouvez toujours réserver et envoyer un cadeau !
+          🎁 Even if you cannot attend the event, you can still reserve and send a gift!
         </div>
       </div>
 
@@ -1662,7 +1661,7 @@ data-i18n-title="mapTitle"
         class="attendance-submit hidden"
         onclick="submitAttendance()"
         data-i18n="sendResponse">
-        Envoyer ma réponse
+        Submit My Response
       </button>
 
     </div>
@@ -1673,26 +1672,24 @@ data-i18n-title="mapTitle"
   <div class="attendance-box">
     <div class="attendance-icon">💚</div>
 
-    <h2>Vous nous avez manqué !</h2>
+    <h2>We Missed You!</h2>
 
     <p>
-      Nous sommes désolés que vous n'ayez pas pu participer
-      à cet événement. Mais vous pouvez encore revivre ces
-      beaux moments à travers les photos partagées !
+      We're sorry you couldn't attend this event. But you can still relive these wonderful moments through the shared photos!
     </p>
 
     <button
       type="button"
       id="viewEventGalleryButton"
       class="attendance-submit">
-      Revivre l'événement en images
+      Relive the Event Through Photos
     </button>
 
     <button
       type="button"
       id="closeMissedEventButton"
       class="attendance-submit">
-      Fermer
+      Close
     </button>
   </div>
 </div>
@@ -1704,30 +1701,30 @@ data-i18n-title="mapTitle"
 
     <div class="attendance-icon">💚</div>
 
-   <h2 id="testimonialTitle">Votre avis nous intéresse !</h2>
+   <h2 id="testimonialTitle">We'd Love to Hear Your Feedback!</h2>
 
 <p id="testimonialDescription">
-  Partagez votre expérience avec nous.
+  Share Your Experience With Us.
 </p>
 
     <form id="testimonialForm">
 
       <input type="hidden" id="testimonialType" value="">
       <label for="testimonialRating">
-        Votre note
+        Your Rating
       </label>
 
       <select id="testimonialRating" required>
-        <option value="">Choisir une note</option>
+        <option value="">Select a Rating</option>
         <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
-        <option value="4">⭐⭐⭐⭐ Très bien</option>
-        <option value="3">⭐⭐⭐ Bien</option>
-        <option value="2">⭐⭐ Moyen</option>
-        <option value="1">⭐ Décevant</option>
+        <option value="4">⭐⭐⭐⭐ Very Good</option>
+        <option value="3">⭐⭐⭐ Good</option>
+        <option value="2">⭐⭐ Average</option>
+        <option value="1">⭐ Disappointing</option>
       </select>
 
       <label for="testimonialMessage">
-        Votre témoignage
+        Your Testimonial
       </label>
 
       <textarea
@@ -1735,34 +1732,34 @@ data-i18n-title="mapTitle"
         rows="5"
         maxlength="1000"
         required
-        placeholder="Racontez-nous votre expérience...">
+        placeholder="Tell Us About Your Experience...">
       </textarea>
 
       
 <div id="testimonialIdentityContainer">
 
-  <h3>Comment souhaitez-vous apparaître ?</h3>
+  <h3>How Would You Like to Be Identified?</h3>
 
-  <label for="testimonialAuthorName">Votre nom</label>
+  <label for="testimonialAuthorName">Your Name</label>
   <input
     type="text"
     id="testimonialAuthorName"
     maxlength="100"
-    placeholder="Votre nom">
+    placeholder="Your Name">
 
-  <label for="testimonialCountry">Votre pays *</label>
+  <label for="testimonialCountry">Your Country *</label>
 <select id="testimonialCountry" required>
-  <option value="">Sélectionnez votre pays</option>
+  <option value="">Select Your Country</option>
   <option value="Haïti">Haïti</option>
-  <option value="États-Unis">États-Unis</option>
+  <option value="United States">United States</option>
   <option value="Canada">Canada</option>
   <option value="France">France</option>
-  <option value="Espagne">Espagne</option>
+  <option value="Spain">Spain</option>
   <option value="Mali">Mali</option>
-  <option value="Côte d’Ivoire">Côte d’Ivoire</option>
-  <option value="Bénin">Bénin</option>
-  <option value="Sénégal">Sénégal</option>
-  <option value="Autre">Autre pays</option>
+  <option value="Ivory Coast">Ivory Coast</option>
+  <option value="Benin">Benin</option>
+  <option value="Senegal">Senegal</option>
+  <option value="Other Country">Other Country</option>
 </select>
 
 <label for="testimonialRegion" id="testimonialRegionLabel">
@@ -1773,29 +1770,29 @@ data-i18n-title="mapTitle"
   id="testimonialRegion"
   maxlength="100"
   required
-  placeholder="Votre département ou région">
+  placeholder="Your Department or Region">
 
- <label for="testimonialCity">Votre ville *</label>
+ <label for="testimonialCity">Your City *</label>
 <input
   type="text"
   id="testimonialCity"
   maxlength="100"
   required
-  placeholder="Votre ville">
+  placeholder="Your City">
 
   <label for="testimonialPublication">
-    Souhaitez-vous publier votre témoignage ?
+    Would You Like to Publish Your Testimonial?
   </label>
 
   <select id="testimonialPublication">
-    <option value="NOM">
-      Oui, avec mon nom
+    <option value="NAME">
+      Yes, With My Name
     </option>
     <option value="ANONYME">
-      Oui, de façon anonyme
+      Yes, Anonymously
     </option>
-    <option value="NON">
-      Non, je préfère le garder privé
+    <option value="NO">
+      No, I Prefer to Keep It Private
     </option>
   </select>
 
@@ -1808,7 +1805,7 @@ data-i18n-title="mapTitle"
         type="submit"
         id="testimonialSubmitButton"
         class="attendance-submit">
-        Envoyer mon témoignage
+        Submit My Testimonial
       </button>
 
     </form>
@@ -1816,39 +1813,7 @@ data-i18n-title="mapTitle"
   </div>
 </div>
   
-<!-- MESSAGE POUR LES INVITÉS ABSENTS -->
-<div id="missedEventModal" class="attendance-modal hidden">
 
-  <div class="attendance-box">
-
-    <div class="attendance-icon">💌</div>
-
-    <h2>Vous nous avez manqué !</h2>
-
-    <p>
-      Vous n'avez malheureusement pas pu participer
-      à cet événement. Mais vous pouvez tout de même
-      revivre ces beaux moments à travers les photos
-      partagées.
-    </p>
-
-    <button
-      type="button"
-      id="openEventGalleryButton"
-      class="attendance-submit">
-      📸 Revivre l'événement en images
-    </button>
-
-    <button
-      type="button"
-      id="closeMissedEventButton"
-      class="attendance-submit">
-      Fermer
-    </button>
-
-  </div>
-
-</div>
 
 <!-- POPUP D'ANNONCE URGENTE -->
 
@@ -1858,7 +1823,7 @@ data-i18n-title="mapTitle"
     <div class="announcement-icon">📢</div>
 
     <h2 id="announcementTitle">
-      Information importante
+      Important Information
     </h2>
 
     <div
@@ -1876,14 +1841,13 @@ data-i18n-title="mapTitle"
       id="announcementConfirmButton"
       class="announcement-button"
       onclick="confirmAnnouncementRead()">
-      J’ai compris
+      Got It
     </button>
 
   </div>
 </div>
   <div class="footer" data-i18n="organizedWith">
-    Organisé avec ❤️ grâce à Fête &amp; Cadeaux
-  </div>
+    Organized with ❤️ by Party &amp; Gifts  </div>
 
 </main>
 
