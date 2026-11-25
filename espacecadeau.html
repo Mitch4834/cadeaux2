@@ -1101,6 +1101,7 @@ adText3: "Votre marque mérite d'être visible !",
 adText4: "Réservez cet espace publicitaire.",
 footerThanks: "Merci de contribuer au bonheur de cette journée ❤️",
     buyOnAmazon: "Acheter sur Amazon",
+    dateToSpecify: "Date à préciser",
   },
   ht: {
     guest: "Chè envite",
@@ -1154,6 +1155,7 @@ adText3: "Mak ou merite jwenn plis vizibilite!",
 adText4: "Rezève espas piblisite sa a.",
 footerThanks: "Mèsi paske w kontribye nan lajwa jounen sa a ❤️",
     buyOnAmazon: "Achte sou Amazon",
+    dateToSpecify: "Dat pou presize",
   },
   en: {
     guest: "Dear guest",
@@ -1207,6 +1209,7 @@ adText3: "Your brand deserves to be seen!",
 adText4: "Reserve this advertising space.",
 footerThanks: "Thank you for contributing to the joy of this special day ❤️",
     buyOnAmazon: "Buy on Amazon",
+    dateToSpecify: "Date to be announced",
   },
   es: {
     guest: "Estimado invitado",
@@ -1260,6 +1263,7 @@ adText3: "¡Tu marca merece ser visible!",
 adText4: "Reserva este espacio publicitario.",
 footerThanks: "Gracias por contribuir a la felicidad de este día ❤️",
     buyOnAmazon: "Comprar en Amazon",
+    dateToSpecify: "Fecha por confirmar",
   },
   pt: {
     guest: "Caro convidado",
@@ -1313,6 +1317,7 @@ adText3: "Sua marca merece ser vista!",
 adText4: "Reserve este espaço publicitário.",
 footerThanks: "Obrigado por contribuir para a alegria deste dia ❤️",
     buyOnAmazon: "Comprar na Amazon",
+    dateToSpecify: "Data a confirmar",
   }
 };
 
@@ -1393,7 +1398,7 @@ function formatDate(value) {
   console.log("DATE REÇUE :", value);
   console.log("TYPE DE DATE :", typeof value);
 
-  if (!value) return "À préciser";
+  if (!value) return t("dateToSpecify");
 
   const date = new Date(value);
 
@@ -1636,8 +1641,12 @@ console.log("OBJET ÉVÉNEMENT EXTRAIT :", eventData);
 console.log("CLÉS DISPONIBLES :", Object.keys(eventData || {}));
 // La langue de l'invité sera utilisée pour traduire la page.
 currentLanguage = String(
-  guest.language || guest.Langue || "fr"
+  guest.language || guest.Langue || "en"
 ).toLowerCase().substring(0, 2);
+
+if (!translations[currentLanguage]) {
+  currentLanguage = "en";
+}
     applyStaticTranslations();
     console.log("LANGUE DE L'INVITÉ :", currentLanguage);
     // Vérification de cohérence
