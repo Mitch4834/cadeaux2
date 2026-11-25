@@ -1667,32 +1667,38 @@ data-i18n-title="mapTitle"
     </div>
   </div>
   
+
 <!-- MESSAGE POUR L'INVITÉ QUI A MANQUÉ L'ÉVÉNEMENT -->
 <div id="missedEventModal" class="attendance-modal hidden">
   <div class="attendance-box">
+
     <div class="attendance-icon">💚</div>
 
-    <h2>We Missed You!</h2>
+    <h2 data-i18n="missedEventTitle">We Missed You!</h2>
 
-    <p>
+    <p data-i18n="missedEventDescription">
       We're sorry you couldn't attend this event. But you can still relive these wonderful moments through the shared photos!
     </p>
 
     <button
       type="button"
       id="viewEventGalleryButton"
-      class="attendance-submit">
+      class="attendance-submit"
+      data-i18n="viewEventGallery">
       Relive the Event Through Photos
     </button>
 
     <button
       type="button"
       id="closeMissedEventButton"
-      class="attendance-submit">
+      class="attendance-submit"
+      data-i18n="close">
       Close
     </button>
+
   </div>
 </div>
+
 
  
 <!-- POPUP DE TÉMOIGNAGE -->
@@ -1718,14 +1724,21 @@ data-i18n-title="mapTitle"
         Your Rating
       </label>
 
-      <select id="testimonialRating" required>
-        <option value="" data-i18n="selectRating">Select a Rating</option>
-        <option value="5" data-i18n="ratingExcellent">⭐⭐⭐⭐⭐ Excellent</option>
-        <option value="4" data-i18n="ratingVeryGood">⭐⭐⭐⭐ Very Good</option>
-        <option value="3" data-i18n="ratingGood">⭐⭐⭐ Good</option>
-        <option value="2" data-i18n="ratingAverage">⭐⭐ Average</option>
-        <option value="1" data-i18n="ratingDisappointing">⭐ Disappointing</option>
-      </select>
+      
+<select id="testimonialCountry" required>
+  <option value="" data-i18n="selectCountry">Select Your Country</option>
+  <option value="Haïti" data-i18n="countryHaiti">Haiti</option>
+  <option value="United States" data-i18n="countryUSA">United States</option>
+  <option value="Canada" data-i18n="countryCanada">Canada</option>
+  <option value="France" data-i18n="countryFrance">France</option>
+  <option value="Spain" data-i18n="countrySpain">Spain</option>
+  <option value="Mali" data-i18n="countryMali">Mali</option>
+  <option value="Ivory Coast" data-i18n="countryIvoryCoast">Ivory Coast</option>
+  <option value="Benin" data-i18n="countryBenin">Benin</option>
+  <option value="Senegal" data-i18n="countrySenegal">Senegal</option>
+  <option value="Other Country" data-i18n="otherCountry">Other Country</option>
+</select>
+
 
       <label for="testimonialMessage" data-i18n="testimonialMessage">
         Your Testimonial
@@ -2006,7 +2019,19 @@ keepPrivate: "Non, je préfère le garder privé",
 submitTestimonial: "Envoyer mon témoignage",
   absent: "ℹ️ Vous avez indiqué votre absence",
   missedEvent: "💌 Vous avez raté cet événement. Nous espérons vous retrouver lors d'une prochaine occasion !",
-  },
+    missedEventTitle: "Vous nous avez manqué !",
+missedEventDescription: "Nous sommes désolés que vous n'ayez pas pu participer à cet événement. Mais vous pouvez encore revivre ces beaux moments à travers les photos partagées !",
+viewEventGallery: "Revivre l'événement en images",
+close: "Fermer",
+    countryHaiti: "Haïti",
+countryUSA: "États-Unis",
+countryCanada: "Canada",
+countryFrance: "France",
+countrySpain: "Espagne",
+countryMali: "Mali",
+countryIvoryCoast: "Côte d’Ivoire",
+countryBenin: "Bénin",
+countrySenegal: "Sénégal",  },
 
   ht: {
     loading: "Preparasyon envitasyon ou...",
@@ -2113,6 +2138,19 @@ keepPrivate: "Non, mwen prefere kenbe l prive",
 submitTestimonial: "Voye temwayaj mwen",
   absent: "ℹ️ Ou fè konnen ou pap vini",
   missedEvent: "💌 Ou rate evènman sa a. Nou espere wè ou nan yon lòt okazyon!",
+    missedEventTitle: "Nou te sonje ou!",
+missedEventDescription: "Nou regrèt ou pa t kapab patisipe nan evènman sa a. Men ou ka toujou reviv bèl moman sa yo atravè foto yo pataje!",
+viewEventGallery: "Rev viv evènman an an foto",
+close: "Fèmen",
+    countryHaiti: "Ayiti",
+countryUSA: "Etazini",
+countryCanada: "Kanada",
+countryFrance: "Frans",
+countrySpain: "Espay",
+countryMali: "Mali",
+countryIvoryCoast: "Kotdivwa",
+countryBenin: "Benin",
+countrySenegal: "Senegal",
     
   },
 
@@ -2222,6 +2260,19 @@ keepPrivate: "No, I Prefer to Keep It Private",
 submitTestimonial: "Submit My Testimonial",
  absent: "ℹ️ You have indicated that you cannot attend",
   missedEvent: "💌 You missed this event. We hope to see you at another occasion!",
+    missedEventTitle: "We Missed You!",
+missedEventDescription: "We're sorry you couldn't attend this event. But you can still relive these wonderful moments through the shared photos!",
+viewEventGallery: "Relive the Event Through Photos",
+close: "Close",
+    countryHaiti: "Haiti",
+countryUSA: "United States",
+countryCanada: "Canada",
+countryFrance: "France",
+countrySpain: "Spain",
+countryMali: "Mali",
+countryIvoryCoast: "Ivory Coast",
+countryBenin: "Benin",
+countrySenegal: "Senegal",
   },
 
   es: {
@@ -2330,6 +2381,19 @@ keepPrivate: "No, prefiero mantenerlo privado",
 submitTestimonial: "Enviar mi testimonio",
 absent: "ℹ️ Has indicado que no podrás asistir",
  missedEvent: "💌 Te perdiste este evento. ¡Esperamos verte en otra ocasión!",
+    missedEventTitle: "¡Te echamos de menos!",
+missedEventDescription: "Lamentamos que no hayas podido asistir a este evento. ¡Pero todavía puedes revivir estos maravillosos momentos a través de las fotos compartidas!",
+viewEventGallery: "Revive el evento a través de las fotos",
+close: "Cerrar",
+    countryHaiti: "Haití",
+countryUSA: "Estados Unidos",
+countryCanada: "Canadá",
+countryFrance: "Francia",
+countrySpain: "España",
+countryMali: "Malí",
+countryIvoryCoast: "Costa de Marfil",
+countryBenin: "Benín",
+countrySenegal: "Senegal",
   },
 
   pt: {
@@ -2438,8 +2502,21 @@ keepPrivate: "Não, prefiro mantê-lo privado",
 submitTestimonial: "Enviar meu depoimento",
 absent: "ℹ️ Você informou que não poderá comparecer",
     missedEvent: "💌 Você perdeu este evento. Esperamos encontrar você em outra ocasião!",
-  }
+    missedEventTitle: "Sentimos sua falta!",
+missedEventDescription: "Lamentamos que você não tenha podido participar deste evento. Mas ainda pode reviver esses momentos maravilhosos através das fotos compartilhadas!",
+viewEventGallery: "Reviva o evento através das fotos",
+close: "Fechar",
+    countryHaiti: "Haiti",
+countryUSA: "Estados Unidos",
+countryCanada: "Canadá",
+countryFrance: "França",
+countrySpain: "Espanha",
+countryMali: "Mali",
+countryIvoryCoast: "Costa do Marfim",
+countryBenin: "Benim",
+countrySenegal: "Senegal",
 };
+  };
 
 // Récupérer une traduction
 function t(key) {
