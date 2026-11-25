@@ -1723,7 +1723,14 @@ data-i18n-title="mapTitle"
       <label for="testimonialRating" data-i18n="testimonialRating">
         Your Rating
       </label>
-
+<select id="testimonialRating" required>
+  <option value="" data-i18n="selectRating">Select a Rating</option>
+  <option value="5" data-i18n="ratingExcellent">⭐⭐⭐⭐⭐ Excellent</option>
+  <option value="4" data-i18n="ratingVeryGood">⭐⭐⭐⭐ Very Good</option>
+  <option value="3" data-i18n="ratingGood">⭐⭐⭐ Good</option>
+  <option value="2" data-i18n="ratingAverage">⭐⭐ Average</option>
+  <option value="1" data-i18n="ratingDisappointing">⭐ Disappointing</option>
+</select>
       
 <select id="testimonialCountry" required>
   <option value="" data-i18n="selectCountry">Select Your Country</option>
