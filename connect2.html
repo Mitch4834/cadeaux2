@@ -3009,10 +3009,10 @@ function displayParking(event) {
   );
 
   const availabilityLabels = {
-    sur_place: "Parking disponible sur place",
-    proximite: "Parking disponible à proximité",
-    rue: "Stationnement dans la rue",
-    aucun: "Aucun parking disponible"
+    sur_place: "Parking available on-site",
+    proximite: "Parking available nearby",
+    rue: "Street parking",
+    aucun: "No parking available"
   };
 
   const availabilityText =
@@ -3021,12 +3021,12 @@ function displayParking(event) {
 
   let feeText = "";
 
-  if (String(feeType).toLowerCase() === "gratuit") {
+  if (String(feeType).toLowerCase() === "Free") {
     feeText = "Gratuit";
-  } else if (String(feeType).toLowerCase() === "payant") {
+  } else if (String(feeType).toLowerCase() === "Paid") {
     feeText = price
-      ? "Payant — " + price
-      : "Payant";
+      ? "Paid — " + price
+      : "Paid";
   } else {
     feeText = price || "";
   }
@@ -3043,13 +3043,13 @@ function displayParking(event) {
   setText(
     "eventParkingAvailability",
     availabilityText,
-    "Non précisée"
+    "Not specified"
   );
 
   setText(
     "eventParkingPrice",
     feeText,
-    "Non précisée"
+    "Not specified"
   );
 
   const detailsContainer =
@@ -3066,7 +3066,7 @@ function displayParking(event) {
 function displayEvent(data) {
 
   if (!data || !data.event) {
-    throw new Error("Les informations de cet événement sont indisponibles.");
+    throw new Error("The information for this event is unavailable.");
   }
 
   
@@ -3121,7 +3121,7 @@ setText("eventFullAddress", fullAddress, t("notSpecified"));
   displayParking(event);  setText(
     "eventMessage",
     event.message || event.Message_Invitation,
-    "Nous sommes heureux de vous compter parmi les invités. Merci de partager ce moment de joie et de convivialité avec nous."
+    "We are delighted to have you among our guests. Thank you for sharing this moment of joy and togetherness with us."
   );
 
   setText(
@@ -3165,7 +3165,7 @@ setText("eventFullAddress", fullAddress, t("notSpecified"));
     });
   } else {
     container.innerHTML =
-      '<p class="empty-message">Aucune personne renseignée.</p>';
+      '<p class="empty-message">No honored person has been added.</p>';
   }
 
   getElement("loadingEvent").classList.add("hidden");
@@ -3182,7 +3182,7 @@ async function initializePersonalInvitation() {
 
   if (!feteId || !inviteId) {
     showEventError(
-      "Votre lien personnel est incomplet. Veuillez contacter l'organisateur."
+      "Your personal invitation link is incomplete. Please contact the organizer."
     );
     return;
   }
@@ -3206,7 +3206,7 @@ async function initializePersonalInvitation() {
 
     if (!eventResult || eventResult.success !== true) {
       throw new Error(
-        eventResult?.message || "Impossible de charger cet événement."
+        eventResult?.message || "Unable to load this event."
       );
     }
 
@@ -3217,7 +3217,7 @@ async function initializePersonalInvitation() {
     ) {
       throw new Error(
         guestResult?.message ||
-        "Ce lien personnel est invalide ou a été désactivé."
+        "This personal invitation link is invalid or has been deactivated."
       );
     }
 
@@ -3239,7 +3239,7 @@ const guestEventId =
   currentGuest.event_id || currentGuest.Fete_ID || "";
 
     if (guestEventId && String(guestEventId) !== String(feteId)) {
-      throw new Error("Cette invitation ne correspond pas à cet événement.");
+      throw new Error("This invitation does not belong to this event.");
     }
 
     displayEvent(eventResult);
@@ -3352,7 +3352,7 @@ statusElement.textContent =
     console.error("Erreur invitation personnelle :", error);
 
     showEventError(
-      error.message || "Une erreur est survenue lors du chargement."
+      error.message || "An error occurred."
     );
   }
 }
@@ -3372,7 +3372,7 @@ async function loadGuestTestimonials() {
 
   if (!result || result.success !== true) {
     throw new Error(
-      result?.message || "Impossible de vérifier vos témoignages."
+      result?.message || "Unable to check your testimonials."
     );
   }
 
@@ -3498,19 +3498,19 @@ async function submitAttendance() {
   if (attendanceSubmitting) return;
 
   if (!currentGuest || !inviteId || !feteId) {
-    setText("attendanceMessage", "Votre invitation n'a pas pu être vérifiée.");
+    setText("attendanceMessage", "Your invitation could not be verified.");
     return;
   }
 
   if (!selectedAttendance) {
-    setText("attendanceMessage", "Veuillez choisir une réponse.");
+    setText("attendanceMessage", "Please select an answer.");
     return;
   }
 
   const reason = getElement("absenceReason").value.trim();
 
   if (selectedAttendance === "NON" && !reason) {
-    setText("attendanceMessage", "Veuillez préciser le motif de votre absence.");
+    setText("attendanceMessage", "Please provide a reason for your absence.");
     getElement("absenceReason").focus();
     return;
   }
@@ -3519,7 +3519,7 @@ async function submitAttendance() {
 
   attendanceSubmitting = true;
   button.disabled = true;
-  button.textContent = "Enregistrement en cours...";
+  button.textContent = "Saving...";
 
   try {
 
@@ -3533,7 +3533,7 @@ async function submitAttendance() {
 
     if (!result || result.success !== true) {
       throw new Error(
-        result?.message || "Votre réponse n'a pas pu être enregistrée."
+        result?.message || "Your response could not be saved."
       );
     }
 
@@ -3564,7 +3564,7 @@ if (selectedAttendance === "OUI") {
 
     setText(
       "attendanceMessage",
-      error.message || "Une erreur est survenue."
+      error.message || "An error occurred."
     );
 
     button.disabled = false;
@@ -3669,7 +3669,7 @@ function renderAdCarousel(position) {
             <strong>${escapeAdHTML(ad.name)}</strong>
             <p>${escapeAdHTML(ad.description)}</p>
             <span class="ad-cta">
-              ${escapeAdHTML(ad.button || "Découvrir")} →
+              ${escapeAdHTML(ad.button || "Discover")} →
             </span>
           </div>
         </a>
@@ -3979,27 +3979,27 @@ if (identityContainer) {
 
   if (type === "PLATEFORME") {
 
-    title.textContent = "Votre expérience avec Fête & Cadeaux";
+    title.textContent = "Your experience with Party & Gifts";
 
     description.textContent =
-  "Comment avez-vous vécu votre expérience sur notre plateforme ? " +
-  "Parlez-nous de votre utilisation, de la simplicité du service " +
-  "et de ce que vous avez apprécié.";
+  "How was your experience on our platform? " +
+  "Tell us about how you used our platform, how easy the service was to use, " +
+  "and what you enjoyed.";
 
     message.placeholder =
-      "Racontez-nous votre expérience avec Fête & Cadeaux...";
+      "Tell us about your experience with Party & Gifts...";
 
   } else if (type === "EVENEMENT") {
 
-    title.textContent = "Votre expérience de l'événement";
+    title.textContent = "Your event experience";
 
     description.textContent =
-      "Vous avez participé à cet événement ! " +
-      "Racontez-nous les moments que vous avez appréciés, " +
-      "l'ambiance et vos impressions.";
+      "You attended this event! " +
+      "Tell us about the moments you enjoyed, " +
+      "the atmosphere, and your impressions.";
 
     message.placeholder =
-      "Racontez-nous votre expérience de cet événement...";
+      "Tell us about your experience at this event...";
 
   }
 
@@ -4026,24 +4026,24 @@ function updateTestimonialRegionLabel() {
   const country = testimonialCountrySelect.value;
 
   const labels = {
-    "Haïti": "Département *",
-    "États-Unis": "État *",
-    "Canada": "Province ou territoire *",
-    "France": "Région *",
-    "Espagne": "Communauté autonome *",
-    "Mali": "Région *",
-    "Côte d’Ivoire": "District ou région *",
-    "Bénin": "Département *",
-    "Sénégal": "Région *",
-    "Autre": "État / Province / Région *"
+    "Haïti": "Department *",
+    "États-Unis": "State *",
+    "Canada": "Province or territory *",
+    "France": "Region *",
+    "Espagne": "Autonomous community *",
+    "Mali": "Region *",
+    "Côte d’Ivoire": "District or region *",
+    "Bénin": "Department *",
+    "Sénégal": "Region *",
+    "Autre": "State / Province / Region *"
   };
 
   testimonialRegionLabel.textContent =
-    labels[country] || "État / Province / Région *";
+    labels[country] || "State / Province / Region *";
 
   if (testimonialRegionInput) {
     testimonialRegionInput.placeholder =
-      "Indiquez votre " +
+      "Enter your " +
       testimonialRegionLabel.textContent.replace(" *", "").toLowerCase();
   }
 }
@@ -4118,9 +4118,7 @@ function isTestimonialPeriodOpen(eventDate) {
 
   return daysAfter >= 1 && daysAfter <= 15;
 }
-  /* =====================================================
-   ENVOI DU TÉMOIGNAGE
-===================================================== */
+
 
 
 /* =====================================================
@@ -4160,12 +4158,12 @@ const publication =
     const status = document.getElementById("testimonialMessageStatus");
 
     if (!type || !rating || !message) {
-      status.textContent = "Veuillez remplir tous les champs.";
+      status.textContent = "Please fill in all fields.";
       return;
     }
 
     button.disabled = true;
-    button.textContent = "Enregistrement...";
+    button.textContent = "Saving...";
 
     try {
 
@@ -4187,13 +4185,13 @@ const result = await jsonpRequest({
 
       if (!result || result.success !== true) {
         throw new Error(
-          result?.message || "Impossible d'enregistrer votre témoignage."
+          result?.message || "Unable to save your testimonial."
         );
       }
 
       
 status.textContent =
-  result.message || "Témoignage enregistré avec succès.";
+  result.message || "Testimonial saved successfully.";
 
 // Recharger les témoignages enregistrés
 const updatedTestimonials = await loadGuestTestimonials();
@@ -4210,13 +4208,13 @@ if (hasNextTestimonial) {
   prepareTestimonialForGuest(updatedTestimonials);
 
   status.textContent =
-    "Merci ! Passons maintenant au témoignage suivant.";
+    "Thank you! Let's move on to the next testimonial.";
 
 } else {
 
   closeTestimonialModal();
 
-  alert("Merci ! Vos témoignages ont bien été enregistrés.");
+  alert("Thank you! Your testimonials have been successfully submitted..");
 
 }
 
@@ -4226,12 +4224,12 @@ if (hasNextTestimonial) {
       console.error("Erreur témoignage :", error);
 
       status.textContent =
-        error.message || "Une erreur est survenue.";
+        error.message || "An error occurred.";
 
     } finally {
 
       button.disabled = false;
-      button.textContent = "Envoyer mon témoignage";
+      button.textContent = "Submit my testimonial";
 
     }
 
