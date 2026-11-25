@@ -2518,53 +2518,54 @@ function renderEvents() {
     }
 
     return `
-      <div
-        class="event-card ${isSelected ? "selected" : ""}"
-        data-event-id="${escapeHtml(event.id)}"
-      >
-        <div class="event-card-top">
-          <span class="event-type">
-            ${escapeHtml(eventType)}
-          </span>
+     
+<div
+  class="event-card ${isSelected ? "selected" : ""}"
+  data-event-id="${escapeHtml(event.id)}"
+>
+  <div class="event-card-top">
+    <span class="event-type">
+      ${escapeHtml(eventType)}
+    </span>
 
-          <span class="event-role ${isCollaborator
-            ? "role-collaborator"
-            : "role-owner"}">
-            <span class="role-dot"></span>
-            ${isCollaborator ? "Collaborateur" : "Propriétaire"}
-          </span>
-        </div>
+    <span class="event-role ${isCollaborator
+      ? "role-collaborator"
+      : "role-owner"}">
+      <span class="role-dot"></span>
+      ${isCollaborator ? "Collaborator" : "Owner"}
+    </span>
+  </div>
 
-        <div class="event-card-name">
-          ${escapeHtml(eventName)}
-        </div>
+  <div class="event-card-name">
+    ${escapeHtml(eventName)}
+  </div>
 
-        <div class="event-card-date">
-          <span>📅</span>
-          ${escapeHtml(formattedDate || "Date non définie")}
-        </div>
+  <div class="event-card-date">
+    <span>📅</span>
+    ${escapeHtml(formattedDate || "Date not set")}
+  </div>
 
-        <div class="event-card-bottom">
-          <span class="event-card-id">
-            ${escapeHtml(event.id)}
-          </span>
+  <div class="event-card-bottom">
+    <span class="event-card-id">
+      ${escapeHtml(event.id)}
+    </span>
 
-          <span class="event-card-action">
-            ${isSelected ? "Événement sélectionné ✓" : "Ouvrir →"}
-          </span>
-        </div>
-      </div>
-    `;
-  }).join("");
+    <span class="event-card-action">
+      ${isSelected ? "Selected event ✓" : "Open →"}
+    </span>
+  </div>
+</div>
+`;
+}).join("");
 
-  container.querySelectorAll("[data-event-id]").forEach(item => {
-    item.addEventListener("click", () => {
-      selectEvent(item.dataset.eventId);
-    });
+container.querySelectorAll("[data-event-id]").forEach(item => {
+  item.addEventListener("click", () => {
+    selectEvent(item.dataset.eventId);
   });
+});
 }
 
-    
+
 function renderSelectedEvent() {
 
   const nameElement = $("currentEventName");
@@ -2581,43 +2582,44 @@ function renderSelectedEvent() {
   const guestPanel = $("guestPanel");
   const giftPanel = $("giftPanel");
 
-  // Aucun événement sélectionné
+  // No event selected
   if (!selectedEvent) {
 
     if (nameElement) {
       nameElement.textContent =
-        "Choisissez un événement dans la liste pour gérer ses invités et ses cadeaux.";
+        "Choose an event from the list to manage its guests and gifts.";
     }
 
     if (typeElement) {
-      typeElement.textContent = "Sélectionnez une fête";
+      typeElement.textContent = "Select an event";
     }
 
     if (badgeElement) {
-      badgeElement.textContent = "Aucun sélectionné";
+      badgeElement.textContent = "None selected";
     }
 
     if (linkBox) linkBox.classList.add("hidden");
 
     [
-  collaboratorPanel,
-  reportPanel,
-  testimonialPanel,
-  announcementPanel,
-  guestPanel,
-  giftPanel
-].forEach(panel => {
-  if (panel) panel.classList.add("hidden");
-});
+      collaboratorPanel,
+      reportPanel,
+      testimonialPanel,
+      announcementPanel,
+      guestPanel,
+      giftPanel
+    ].forEach(panel => {
+      if (panel) panel.classList.add("hidden");
+    });
+
     return;
   }
 
-  // Informations de l'événement
+  // Event information
   const eventName =
     selectedEvent.nom ||
     selectedEvent.titre ||
     selectedEvent.name ||
-    "Ma fête";
+    "My Event";
 
   const isCollaborator =
     selectedEvent.isCollaborator === true;
@@ -2636,14 +2638,14 @@ function renderSelectedEvent() {
 
   if (typeElement) {
     typeElement.textContent =
-      isCollaborator ? "Collaborateur" : "Propriétaire";
+      isCollaborator ? "Collaborator" : "Owner";
   }
 
   if (badgeElement) {
     badgeElement.textContent = eventName;
   }
 
-  // Lien de l'événement
+  // Event invitation link
   const invitationUrl =
     selectedEvent.invitation_url ||
     selectedEvent.lien_invitation ||
@@ -2657,7 +2659,7 @@ function renderSelectedEvent() {
     linkBox.classList.add("hidden");
   }
 
-  // Gestion des panneaux selon les permissions
+  // Display panels according to permissions
   if (collaboratorPanel) {
     collaboratorPanel.classList.toggle(
       "hidden",
@@ -2678,12 +2680,14 @@ function renderSelectedEvent() {
       !hasPermission("annonces_urgentes")
     );
   }
-if (testimonialPanel) {
-  testimonialPanel.classList.toggle(
-    "hidden",
-    !hasPermission("temoignages")
-  );
-}
+
+  if (testimonialPanel) {
+    testimonialPanel.classList.toggle(
+      "hidden",
+      !hasPermission("temoignages")
+    );
+  }
+
   if (guestPanel) {
     guestPanel.classList.toggle(
       "hidden",
@@ -2707,12 +2711,12 @@ async function loadAnnouncements() {
 
   if (!selectedEventId) {
     container.innerHTML =
-      '<div class="muted">Aucun événement sélectionné.</div>';
+      '<div class="muted">No event selected.</div>';
     return;
   }
 
   container.innerHTML =
-    '<div class="muted">Chargement des annonces...</div>';
+    '<div class="muted">Loading announcements...</div>';
 
   try {
 
@@ -2725,13 +2729,13 @@ async function loadAnnouncements() {
 
     if (!announcements.length) {
       container.innerHTML =
-        '<div class="muted">Aucune annonce publiée pour cet événement.</div>';
+        '<div class="muted">No announcements published for this event.</div>';
       return;
     }
 
     container.innerHTML = announcements.map(announcement => {
 
-      const title = escapeHtml(announcement.Titre || announcement.titre || "Annonce");
+      const title = escapeHtml(announcement.Titre || announcement.titre || "Announcement");
       const message = escapeHtml(announcement.Message || announcement.message || "");
       const date = announcement.Date_Creation || announcement.date || "";
 
@@ -2747,17 +2751,17 @@ async function loadAnnouncements() {
 
   } catch (error) {
 
-    console.error("Erreur chargement annonces :", error);
+    console.error("Error loading announcements:", error);
 
     container.innerHTML =
-      '<div class="muted">Impossible de charger les annonces.</div>';
+      '<div class="muted">Unable to load announcements.</div>';
 
     showStatus("globalStatus", error.message, "error");
   }
 }
 
 /* =====================================================
-   TÉMOIGNAGES DES INVITÉS
+   GUEST TESTIMONIALS
 ===================================================== */
 
 async function loadTestimonials() {
@@ -2769,12 +2773,12 @@ async function loadTestimonials() {
 
   if (!selectedEventId) {
     container.innerHTML =
-      '<div class="muted">Aucun événement sélectionné.</div>';
+      '<div class="muted">No event selected.</div>';
     return;
   }
 
   container.innerHTML =
-    '<div class="muted">Chargement des témoignages...</div>';
+    '<div class="muted">Loading testimonials...</div>';
 
   if (status) {
     status.textContent = "";
@@ -2792,7 +2796,7 @@ async function loadTestimonials() {
 
     if (!testimonials.length) {
       container.innerHTML =
-        '<div class="muted">Aucun témoignage publié pour cet événement.</div>';
+        '<div class="muted">No testimonials published for this event.</div>';
       return;
     }
 
@@ -2807,8 +2811,9 @@ async function loadTestimonials() {
         "☆".repeat(5 - rating);
 
       const date = item.date_creation
-        ? new Date(item.date_creation).toLocaleDateString("fr-FR")
+        ? new Date(item.date_creation).toLocaleDateString("en-US")
         : "";
+
 
       return `
         <div class="item-card">
