@@ -2230,14 +2230,13 @@ function validateWizardStep(){
   }
 
   if(wizard.step===4){
-    const validPeople = wizard.people.filter(p=>p.firstName.trim() || p.lastName.trim());
+  const validPeople = wizard.people.filter(p=>p.firstName.trim() || p.lastName.trim());
 
-    if(!validPeople.length){
-      alert("Please enter at least one person being celebrated.
-");
-      return false;
-    }
+  if(!validPeople.length){
+    alert("Please enter at least one person being celebrated.");
+    return false;
   }
+}
 
   if(wizard.step===7 && d.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email)){
     alert("Please enter a valid email address.");
