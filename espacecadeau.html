@@ -1118,6 +1118,10 @@ nextAd: "Publicité suivante",
     learnMore: "En savoir plus",
     showAdvertisement: "Afficher la publicité",
     myChosenGifts: "🎁 Les cadeaux que vous avez choisis",
+    reservationFinal: "Votre réservation pour le cadeau",
+    thankYou: "Merci pour votre générosité !",
+    noAdvertisementReturned: "Aucune publicité n'a été retournée.",
+
   },
   ht: {
     guest: "Chè envite",
@@ -1186,6 +1190,9 @@ nextAd: "Piblisite apre a",
     learnMore: "Aprann plis",
     showAdvertisement: "Montre piblisite a",
     myChosenGifts: "🎁 Kado ou te chwazi yo",
+    reservationFinal: "Ou byen rezève kado a",
+    thankYou: "Mèsi pou jenerozite ou !",
+    noAdvertisementReturned: "Pa gen okenn piblisite ki retounen.",
   },
   en: {
     guest: "Dear guest",
@@ -1256,6 +1263,10 @@ nextAd: "Next advertisement",
     learnMore: "Learn more",
     showAdvertisement: "Show advertisement",
     myChosenGifts: "🎁 The gifts you have chosen",
+    reservationFinal: "Your reservation for the gift",
+    thankYou: "Thank you for your generosity!",
+    noAdvertisementReturned: "No advertisement was returned.",
+
   },
   es: {
     guest: "Estimado invitado",
@@ -1326,6 +1337,10 @@ nextAd: "Publicidad siguiente",
     learnMore: "Más información",
     showAdvertisement: "Mostrar publicidad",
     myChosenGifts: "🎁 Los regalos que has elegido",
+    reservationFinal: "Has reservado el regalo",
+    thankYou: "¡Gracias por tu generosidad!",
+    noAdvertisementReturned: "No se ha devuelto ningún anuncio.",
+
   },
   pt: {
     guest: "Caro convidado",
@@ -1396,6 +1411,9 @@ nextAd: "Publicidade seguinte",
     learnMore: "Saiba mais",
     showAdvertisement: "Mostrar publicidade",
     myChosenGifts: "🎁 Os presentes que você escolheu",
+    reservationFinal: "Você reservou o presente",
+    thankYou: "Obrigado pela sua generosidade!",
+    noAdvertisementReturned: "Nenhuma publicidade foi retornada.",
   }
 };
 
@@ -2239,11 +2257,9 @@ async function chooseGift(giftId) {
     await loadGifts();
 
     showMessage(
-    "🎉 " + t("reservationFinal") +
-" \"" + gift.name + "\". " +
-guestName + "!",
-      "success"
-    );
+  "🎉 " + t("reservationFinal") + " \"" + gift.name + "\". " + t("thankYou"),
+  "success"
+);
 
   } catch (error) {
 
@@ -2325,7 +2341,7 @@ function loadAdvertising(position, containerId) {
 
     if (!result || result.success !== true) {
       throw new Error(
-        result?.message || "Le backend n'a pas retourné de publicité."
+        result?.message || t("noAdvertisementReturned")
       );
     }
 
