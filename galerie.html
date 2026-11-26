@@ -1,0 +1,341 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Galerie - Party & Gifts</title>
+
+<style>
+:root {
+  --purple: #712a90;
+  --light: #f7f3fa;
+  --text: #292333;
+  --muted: #77717e;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--light);
+  color: var(--text);
+}
+
+header {
+  background: var(--purple);
+  color: white;
+  padding: 22px 6%;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo {
+  font-size: 23px;
+  font-weight: bold;
+}
+
+.tag {
+  border: 1px solid #ffffff80;
+  padding: 7px 13px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.hero {
+  padding: 35px 0 20px;
+}
+
+.hero h1 {
+  font-size: 30px;
+  margin: 0 0 10px;
+}
+
+.hero p {
+  color: #eee0f5;
+  line-height: 1.6;
+}
+
+main {
+  max-width: 1050px;
+  margin: auto;
+  padding: 30px 20px;
+}
+
+.section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.free {
+  color: #287c4d;
+  background: #e2f5e9;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.subtitle {
+  color: var(--muted);
+  font-size: 14px;
+  margin: 8px 0 22px;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.photo-card {
+  background: white;
+  border-radius: 13px;
+  overflow: hidden;
+  box-shadow: 0 3px 12px #0000000d;
+}
+
+.photo {
+  position: relative;
+  overflow: hidden;
+}
+
+.photo img {
+  width: 100%;
+  height: 210px;
+  object-fit: cover;
+  display: block;
+}
+
+.watermark {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 17px;
+  opacity: .65;
+  text-shadow: 1px 2px 5px #000;
+  transform: rotate(-25deg);
+  pointer-events: none;
+}
+
+.photo-info {
+  padding: 13px;
+}
+
+.photo-info h3 {
+  font-size: 15px;
+  margin: 0 0 7px;
+}
+
+.photo-info p {
+  color: var(--muted);
+  font-size: 12px;
+  margin: 0 0 12px;
+}
+
+.buy {
+  border: none;
+  background: var(--purple);
+  color: white;
+  padding: 10px;
+  border-radius: 7px;
+  width: 100%;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.buy:hover {
+  background: #55206c;
+}
+
+.offer {
+  margin-top: 35px;
+  background: white;
+  border-radius: 15px;
+  padding: 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.offer h2 { margin-top: 0; }
+
+.offer p {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.pack-price {
+  font-size: 23px;
+  font-weight: bold;
+  color: var(--purple);
+}
+
+footer {
+  background: var(--purple);
+  color: white;
+  text-align: center;
+  padding: 22px;
+  margin-top: 25px;
+  font-size: 13px;
+}
+
+@media(max-width: 700px) {
+  .gallery { grid-template-columns: repeat(2, 1fr); }
+  .photo img { height: 160px; }
+  .hero h1 { font-size: 24px; }
+}
+
+@media(max-width: 420px) {
+  .gallery { grid-template-columns: 1fr; }
+  .photo img { height: 230px; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="top">
+    <div class="logo">Party & Gifts</div>
+    <div class="tag">ESPACE GALERIE</div>
+  </div>
+
+  <div class="hero">
+    <h1>Les souvenirs de notre journée 💜</h1>
+    <p>Baby Shower de Sarah · 21 novembre 2026</p>
+    <p>Bienvenue dans notre galerie. Découvrez gratuitement
+    les meilleurs moments de cette belle célébration.</p>
+  </div>
+</header>
+
+<main>
+
+  <div class="section-title">
+    <h2>Galerie de l'événement</h2>
+    <span class="free">Consultation gratuite</span>
+  </div>
+
+  <p class="subtitle">
+    24 photos publiées · Sélectionnez vos souvenirs préférés.
+  </p>
+
+  <div class="gallery" id="gallery"></div>
+
+  <section class="offer">
+    <div>
+      <h2>Gardez vos plus beaux souvenirs !</h2>
+      <p>Obtenez les photos en haute résolution,
+      sans filigrane.</p>
+      <p>Photo individuelle : $2.00</p>
+      <p>Pack de 10 photos : $15.00</p>
+    </div>
+    <div>
+      <div class="pack-price">$15.00</div>
+      <button class="buy" onclick="demoPayment()">
+        Acheter un pack
+      </button>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Une création Party & Gifts · Des souvenirs à partager 💜
+</footer>
+
+<script>
+const photos = [
+  {
+    title: "La décoration",
+    url: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=800"
+  },
+  {
+    title: "Les invités",
+    url: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800"
+  },
+  {
+    title: "Le gâteau",
+    url: "https://images.unsplash.com/photo-1535254973040-607b474cb50d?w=800"
+  },
+  {
+    title: "La célébration",
+    url: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=800"
+  },
+  {
+    title: "Les beaux moments",
+    url: "https://images.unsplash.com/photo-1519741497674-611481863552?w=800"
+  },
+  {
+    title: "Les souvenirs",
+    url: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=800"
+  }
+];
+
+const gallery = document.getElementById("gallery");
+
+photos.forEach((photo, index) => {
+  const card = document.createElement("article");
+  card.className = "photo-card";
+
+  const image = document.createElement("img");
+  image.src = photo.url;
+  image.alt = photo.title;
+  image.loading = "lazy";
+
+  const container = document.createElement("div");
+  container.className = "photo";
+
+  const watermark = document.createElement("div");
+  watermark.className = "watermark";
+  watermark.textContent = "PARTY & GIFTS";
+
+  container.appendChild(image);
+  container.appendChild(watermark);
+
+  const info = document.createElement("div");
+  info.className = "photo-info";
+
+  const title = document.createElement("h3");
+  title.textContent = photo.title;
+
+  const description = document.createElement("p");
+  description.textContent = "Aperçu gratuit · Photo " + (index + 1);
+
+  const button = document.createElement("button");
+  button.className = "buy";
+  button.textContent = "Acheter · $2.00";
+  button.onclick = () => demoPayment();
+
+  info.append(title, description, button);
+  card.append(container, info);
+  gallery.appendChild(card);
+});
+
+function demoPayment() {
+  alert("Ceci est une démonstration. Le paiement sera intégré ultérieurement.");
+}
+
+// Dissuasion seulement : ne bloque pas les captures d'écran.
+document.addEventListener("contextmenu", function(e) {
+  if (e.target.closest(".photo")) e.preventDefault();
+});
+</script>
+
+</body>
+</html>
