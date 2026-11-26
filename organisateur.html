@@ -2742,6 +2742,60 @@ const galleryPanel = $("galleryPanel");
 }
 }
 
+async function loadEventGallery() {
+  const eventId = selectedEventId;
+
+  if (!eventId) return;
+
+  const status = $("galleryStatus");
+
+  try {
+    if (status) {
+      status.textContent = "Loading gallery data...";
+      status.className = "status";
+    }
+
+    const result = await api({
+      action: "galleryManagerData",
+      event_id: eventId
+    });
+
+    const photos = result.photos || [];
+    const purchases = result.purchases || [];
+    const paidPhotos = result.paidPhotos || [];
+    const accessStats = result.accessStats || [];
+    const shareStats = result.shareStats || [];
+
+    $("galleryUploadArea").innerHTML =
+      `<p>${photos.length} photo(s) in the gallery.</p>`;
+
+    $("galleryPurchaseRequests").innerHTML =
+      `<p>${purchases.length} purchase request(s).</p>`;
+
+    $("galleryPaidPhotos").innerHTML =
+      `<p>${paidPhotos.length} paid photo(s).</p>`;
+
+    $("galleryAccessStats").innerHTML =
+      `<p>${accessStats.length} access record(s).</p>`;
+
+    $("galleryShareStats").innerHTML =
+      `<p>${shareStats.length} share record(s).</p>`;
+
+    if (status) {
+      status.textContent = "Gallery data loaded.";
+      status.className = "status success";
+    }
+
+  } catch (error) {
+    console.error("Gallery loading error:", error);
+
+    if (status) {
+      status.textContent = error.message;
+      status.className = "status error";
+    }
+  }
+}
+
 async function loadAnnouncements() {
 
   const container = $("announcementHistory");
