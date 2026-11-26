@@ -917,6 +917,14 @@ button{font-family:inherit}
             style="width:auto">
           ⭐ View Guest Testimonials
         </label>
+        <label style="display:flex;align-items:center;gap:9px;margin-top:12px">
+  <input
+    type="checkbox"
+    class="collaborator-permission"
+    value="galerie"
+    style="width:auto">
+  📸 Manage Event Gallery
+</label>
       </div>
     </div>
 
@@ -1258,6 +1266,60 @@ button{font-family:inherit}
           <div class="muted">No event selected.</div>
         </div>
       </section>
+
+<section class="panel hidden" id="galleryPanel" style="margin-top:18px">
+
+  <div class="section-head">
+    <h3>📸 Event Gallery</h3>
+    <span class="badge">Photo Management</span>
+  </div>
+
+  <p class="muted">
+    Manage event photos, purchase requests, paid photos and gallery activity.
+  </p>
+
+  <div class="form-grid">
+
+    <div class="panel">
+      <h4>📤 Add Photos</h4>
+      <div id="galleryUploadArea">
+        <p class="muted">Photo upload area</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h4>🛒 Purchase Requests</h4>
+      <div id="galleryPurchaseRequests">
+        <p class="muted">No purchase requests loaded.</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h4>✅ Paid Photos</h4>
+      <div id="galleryPaidPhotos">
+        <p class="muted">No paid photos loaded.</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h4>👁️ Gallery Access</h4>
+      <div id="galleryAccessStats">
+        <p class="muted">Access statistics will appear here.</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h4>🔗 Photo Shares</h4>
+      <div id="galleryShareStats">
+        <p class="muted">Photo sharing statistics will appear here.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="galleryStatus" class="status"></div>
+
+</section>
 
     </div>
   </div>
@@ -2551,7 +2613,7 @@ function renderSelectedEvent() {
   const testimonialPanel = $("testimonialPanel");
   const guestPanel = $("guestPanel");
   const giftPanel = $("giftPanel");
-
+const galleryPanel = $("galleryPanel");
   // No event selected
   if (!selectedEvent) {
 
@@ -2576,7 +2638,8 @@ function renderSelectedEvent() {
       testimonialPanel,
       announcementPanel,
       guestPanel,
-      giftPanel
+      giftPanel,
+       galleryPanel
     ].forEach(panel => {
       if (panel) panel.classList.add("hidden");
     });
@@ -2671,6 +2734,12 @@ function renderSelectedEvent() {
       !hasPermission("cadeaux")
     );
   }
+  if (galleryPanel) {
+  galleryPanel.classList.toggle(
+    "hidden",
+    !hasPermission("galerie")
+  );
+}
 }
 
 async function loadAnnouncements() {
