@@ -1283,8 +1283,34 @@ button{font-family:inherit}
     <div class="panel">
       <h4>📤 Add Photos</h4>
       <div id="galleryUploadArea">
-        <p class="muted">Photo upload area</p>
-      </div>
+
+  <label for="galleryPhotoFiles">Sélectionner les photos</label>
+
+  <input
+    type="file"
+    id="galleryPhotoFiles"
+    accept="image/jpeg,image/png,image/webp"
+    multiple
+    style="width:100%;margin:10px 0">
+
+  <p class="muted">
+    Tu peux sélectionner plusieurs photos à la fois.
+    Formats acceptés : JPG, PNG et WebP.
+  </p>
+
+  <div id="galleryPhotoPreview"
+       style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px">
+  </div>
+
+  <button
+    type="button"
+    id="galleryUploadButton"
+    class="btn"
+    style="margin-top:15px">
+    📤 Préparer les photos
+  </button>
+
+</div>
     </div>
 
     <div class="panel">
