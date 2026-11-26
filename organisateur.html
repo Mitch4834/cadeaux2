@@ -3068,7 +3068,18 @@ if (hasPermission("temoignages")) {
     '<div class="muted">You do not have permission to view testimonials.</div>';
 
 }
-
+    // Event Gallery
+    if (hasPermission("galerie")) {
+      await loadEventGallery();
+    } else {
+      if ($("galleryUploadArea")) {
+        $("galleryUploadArea").innerHTML = "";
+      }
+      if ($("galleryPurchaseRequests")) {
+        $("galleryPurchaseRequests").innerHTML =
+          '<div class="muted">No permission.</div>';
+      }
+    }
 } catch (err) {
 
   console.error(err);
