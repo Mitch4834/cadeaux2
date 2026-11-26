@@ -2772,7 +2772,17 @@ async function loadEventGallery() {
   const eventId = selectedEventId;
 
   if (!eventId) return;
+const photoInput = $("galleryPhotoFiles");
 
+if (photoInput && !photoInput.dataset.previewBound) {
+
+  photoInput.addEventListener(
+    "change",
+    previewGalleryPhotos
+  );
+
+  photoInput.dataset.previewBound = "true";
+}
   const status = $("galleryStatus");
 
   try {
@@ -2821,7 +2831,60 @@ async function loadEventGallery() {
     }
   }
 }
+function previewGalleryPhotos() {
 
+  const input = document.getElementById("galleryPhotoFiles");
+  const preview = document.getElementById("galleryPhotoPreview");
+
+  if (!input || !preview) return;
+
+  preview.innerHTML = "";
+
+  const files = Array.from(input.files || []);
+
+  files.forEach((file, index) => {
+
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+
+      const card = document.createElement("div");
+
+      card.style.cssText = `
+        border:1px solid #ddd;
+        border-radius:8px;
+        padding:6px;
+        overflow:hidden;
+      `;
+
+      const img = document.createElement("img");
+      img.src = event.target.result;
+      img.style.cssText = `
+        width:100%;
+        height:100px;
+        object-fit:cover;
+        border-radius:5px;
+      `;
+
+      const name = document.createElement("p");
+      name.textContent = file.name;
+      name.style.cssText = "font-size:11px;word-break:break-word;margin:5px 0 0";
+
+      card.appendChild(img);
+      card.appendChild(name);
+
+      preview.appendChild(card);
+    };
+
+    reader.readAsDataURL(file);
+
+  });
+
+}
 async function loadAnnouncements() {
 
   const container = $("announcementHistory");
