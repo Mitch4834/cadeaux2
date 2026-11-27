@@ -1,119 +1,209 @@
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Galerie - Party & Gifts</title>
+
+<title>Event Gallery | Party & Gifts</title>
+
+<meta name="description" content="Explore the memories of this special celebration. Discover beautiful event photos and keep your favorite moments in high resolution.">
 
 <style>
 :root {
-  --purple: #712a90;
-  --light: #f7f3fa;
-  --text: #292333;
-  --muted: #77717e;
+  --primary: #712A90;
+  --primary-dark: #502064;
+  --primary-light: #F1E8F6;
+  --accent: #D6B77A;
+  --background: #FAF8FC;
+  --white: #FFFFFF;
+  --text: #30263A;
+  --muted: #82798A;
+  --border: #EEE8F2;
+  --shadow: 0 12px 35px rgba(52, 30, 67, .07);
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: var(--light);
+  font-family: Inter, Arial, sans-serif;
+  background: var(--background);
   color: var(--text);
 }
 
+button {
+  font-family: inherit;
+}
+
 header {
-  background: var(--purple);
+  background:
+    linear-gradient(120deg, rgba(48, 20, 65, .96), rgba(113, 42, 144, .92));
   color: white;
-  padding: 22px 6%;
+  padding: 24px 7% 65px;
 }
 
 .top {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 12px;
+  justify-content: space-between;
+  gap: 15px;
+  max-width: 1250px;
+  margin: auto;
 }
 
 .logo {
   font-size: 23px;
-  font-weight: bold;
+  font-weight: 800;
+  letter-spacing: -.7px;
+}
+
+.logo span {
+  color: var(--accent);
 }
 
 .tag {
-  border: 1px solid #ffffff80;
-  padding: 7px 13px;
-  border-radius: 20px;
-  font-size: 12px;
-}
-
-.hero {
-  padding: 35px 0 20px;
-}
-
-.hero h1 {
-  font-size: 30px;
-  margin: 0 0 10px;
-}
-
-.hero p {
-  color: #eee0f5;
-  line-height: 1.6;
-}
-
-main {
-  max-width: 1050px;
-  margin: auto;
-  padding: 30px 20px;
-}
-
-.section-title {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.free {
-  color: #287c4d;
-  background: #e2f5e9;
-  padding: 8px 12px;
-  border-radius: 20px;
-  font-size: 12px;
+  border: 1px solid rgba(255,255,255,.3);
+  padding: 9px 16px;
+  border-radius: 30px;
+  font-size: 11px;
+  letter-spacing: 1.5px;
   font-weight: bold;
 }
 
-.subtitle {
+.hero {
+  max-width: 1250px;
+  margin: 75px auto 0;
+  max-width: 900px;
+  text-align: center;
+}
+
+.eyebrow {
+  color: #E6D0F0;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.hero h1 {
+  font-family: Georgia, serif;
+  font-size: clamp(34px, 5vw, 55px);
+  line-height: 1.15;
+  margin: 0 0 18px;
+  font-weight: 500;
+}
+
+.hero-description {
+  color: #E8DCEC;
+  max-width: 620px;
+  margin: auto;
+  line-height: 1.8;
+  font-size: 15px;
+}
+
+.event-meta {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 25px;
+  color: #F3EAF7;
+  font-size: 13px;
+}
+
+.event-meta span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+main {
+  max-width: 1250px;
+  margin: auto;
+  padding: 45px 25px 60px;
+}
+
+.gallery-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 27px;
+}
+
+.section-label {
+  color: var(--primary);
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 9px;
+}
+
+.gallery-heading h2 {
+  font-family: Georgia, serif;
+  font-size: 30px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.gallery-heading p {
   color: var(--muted);
-  font-size: 14px;
-  margin: 8px 0 22px;
+  font-size: 13px;
+  margin: 9px 0 0;
+}
+
+.free-badge {
+  background: #E8F5EC;
+  color: #267346;
+  padding: 10px 16px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: bold;
 }
 
 .gallery {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 23px;
 }
 
 .photo-card {
   background: white;
-  border-radius: 13px;
+  border-radius: 15px;
   overflow: hidden;
-  box-shadow: 0 3px 12px #0000000d;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 15px rgba(52, 30, 67, .035);
+  transition: transform .25s, box-shadow .25s;
+}
+
+.photo-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow);
 }
 
 .photo {
   position: relative;
   overflow: hidden;
+  background: var(--primary-light);
+  cursor: pointer;
 }
 
 .photo img {
-  width: 100%;
-  height: 210px;
-  object-fit: cover;
   display: block;
+  width: 100%;
+  height: 245px;
+  object-fit: cover;
+  transition: transform .5s;
+}
+
+.photo-card:hover .photo img {
+  transform: scale(1.045);
 }
 
 .watermark {
@@ -123,16 +213,29 @@ main {
   align-items: center;
   justify-content: center;
   color: white;
-  font-weight: bold;
-  font-size: 17px;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 3px;
   opacity: .65;
-  text-shadow: 1px 2px 5px #000;
+  text-shadow: 1px 2px 8px #000;
   transform: rotate(-25deg);
   pointer-events: none;
 }
 
+.preview-label {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  background: rgba(255,255,255,.92);
+  color: var(--primary);
+  border-radius: 20px;
+  padding: 7px 11px;
+  font-size: 10px;
+  font-weight: bold;
+}
+
 .photo-info {
-  padding: 13px;
+  padding: 17px;
 }
 
 .photo-info h3 {
@@ -141,69 +244,264 @@ main {
 }
 
 .photo-info p {
-  color: var(--muted);
   font-size: 12px;
-  margin: 0 0 12px;
+  color: var(--muted);
+  margin: 0 0 16px;
+}
+
+.photo-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.price {
+  color: var(--primary);
+  font-size: 17px;
+  font-weight: 800;
 }
 
 .buy {
-  border: none;
-  background: var(--purple);
+  background: var(--primary);
   color: white;
-  padding: 10px;
-  border-radius: 7px;
-  width: 100%;
-  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  padding: 11px 15px;
+  font-size: 12px;
   font-weight: bold;
+  cursor: pointer;
+  transition: background .2s;
 }
 
 .buy:hover {
-  background: #55206c;
+  background: var(--primary-dark);
 }
 
 .offer {
-  margin-top: 35px;
-  background: white;
-  border-radius: 15px;
-  padding: 25px;
+  margin-top: 55px;
+  background: linear-gradient(115deg, #F0E5F5, #FAF5FC);
+  border: 1px solid #E8D9EF;
+  border-radius: 19px;
+  padding: 35px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 20px;
+  gap: 25px;
   flex-wrap: wrap;
 }
 
-.offer h2 { margin-top: 0; }
+.offer-label {
+  color: var(--primary);
+  font-size: 11px;
+  letter-spacing: 2px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.offer h2 {
+  font-family: Georgia, serif;
+  font-size: 27px;
+  font-weight: 500;
+  margin: 12px 0;
+}
 
 .offer p {
   color: var(--muted);
-  font-size: 14px;
+  font-size: 13px;
+  line-height: 1.7;
+  margin: 5px 0;
+}
+
+.offer-action {
+  text-align: center;
+  min-width: 190px;
 }
 
 .pack-price {
-  font-size: 23px;
-  font-weight: bold;
-  color: var(--purple);
+  font-size: 33px;
+  color: var(--primary);
+  font-weight: 800;
+  margin-bottom: 12px;
 }
 
-footer {
-  background: var(--purple);
-  color: white;
-  text-align: center;
-  padding: 22px;
-  margin-top: 25px;
+.pack-note {
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 13px;
+}
+
+.pack-button {
+  width: 100%;
+  padding: 14px 20px;
   font-size: 13px;
 }
 
-@media(max-width: 700px) {
-  .gallery { grid-template-columns: repeat(2, 1fr); }
-  .photo img { height: 160px; }
-  .hero h1 { font-size: 24px; }
+.trust {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin: 40px 0 5px;
+  color: var(--muted);
+  font-size: 12px;
 }
 
-@media(max-width: 420px) {
-  .gallery { grid-template-columns: 1fr; }
-  .photo img { height: 230px; }
+footer {
+  background: #2F1C3A;
+  color: white;
+  text-align: center;
+  padding: 30px 20px;
+  font-size: 12px;
+}
+
+footer strong {
+  color: #E5C9F0;
+}
+
+footer p {
+  color: #C9B7D0;
+  margin: 9px 0 0;
+}
+
+/* PHOTO LIGHTBOX */
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(22, 12, 28, .94);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 25px;
+}
+
+.lightbox.active {
+  display: flex;
+}
+
+.lightbox-content {
+  max-width: 900px;
+  width: 100%;
+  text-align: center;
+}
+
+.lightbox img {
+  max-width: 100%;
+  max-height: 78vh;
+  object-fit: contain;
+  border-radius: 9px;
+}
+
+.lightbox-title {
+  color: white;
+  margin-top: 14px;
+  font-size: 14px;
+}
+
+.close-lightbox {
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 35px;
+  cursor: pointer;
+}
+
+@media(max-width: 850px) {
+  .gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .photo img {
+    height: 210px;
+  }
+}
+
+@media(max-width: 550px) {
+  header {
+    padding: 20px 20px 50px;
+  }
+
+  .hero {
+    margin-top: 55px;
+  }
+
+  .hero h1 {
+    font-size: 34px;
+  }
+
+  .hero-description {
+    font-size: 13px;
+  }
+
+  main {
+    padding: 35px 16px 45px;
+  }
+
+  .gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .photo img {
+    height: 155px;
+  }
+
+  .photo-info {
+    padding: 12px;
+  }
+
+  .photo-info h3 {
+    font-size: 13px;
+  }
+
+  .photo-info p {
+    font-size: 10px;
+  }
+
+  .price {
+    font-size: 14px;
+  }
+
+  .buy {
+    padding: 9px 10px;
+    font-size: 10px;
+  }
+
+  .offer {
+    padding: 23px;
+  }
+
+  .offer h2 {
+    font-size: 23px;
+  }
+
+  .offer-action {
+    width: 100%;
+  }
+
+  .tag {
+    font-size: 9px;
+  }
+
+  .trust {
+    gap: 13px;
+    font-size: 10px;
+  }
+}
+
+@media(max-width: 350px) {
+  .gallery {
+    grid-template-columns: 1fr;
+  }
+
+  .photo img {
+    height: 220px;
+  }
 }
 </style>
 </head>
@@ -211,131 +509,261 @@ footer {
 <body>
 
 <header>
+
   <div class="top">
-    <div class="logo">Party & Gifts</div>
-    <div class="tag">ESPACE GALERIE</div>
+    <div class="logo">PARTY <span>&</span> GIFTS</div>
+    <div class="tag">EVENT GALLERY</div>
   </div>
 
-  <div class="hero">
-    <h1>Les souvenirs de notre journée 💜</h1>
-    <p>Baby Shower de Sarah · 21 novembre 2026</p>
-    <p>Bienvenue dans notre galerie. Découvrez gratuitement
-    les meilleurs moments de cette belle célébration.</p>
-  </div>
+  <section class="hero">
+
+    <div class="eyebrow">A celebration to remember</div>
+
+    <h1>Beautiful Moments,<br>Forever Memories.</h1>
+
+    <p class="hero-description">
+      Welcome to our event gallery. Relive the joy, the laughter
+      and the unforgettable moments of this special celebration.
+      Explore the photos and keep your favorite memories.
+    </p>
+
+    <div class="event-meta">
+      <span>📍 Sarah's Baby Shower</span>
+      <span>📅 November 21, 2026</span>
+    </div>
+
+  </section>
+
 </header>
 
 <main>
 
-  <div class="section-title">
-    <h2>Galerie de l'événement</h2>
-    <span class="free">Consultation gratuite</span>
-  </div>
+  <section class="gallery-heading">
 
-  <p class="subtitle">
-    24 photos publiées · Sélectionnez vos souvenirs préférés.
-  </p>
+    <div>
+      <div class="section-label">The memories</div>
+      <h2>Explore the Gallery</h2>
+      <p id="galleryCount">
+        Discover the highlights of this special day.
+      </p>
+    </div>
 
-  <div class="gallery" id="gallery"></div>
+    <span class="free-badge">✓ Free Preview</span>
+
+  </section>
+
+  <section class="gallery" id="gallery"></section>
 
   <section class="offer">
+
     <div>
-      <h2>Gardez vos plus beaux souvenirs !</h2>
-      <p>Obtenez les photos en haute résolution,
-      sans filigrane.</p>
-      <p>Photo individuelle : $2.00</p>
-      <p>Pack de 10 photos : $15.00</p>
+      <div class="offer-label">Keep your memories</div>
+
+      <h2>Your favorite moments,<br>in beautiful high resolution.</h2>
+
+      <p>
+        Get your favorite event photos in high resolution,
+        without the preview watermark.
+      </p>
+
+      <p>Individual photo: $2.00</p>
+      <p>Special bundle: 10 photos for $15.00</p>
     </div>
-    <div>
+
+    <div class="offer-action">
+
       <div class="pack-price">$15.00</div>
-      <button class="buy" onclick="demoPayment()">
-        Acheter un pack
+
+      <div class="pack-note">
+        10 high-resolution photos
+      </div>
+
+      <button class="buy pack-button" onclick="demoPayment()">
+        Get the Photo Bundle
       </button>
+
     </div>
+
   </section>
+
+  <div class="trust">
+    <span>📸 High-resolution photos</span>
+    <span>🔒 Secure purchase process</span>
+    <span>💜 Memories worth keeping</span>
+  </div>
 
 </main>
 
 <footer>
-  Une création Party & Gifts · Des souvenirs à partager 💜
+  <strong>PARTY & GIFTS</strong>
+  <p>Making every celebration unforgettable.</p>
+  <p>© 2026 Party & Gifts. All rights reserved.</p>
 </footer>
 
+<!-- PHOTO LIGHTBOX -->
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+
+  <button class="close-lightbox"
+    onclick="closeLightbox(event)">×</button>
+
+  <div class="lightbox-content">
+    <img id="lightboxImage" src="" alt="Photo preview">
+    <div class="lightbox-title" id="lightboxTitle"></div>
+  </div>
+
+</div>
+
 <script>
+
+/*
+  DEMO DATA
+
+  Replace these sample images with the real preview URLs
+  returned by your public gallery API.
+*/
+
 const photos = [
   {
-    title: "La décoration",
-    url: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=800"
+    id: "demo1",
+    title: "The Decoration",
+    url: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=900",
+    price: 2
   },
   {
-    title: "Les invités",
-    url: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800"
+    id: "demo2",
+    title: "Our Guests",
+    url: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=900",
+    price: 2
   },
   {
-    title: "Le gâteau",
-    url: "https://images.unsplash.com/photo-1535254973040-607b474cb50d?w=800"
+    id: "demo3",
+    title: "The Celebration Cake",
+    url: "https://images.unsplash.com/photo-1535254973040-607b474cb50d?w=900",
+    price: 2
   },
   {
-    title: "La célébration",
-    url: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=800"
+    id: "demo4",
+    title: "A Beautiful Celebration",
+    url: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=900",
+    price: 2
   },
   {
-    title: "Les beaux moments",
-    url: "https://images.unsplash.com/photo-1519741497674-611481863552?w=800"
+    id: "demo5",
+    title: "Special Moments",
+    url: "https://images.unsplash.com/photo-1519741497674-611481863552?w=900",
+    price: 2
   },
   {
-    title: "Les souvenirs",
-    url: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=800"
+    id: "demo6",
+    title: "Forever Memories",
+    url: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=900",
+    price: 2
   }
 ];
 
 const gallery = document.getElementById("gallery");
 
-photos.forEach((photo, index) => {
-  const card = document.createElement("article");
-  card.className = "photo-card";
+function renderGallery() {
 
-  const image = document.createElement("img");
-  image.src = photo.url;
-  image.alt = photo.title;
-  image.loading = "lazy";
+  gallery.innerHTML = "";
 
-  const container = document.createElement("div");
-  container.className = "photo";
+  document.getElementById("galleryCount").textContent =
+    `${photos.length} photos available · Select your favorite memories.`;
 
-  const watermark = document.createElement("div");
-  watermark.className = "watermark";
-  watermark.textContent = "PARTY & GIFTS";
+  photos.forEach((photo, index) => {
 
-  container.appendChild(image);
-  container.appendChild(watermark);
+    const card = document.createElement("article");
+    card.className = "photo-card";
 
-  const info = document.createElement("div");
-  info.className = "photo-info";
+    const container = document.createElement("div");
+    container.className = "photo";
 
-  const title = document.createElement("h3");
-  title.textContent = photo.title;
+    const image = document.createElement("img");
+    image.src = photo.url;
+    image.alt = photo.title;
+    image.loading = "lazy";
 
-  const description = document.createElement("p");
-  description.textContent = "Aperçu gratuit · Photo " + (index + 1);
+    image.addEventListener("click", () => {
+      openLightbox(photo);
+    });
 
-  const button = document.createElement("button");
-  button.className = "buy";
-  button.textContent = "Acheter · $2.00";
-  button.onclick = () => demoPayment();
+    const label = document.createElement("span");
+    label.className = "preview-label";
+    label.textContent = "FREE PREVIEW";
 
-  info.append(title, description, button);
-  card.append(container, info);
-  gallery.appendChild(card);
-});
+    const watermark = document.createElement("div");
+    watermark.className = "watermark";
+    watermark.textContent = "PARTY & GIFTS";
 
-function demoPayment() {
-  alert("Ceci est une démonstration. Le paiement sera intégré ultérieurement.");
+    container.append(image, label, watermark);
+
+    const info = document.createElement("div");
+    info.className = "photo-info";
+
+    const title = document.createElement("h3");
+    title.textContent = photo.title;
+
+    const description = document.createElement("p");
+    description.textContent =
+      `Photo ${index + 1} · Preview available`;
+
+    const bottom = document.createElement("div");
+    bottom.className = "photo-bottom";
+
+    const price = document.createElement("span");
+    price.className = "price";
+    price.textContent = `$${Number(photo.price).toFixed(2)}`;
+
+    const button = document.createElement("button");
+    button.className = "buy";
+    button.textContent = "Get Photo";
+    button.onclick = () => demoPayment(photo.id);
+
+    bottom.append(price, button);
+    info.append(title, description, bottom);
+    card.append(container, info);
+
+    gallery.appendChild(card);
+
+  });
 }
 
-// Dissuasion seulement : ne bloque pas les captures d'écran.
-document.addEventListener("contextmenu", function(e) {
-  if (e.target.closest(".photo")) e.preventDefault();
-});
+function openLightbox(photo) {
+
+  document.getElementById("lightboxImage").src = photo.url;
+
+  document.getElementById("lightboxTitle").textContent =
+    photo.title;
+
+  document.getElementById("lightbox").classList.add("active");
+
+}
+
+function closeLightbox(event) {
+
+  if (
+    event.target.id === "lightbox" ||
+    event.target.classList.contains("close-lightbox")
+  ) {
+    document.getElementById("lightbox").classList.remove("active");
+  }
+
+}
+
+function demoPayment(photoId) {
+
+  alert(
+    "Thank you for your interest!\n\n" +
+    "The secure photo purchase system will be available soon."
+  );
+
+}
+
+renderGallery();
+
 </script>
 
 </body>
 </html>
+
