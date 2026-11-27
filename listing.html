@@ -677,70 +677,166 @@ footer p {
 </footer>
 
 <script>
-const providers = [
-  {
-    name: "Elegant Moments Events",
-    category: "decoration",
-    label: "Event Decoration",
-    city: "Port-au-Prince",
-    country: "Haiti",
-    description: "Beautiful event decorations for unforgettable celebrations.",
-    image: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=800",
-    verified: true
-  },
-  {
-    name: "Forever Memories Studio",
-    category: "photography",
-    label: "Photography & Video",
-    city: "Port-au-Prince",
-    country: "Haiti",
-    description: "Professional photography for your special moments.",
-    image: "https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=800",
-    verified: true
-  },
-  {
-    name: "Sweet Delights Bakery",
-    category: "cakes",
-    label: "Cakes & Bakery",
-    city: "Pétion-Ville",
-    country: "Haiti",
-    description: "Custom cakes and sweet creations for every occasion.",
-    image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=800",
-    verified: false
-  },
-  {
-    name: "Royal Celebration Hall",
-    category: "venues",
-    label: "Event Venues",
-    city: "Pétion-Ville",
-    country: "Haiti",
-    description: "Elegant spaces for weddings and private celebrations.",
-    image: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=800",
-    verified: true
-  },
-  {
-    name: "Golden Table Catering",
-    category: "catering",
-    label: "Catering",
-    city: "Port-au-Prince",
-    country: "Haiti",
-    description: "Professional catering for memorable events.",
-    image: "https://images.unsplash.com/photo-1555244162-803834f70033?w=800",
-    verified: false
-  },
-  {
-    name: "Sound Experience DJ",
-    category: "music",
-    label: "Music & DJs",
-    city: "Delmas",
-    country: "Haiti",
-    description: "Music and entertainment for every celebration.",
-    image: "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=800",
-    verified: true
-  }
-];
+/* =====================================================
+   PARTY & GIFTS LISTING
+   CONNEXION GOOGLE APPS SCRIPT
+===================================================== */
 
+const API_URL = "https://script.google.com/macros/s/AKfycbzVpvq126Qc6ooYEKpxNDGN9AKwP6vU14a62d1hsEBXxu2SW6d9xudlVRjfl8g1OlZq/exec";
+
+let providers = [];
 let selectedCategory = "";
+
+/* =====================================================
+   CORRESPONDANCE DES CATEGORIES
+===================================================== */
+
+const categoryMap = {
+  "event venues": "venues",
+  "venues": "venues",
+
+  "photography & video": "photography",
+  "photography": "photography",
+  "photo": "photography",
+
+  "decoration & flowers": "decoration",
+  "decoration": "decoration",
+
+  "catering": "catering",
+
+  "cakes & bakery": "cakes",
+  "cakes": "cakes",
+  "bakery": "cakes",
+
+  "music & djs": "music",
+  "music": "music",
+  "djs": "music",
+
+  "beauty & makeup": "beauty",
+  "beauty": "beauty",
+  "makeup": "beauty",
+
+  "event planning": "planning",
+  "planning": "planning",
+
+  "fashion & clothing": "fashion",
+  "fashion": "fashion",
+
+  "furniture & rentals": "rentals",
+  "rentals": "rentals",
+
+  "transportation": "transport",
+  "transport": "transport",
+
+  "gifts & souvenirs": "gifts",
+  "gifts": "gifts"
+};
+
+const categoryImages = {
+  venues: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=800",
+  photography: "https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=800",
+  decoration: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=800",
+  catering: "https://images.unsplash.com/photo-1555244162-803834f70033?w=800",
+  cakes: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=800",
+  music: "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=800",
+  beauty: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800",
+  planning: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800",
+  fashion: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800",
+  rentals: "https://images.unsplash.com/photo-1507504031003-b417219a0hle?w=800",
+  transport: "https://images.unsplash.com/photo-1519741497674-611481863552?w=800",
+  gifts: "https://images.unsplash.com/photo-1513201099705-a9746e1e201f?w=800"
+};
+
+/* =====================================================
+   NORMALISATION
+===================================================== */
+
+function normalizeText(value) {
+  return String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
+}
+
+function getCategoryKey(category) {
+  return categoryMap[normalizeText(category)] || "";
+}
+
+/* =====================================================
+   CHARGEMENT DES PRESTATAIRES
+===================================================== */
+
+async function loadProviders() {
+  const grid = document.getElementById("providerGrid");
+  const empty = document.getElementById("emptyMessage");
+
+  grid.innerHTML = `
+    <p style="grid-column:1/-1;text-align:center;padding:35px;">
+      Loading event professionals...
+    </p>
+  `;
+
+  empty.style.display = "none";
+
+  try {
+    const response = await fetch(
+      API_URL + "?action=providers&publicOnly=true"
+    );
+
+    if (!response.ok) {
+      throw new Error("HTTP error " + response.status);
+    }
+
+    const data = await response.json();
+
+    if (!data.success) {
+      throw new Error(data.message || "Unable to load providers");
+    }
+
+    providers = (data.providers || []).map(provider => {
+      const categoryKey = getCategoryKey(provider.Categorie);
+
+      return {
+        id: provider.ID || "",
+        name: provider.Nom_Entreprise || "Unnamed provider",
+        category: categoryKey,
+        label: provider.Categorie || "Other services",
+        city: provider.Ville || "",
+        country: provider.Pays || "",
+        address: provider.Adresse || "",
+        description: provider.Description || "",
+        image: provider.Logo || categoryImages[categoryKey] ||
+          "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800",
+        phone: provider.Telephone || "",
+        whatsapp: provider.WhatsApp || "",
+        email: provider.Email || "",
+        website: provider.Site_Web || "",
+        verified: false
+      };
+    });
+
+    filterProviders();
+
+  } catch (error) {
+    console.error("Listing API error:", error);
+
+    grid.innerHTML = "";
+
+    document.getElementById("resultCount").textContent =
+      "Unable to load providers.";
+
+    empty.style.display = "block";
+    empty.innerHTML = `
+      <h3>Unable to load providers</h3>
+      <p>Please try again later.</p>
+    `;
+  }
+}
+
+/* =====================================================
+   AFFICHAGE DES CARTES
+===================================================== */
 
 function renderProviders(list) {
   const grid = document.getElementById("providerGrid");
@@ -763,6 +859,10 @@ function renderProviders(list) {
     image.alt = provider.name;
     image.loading = "lazy";
 
+    image.onerror = function() {
+      this.src = "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800";
+    };
+
     const content = document.createElement("div");
     content.className = "provider-content";
 
@@ -780,8 +880,8 @@ function renderProviders(list) {
 
     const location = document.createElement("div");
     location.className = "provider-location";
-    location.textContent =
-      "📍 " + provider.city + ", " + provider.country;
+    location.textContent = "📍 " +
+      [provider.city, provider.country].filter(Boolean).join(", ");
 
     content.append(category, title);
 
@@ -797,47 +897,88 @@ function renderProviders(list) {
     const actions = document.createElement("div");
     actions.className = "provider-actions";
 
-    const details = document.createElement("a");
-    details.className = "btn btn-outline";
-    details.href = "#";
-    details.textContent = "View Profile";
+    let contactLink = "";
 
-    actions.appendChild(details);
-    content.appendChild(actions);
+    if (provider.whatsapp) {
+      const number = provider.whatsapp.replace(/[^\d]/g, "");
+      contactLink = "https://wa.me/" + number;
+    } else if (provider.phone) {
+      contactLink = "tel:" + provider.phone;
+    } else if (provider.email) {
+      contactLink = "mailto:" + provider.email;
+    } else if (provider.website) {
+      contactLink = provider.website;
+    }
+
+    if (contactLink) {
+      const contact = document.createElement("a");
+      contact.className = "btn btn-outline";
+      contact.href = contactLink;
+      contact.textContent = "Contact";
+      contact.target = "_blank";
+      contact.rel = "noopener noreferrer";
+      actions.appendChild(contact);
+    }
+
+    if (provider.website && contactLink !== provider.website) {
+      const website = document.createElement("a");
+      website.className = "btn btn-outline";
+      website.href = provider.website;
+      website.textContent = "Website";
+      website.target = "_blank";
+      website.rel = "noopener noreferrer";
+      actions.appendChild(website);
+    }
+
+    if (actions.children.length) {
+      content.appendChild(actions);
+    }
 
     card.append(image, content);
     grid.appendChild(card);
   });
 }
 
-function filterProviders() {
-  const search = document
-    .getElementById("searchInput")
-    .value.toLowerCase().trim();
+/* =====================================================
+   RECHERCHE ET FILTRES
+===================================================== */
 
-  const location = document
-    .getElementById("locationInput")
-    .value.toLowerCase().trim();
+function filterProviders() {
+  const search = normalizeText(
+    document.getElementById("searchInput").value
+  );
+
+  const location = normalizeText(
+    document.getElementById("locationInput").value
+  );
 
   let results = providers.filter(provider => {
+
     const matchesCategory =
       !selectedCategory ||
       provider.category === selectedCategory;
 
-    const searchable =
-      (provider.name + " " +
-       provider.label + " " +
-       provider.description).toLowerCase();
+    const searchable = normalizeText([
+      provider.name,
+      provider.label,
+      provider.description,
+      provider.city,
+      provider.country
+    ].join(" "));
 
-    const matchesSearch = searchable.includes(search);
+    const matchesSearch =
+      !search || searchable.includes(search);
 
-    const providerLocation =
-      (provider.city + " " + provider.country).toLowerCase();
+    const providerLocation = normalizeText(
+      provider.city + " " + provider.country
+    );
 
     const matchesLocation =
-      providerLocation.includes(location);
+      !location || providerLocation.includes(location);
 
-    return matchesCategory && matchesSearch && matchesLocation;
+    return matchesCategory &&
+      matchesSearch &&
+      matchesLocation;
   });
 
   if (document.getElementById("sortSelect").value === "name") {
@@ -847,9 +988,13 @@ function filterProviders() {
   renderProviders(results);
 }
 
-/* CATEGORY FILTER */
+/* =====================================================
+   FILTRE PAR CATEGORIE
+===================================================== */
+
 document.querySelectorAll(".category").forEach(category => {
   category.addEventListener("click", () => {
+
     const value = category.dataset.category;
 
     selectedCategory =
@@ -869,16 +1014,23 @@ document.querySelectorAll(".category").forEach(category => {
   });
 });
 
-/* LIVE SEARCH */
+/* =====================================================
+   RECHERCHE EN DIRECT
+===================================================== */
+
 document.getElementById("searchInput")
   .addEventListener("input", filterProviders);
 
 document.getElementById("locationInput")
   .addEventListener("input", filterProviders);
 
-/* HERO CAROUSEL */
+/* =====================================================
+   HERO CAROUSEL
+===================================================== */
+
 const heroSlides = document.querySelectorAll(".hero-slide");
 const carouselDots = document.querySelectorAll(".carousel-dot");
+
 let currentSlide = 0;
 let carouselTimer;
 
@@ -913,8 +1065,11 @@ carouselDots.forEach(dot => {
 
 startCarousel();
 
-/* INITIAL DISPLAY */
-renderProviders(providers);
+/* =====================================================
+   INITIALISATION
+===================================================== */
+
+loadProviders();
 </script>
 
 </body>
