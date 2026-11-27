@@ -2809,6 +2809,19 @@ if (photoInput && !photoInput.dataset.previewBound) {
 
   photoInput.dataset.previewBound = "true";
 }
+  ["galleryLotName", "galleryLotPrice"].forEach(id => {
+  const field = $(id);
+
+  if (field && !field.dataset.summaryBound) {
+    field.addEventListener("input", updateGalleryLotSummary);
+    field.dataset.summaryBound = "true";
+  }
+});
+
+if (photoInput && !photoInput.dataset.summaryBound) {
+  photoInput.addEventListener("change", updateGalleryLotSummary);
+  photoInput.dataset.summaryBound = "true";
+}
   const status = $("galleryStatus");
 
   try {
