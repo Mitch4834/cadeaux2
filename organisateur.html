@@ -1280,67 +1280,60 @@ button{font-family:inherit}
 
   <div class="form-grid">
 
-    <div class="panel">
-      <h4>📤 Add Photos</h4>
-      <div id="galleryUploadArea">
+   <div class="panel">
+  <h4>📤 Add Photo Lot</h4>
 
-  <label for="galleryLotName">Nom du lot</label>
-  <input
-    type="text"
-    id="galleryLotName"
-    placeholder="Ex : Décoration">
+  <div id="galleryUploadArea">
 
-  <label for="galleryLotPrice">Prix du lot</label>
-  <input
-    type="number"
-    id="galleryLotPrice"
-    min="0"
-    step="0.01"
-    placeholder="Ex : 25">
+    <label for="galleryLotName">Lot Name</label>
+    <input
+      type="text"
+      id="galleryLotName"
+      placeholder="Example: Decoration">
 
-  <label for="galleryPhotoFiles">Sélectionner les photos</label>
-  <input
-    type="file"
-    id="galleryPhotoFiles"
-    accept="image/jpeg,image/png,image/webp"
-    multiple
-    style="width:100%;margin:10px 0">
+    <label for="galleryLotPrice">Lot Price</label>
+    <input
+      type="number"
+      id="galleryLotPrice"
+      min="0"
+      step="0.01"
+      placeholder="Example: 25">
 
-  <p class="muted">
-    Tu peux sélectionner plusieurs photos pour constituer un même lot.
-  </p>
+    <label for="galleryPhotoFiles">Select Photos</label>
+    <input
+      type="file"
+      id="galleryPhotoFiles"
+      accept="image/jpeg,image/png,image/webp"
+      multiple
+      style="width:100%;margin:10px 0">
 
-  <div id="galleryPhotoPreview"
-       style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px">
-  </div>
+    <p class="muted">
+      You can select multiple photos to create one photo lot.
+    </p>
 
-  <p id="galleryPhotoCount" class="muted">
-    0 photo sélectionnée
-  </p>
-
-  <button
-    type="button"
-    id="galleryUploadButton"
-    class="btn"
-    style="margin-top:15px">
-    📤 Ajouter ce lot
-  </button>
-<p id="galleryUploadInfo" class="muted">
-  0 photos in the gallery.
-</p>
-</div>
-
-  <button
-    type="button"
-    id="galleryUploadButton"
-    class="btn"
-    style="margin-top:15px">
-    📤 Préparer les photos
-  </button>
-
-</div>
+    <div
+      id="galleryPhotoPreview"
+      style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px">
     </div>
 
+    <p id="galleryPhotoCount" class="muted">
+      0 photos selected
+    </p>
+
+    <p id="galleryUploadInfo" class="muted">
+      0 photos in the gallery.
+    </p>
+
+    <button
+      type="button"
+      id="galleryUploadButton"
+      class="btn"
+      style="margin-top:15px">
+      📤 Add Photo Lot
+    </button>
+
+  </div>
+</div>
     <div class="panel">
       <h4>🛒 Purchase Requests</h4>
       <div id="galleryPurchaseRequests">
