@@ -515,24 +515,30 @@ footer p {
     <div class="tag">EVENT GALLERY</div>
   </div>
 
-  <section class="hero">
+  
+<section class="hero">
 
-    <div class="eyebrow">A celebration to remember</div>
+  <div class="eyebrow" id="eventType">
+    A celebration to remember
+  </div>
 
-    <h1>Beautiful Moments,<br>Forever Memories.</h1>
+  <h1 id="eventName">
+    Beautiful Moments,<br>Forever Memories.
+  </h1>
 
-    <p class="hero-description">
-      Welcome to our event gallery. Relive the joy, the laughter
-      and the unforgettable moments of this special celebration.
-      Explore the photos and keep your favorite memories.
-    </p>
+  <p class="hero-description" id="eventDescription">
+    Welcome to our event gallery. Relive the joy,
+    the laughter and the unforgettable moments.
+  </p>
 
-    <div class="event-meta">
-      <span>📍 Sarah's Baby Shower</span>
-      <span>📅 November 21, 2026</span>
-    </div>
+  <div class="event-meta">
+    <span id="eventVenue">📍 Event location</span>
+    <span id="eventDate">📅 Event date</span>
+    <span id="eventTime">🕒 Event time</span>
+  </div>
 
-  </section>
+</section>
+
 
 </header>
 
@@ -624,6 +630,49 @@ let photos = [];
 
 const gallery = document.getElementById("gallery");
 
+
+async function loadEventInfo() {
+  try {
+    const url = new URL(API_URL);
+    url.searchParams.set("action", "publicEvent");
+    url.searchParams.set("fete_id", eventId);
+
+    const response = await fetch(url);
+    const result = await response.json();
+
+    if (!result.success || !result.event) {
+      throw new Error(result.message || "Unable to load event information.");
+    }
+
+    const event = result.event;
+
+    document.getElementById("eventType").textContent =
+      event.type || "Special Celebration";
+
+    document.getElementById("eventName").textContent =
+      event.name || "Beautiful Moments, Forever Memories.";
+
+    document.getElementById("eventDescription").textContent =
+      event.presentation || event.description || "";
+
+    document.getElementById("eventVenue").textContent =
+      "📍 " + [event.venue, event.city, event.country]
+        .filter(Boolean).join(", ");
+
+    document.getElementById("eventDate").textContent =
+      event.date ? "📅 " + new Date(event.date).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+      }) : "";
+
+    document.getElementById("eventTime").textContent =
+      event.time ? "🕒 " + event.time : "";
+
+  } catch (error) {
+    console.error("Event information error:", error);
+  }
+}
 
 
 
@@ -786,6 +835,7 @@ function demoPayment(photoId) {
 
 }
 
+loadEventInfo();
 loadGallery();
 
 </script>
