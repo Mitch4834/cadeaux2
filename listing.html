@@ -1,0 +1,921 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Party & Gifts | Event Directory</title>
+
+<style>
+:root {
+  --primary: #712A90;
+  --secondary: #F1E8F6;
+  --accent: #D6B77A;
+  --bg: #FAF7FC;
+  --text: #35213D;
+  --muted: #786C7D;
+  --white: #FFFFFF;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+a { text-decoration: none; color: inherit; }
+
+header {
+  background: white;
+  padding: 16px 6%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  box-shadow: 0 2px 12px #35213D0D;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.logo {
+  color: var(--primary);
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+nav {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+nav a {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+nav a:hover { color: var(--primary); }
+
+.btn {
+  border: 0;
+  border-radius: 8px;
+  padding: 13px 19px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 14px;
+  transition: .2s;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #57206F;
+  transform: translateY(-1px);
+}
+
+.btn-outline {
+  background: white;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+}
+
+/* HERO / PHOTO CAROUSEL */
+
+.hero {
+  position: relative;
+  min-height: 570px;
+  padding: 50px 20px;
+  overflow: hidden;
+  background: #35213D;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-carousel {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.hero-slide {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transform: scale(1.02);
+  transition: opacity 1s ease-in-out, transform 6s ease;
+}
+
+.hero-slide.active {
+  opacity: 1;
+  transform: scale(1.07);
+}
+
+.hero-slide::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(30, 15, 38, 0.68),
+    rgba(30, 15, 38, 0.42)
+  );
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1120px;
+  margin: auto;
+  padding: 25px 15px;
+  text-align: center;
+}
+
+.hero-title {
+  color: white;
+  font-size: clamp(32px, 5vw, 55px);
+  font-weight: 800;
+  letter-spacing: 2px;
+  margin: 0 0 30px;
+  text-shadow: 0 3px 18px #0008;
+}
+
+.search-panel {
+  max-width: 1000px;
+  width: 100%;
+  margin: auto;
+  background: white;
+  padding: 19px;
+  border-radius: 15px;
+  box-shadow: 0 10px 40px #0005;
+  display: grid;
+  grid-template-columns: 1.5fr 1fr auto;
+  gap: 12px;
+  text-align: left;
+}
+
+.search-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.search-field label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.search-panel input {
+  width: 100%;
+  min-width: 0;
+  padding: 15px;
+  border: 1px solid #E8DFEC;
+  border-radius: 8px;
+  background: white;
+  color: var(--text);
+  outline-color: var(--primary);
+  font-size: 14px;
+}
+
+.search-panel .btn {
+  align-self: end;
+  min-height: 48px;
+  white-space: nowrap;
+}
+
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 25px;
+}
+
+.carousel-dot {
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #FFFFFF90;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.carousel-dot.active {
+  background: var(--accent);
+  transform: scale(1.35);
+}
+
+/* INTRO BELOW HERO */
+
+.intro-section {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 48px 22px 10px;
+  text-align: center;
+}
+
+.intro-section h1 {
+  font-size: clamp(25px, 3vw, 34px);
+  margin: 0 0 12px;
+  color: var(--text);
+}
+
+.intro-section p {
+  max-width: 720px;
+  margin: auto;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.container {
+  max-width: 1200px;
+  padding: 45px 22px 55px;
+  margin: auto;
+}
+
+.section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+h2 { font-size: 27px; margin: 0 0 8px; }
+
+.subtitle {
+  color: var(--muted);
+  font-size: 14px;
+  margin: 0;
+}
+
+.categories {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 15px;
+}
+
+.category {
+  background: white;
+  border-radius: 12px;
+  padding: 22px 10px;
+  text-align: center;
+  border: 1px solid #EEE6F1;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.category:hover,
+.category.active {
+  border-color: var(--primary);
+  background: var(--secondary);
+  transform: translateY(-3px);
+}
+
+.category .emoji {
+  font-size: 30px;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.category strong { font-size: 13px; }
+
+.listing-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 45px 0 22px;
+  gap: 15px;
+}
+
+.listing-toolbar select {
+  padding: 11px;
+  border: 1px solid #E5DCE9;
+  border-radius: 8px;
+  background: white;
+}
+
+.providers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 23px;
+}
+
+.provider-card {
+  background: white;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid #EEE6F1;
+  transition: .2s;
+}
+
+.provider-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px #35213D12;
+}
+
+.provider-image {
+  width: 100%;
+  height: 210px;
+  object-fit: cover;
+  background: var(--secondary);
+}
+
+.provider-content { padding: 19px; }
+
+.provider-category {
+  color: var(--primary);
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.provider-title {
+  font-size: 19px;
+  margin: 9px 0;
+}
+
+.provider-description {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+  min-height: 40px;
+}
+
+.provider-location {
+  font-size: 13px;
+  margin: 14px 0;
+  color: var(--muted);
+}
+
+.verified {
+  display: inline-block;
+  color: #287B4A;
+  background: #E6F5EC;
+  padding: 5px 9px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.provider-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 15px;
+}
+
+.provider-actions a {
+  flex: 1;
+  text-align: center;
+  font-size: 12px;
+}
+
+.empty {
+  text-align: center;
+  padding: 45px 15px;
+  color: var(--muted);
+  display: none;
+}
+
+.join-banner {
+  background: var(--secondary);
+  border-radius: 18px;
+  padding: 40px 25px;
+  text-align: center;
+  margin-top: 70px;
+}
+
+.join-banner h2 { color: var(--primary); }
+
+.join-banner p {
+  color: var(--muted);
+  margin-bottom: 22px;
+  line-height: 1.6;
+}
+
+footer {
+  background: var(--text);
+  color: white;
+  padding: 40px 6%;
+  text-align: center;
+}
+
+footer p {
+  color: #D6C9DA;
+  font-size: 13px;
+}
+
+@media(max-width:850px) {
+  .categories { grid-template-columns: repeat(3,1fr); }
+  .providers { grid-template-columns: repeat(2,1fr); }
+  nav { gap: 12px; }
+}
+
+@media(max-width:600px) {
+  header { flex-wrap: wrap; padding: 14px 5%; }
+
+  nav {
+    width: 100%;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  nav a { font-size: 11px; }
+
+  .hero {
+    min-height: 590px;
+    padding: 35px 12px;
+  }
+
+  .hero-content { padding: 25px 5px; }
+
+  .hero-title {
+    font-size: 30px;
+    line-height: 1.15;
+    margin-bottom: 24px;
+  }
+
+  .search-panel {
+    grid-template-columns: 1fr;
+    padding: 16px;
+    gap: 13px;
+  }
+
+  .search-panel .btn { width: 100%; }
+
+  .intro-section { padding: 38px 18px 5px; }
+  .container { padding: 38px 15px; }
+  .categories { grid-template-columns: repeat(2,1fr); }
+  .providers { grid-template-columns: 1fr; }
+
+  .section-heading,
+  .listing-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <a href="#" class="logo">PARTY & GIFTS</a>
+
+  <nav>
+    <a href="#">Home</a>
+    <a href="#categories">Categories</a>
+    <a href="#providers">Providers</a>
+    <a href="#join">For Professionals</a>
+    <a href="#">Sign In</a>
+  </nav>
+</header>
+
+<!-- HERO: PHOTO CAROUSEL + CENTERED SEARCH -->
+<section class="hero">
+
+  <div class="hero-carousel" aria-hidden="true">
+    <div class="hero-slide active"
+      style="background-image:url('https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=2000&q=85');">
+    </div>
+
+    <div class="hero-slide"
+      style="background-image:url('https://images.unsplash.com/photo-1531058020387-3be344556be6?w=2000&q=85');">
+    </div>
+
+    <div class="hero-slide"
+      style="background-image:url('https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=2000&q=85');">
+    </div>
+
+    <div class="hero-slide"
+      style="background-image:url('https://images.unsplash.com/photo-1507504031003-b417219a0hle?w=2000&q=85');">
+    </div>
+  </div>
+
+  <div class="hero-content">
+    <h1 class="hero-title">YOUR EVENT STARTS HERE</h1>
+
+    <div class="search-panel">
+      <div class="search-field">
+        <label for="searchInput">WHAT SERVICE ARE YOU LOOKING FOR?</label>
+        <input
+          type="search"
+          id="searchInput"
+          placeholder="e.g. Photographer, venue, catering..."
+        >
+      </div>
+
+      <div class="search-field">
+        <label for="locationInput">WHAT CITY OR COUNTRY?</label>
+        <input
+          type="text"
+          id="locationInput"
+          placeholder="e.g. Newark, New Jersey"
+        >
+      </div>
+
+      <button class="btn btn-primary" onclick="filterProviders()">
+        SEARCH PROVIDERS
+      </button>
+    </div>
+
+    <div class="carousel-dots" aria-label="Choose a banner image">
+      <button class="carousel-dot active" aria-label="Slide 1" data-slide="0"></button>
+      <button class="carousel-dot" aria-label="Slide 2" data-slide="1"></button>
+      <button class="carousel-dot" aria-label="Slide 3" data-slide="2"></button>
+      <button class="carousel-dot" aria-label="Slide 4" data-slide="3"></button>
+    </div>
+  </div>
+</section>
+
+<!-- DESCRIPTION MOVED BELOW THE CAROUSEL -->
+<section class="intro-section">
+  <h1>Find Everything You Need to Celebrate</h1>
+  <p>
+    Discover trusted event professionals and services to make every
+    celebration unforgettable.
+  </p>
+</section>
+
+<main class="container">
+
+  <section id="categories">
+    <div class="section-heading">
+      <div>
+        <h2>Explore Categories</h2>
+        <p class="subtitle">
+          Find the right professionals for your celebration.
+        </p>
+      </div>
+    </div>
+
+    <div class="categories">
+      <div class="category" data-category="venues">
+        <span class="emoji">🏛️</span>
+        <strong>Event Venues</strong>
+      </div>
+
+      <div class="category" data-category="photography">
+        <span class="emoji">📸</span>
+        <strong>Photography</strong>
+      </div>
+
+      <div class="category" data-category="decoration">
+        <span class="emoji">🌸</span>
+        <strong>Decoration</strong>
+      </div>
+
+      <div class="category" data-category="catering">
+        <span class="emoji">🍽️</span>
+        <strong>Catering</strong>
+      </div>
+
+      <div class="category" data-category="cakes">
+        <span class="emoji">🎂</span>
+        <strong>Cakes & Bakery</strong>
+      </div>
+
+      <div class="category" data-category="music">
+        <span class="emoji">🎵</span>
+        <strong>Music & DJs</strong>
+      </div>
+
+      <div class="category" data-category="beauty">
+        <span class="emoji">💄</span>
+        <strong>Beauty & Makeup</strong>
+      </div>
+
+      <div class="category" data-category="planning">
+        <span class="emoji">📋</span>
+        <strong>Event Planning</strong>
+      </div>
+
+      <div class="category" data-category="fashion">
+        <span class="emoji">👗</span>
+        <strong>Fashion</strong>
+      </div>
+
+      <div class="category" data-category="rentals">
+        <span class="emoji">🪑</span>
+        <strong>Furniture & Rentals</strong>
+      </div>
+
+      <div class="category" data-category="transport">
+        <span class="emoji">🚘</span>
+        <strong>Transportation</strong>
+      </div>
+
+      <div class="category" data-category="gifts">
+        <span class="emoji">🎁</span>
+        <strong>Gifts & Souvenirs</strong>
+      </div>
+    </div>
+  </section>
+
+  <section id="providers">
+
+    <div class="listing-toolbar">
+      <div>
+        <h2>Discover Event Professionals</h2>
+        <p class="subtitle" id="resultCount">
+          Explore our professional directory.
+        </p>
+      </div>
+
+      <select id="sortSelect" onchange="filterProviders()">
+        <option value="default">Recommended</option>
+        <option value="name">Name: A to Z</option>
+      </select>
+    </div>
+
+    <div class="providers" id="providerGrid"></div>
+
+    <div class="empty" id="emptyMessage">
+      <h3>No providers found</h3>
+      <p>Try another category or location.</p>
+    </div>
+
+  </section>
+
+  <section class="join-banner" id="join">
+    <h2>Are You an Event Professional?</h2>
+    <p>
+      Join Party & Gifts for free and connect with people
+      planning their next celebration.
+    </p>
+    <a href="inscription-prestataire.html" class="btn btn-primary">
+      List Your Business – It's Free
+    </a>
+  </section>
+
+</main>
+
+<footer>
+  <h2>PARTY & GIFTS</h2>
+  <p>Making celebrations easier, everywhere.</p>
+  <p>© 2026 Party & Gifts. All rights reserved.</p>
+</footer>
+
+<script>
+const providers = [
+  {
+    name: "Elegant Moments Events",
+    category: "decoration",
+    label: "Event Decoration",
+    city: "Port-au-Prince",
+    country: "Haiti",
+    description: "Beautiful event decorations for unforgettable celebrations.",
+    image: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=800",
+    verified: true
+  },
+  {
+    name: "Forever Memories Studio",
+    category: "photography",
+    label: "Photography & Video",
+    city: "Port-au-Prince",
+    country: "Haiti",
+    description: "Professional photography for your special moments.",
+    image: "https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=800",
+    verified: true
+  },
+  {
+    name: "Sweet Delights Bakery",
+    category: "cakes",
+    label: "Cakes & Bakery",
+    city: "Pétion-Ville",
+    country: "Haiti",
+    description: "Custom cakes and sweet creations for every occasion.",
+    image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=800",
+    verified: false
+  },
+  {
+    name: "Royal Celebration Hall",
+    category: "venues",
+    label: "Event Venues",
+    city: "Pétion-Ville",
+    country: "Haiti",
+    description: "Elegant spaces for weddings and private celebrations.",
+    image: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=800",
+    verified: true
+  },
+  {
+    name: "Golden Table Catering",
+    category: "catering",
+    label: "Catering",
+    city: "Port-au-Prince",
+    country: "Haiti",
+    description: "Professional catering for memorable events.",
+    image: "https://images.unsplash.com/photo-1555244162-803834f70033?w=800",
+    verified: false
+  },
+  {
+    name: "Sound Experience DJ",
+    category: "music",
+    label: "Music & DJs",
+    city: "Delmas",
+    country: "Haiti",
+    description: "Music and entertainment for every celebration.",
+    image: "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=800",
+    verified: true
+  }
+];
+
+let selectedCategory = "";
+
+function renderProviders(list) {
+  const grid = document.getElementById("providerGrid");
+  const empty = document.getElementById("emptyMessage");
+
+  grid.innerHTML = "";
+
+  document.getElementById("resultCount").textContent =
+    list.length + " provider(s) found";
+
+  empty.style.display = list.length ? "none" : "block";
+
+  list.forEach(provider => {
+    const card = document.createElement("article");
+    card.className = "provider-card";
+
+    const image = document.createElement("img");
+    image.className = "provider-image";
+    image.src = provider.image;
+    image.alt = provider.name;
+    image.loading = "lazy";
+
+    const content = document.createElement("div");
+    content.className = "provider-content";
+
+    const category = document.createElement("div");
+    category.className = "provider-category";
+    category.textContent = provider.label;
+
+    const title = document.createElement("h3");
+    title.className = "provider-title";
+    title.textContent = provider.name;
+
+    const description = document.createElement("p");
+    description.className = "provider-description";
+    description.textContent = provider.description;
+
+    const location = document.createElement("div");
+    location.className = "provider-location";
+    location.textContent =
+      "📍 " + provider.city + ", " + provider.country;
+
+    content.append(category, title);
+
+    if (provider.verified) {
+      const badge = document.createElement("span");
+      badge.className = "verified";
+      badge.textContent = "✓ VERIFIED PROVIDER";
+      content.appendChild(badge);
+    }
+
+    content.append(description, location);
+
+    const actions = document.createElement("div");
+    actions.className = "provider-actions";
+
+    const details = document.createElement("a");
+    details.className = "btn btn-outline";
+    details.href = "#";
+    details.textContent = "View Profile";
+
+    actions.appendChild(details);
+    content.appendChild(actions);
+
+    card.append(image, content);
+    grid.appendChild(card);
+  });
+}
+
+function filterProviders() {
+  const search = document
+    .getElementById("searchInput")
+    .value.toLowerCase().trim();
+
+  const location = document
+    .getElementById("locationInput")
+    .value.toLowerCase().trim();
+
+  let results = providers.filter(provider => {
+    const matchesCategory =
+      !selectedCategory ||
+      provider.category === selectedCategory;
+
+    const searchable =
+      (provider.name + " " +
+       provider.label + " " +
+       provider.description).toLowerCase();
+
+    const matchesSearch = searchable.includes(search);
+
+    const providerLocation =
+      (provider.city + " " + provider.country).toLowerCase();
+
+    const matchesLocation =
+      providerLocation.includes(location);
+
+    return matchesCategory && matchesSearch && matchesLocation;
+  });
+
+  if (document.getElementById("sortSelect").value === "name") {
+    results.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  renderProviders(results);
+}
+
+/* CATEGORY FILTER */
+document.querySelectorAll(".category").forEach(category => {
+  category.addEventListener("click", () => {
+    const value = category.dataset.category;
+
+    selectedCategory =
+      selectedCategory === value ? "" : value;
+
+    document.querySelectorAll(".category")
+      .forEach(item => item.classList.remove("active"));
+
+    if (selectedCategory) {
+      category.classList.add("active");
+    }
+
+    filterProviders();
+
+    document.getElementById("providers")
+      .scrollIntoView({ behavior: "smooth" });
+  });
+});
+
+/* LIVE SEARCH */
+document.getElementById("searchInput")
+  .addEventListener("input", filterProviders);
+
+document.getElementById("locationInput")
+  .addEventListener("input", filterProviders);
+
+/* HERO CAROUSEL */
+const heroSlides = document.querySelectorAll(".hero-slide");
+const carouselDots = document.querySelectorAll(".carousel-dot");
+let currentSlide = 0;
+let carouselTimer;
+
+function showHeroSlide(index) {
+  currentSlide = index;
+
+  heroSlides.forEach((slide, i) => {
+    slide.classList.toggle("active", i === index);
+  });
+
+  carouselDots.forEach((dot, i) => {
+    dot.classList.toggle("active", i === index);
+  });
+}
+
+function nextHeroSlide() {
+  const nextIndex = (currentSlide + 1) % heroSlides.length;
+  showHeroSlide(nextIndex);
+}
+
+function startCarousel() {
+  clearInterval(carouselTimer);
+  carouselTimer = setInterval(nextHeroSlide, 5000);
+}
+
+carouselDots.forEach(dot => {
+  dot.addEventListener("click", () => {
+    showHeroSlide(Number(dot.dataset.slide));
+    startCarousel();
+  });
+});
+
+startCarousel();
+
+/* INITIAL DISPLAY */
+renderProviders(providers);
+</script>
+
+</body>
+</html>
