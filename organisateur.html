@@ -2886,10 +2886,10 @@ function previewGalleryPhotos() {
 
   if (count) {
     count.textContent =
-      validFiles.length + " photo(s) sélectionnée(s)";
+      `${validFiles.length} photo(s) selected`;
   }
 
-  validFiles.forEach(file => {
+  validFiles.forEach((file, index) => {
 
     const reader = new FileReader();
 
@@ -2898,14 +2898,14 @@ function previewGalleryPhotos() {
       const card = document.createElement("div");
 
       card.style.cssText = `
+        position:relative;
         border:1px solid #ddd;
         border-radius:8px;
-        padding:6px;
+        padding:5px;
         overflow:hidden;
       `;
 
       const img = document.createElement("img");
-
       img.src = event.target.result;
 
       img.style.cssText = `
@@ -2915,18 +2915,47 @@ function previewGalleryPhotos() {
         border-radius:5px;
       `;
 
-      const name = document.createElement("p");
+      const removeButton = document.createElement("button");
 
-      name.textContent = file.name;
+      removeButton.type = "button";
+      removeButton.textContent = "×";
 
-      name.style.cssText = `
-        font-size:11px;
-        word-break:break-word;
-        margin:5px 0 0;
+      removeButton.style.cssText = `
+        position:absolute;
+        top:5px;
+        right:5px;
+        width:26px;
+        height:26px;
+        border:none;
+        border-radius:50%;
+        background:#d93025;
+        color:white;
+        font-size:20px;
+        font-weight:bold;
+        cursor:pointer;
+        line-height:20px;
       `;
 
+      removeButton.title = "Remove photo";
+
+      removeButton.onclick = function() {
+
+        const dataTransfer = new DataTransfer();
+
+        Array.from(input.files).forEach((selectedFile, i) => {
+          if (i !== index) {
+            dataTransfer.items.add(selectedFile);
+          }
+        });
+
+        input.files = dataTransfer.files;
+
+        previewGalleryPhotos();
+        updateGalleryLotSummary();
+      };
+
       card.appendChild(img);
-      card.appendChild(name);
+      card.appendChild(removeButton);
 
       preview.appendChild(card);
     };
