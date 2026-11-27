@@ -1325,7 +1325,9 @@ button{font-family:inherit}
     style="margin-top:15px">
     📤 Ajouter ce lot
   </button>
-
+<p id="galleryUploadInfo" class="muted">
+  0 photos in the gallery.
+</p>
 </div>
 
   <button
@@ -2841,9 +2843,12 @@ if (photoInput && !photoInput.dataset.summaryBound) {
     const accessStats = result.accessStats || [];
     const shareStats = result.shareStats || [];
 
-    $("galleryUploadArea").innerHTML =
-      `<p>${photos.length} photo(s) in the gallery.</p>`;
+    const uploadInfo = $("galleryUploadInfo");
 
+if (uploadInfo) {
+  uploadInfo.textContent =
+    `${photos.length} photo(s) in the gallery.`;
+}
     $("galleryPurchaseRequests").innerHTML =
       `<p>${purchases.length} purchase request(s).</p>`;
 
