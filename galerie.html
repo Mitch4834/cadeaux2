@@ -615,13 +615,15 @@ footer p {
 </div>
 
 <script>
+const API_URL = "https://script.google.com/macros/s/AKfycbyEuPvlw5ohzkixBj_b1jaodXWOC-z0pUjjlF8SZAItvZl5S91yi3n87643z0dk0wGg/exec";
 
-/*
-  DEMO DATA
+const params = new URLSearchParams(window.location.search);
+const eventId = params.get("event_id");
 
-  Replace these sample images with the real preview URLs
-  returned by your public gallery API.
-*/
+let photos = [];
+
+const gallery = document.getElementById("gallery");
+
 
 const photos = [
   {
