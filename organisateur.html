@@ -3197,11 +3197,13 @@ async function uploadGalleryLot() {
     ["image/jpeg", "image/png", "image/webp"].includes(file.type)
   ).length;
 
-  const lotName = name.value.trim() || "Lot sans nom";
-  const lotPrice = price.value.trim() || "Non défini";
+ 
+const lotName = name.value.trim() || "Unnamed package";
+const lotPrice = price.value.trim() || "Not set";
 
-  count.textContent =
-    `${total} photo(s) sélectionnée(s) | Lot : ${lotName} | Prix : ${lotPrice}`;
+count.textContent =
+  `${total} photo(s) selected | Package: ${lotName} | Price: ${lotPrice}`;
+
 } 
 async function loadAnnouncements() {
 
