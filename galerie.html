@@ -666,6 +666,69 @@ const photos = [
 
 const gallery = document.getElementById("gallery");
 
+async function loadGallery() {
+
+  gallery.innerHTML = `
+    <p style="text-align:center;grid-column:1/-1;padding:40px">
+      Loading event photos...
+    </p>
+  `;
+
+  if (!eventId) {
+    gallery.innerHTML = `
+      <p style="text-align:center;grid-column:1/-1;padding:40px">
+        No event ID was provided.
+      </p>
+    `;
+    return;
+  }
+
+  try {
+
+    const url = new URL(API_URL);
+    url.searchParams.set("action", "publicGallery");
+    url.searchParams.set("event_id", eventId);
+
+    const response = await fetch(url);
+    const result = await response.json();
+
+    if (!result.success) {
+      throw new Error(result.message || "Unable to load the gallery.");
+    }
+
+    photos = result.photos.map(photo => ({
+      id: photo.id,
+      title: photo.caption || "Event Memory",
+      url: photo.image,
+      price: Number(photo.price) || 0
+    }));
+
+    if (photos.length === 0) {
+      gallery.innerHTML = `
+        <p style="text-align:center;grid-column:1/-1;padding:40px">
+          No photos are available yet.
+        </p>
+      `;
+      document.getElementById("galleryCount").textContent =
+        "No photos available yet.";
+      return;
+    }
+
+    renderGallery();
+
+  } catch (error) {
+
+    console.error("Gallery loading error:", error);
+
+    gallery.innerHTML = `
+      <p style="text-align:center;grid-column:1/-1;padding:40px;color:#b42318">
+        Unable to load the event gallery. Please try again later.
+      </p>
+    `;
+
+  }
+}
+
 function renderGallery() {
 
   gallery.innerHTML = "";
@@ -762,7 +825,7 @@ function demoPayment(photoId) {
 
 }
 
-renderGallery();
+loadGallery();
 
 </script>
 
