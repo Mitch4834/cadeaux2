@@ -1284,8 +1284,21 @@ button{font-family:inherit}
       <h4>📤 Add Photos</h4>
       <div id="galleryUploadArea">
 
-  <label for="galleryPhotoFiles">Sélectionner les photos</label>
+  <label for="galleryLotName">Nom du lot</label>
+  <input
+    type="text"
+    id="galleryLotName"
+    placeholder="Ex : Décoration">
 
+  <label for="galleryLotPrice">Prix du lot</label>
+  <input
+    type="number"
+    id="galleryLotPrice"
+    min="0"
+    step="0.01"
+    placeholder="Ex : 25">
+
+  <label for="galleryPhotoFiles">Sélectionner les photos</label>
   <input
     type="file"
     id="galleryPhotoFiles"
@@ -1294,13 +1307,26 @@ button{font-family:inherit}
     style="width:100%;margin:10px 0">
 
   <p class="muted">
-    Tu peux sélectionner plusieurs photos à la fois.
-    Formats acceptés : JPG, PNG et WebP.
+    Tu peux sélectionner plusieurs photos pour constituer un même lot.
   </p>
 
   <div id="galleryPhotoPreview"
        style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px">
   </div>
+
+  <p id="galleryPhotoCount" class="muted">
+    0 photo sélectionnée
+  </p>
+
+  <button
+    type="button"
+    id="galleryUploadButton"
+    class="btn"
+    style="margin-top:15px">
+    📤 Ajouter ce lot
+  </button>
+
+</div>
 
   <button
     type="button"
