@@ -666,9 +666,12 @@ async function loadEventInfo() {
         day: "numeric"
       }) : "";
 
-    document.getElementById("eventTime").textContent =
-      event.time ? "🕒 " + event.time : "";
+   const eventTime = event.time
+  ? String(event.time).match(/\d{1,2}:\d{2}/)?.[0]
+  : "";
 
+document.getElementById("eventTime").textContent =
+  eventTime ? "🕒 " + eventTime : "";
   } catch (error) {
     console.error("Event information error:", error);
   }
