@@ -2925,6 +2925,25 @@ function previewGalleryPhotos() {
   });
 
 }
+   function updateGalleryLotSummary() {
+
+  const name = $("galleryLotName");
+  const price = $("galleryLotPrice");
+  const input = $("galleryPhotoFiles");
+  const count = $("galleryPhotoCount");
+
+  if (!name || !price || !input || !count) return;
+
+  const total = Array.from(input.files || []).filter(file =>
+    ["image/jpeg", "image/png", "image/webp"].includes(file.type)
+  ).length;
+
+  const lotName = name.value.trim() || "Lot sans nom";
+  const lotPrice = price.value.trim() || "Non défini";
+
+  count.textContent =
+    `${total} photo(s) sélectionnée(s) | Lot : ${lotName} | Prix : ${lotPrice}`;
+} 
 async function loadAnnouncements() {
 
   const container = $("announcementHistory");
