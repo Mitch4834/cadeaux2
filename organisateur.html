@@ -3052,7 +3052,138 @@ function previewGalleryPhotos() {
     reader.readAsDataURL(file);
 
   });
-}    
+}   
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const result = String(reader.result || "");
+      resolve(result.split(",")[1] || "");
+    };
+
+    reader.onerror = () => {
+      reject(new Error("Unable to read the photo."));
+    };
+
+    reader.readAsDataURL(file);
+  });
+}
+
+async function uploadGalleryLot() {
+  const button = $("galleryUploadButton");
+  const status = $("galleryStatus");
+  const input = $("galleryPhotoFiles");
+
+  if (!validateGalleryLot()) return;
+
+  const files = Array.from(input.files || []);
+  const lotName = $("galleryLotName").value.trim();
+  const lotPrice = Number($("galleryLotPrice").value);
+  const eventId = selectedEventId;
+
+  if (!eventId) {
+    alert("Please select an event first.");
+    return;
+  }
+
+  const allowedTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/webp"
+  ];
+
+  for (const file of files) {
+    if (!allowedTypes.includes(file.type)) {
+      alert("Only JPG, PNG and WebP photos are accepted.");
+      return;
+    }
+
+    if (file.size > 4 * 1024 * 1024) {
+      alert(
+        `The photo "${file.name}" exceeds the 4 MB limit.`
+      );
+      return;
+    }
+  }
+
+  button.disabled = true;
+
+  let uploaded = 0;
+
+  try {
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+
+      if (status) {
+        status.textContent =
+          `Uploading photo ${i + 1} of ${files.length}...`;
+        status.className = "status";
+      }
+
+      const originalData = await fileToBase64(file);
+
+      const previewBlob = await compressGalleryImage(file);
+      const previewData = await fileToBase64(previewBlob);
+
+      await api({
+        action: "uploadGalleryLot",
+        event_id: eventId,
+        lot_name: lotName,
+        lot_price: lotPrice,
+        photo: {
+          file_name: file.name,
+          mime_type: file.type,
+          original_data: originalData,
+          preview_data: previewData
+        }
+      });
+
+      uploaded++;
+
+      // Retirer les photos déjà téléversées
+      // pour éviter de les envoyer deux fois en cas d'erreur.
+      const remainingFiles = files.slice(uploaded);
+      const transfer = new DataTransfer();
+
+      remainingFiles.forEach(remainingFile => {
+        transfer.items.add(remainingFile);
+      });
+
+      input.files = transfer.files;
+    }
+
+    $("galleryLotName").value = "";
+    $("galleryLotPrice").value = "";
+
+    previewGalleryPhotos();
+    updateGalleryLotSummary();
+
+    if (status) {
+      status.textContent =
+        `${uploaded} photo(s) uploaded successfully!`;
+      status.className = "status success";
+    }
+
+    await loadEventGallery();
+
+  } catch (error) {
+    console.error("Gallery upload error:", error);
+
+    if (status) {
+      status.textContent =
+        `${uploaded} photo(s) uploaded. Error: ${error.message}`;
+      status.className = "status error";
+    }
+
+    previewGalleryPhotos();
+    updateGalleryLotSummary();
+
+  } finally {
+    button.disabled = false;
+  }
+}
+    
    function updateGalleryLotSummary() {
 
   const name = $("galleryLotName");
@@ -4921,7 +5052,19 @@ auth.onAuthStateChanged(async user => {
   }
 
 });
+const galleryUploadButton = $("galleryUploadButton");
 
+if (
+  galleryUploadButton &&
+  !galleryUploadButton.dataset.bound
+) {
+  galleryUploadButton.addEventListener(
+    "click",
+    uploadGalleryLot
+  );
+
+  galleryUploadButton.dataset.bound = "true";
+}
 /* =====================================================
    INITIALISATION DU TABLEAU DE BORD
 ===================================================== */
