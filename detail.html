@@ -1173,81 +1173,8 @@ function updateGallery() {
     dot.classList.toggle("active", index === currentPhoto);
   });
 
+  renderGalleryThumbnails();
 }
-
-gallerySlides.forEach((slide, index) => {
-
-  const dot = document.createElement("button");
-
-  dot.type = "button";
-  dot.className = "gallery-dot";
-  dot.setAttribute("aria-label", `Show photo ${index + 1}`);
-
-  dot.addEventListener("click", () => {
-    currentPhoto = index;
-    updateGallery();
-  });
-
-  galleryDots.appendChild(dot);
-
-});
-
-document.getElementById("galleryPrev").addEventListener("click", () => {
-
-  currentPhoto =
-    (currentPhoto - 1 + gallerySlides.length) % gallerySlides.length;
-
-  updateGallery();
-
-});
-
-document.getElementById("galleryNext").addEventListener("click", () => {
-
-  currentPhoto =
-    (currentPhoto + 1) % gallerySlides.length;
-
-  updateGallery();
-
-});
-
-updateGallery();
-
-
-/* ABOUT READ MORE */
-
-const aboutText = document.getElementById("aboutText");
-const readMore = document.getElementById("readMore");
-
-let expanded = true;
-
-readMore.addEventListener("click", function() {
-
-  expanded = !expanded;
-
-  aboutText.style.maxHeight = expanded ? "none" : "170px";
-  aboutText.style.overflow = expanded ? "visible" : "hidden";
-
-  readMore.textContent = expanded
-    ? "Read less ↑"
-    : "Read more ↓";
-
-});
-
-
-/* MOBILE AVAILABILITY MODAL */
-
-const availabilityModal =
-  document.getElementById("availabilityModal");
-
-document.getElementById("openAvailability")
-.addEventListener("click", () => {
-
-  availabilityModal.classList.add("open");
-  document.body.classList.add("modal-open");
-  
-renderGalleryThumbnails();
-});
-
 function closeAvailabilityModal() {
 
   availabilityModal.classList.remove("open");
@@ -1289,29 +1216,46 @@ document.querySelectorAll('input[type="date"]').forEach(input => {
 
 
 function renderGalleryThumbnails() {
+
   const thumbnails = document.getElementById("galleryThumbnails");
-  const slides = [...document.querySelectorAll(".gallery-slide")];
 
   thumbnails.innerHTML = "";
 
-  slides.forEach((slide, index) => {
+  gallerySlides.forEach((slide, index) => {
+
     const img = slide.querySelector("img");
+
     if (!img) return;
 
     const button = document.createElement("button");
-    button.className = "gallery-thumbnail" +
-      (index === currentSlide ? " active" : "");
 
     button.type = "button";
-    button.innerHTML = `<img src="${img.src}" alt="Photo ${index + 1}">`;
+
+    button.className =
+      "gallery-thumbnail" +
+      (index === currentPhoto ? " active" : "");
+
+    button.setAttribute("aria-label", `Show photo ${index + 1}`);
+
+    const thumbnailImage = document.createElement("img");
+
+    thumbnailImage.src = img.src;
+    thumbnailImage.alt = `Photo ${index + 1}`;
+
+    button.appendChild(thumbnailImage);
 
     button.addEventListener("click", () => {
-      currentSlide = index;
+
+      currentPhoto = index;
+
       updateGallery();
+
     });
 
     thumbnails.appendChild(button);
+
   });
+
 }
 
 /* AVAILABILITY FORMS - DEMO ONLY */
