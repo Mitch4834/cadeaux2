@@ -373,13 +373,14 @@ let currentMode = "login";
    COLLABORATOR INVITATION
 ===================================================== */
 
+
 const collaboratorInvitationToken =
   new URLSearchParams(window.location.search)
     .get("invitation") || "";
 
 if (collaboratorInvitationToken) {
 
-  localStorage.setItem(
+  sessionStorage.setItem(
     "fete_cadeaux_collaborator_invitation",
     collaboratorInvitationToken
   );
@@ -392,6 +393,7 @@ if (collaboratorInvitationToken) {
 
   showMode("login");
 }
+
 
 /* =====================================================
    DISPLAY MESSAGES
@@ -732,8 +734,8 @@ async function finishLogin(user) {
 
   await syncOrganizer(user);
 
-  const invitationToken = localStorage.getItem(
-    "fete_cadeaux_collaborator_invitation"
+ const invitationToken = sessionStorage.getItem(
+  "fete_cadeaux_collaborator_invitation"
   );
 
   // Collaborator login flow
@@ -744,9 +746,9 @@ async function finishLogin(user) {
       invitationToken
     );
 
-    localStorage.removeItem(
-      "fete_cadeaux_collaborator_invitation"
-    );
+    sessionStorage.removeItem(
+  "fete_cadeaux_collaborator_invitation"
+);
 
     sessionStorage.setItem(
       "fete_cadeaux_collaborator_event",
