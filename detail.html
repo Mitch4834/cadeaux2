@@ -1212,7 +1212,7 @@ document.getElementById("galleryNext").addEventListener("click", () => {
 
 updateGallery();
 
-renderGalleryThumbnails();
+
 /* ABOUT READ MORE */
 
 const aboutText = document.getElementById("aboutText");
@@ -1244,7 +1244,8 @@ document.getElementById("openAvailability")
 
   availabilityModal.classList.add("open");
   document.body.classList.add("modal-open");
-
+  
+renderGalleryThumbnails();
 });
 
 function closeAvailabilityModal() {
