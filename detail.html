@@ -650,6 +650,46 @@ footer {
     border-radius: 18px 18px 0 0;
   }
 }
+  
+/* Miniatures de la galerie */
+.gallery-thumbnails {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+  overflow-x: auto;
+  padding: 3px 2px 8px;
+}
+
+.gallery-thumbnail {
+  flex: 0 0 82px;
+  width: 82px;
+  height: 65px;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  opacity: 0.7;
+  background: transparent;
+  transition: 0.2s ease;
+}
+
+.gallery-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.gallery-thumbnail.active {
+  border-color: #729c12;
+  opacity: 1;
+}
+
+.gallery-thumbnail:hover {
+  opacity: 1;
+}
+
 </style>
 </head>
 
@@ -729,7 +769,7 @@ footer {
         </div>
 
         <div class="gallery-dots" id="galleryDots"></div>
-
+<div id="galleryThumbnails" class="gallery-thumbnails"></div>
         <div id="aboutText">
 
           <p>
@@ -1172,7 +1212,7 @@ document.getElementById("galleryNext").addEventListener("click", () => {
 
 updateGallery();
 
-
+renderGalleryThumbnails();
 /* ABOUT READ MORE */
 
 const aboutText = document.getElementById("aboutText");
@@ -1246,6 +1286,32 @@ document.querySelectorAll('input[type="date"]').forEach(input => {
   input.min = localToday;
 });
 
+
+function renderGalleryThumbnails() {
+  const thumbnails = document.getElementById("galleryThumbnails");
+  const slides = [...document.querySelectorAll(".gallery-slide")];
+
+  thumbnails.innerHTML = "";
+
+  slides.forEach((slide, index) => {
+    const img = slide.querySelector("img");
+    if (!img) return;
+
+    const button = document.createElement("button");
+    button.className = "gallery-thumbnail" +
+      (index === currentSlide ? " active" : "");
+
+    button.type = "button";
+    button.innerHTML = `<img src="${img.src}" alt="Photo ${index + 1}">`;
+
+    button.addEventListener("click", () => {
+      currentSlide = index;
+      updateGallery();
+    });
+
+    thumbnails.appendChild(button);
+  });
+}
 
 /* AVAILABILITY FORMS - DEMO ONLY */
 
