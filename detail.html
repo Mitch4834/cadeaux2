@@ -33,13 +33,21 @@ body {
   line-height: 1.6;
 }
 
+body.modal-open {
+  overflow: hidden;
+}
+
 a {
   color: inherit;
   text-decoration: none;
 }
 
+button, input, select, textarea {
+  font: inherit;
+}
+
 .container {
-  width: min(1120px, 92%);
+  width: min(1400px, 94%);
   margin: auto;
 }
 
@@ -78,7 +86,7 @@ nav a:hover {
 /* BREADCRUMB */
 
 .breadcrumb {
-  padding: 25px 0 5px;
+  padding: 24px 0 10px;
   font-size: 13px;
   color: var(--muted);
 }
@@ -92,8 +100,8 @@ nav a:hover {
 
 .main-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
-  gap: 25px;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: 30px;
   align-items: start;
   margin: 15px 0 60px;
 }
@@ -101,27 +109,34 @@ nav a:hover {
 .content {
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 24px;
+  min-width: 0;
+}
+
+.sidebar {
+  min-width: 0;
 }
 
 /* SECTIONS */
 
-.section {
+.section,
+.availability-card {
   background: white;
-  padding: 28px;
+  padding: 30px;
   border-radius: 16px;
   border: 1px solid var(--border);
   box-shadow: 0 4px 18px rgba(53,33,61,.025);
 }
 
-.section h2 {
+.section h2,
+.availability-card h2 {
   font-family: 'Playfair Display', serif;
-  font-size: 25px;
+  font-size: 27px;
   margin-bottom: 18px;
 }
 
 .section h3 {
-  font-size: 20px;
+  font-size: 21px;
   margin-bottom: 12px;
 }
 
@@ -131,13 +146,101 @@ nav a:hover {
   margin-bottom: 12px;
 }
 
-.about-image {
+/* PHOTO CAROUSEL */
+
+.gallery {
+  position: relative;
   width: 100%;
-  height: 260px;
-  object-fit: cover;
-  border-radius: 12px;
-  margin: 12px 0 18px;
+  overflow: hidden;
+  border-radius: 13px;
+  background: #eee;
+  margin: 15px 0 22px;
 }
+
+.gallery-track {
+  display: flex;
+  transition: transform .4s ease;
+}
+
+.gallery-slide {
+  flex: 0 0 100%;
+  width: 100%;
+  height: 390px;
+}
+
+.gallery-slide img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.gallery-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255,255,255,.93);
+  color: var(--primary);
+  font-size: 23px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  z-index: 2;
+  box-shadow: 0 2px 10px rgba(0,0,0,.12);
+}
+
+.gallery-arrow:hover {
+  background: white;
+}
+
+.gallery-prev {
+  left: 14px;
+}
+
+.gallery-next {
+  right: 14px;
+}
+
+.gallery-counter {
+  position: absolute;
+  right: 15px;
+  bottom: 15px;
+  padding: 6px 12px;
+  background: rgba(0,0,0,.65);
+  color: white;
+  border-radius: 20px;
+  font-size: 12px;
+  z-index: 2;
+}
+
+.gallery-dots {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 7px;
+  padding: 12px 10px 0;
+}
+
+.gallery-dot {
+  width: 8px;
+  height: 8px;
+  border: none;
+  border-radius: 50%;
+  background: #d8cbdc;
+  cursor: pointer;
+}
+
+.gallery-dot.active {
+  background: var(--primary);
+  width: 20px;
+  border-radius: 10px;
+}
+
+/* READ MORE */
 
 .read-more {
   color: var(--primary);
@@ -189,7 +292,7 @@ nav a:hover {
 }
 
 .map-placeholder {
-  height: 220px;
+  height: 280px;
   border-radius: 12px;
   overflow: hidden;
   background: #eee;
@@ -212,26 +315,35 @@ nav a:hover {
   font-size: 13px;
 }
 
-/* AVAILABILITY */
+/* AVAILABILITY FORM */
 
 .availability-card {
-  background: white;
-  padding: 28px;
-  border-radius: 16px;
-  border: 1px solid var(--border);
-  box-shadow: 0 4px 18px rgba(53,33,61,.025);
+  position: sticky;
+  top: 20px;
+  padding: 25px;
+}
+
+.vendor-logo {
+  text-align: center;
+  padding-bottom: 18px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.vendor-logo img {
+  max-width: 190px;
+  max-height: 55px;
+  object-fit: contain;
 }
 
 .availability-card h2 {
-  font-family: 'Playfair Display', serif;
   font-size: 25px;
-  margin-bottom: 20px;
 }
 
 .availability-card form {
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  gap: 8px;
 }
 
 .availability-card label {
@@ -266,22 +378,17 @@ nav a:hover {
   min-height: 90px;
 }
 
-.availability-card button {
+.submit-availability {
   width: 100%;
   background: var(--primary);
   color: white;
-  padding: 13px;
+  padding: 14px;
   border: none;
   border-radius: 8px;
-  font-family: inherit;
   font-weight: 700;
   font-size: 14px;
   cursor: pointer;
   margin-top: 10px;
-}
-
-.availability-card button:hover {
-  opacity: .9;
 }
 
 .availability-note {
@@ -375,8 +482,90 @@ nav a:hover {
   font-size: 14px;
 }
 
-.primary-button:hover {
-  opacity: .9;
+/* MOBILE AVAILABILITY BUTTON */
+
+.mobile-availability-button {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 14px 18px calc(14px + env(safe-area-inset-bottom));
+  background: white;
+  border-top: 1px solid var(--border);
+  z-index: 50;
+}
+
+.mobile-availability-button button {
+  width: 100%;
+  border: none;
+  border-radius: 9px;
+  padding: 15px;
+  color: white;
+  background: var(--primary);
+  font-weight: 800;
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow: 0 3px 12px rgba(113,42,144,.2);
+}
+
+/* MOBILE MODAL */
+
+.availability-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(20,10,25,.6);
+  z-index: 100;
+  padding: 15px;
+  overflow-y: auto;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.availability-modal.open {
+  display: flex;
+}
+
+.modal-content {
+  width: 100%;
+  max-width: 540px;
+  max-height: 92vh;
+  overflow-y: auto;
+  background: var(--bg);
+  border-radius: 18px 18px 0 0;
+  padding: 20px;
+  position: relative;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.modal-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 23px;
+}
+
+.close-modal {
+  border: none;
+  background: var(--secondary);
+  color: var(--primary);
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.modal-content .availability-card {
+  position: static;
+  padding: 0;
+  border: none;
+  box-shadow: none;
 }
 
 /* FOOTER */
@@ -391,33 +580,74 @@ footer {
 
 /* RESPONSIVE */
 
-@media(max-width: 850px) {
+@media(max-width: 900px) {
   .main-layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: 20px;
+  }
+
+  .section {
+    padding: 23px;
+  }
+
+  .gallery-slide {
+    height: 320px;
   }
 }
 
-@media(max-width: 600px) {
+@media(max-width: 700px) {
+  .container {
+    width: 94%;
+  }
+
   nav {
     display: none;
   }
 
-  .section,
-  .availability-card {
+  .main-layout {
+    grid-template-columns: 1fr;
+    margin-bottom: 35px;
+  }
+
+  .sidebar {
+    display: none;
+  }
+
+  .section {
     padding: 20px;
+  }
+
+  .section h2 {
+    font-size: 23px;
+  }
+
+  .gallery-slide {
+    height: 250px;
+  }
+
+  .map-placeholder {
+    height: 220px;
   }
 
   .details-grid {
     grid-template-columns: 1fr;
   }
 
-  .section h2,
-  .availability-card h2 {
-    font-size: 23px;
+  .mobile-availability-button {
+    display: block;
   }
 
-  .about-image {
-    height: 210px;
+  body {
+    padding-bottom: 82px;
+  }
+
+  .availability-modal {
+    padding: 0;
+  }
+
+  .modal-content {
+    max-height: 94vh;
+    border-radius: 18px 18px 0 0;
   }
 }
 </style>
@@ -452,20 +682,56 @@ footer {
 
     <div class="content">
 
-      <!-- ABOUT -->
+      <!-- ABOUT AND PHOTO CAROUSEL -->
 
       <section class="section">
+
         <h2>About</h2>
 
         <h3>Get married in urban wine country!</h3>
 
-        <img
-          class="about-image"
-          src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=1200&q=85"
-          alt="Wedding venue"
-        >
+        <div class="gallery" id="photoGallery">
+
+          <div class="gallery-track" id="galleryTrack">
+
+            <div class="gallery-slide">
+              <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=1400&q=85" alt="Wedding reception">
+            </div>
+
+            <div class="gallery-slide">
+              <img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=1400&q=85" alt="Wedding table decoration">
+            </div>
+
+            <div class="gallery-slide">
+              <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=1400&q=85" alt="Wedding celebration">
+            </div>
+
+            <div class="gallery-slide">
+              <img src="https://images.unsplash.com/photo-1465495976277-4387d4b0e4a6?auto=format&fit=crop&w=1400&q=85" alt="Wedding flowers">
+            </div>
+
+          </div>
+
+          <button class="gallery-arrow gallery-prev"
+                  id="galleryPrev"
+                  type="button"
+                  aria-label="Previous photo">‹</button>
+
+          <button class="gallery-arrow gallery-next"
+                  id="galleryNext"
+                  type="button"
+                  aria-label="Next photo">›</button>
+
+          <div class="gallery-counter" id="galleryCounter">
+            1 / 4
+          </div>
+
+        </div>
+
+        <div class="gallery-dots" id="galleryDots"></div>
 
         <div id="aboutText">
+
           <p>
             City Winery is a premier wedding and event venue
             located in the Strip District, near Downtown Pittsburgh.
@@ -491,17 +757,20 @@ footer {
             showers, rehearsal dinners, welcome parties, anniversaries
             and other private celebrations.
           </p>
+
         </div>
 
         <button class="read-more" id="readMore">
           Read less ↑
         </button>
+
       </section>
 
 
       <!-- DETAILS -->
 
       <section class="section">
+
         <h2>Details</h2>
 
         <div class="details-grid">
@@ -547,28 +816,35 @@ footer {
           </div>
 
         </div>
+
       </section>
 
 
       <!-- LOCATION -->
 
       <section class="section">
+
         <h2>Location</h2>
 
         <div class="location-address">
+
           <span class="location-icon">📍</span>
+
           <div>
             <strong>1627 Smallman Street</strong>
             <p>Pittsburgh, PA 15222, USA</p>
           </div>
+
         </div>
 
         <div class="map-placeholder">
+
           <iframe
             src="https://maps.google.com/maps?q=1627%20Smallman%20Street%2C%20Pittsburgh%2C%20PA%2015222&t=&z=15&ie=UTF8&iwloc=&output=embed"
             loading="lazy"
             allowfullscreen>
           </iframe>
+
         </div>
 
         <a
@@ -578,114 +854,25 @@ footer {
           rel="noopener">
           Get Directions →
         </a>
-      </section>
 
-
-      <!-- REQUEST AVAILABILITY - AFTER LOCATION -->
-
-      <section class="availability-card">
-
-        <h2>Check Availability</h2>
-
-        <form id="availabilityForm">
-
-          <label for="visitorName">Your name *</label>
-          <input
-            type="text"
-            id="visitorName"
-            name="name"
-            placeholder="Your full name"
-            required
-          >
-
-          <label for="visitorEmail">Email *</label>
-          <input
-            type="email"
-            id="visitorEmail"
-            name="email"
-            placeholder="Your email address"
-            required
-          >
-
-          <label for="visitorPhone">Phone</label>
-          <input
-            type="tel"
-            id="visitorPhone"
-            name="phone"
-            placeholder="Your phone number"
-          >
-
-          <label for="eventDate">Event Date *</label>
-          <input
-            type="date"
-            id="eventDate"
-            name="eventDate"
-            required
-          >
-
-          <label for="eventType">Type of event *</label>
-          <select id="eventType" name="eventType" required>
-            <option value="">Select event type</option>
-            <option>Ceremony & Reception</option>
-            <option>Ceremony Only</option>
-            <option>Reception Only</option>
-            <option>Rehearsal Dinner</option>
-            <option>Bridal Shower</option>
-            <option>Bachelor Party</option>
-            <option>Bachelorette Party</option>
-            <option>Other</option>
-          </select>
-
-          <label for="guestCount">Number of Guests</label>
-          <input
-            type="number"
-            id="guestCount"
-            name="guests"
-            min="1"
-            placeholder="Estimated guests"
-          >
-
-          <label for="contactMethod">Best way to contact you?</label>
-          <select id="contactMethod" name="contactMethod">
-            <option value="Phone">Phone</option>
-            <option value="Email">Email</option>
-            <option value="Text">Text</option>
-          </select>
-
-          <label for="visitorMessage">Message</label>
-          <textarea
-            id="visitorMessage"
-            name="message"
-            placeholder="Tell us more about your event..."
-          ></textarea>
-
-          <button type="submit">
-            Request Availability
-          </button>
-
-          <p class="availability-note">
-            Your information will be sent to this vendor.
-          </p>
-
-          <p id="availabilityMessage"
-             style="font-size:12px;margin-top:8px;">
-          </p>
-
-        </form>
       </section>
 
 
       <!-- REVIEWS -->
 
       <section class="section">
+
         <h2>Reviews</h2>
 
         <div class="review-summary">
+
           <div class="review-number">—</div>
+
           <div>
             <div class="stars">☆☆☆☆☆</div>
             <p>No reviews yet</p>
           </div>
+
         </div>
 
         <p>
@@ -697,6 +884,7 @@ footer {
           <h3>Share your experience</h3>
 
           <div class="rating-input">
+
             <input type="radio" name="rating" id="star5" value="5">
             <label for="star5">★</label>
 
@@ -711,6 +899,7 @@ footer {
 
             <input type="radio" name="rating" id="star1" value="1">
             <label for="star1">★</label>
+
           </div>
 
           <input
@@ -723,8 +912,8 @@ footer {
           <textarea
             id="reviewComment"
             placeholder="Write your review..."
-            required
-          ></textarea>
+            required>
+          </textarea>
 
           <button type="submit" class="primary-button">
             Submit Review
@@ -733,11 +922,181 @@ footer {
           <p id="reviewMessage" style="margin-top:12px;"></p>
 
         </form>
+
       </section>
 
     </div>
 
+
+    <!-- DESKTOP AVAILABILITY SIDEBAR -->
+
+    <aside class="sidebar">
+
+      <div class="availability-card">
+
+        <div class="vendor-logo">
+          <img
+            src="https://b3579232.assetcdn.net/2.0/3579232/wp-content/uploads/2024/12/CW-PIT-logo-red-300x75.png?lossy=1&strip=1&webp=1"
+            alt="City Winery Logo">
+        </div>
+
+        <h2>Check Availability</h2>
+
+        <form id="availabilityFormDesktop">
+
+          <label>Your name *</label>
+          <input type="text" name="name" placeholder="Your full name" required>
+
+          <label>Email *</label>
+          <input type="email" name="email" placeholder="Your email address" required>
+
+          <label>Phone</label>
+          <input type="tel" name="phone" placeholder="Your phone number">
+
+          <label>Event Date *</label>
+          <input type="date" name="eventDate" required>
+
+          <label>Type of event *</label>
+          <select name="eventType" required>
+            <option value="">Select event type</option>
+            <option>Ceremony & Reception</option>
+            <option>Ceremony Only</option>
+            <option>Reception Only</option>
+            <option>Rehearsal Dinner</option>
+            <option>Bridal Shower</option>
+            <option>Bachelor Party</option>
+            <option>Bachelorette Party</option>
+            <option>Other</option>
+          </select>
+
+          <label>Number of Guests</label>
+          <input type="number" name="guests" min="1" placeholder="Estimated guests">
+
+          <label>Best way to contact you?</label>
+          <select name="contactMethod">
+            <option value="Phone">Phone</option>
+            <option value="Email">Email</option>
+            <option value="Text">Text</option>
+          </select>
+
+          <label>Message</label>
+          <textarea name="message" placeholder="Tell us more about your event..."></textarea>
+
+          <button type="submit" class="submit-availability">
+            Request Availability
+          </button>
+
+          <p class="availability-note">
+            Your information will be sent to this vendor.
+          </p>
+
+          <p class="form-message" style="font-size:12px;margin-top:8px;"></p>
+
+        </form>
+
+      </div>
+
+    </aside>
+
   </main>
+
+</div>
+
+
+<!-- MOBILE FIXED BUTTON -->
+
+<div class="mobile-availability-button">
+
+  <button type="button" id="openAvailability">
+    Request Availability
+  </button>
+
+</div>
+
+
+<!-- MOBILE AVAILABILITY MODAL -->
+
+<div class="availability-modal" id="availabilityModal">
+
+  <div class="modal-content">
+
+    <div class="modal-header">
+
+      <h2>Check Availability</h2>
+
+      <button type="button"
+              class="close-modal"
+              id="closeAvailability"
+              aria-label="Close">
+        ×
+      </button>
+
+    </div>
+
+    <div class="availability-card">
+
+      <div class="vendor-logo">
+        <img
+          src="https://b3579232.assetcdn.net/2.0/3579232/wp-content/uploads/2024/12/CW-PIT-logo-red-300x75.png?lossy=1&strip=1&webp=1"
+          alt="City Winery Logo">
+      </div>
+
+      <form id="availabilityFormMobile">
+
+        <label>Your name *</label>
+        <input type="text" name="name" placeholder="Your full name" required>
+
+        <label>Email *</label>
+        <input type="email" name="email" placeholder="Your email address" required>
+
+        <label>Phone</label>
+        <input type="tel" name="phone" placeholder="Your phone number">
+
+        <label>Event Date *</label>
+        <input type="date" name="eventDate" required>
+
+        <label>Type of event *</label>
+        <select name="eventType" required>
+          <option value="">Select event type</option>
+          <option>Ceremony & Reception</option>
+          <option>Ceremony Only</option>
+          <option>Reception Only</option>
+          <option>Rehearsal Dinner</option>
+          <option>Bridal Shower</option>
+          <option>Bachelor Party</option>
+          <option>Bachelorette Party</option>
+          <option>Other</option>
+        </select>
+
+        <label>Number of Guests</label>
+        <input type="number" name="guests" min="1" placeholder="Estimated guests">
+
+        <label>Best way to contact you?</label>
+        <select name="contactMethod">
+          <option value="Phone">Phone</option>
+          <option value="Email">Email</option>
+          <option value="Text">Text</option>
+        </select>
+
+        <label>Message</label>
+        <textarea name="message" placeholder="Tell us more about your event..."></textarea>
+
+        <button type="submit" class="submit-availability">
+          Request Availability
+        </button>
+
+        <p class="availability-note">
+          Your information will be sent to this vendor.
+        </p>
+
+        <p class="form-message" style="font-size:12px;margin-top:8px;"></p>
+
+      </form>
+
+    </div>
+
+  </div>
+
 </div>
 
 
@@ -750,6 +1109,70 @@ footer {
 
 <script>
 
+/* PHOTO CAROUSEL */
+
+const galleryTrack = document.getElementById("galleryTrack");
+const gallerySlides = Array.from(
+  galleryTrack.querySelectorAll(".gallery-slide")
+);
+
+const galleryDots = document.getElementById("galleryDots");
+const galleryCounter = document.getElementById("galleryCounter");
+
+let currentPhoto = 0;
+
+function updateGallery() {
+
+  galleryTrack.style.transform =
+    `translateX(-${currentPhoto * 100}%)`;
+
+  galleryCounter.textContent =
+    `${currentPhoto + 1} / ${gallerySlides.length}`;
+
+  galleryDots.querySelectorAll(".gallery-dot").forEach((dot, index) => {
+    dot.classList.toggle("active", index === currentPhoto);
+  });
+
+}
+
+gallerySlides.forEach((slide, index) => {
+
+  const dot = document.createElement("button");
+
+  dot.type = "button";
+  dot.className = "gallery-dot";
+  dot.setAttribute("aria-label", `Show photo ${index + 1}`);
+
+  dot.addEventListener("click", () => {
+    currentPhoto = index;
+    updateGallery();
+  });
+
+  galleryDots.appendChild(dot);
+
+});
+
+document.getElementById("galleryPrev").addEventListener("click", () => {
+
+  currentPhoto =
+    (currentPhoto - 1 + gallerySlides.length) % gallerySlides.length;
+
+  updateGallery();
+
+});
+
+document.getElementById("galleryNext").addEventListener("click", () => {
+
+  currentPhoto =
+    (currentPhoto + 1) % gallerySlides.length;
+
+  updateGallery();
+
+});
+
+updateGallery();
+
+
 /* ABOUT READ MORE */
 
 const aboutText = document.getElementById("aboutText");
@@ -758,6 +1181,7 @@ const readMore = document.getElementById("readMore");
 let expanded = true;
 
 readMore.addEventListener("click", function() {
+
   expanded = !expanded;
 
   aboutText.style.maxHeight = expanded ? "none" : "170px";
@@ -766,24 +1190,94 @@ readMore.addEventListener("click", function() {
   readMore.textContent = expanded
     ? "Read less ↑"
     : "Read more ↓";
+
 });
 
 
-/* AVAILABILITY FORM - DEMO */
+/* MOBILE AVAILABILITY MODAL */
 
-document.getElementById("availabilityForm")
-.addEventListener("submit", function(e) {
-  e.preventDefault();
+const availabilityModal =
+  document.getElementById("availabilityModal");
 
-  document.getElementById("availabilityMessage").textContent =
-    "The form is ready. Connection to the vendor API is required to send this request.";
+document.getElementById("openAvailability")
+.addEventListener("click", () => {
+
+  availabilityModal.classList.add("open");
+  document.body.classList.add("modal-open");
+
+});
+
+function closeAvailabilityModal() {
+
+  availabilityModal.classList.remove("open");
+  document.body.classList.remove("modal-open");
+
+}
+
+document.getElementById("closeAvailability")
+.addEventListener("click", closeAvailabilityModal);
+
+availabilityModal.addEventListener("click", function(e) {
+
+  if (e.target === availabilityModal) {
+    closeAvailabilityModal();
+  }
+
+});
+
+document.addEventListener("keydown", function(e) {
+
+  if (e.key === "Escape") {
+    closeAvailabilityModal();
+  }
+
 });
 
 
-/* REVIEWS FORM - DEMO */
+/* EVENT DATE MINIMUM */
+
+const today = new Date();
+
+const localToday = new Date(
+  today.getTime() - today.getTimezoneOffset() * 60000
+).toISOString().split("T")[0];
+
+document.querySelectorAll('input[type="date"]').forEach(input => {
+  input.min = localToday;
+});
+
+
+/* AVAILABILITY FORMS - DEMO ONLY */
+
+function handleAvailability(form) {
+
+  form.addEventListener("submit", function(e) {
+
+    e.preventDefault();
+
+    const message = form.querySelector(".form-message");
+
+    message.textContent =
+      "The form is ready. Backend connection is required to send your request.";
+
+  });
+
+}
+
+handleAvailability(
+  document.getElementById("availabilityFormDesktop")
+);
+
+handleAvailability(
+  document.getElementById("availabilityFormMobile")
+);
+
+
+/* REVIEWS FORM - DEMO ONLY */
 
 document.getElementById("reviewForm")
 .addEventListener("submit", function(e) {
+
   e.preventDefault();
 
   const rating = document.querySelector(
@@ -799,22 +1293,11 @@ document.getElementById("reviewForm")
 
   message.textContent =
     "Thank you! Saving reviews requires connecting the backend.";
+
 });
-
-
-/* PREVENT PAST EVENT DATES */
-
-const eventDateInput = document.getElementById("eventDate");
-
-const today = new Date();
-
-const localToday = new Date(
-  today.getTime() - today.getTimezoneOffset() * 60000
-).toISOString().split("T")[0];
-
-eventDateInput.min = localToday;
 
 </script>
 
 </body>
 </html>
+
