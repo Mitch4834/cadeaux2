@@ -722,76 +722,44 @@ footer {
 
         <h2>About</h2>
 
-        <h3>Get married in urban wine country!</h3>
+        <h3 id="providerName">Loading...</h3>
+        
+<div class="gallery" id="photoGallery">
 
-        <div class="gallery" id="photoGallery">
+  <div class="gallery-track" id="galleryTrack">
 
-          <div class="gallery-track" id="galleryTrack">
+    <div class="gallery-slide">
+      <img
+        src=""
+        alt="Provider photo"
+        class="provider-gallery-image">
+    </div>
 
-            <div class="gallery-slide">
-              <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=1400&q=85" alt="Wedding reception">
-            </div>
+  </div>
 
-            <div class="gallery-slide">
-              <img src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=1400&q=85" alt="Wedding table decoration">
-            </div>
+  <button class="gallery-arrow gallery-prev"
+          id="galleryPrev"
+          type="button"
+          aria-label="Previous photo">‹</button>
 
-            <div class="gallery-slide">
-              <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=1400&q=85" alt="Wedding celebration">
-            </div>
+  <button class="gallery-arrow gallery-next"
+          id="galleryNext"
+          type="button"
+          aria-label="Next photo">›</button>
 
-            <div class="gallery-slide">
-              <img src="https://images.unsplash.com/photo-1465495976277-4387d4b0e4a6?auto=format&fit=crop&w=1400&q=85" alt="Wedding flowers">
-            </div>
+  <div class="gallery-counter" id="galleryCounter">
+    1 / 1
+  </div>
 
-          </div>
+</div>
 
-          <button class="gallery-arrow gallery-prev"
-                  id="galleryPrev"
-                  type="button"
-                  aria-label="Previous photo">‹</button>
-
-          <button class="gallery-arrow gallery-next"
-                  id="galleryNext"
-                  type="button"
-                  aria-label="Next photo">›</button>
-
-          <div class="gallery-counter" id="galleryCounter">
-            1 / 4
-          </div>
-
-        </div>
 <div id="galleryThumbnails" class="gallery-thumbnails"></div>
-        <div class="gallery-dots" id="galleryDots"></div>
-        <div id="aboutText">
 
-          <p>
-            City Winery is a premier wedding and event venue
-            located in the Strip District, near Downtown Pittsburgh.
-            A former produce terminal transformed into a contemporary,
-            flexible and full-service event space.
-          </p>
+<div class="gallery-dots" id="galleryDots"></div>
 
-          <p>
-            With its industrial atmosphere, beautiful architecture,
-            built-in stage, professional audiovisual equipment,
-            private bars and elegant lighting, this venue offers
-            a unique setting for weddings and celebrations.
-          </p>
-
-          <p>
-            The team works with each couple to customize their event.
-            On-site catering, custom menus, tables, chairs, dinnerware
-            and premium beverages are available.
-          </p>
-
-          <p>
-            City Winery can also host engagement parties, bridal
-            showers, rehearsal dinners, welcome parties, anniversaries
-            and other private celebrations.
-          </p>
-
-        </div>
+<div id="aboutText">
+  <p id="providerDescription">Loading provider information...</p>
+</div>
 
         <button class="read-more" id="readMore">
           Read less ↑
@@ -802,55 +770,20 @@ footer {
 
       <!-- DETAILS -->
 
-      <section class="section">
+<section class="section" id="detailsSection">
 
-        <h2>Details</h2>
+  <section class="section" id="detailsSection">
+  <h2>Details</h2>
 
-        <div class="details-grid">
+  <div class="details-grid" id="providerDetails">
 
-          <div class="detail-item">
-            <span class="detail-label">Price range</span>
-            <span class="detail-value">$4,000 to $25,000</span>
-          </div>
+    <div class="detail-item">
+      <span class="detail-label">Category</span>
+      <span class="detail-value" id="detailCategory">Loading...</span>
+    </div>
 
-          <div class="detail-item">
-            <span class="detail-label">Business insurance</span>
-            <span class="detail-value">Yes</span>
-          </div>
-
-          <div class="detail-item">
-            <span class="detail-label">Venue type</span>
-            <span class="detail-value">Indoor / Outdoor</span>
-          </div>
-
-          <div class="detail-item">
-            <span class="detail-label">Guest capacity</span>
-            <span class="detail-value">25 - 200</span>
-          </div>
-
-          <div class="detail-item">
-            <span class="detail-label">Banquet rooms</span>
-            <span class="detail-value">1 - 3</span>
-          </div>
-
-          <div class="detail-item">
-            <span class="detail-label">Outside catering</span>
-            <span class="detail-value">No</span>
-          </div>
-
-          <div class="detail-item">
-            <span class="detail-label">Guest rooms</span>
-            <span class="detail-value">1</span>
-          </div>
-
-          <div class="detail-item">
-            <span class="detail-label">Seasonal availability</span>
-            <span class="detail-value">Year-round</span>
-          </div>
-
-        </div>
-
-      </section>
+  </div>
+</section>
 
 
       <!-- LOCATION -->
@@ -864,8 +797,8 @@ footer {
           <span class="location-icon">📍</span>
 
           <div>
-            <strong>1627 Smallman Street</strong>
-            <p>Pittsburgh, PA 15222, USA</p>
+           <strong id="providerAddress">Address not provided</strong>
+<p id="providerLocation">Loading location...</p>
           </div>
 
         </div>
@@ -873,20 +806,22 @@ footer {
         <div class="map-placeholder">
 
           <iframe
-            src="https://maps.google.com/maps?q=1627%20Smallman%20Street%2C%20Pittsburgh%2C%20PA%2015222&t=&z=15&ie=UTF8&iwloc=&output=embed"
-            loading="lazy"
-            allowfullscreen>
-          </iframe>
+  id="providerMap"
+  src=""
+  loading="lazy"
+  allowfullscreen>
+</iframe>
 
         </div>
 
         <a
-          class="directions"
-          href="https://www.google.com/maps/search/?api=1&query=1627+Smallman+Street+Pittsburgh+PA+15222"
-          target="_blank"
-          rel="noopener">
-          Get Directions →
-        </a>
+  class="directions"
+  id="providerDirections"
+  href="#"
+  target="_blank"
+  rel="noopener noreferrer">
+  Get Directions →
+</a>
 
       </section>
 
@@ -967,11 +902,12 @@ footer {
 
       <div class="availability-card">
 
-        <div class="vendor-logo">
-          <img
-            src="https://b3579232.assetcdn.net/2.0/3579232/wp-content/uploads/2024/12/CW-PIT-logo-red-300x75.png?lossy=1&strip=1&webp=1"
-            alt="City Winery Logo">
-        </div>
+       <div class="vendor-logo">
+  <img
+    class="providerLogo"
+    src=""
+    alt="Provider Logo">
+</div>
 
         <h2>Check Availability</h2>
 
@@ -1069,11 +1005,11 @@ footer {
     <div class="availability-card">
 
       <div class="vendor-logo">
-        <img
-          src="https://b3579232.assetcdn.net/2.0/3579232/wp-content/uploads/2024/12/CW-PIT-logo-red-300x75.png?lossy=1&strip=1&webp=1"
-          alt="City Winery Logo">
-      </div>
-
+  <img
+    class="providerLogo"
+    src=""
+    alt="Provider Logo">
+</div>
       <form id="availabilityFormMobile">
 
         <label>Your name *</label>
@@ -1141,144 +1077,371 @@ footer {
 
 
 
+
 <script>
+
+/* =====================================================
+   CONFIGURATION API
+===================================================== */
+
+const API_URL = "https://script.google.com/macros/s/AKfycbzVpvq126Qc6ooYEKpxNDGN9AKwP6vU14a62d1hsEBXxu2SW6d9xudlVRjfl8g1OlZq/exec";
+
+const params = new URLSearchParams(window.location.search);
+const providerId = params.get("id");
+
+
+/* =====================================================
+   CHARGEMENT DU PRESTATAIRE
+===================================================== */
+
+async function loadProvider() {
+
+  if (!providerId) {
+    showProviderError("Provider ID is missing.");
+    return;
+  }
+
+  try {
+
+    const response = await fetch(
+      `${API_URL}?action=getProvider&id=${encodeURIComponent(providerId)}`
+    );
+
+    const data = await response.json();
+
+    if (!data.success || !data.provider) {
+      throw new Error(data.message || "Provider not found.");
+    }
+
+    const provider = data.provider;
+
+    displayProvider(provider);
+
+  } catch (error) {
+
+    console.error("Provider loading error:", error);
+
+    showProviderError(
+      error.message || "Unable to load provider information."
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   AFFICHAGE DES INFORMATIONS
+===================================================== */
+
+function displayProvider(provider) {
+
+  const name = provider.Nom_Entreprise || "Provider";
+  const category = provider.Categorie || "Not specified";
+  const description = provider.Description || "No description available.";
+  const city = provider.Ville || "";
+  const country = provider.Pays || "";
+  const address = provider.Adresse || "Address not provided";
+  const logo = provider.Logo || "";
+
+  document.title = name + " | Party & Gifts";
+
+  const providerName = document.getElementById("providerName");
+  if (providerName) providerName.textContent = name;
+
+  const providerDescription =
+    document.getElementById("providerDescription");
+
+  if (providerDescription) {
+    providerDescription.textContent = description;
+  }
+
+  const detailCategory =
+    document.getElementById("detailCategory");
+
+  if (detailCategory) {
+    detailCategory.textContent = category;
+  }
+
+  const providerAddress =
+    document.getElementById("providerAddress");
+
+  if (providerAddress) {
+    providerAddress.textContent = address;
+  }
+
+  const providerLocation =
+    document.getElementById("providerLocation");
+
+  const fullLocation = [city, country].filter(Boolean).join(", ");
+
+  if (providerLocation) {
+    providerLocation.textContent =
+      fullLocation || "Location not provided";
+  }
+
+  /* LOGOS */
+
+  document.querySelectorAll(".providerLogo").forEach(img => {
+
+    if (logo) {
+      img.src = logo;
+      img.alt = name + " logo";
+      img.style.display = "block";
+    } else {
+      img.style.display = "none";
+    }
+
+  });
+
+  /* GOOGLE MAPS */
+
+  const fullAddress = [address, city, country]
+    .filter(Boolean)
+    .join(", ");
+
+  const mapQuery = encodeURIComponent(fullAddress);
+
+  const providerMap = document.getElementById("providerMap");
+
+  if (providerMap && fullAddress) {
+    providerMap.src =
+      "https://maps.google.com/maps?q=" +
+      mapQuery +
+      "&output=embed";
+  }
+
+  const providerDirections =
+    document.getElementById("providerDirections");
+
+  if (providerDirections && fullAddress) {
+    providerDirections.href =
+      "https://www.google.com/maps/search/?api=1&query=" +
+      mapQuery;
+  }
+
+  /* GALERIE TEMPORAIRE */
+
+  initializeGallery(logo, name);
+
+}
+
+
+/* =====================================================
+   MESSAGE D'ERREUR
+===================================================== */
+
+function showProviderError(message) {
+
+  const providerName = document.getElementById("providerName");
+
+  if (providerName) {
+    providerName.textContent = "Provider unavailable";
+  }
+
+  const providerDescription =
+    document.getElementById("providerDescription");
+
+  if (providerDescription) {
+    providerDescription.textContent = message;
+  }
+
+  const galleryTrack = document.getElementById("galleryTrack");
+
+  if (galleryTrack) {
+    galleryTrack.innerHTML = "";
+  }
+
+}
+
 
 /* =====================================================
    PHOTO CAROUSEL
 ===================================================== */
 
-const galleryTrack = document.getElementById("galleryTrack");
-
-const gallerySlides = Array.from(
-  galleryTrack.querySelectorAll(".gallery-slide")
-);
+let galleryTrack = document.getElementById("galleryTrack");
+let gallerySlides = [];
+let currentPhoto = 0;
 
 const galleryDots = document.getElementById("galleryDots");
 const galleryCounter = document.getElementById("galleryCounter");
 const galleryThumbnails = document.getElementById("galleryThumbnails");
 
-let currentPhoto = 0;
+function initializeGallery(logo, name) {
+
+  if (!galleryTrack) return;
+
+  galleryTrack.innerHTML = "";
+
+  const slide = document.createElement("div");
+  slide.className = "gallery-slide";
+
+  if (logo) {
+
+    const img = document.createElement("img");
+
+    img.src = logo;
+    img.alt = name + " photo";
+    img.className = "provider-gallery-image";
+
+    slide.appendChild(img);
+
+  } else {
+
+    const placeholder = document.createElement("div");
+
+    placeholder.textContent = "Provider photos coming soon";
+    placeholder.style.cssText =
+      "width:100%;height:100%;display:flex;align-items:center;" +
+      "justify-content:center;background:#f3f3f3;color:#666;";
+
+    slide.appendChild(placeholder);
+
+  }
+
+  galleryTrack.appendChild(slide);
+
+  gallerySlides = Array.from(
+    galleryTrack.querySelectorAll(".gallery-slide")
+  );
+
+  currentPhoto = 0;
+
+  renderGalleryControls();
+
+  updateGallery();
+
+}
 
 
-/* CREATION DES POINTS */
+function renderGalleryControls() {
 
-galleryDots.innerHTML = "";
-
-gallerySlides.forEach((slide, index) => {
-
-  const dot = document.createElement("button");
-
-  dot.type = "button";
-  dot.className = "gallery-dot";
-  dot.setAttribute("aria-label", `Show photo ${index + 1}`);
-
-  dot.addEventListener("click", () => {
-    currentPhoto = index;
-    updateGallery();
-  });
-
-  galleryDots.appendChild(dot);
-
-});
-
-
-/* CREATION DES MINIATURES */
-
-function renderGalleryThumbnails() {
-
-  galleryThumbnails.innerHTML = "";
+  if (galleryDots) galleryDots.innerHTML = "";
+  if (galleryThumbnails) galleryThumbnails.innerHTML = "";
 
   gallerySlides.forEach((slide, index) => {
 
-    const img = slide.querySelector("img");
+    if (galleryDots) {
 
-    if (!img) return;
+      const dot = document.createElement("button");
 
-    const button = document.createElement("button");
+      dot.type = "button";
+      dot.className = "gallery-dot";
+      dot.setAttribute("aria-label", `Show photo ${index + 1}`);
 
-    button.type = "button";
+      dot.addEventListener("click", () => {
+        currentPhoto = index;
+        updateGallery();
+      });
 
-    button.className =
-      "gallery-thumbnail" +
-      (index === currentPhoto ? " active" : "");
+      galleryDots.appendChild(dot);
 
-    button.setAttribute(
-      "aria-label",
-      `Afficher la photo ${index + 1}`
-    );
+    }
 
-    const thumbnailImage = document.createElement("img");
+    if (galleryThumbnails) {
 
-    thumbnailImage.src = img.src;
-    thumbnailImage.alt = img.alt || `Photo ${index + 1}`;
+      const img = slide.querySelector("img");
 
-    button.appendChild(thumbnailImage);
+      if (img) {
 
-    button.addEventListener("click", () => {
+        const button = document.createElement("button");
 
-      currentPhoto = index;
+        button.type = "button";
+        button.className = "gallery-thumbnail";
+        button.setAttribute(
+          "aria-label",
+          `Show photo ${index + 1}`
+        );
 
-      updateGallery();
+        const thumbnailImage = document.createElement("img");
 
-    });
+        thumbnailImage.src = img.src;
+        thumbnailImage.alt = img.alt;
 
-    galleryThumbnails.appendChild(button);
+        button.appendChild(thumbnailImage);
+
+        button.addEventListener("click", () => {
+          currentPhoto = index;
+          updateGallery();
+        });
+
+        galleryThumbnails.appendChild(button);
+
+      }
+
+    }
 
   });
 
 }
 
 
-/* MISE A JOUR DU CARROUSEL */
-
 function updateGallery() {
 
-  if (gallerySlides.length === 0) return;
+  if (!gallerySlides.length) return;
 
   galleryTrack.style.transform =
     `translateX(-${currentPhoto * 100}%)`;
 
-  galleryCounter.textContent =
-    `${currentPhoto + 1} / ${gallerySlides.length}`;
+  if (galleryCounter) {
+    galleryCounter.textContent =
+      `${currentPhoto + 1} / ${gallerySlides.length}`;
+  }
 
-  galleryDots.querySelectorAll(".gallery-dot").forEach((dot, index) => {
+  if (galleryDots) {
 
-    dot.classList.toggle("active", index === currentPhoto);
+    galleryDots.querySelectorAll(".gallery-dot")
+      .forEach((dot, index) => {
+        dot.classList.toggle("active", index === currentPhoto);
+      });
 
-  });
+  }
 
-  renderGalleryThumbnails();
+  if (galleryThumbnails) {
+
+    galleryThumbnails
+      .querySelectorAll(".gallery-thumbnail")
+      .forEach((button, index) => {
+        button.classList.toggle("active", index === currentPhoto);
+      });
+
+  }
 
 }
 
 
-/* PHOTO PRECEDENTE */
+const galleryPrev = document.getElementById("galleryPrev");
+const galleryNext = document.getElementById("galleryNext");
 
-document.getElementById("galleryPrev").addEventListener("click", () => {
+if (galleryPrev) {
 
-  currentPhoto =
-    (currentPhoto - 1 + gallerySlides.length) % gallerySlides.length;
+  galleryPrev.addEventListener("click", () => {
 
-  updateGallery();
+    if (gallerySlides.length < 2) return;
 
-});
+    currentPhoto =
+      (currentPhoto - 1 + gallerySlides.length) % gallerySlides.length;
 
+    updateGallery();
 
-/* PHOTO SUIVANTE */
+  });
 
-document.getElementById("galleryNext").addEventListener("click", () => {
+}
 
-  currentPhoto =
-    (currentPhoto + 1) % gallerySlides.length;
+if (galleryNext) {
 
-  updateGallery();
+  galleryNext.addEventListener("click", () => {
 
-});
+    if (gallerySlides.length < 2) return;
 
+    currentPhoto =
+      (currentPhoto + 1) % gallerySlides.length;
 
-/* INITIALISATION */
+    updateGallery();
 
-updateGallery();
+  });
+
+}
 
 
 /* =====================================================
@@ -1290,19 +1453,22 @@ const readMore = document.getElementById("readMore");
 
 let expanded = true;
 
-readMore.addEventListener("click", function() {
+if (readMore && aboutText) {
 
-  expanded = !expanded;
+  readMore.addEventListener("click", function() {
 
-  aboutText.style.maxHeight = expanded ? "none" : "170px";
+    expanded = !expanded;
 
-  aboutText.style.overflow = expanded ? "visible" : "hidden";
+    aboutText.style.maxHeight = expanded ? "none" : "170px";
+    aboutText.style.overflow = expanded ? "visible" : "hidden";
 
-  readMore.textContent = expanded
-    ? "Read less ↑"
-    : "Read more ↓";
+    readMore.textContent = expanded
+      ? "Read less ↑"
+      : "Read more ↓";
 
-});
+  });
+
+}
 
 
 /* =====================================================
@@ -1319,37 +1485,47 @@ const closeAvailability =
   document.getElementById("closeAvailability");
 
 
-openAvailability.addEventListener("click", () => {
+if (openAvailability && availabilityModal) {
 
-  availabilityModal.classList.add("open");
+  openAvailability.addEventListener("click", () => {
 
-  document.body.classList.add("modal-open");
+    availabilityModal.classList.add("open");
+    document.body.classList.add("modal-open");
 
-});
+  });
+
+}
 
 
 function closeAvailabilityModal() {
 
-  availabilityModal.classList.remove("open");
+  if (!availabilityModal) return;
 
+  availabilityModal.classList.remove("open");
   document.body.classList.remove("modal-open");
 
 }
 
 
-closeAvailability.addEventListener(
-  "click",
-  closeAvailabilityModal
-);
+if (closeAvailability) {
+  closeAvailability.addEventListener(
+    "click",
+    closeAvailabilityModal
+  );
+}
 
 
-availabilityModal.addEventListener("click", function(e) {
+if (availabilityModal) {
 
-  if (e.target === availabilityModal) {
-    closeAvailabilityModal();
-  }
+  availabilityModal.addEventListener("click", function(e) {
 
-});
+    if (e.target === availabilityModal) {
+      closeAvailabilityModal();
+    }
+
+  });
+
+}
 
 
 document.addEventListener("keydown", function(e) {
@@ -1384,14 +1560,18 @@ document.querySelectorAll('input[type="date"]').forEach(input => {
 
 function handleAvailability(form) {
 
+  if (!form) return;
+
   form.addEventListener("submit", function(e) {
 
     e.preventDefault();
 
     const message = form.querySelector(".form-message");
 
-    message.textContent =
-      "The form is ready. Backend connection is required to send your request.";
+    if (message) {
+      message.textContent =
+        "The form is ready. Backend connection is required to send your request.";
+    }
 
   });
 
@@ -1402,7 +1582,6 @@ handleAvailability(
   document.getElementById("availabilityFormDesktop")
 );
 
-
 handleAvailability(
   document.getElementById("availabilityFormMobile")
 );
@@ -1412,31 +1591,48 @@ handleAvailability(
    REVIEWS FORM - DEMO ONLY
 ===================================================== */
 
-document.getElementById("reviewForm")
-.addEventListener("submit", function(e) {
+const reviewForm = document.getElementById("reviewForm");
 
-  e.preventDefault();
+if (reviewForm) {
 
-  const rating = document.querySelector(
-    'input[name="rating"]:checked'
-  );
+  reviewForm.addEventListener("submit", function(e) {
 
-  const message = document.getElementById("reviewMessage");
+    e.preventDefault();
 
-  if (!rating) {
+    const rating = document.querySelector(
+      'input[name="rating"]:checked'
+    );
 
-    message.textContent = "Please select a star rating.";
+    const message = document.getElementById("reviewMessage");
 
-    return;
+    if (!rating) {
 
-  }
+      if (message) {
+        message.textContent = "Please select a star rating.";
+      }
 
-  message.textContent =
-    "Thank you! Saving reviews requires connecting the backend.";
+      return;
 
-});
+    }
+
+    if (message) {
+      message.textContent =
+        "Thank you! Saving reviews requires connecting the backend.";
+    }
+
+  });
+
+}
+
+
+/* =====================================================
+   INITIALISATION
+===================================================== */
+
+loadProvider();
 
 </script>
+
 
 
 </body>
