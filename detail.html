@@ -1172,7 +1172,13 @@ function updateGallery() {
   galleryDots.querySelectorAll(".gallery-dot").forEach((dot, index) => {
     dot.classList.toggle("active", index === currentPhoto);
   });
+document.getElementById("openAvailability")
+.addEventListener("click", () => {
 
+  availabilityModal.classList.add("open");
+  document.body.classList.add("modal-open");
+
+});
   renderGalleryThumbnails();
 }
 function closeAvailabilityModal() {
