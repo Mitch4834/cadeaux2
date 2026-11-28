@@ -1063,8 +1063,19 @@ function renderProviders(list) {
   empty.style.display = list.length ? "none" : "block";
 
   list.forEach(provider => {
-    const card = document.createElement("article");
-    card.className = "provider-card";
+   const card = document.createElement("article");
+card.className = "provider-card";
+card.style.cursor = "pointer";
+
+card.addEventListener("click", function() {
+  if (!provider.id) {
+    alert("Impossible d'ouvrir cette fiche : identifiant manquant.");
+    return;
+  }
+
+  window.location.href =
+    "prestataire.html?id=" + encodeURIComponent(provider.id);
+});
 
     const image = document.createElement("img");
     image.className = "provider-image";
@@ -1107,45 +1118,7 @@ function renderProviders(list) {
 
     content.append(description, location);
 
-    const actions = document.createElement("div");
-    actions.className = "provider-actions";
-
-    let contactLink = "";
-
-    if (provider.whatsapp) {
-      const number = provider.whatsapp.replace(/[^\d]/g, "");
-      contactLink = "https://wa.me/" + number;
-    } else if (provider.phone) {
-      contactLink = "tel:" + provider.phone;
-    } else if (provider.email) {
-      contactLink = "mailto:" + provider.email;
-    } else if (provider.website) {
-      contactLink = provider.website;
-    }
-
-    if (contactLink) {
-      const contact = document.createElement("a");
-      contact.className = "btn btn-outline";
-      contact.href = contactLink;
-      contact.textContent = "Contact";
-      contact.target = "_blank";
-      contact.rel = "noopener noreferrer";
-      actions.appendChild(contact);
-    }
-
-    if (provider.website && contactLink !== provider.website) {
-      const website = document.createElement("a");
-      website.className = "btn btn-outline";
-      website.href = provider.website;
-      website.textContent = "Website";
-      website.target = "_blank";
-      website.rel = "noopener noreferrer";
-      actions.appendChild(website);
-    }
-
-    if (actions.children.length) {
-      content.appendChild(actions);
-    }
+    
 
     card.append(image, content);
     grid.appendChild(card);
