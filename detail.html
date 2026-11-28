@@ -1147,85 +1147,53 @@ footer {
 </footer>
 
 
+
 <script>
 
-/* PHOTO CAROUSEL */
+/* =====================================================
+   PHOTO CAROUSEL
+===================================================== */
 
 const galleryTrack = document.getElementById("galleryTrack");
+
 const gallerySlides = Array.from(
   galleryTrack.querySelectorAll(".gallery-slide")
 );
 
 const galleryDots = document.getElementById("galleryDots");
 const galleryCounter = document.getElementById("galleryCounter");
+const galleryThumbnails = document.getElementById("galleryThumbnails");
 
 let currentPhoto = 0;
 
-function updateGallery() {
 
-  galleryTrack.style.transform =
-    `translateX(-${currentPhoto * 100}%)`;
+/* CREATION DES POINTS */
 
-  galleryCounter.textContent =
-    `${currentPhoto + 1} / ${gallerySlides.length}`;
+galleryDots.innerHTML = "";
 
-  galleryDots.querySelectorAll(".gallery-dot").forEach((dot, index) => {
-    dot.classList.toggle("active", index === currentPhoto);
+gallerySlides.forEach((slide, index) => {
+
+  const dot = document.createElement("button");
+
+  dot.type = "button";
+  dot.className = "gallery-dot";
+  dot.setAttribute("aria-label", `Show photo ${index + 1}`);
+
+  dot.addEventListener("click", () => {
+    currentPhoto = index;
+    updateGallery();
   });
-document.getElementById("openAvailability")
-.addEventListener("click", () => {
 
-  availabilityModal.classList.add("open");
-  document.body.classList.add("modal-open");
-
-});
-  renderGalleryThumbnails();
-}
-function closeAvailabilityModal() {
-
-  availabilityModal.classList.remove("open");
-  document.body.classList.remove("modal-open");
-
-}
-
-document.getElementById("closeAvailability")
-.addEventListener("click", closeAvailabilityModal);
-
-availabilityModal.addEventListener("click", function(e) {
-
-  if (e.target === availabilityModal) {
-    closeAvailabilityModal();
-  }
-
-});
-
-document.addEventListener("keydown", function(e) {
-
-  if (e.key === "Escape") {
-    closeAvailabilityModal();
-  }
+  galleryDots.appendChild(dot);
 
 });
 
 
-/* EVENT DATE MINIMUM */
-
-const today = new Date();
-
-const localToday = new Date(
-  today.getTime() - today.getTimezoneOffset() * 60000
-).toISOString().split("T")[0];
-
-document.querySelectorAll('input[type="date"]').forEach(input => {
-  input.min = localToday;
-});
-
+/* CREATION DES MINIATURES */
 
 function renderGalleryThumbnails() {
 
-  const thumbnails = document.getElementById("galleryThumbnails");
-
-  thumbnails.innerHTML = "";
+  galleryThumbnails.innerHTML = "";
 
   gallerySlides.forEach((slide, index) => {
 
@@ -1241,12 +1209,15 @@ function renderGalleryThumbnails() {
       "gallery-thumbnail" +
       (index === currentPhoto ? " active" : "");
 
-    button.setAttribute("aria-label", `Show photo ${index + 1}`);
+    button.setAttribute(
+      "aria-label",
+      `Afficher la photo ${index + 1}`
+    );
 
     const thumbnailImage = document.createElement("img");
 
     thumbnailImage.src = img.src;
-    thumbnailImage.alt = `Photo ${index + 1}`;
+    thumbnailImage.alt = img.alt || `Photo ${index + 1}`;
 
     button.appendChild(thumbnailImage);
 
@@ -1258,13 +1229,165 @@ function renderGalleryThumbnails() {
 
     });
 
-    thumbnails.appendChild(button);
+    galleryThumbnails.appendChild(button);
 
   });
 
 }
 
-/* AVAILABILITY FORMS - DEMO ONLY */
+
+/* MISE A JOUR DU CARROUSEL */
+
+function updateGallery() {
+
+  if (gallerySlides.length === 0) return;
+
+  galleryTrack.style.transform =
+    `translateX(-${currentPhoto * 100}%)`;
+
+  galleryCounter.textContent =
+    `${currentPhoto + 1} / ${gallerySlides.length}`;
+
+  galleryDots.querySelectorAll(".gallery-dot").forEach((dot, index) => {
+
+    dot.classList.toggle("active", index === currentPhoto);
+
+  });
+
+  renderGalleryThumbnails();
+
+}
+
+
+/* PHOTO PRECEDENTE */
+
+document.getElementById("galleryPrev").addEventListener("click", () => {
+
+  currentPhoto =
+    (currentPhoto - 1 + gallerySlides.length) % gallerySlides.length;
+
+  updateGallery();
+
+});
+
+
+/* PHOTO SUIVANTE */
+
+document.getElementById("galleryNext").addEventListener("click", () => {
+
+  currentPhoto =
+    (currentPhoto + 1) % gallerySlides.length;
+
+  updateGallery();
+
+});
+
+
+/* INITIALISATION */
+
+updateGallery();
+
+
+/* =====================================================
+   ABOUT - READ MORE
+===================================================== */
+
+const aboutText = document.getElementById("aboutText");
+const readMore = document.getElementById("readMore");
+
+let expanded = true;
+
+readMore.addEventListener("click", function() {
+
+  expanded = !expanded;
+
+  aboutText.style.maxHeight = expanded ? "none" : "170px";
+
+  aboutText.style.overflow = expanded ? "visible" : "hidden";
+
+  readMore.textContent = expanded
+    ? "Read less ↑"
+    : "Read more ↓";
+
+});
+
+
+/* =====================================================
+   MOBILE AVAILABILITY MODAL
+===================================================== */
+
+const availabilityModal =
+  document.getElementById("availabilityModal");
+
+const openAvailability =
+  document.getElementById("openAvailability");
+
+const closeAvailability =
+  document.getElementById("closeAvailability");
+
+
+openAvailability.addEventListener("click", () => {
+
+  availabilityModal.classList.add("open");
+
+  document.body.classList.add("modal-open");
+
+});
+
+
+function closeAvailabilityModal() {
+
+  availabilityModal.classList.remove("open");
+
+  document.body.classList.remove("modal-open");
+
+}
+
+
+closeAvailability.addEventListener(
+  "click",
+  closeAvailabilityModal
+);
+
+
+availabilityModal.addEventListener("click", function(e) {
+
+  if (e.target === availabilityModal) {
+    closeAvailabilityModal();
+  }
+
+});
+
+
+document.addEventListener("keydown", function(e) {
+
+  if (e.key === "Escape") {
+    closeAvailabilityModal();
+  }
+
+});
+
+
+/* =====================================================
+   EVENT DATE MINIMUM
+===================================================== */
+
+const today = new Date();
+
+const localToday = new Date(
+  today.getTime() - today.getTimezoneOffset() * 60000
+).toISOString().split("T")[0];
+
+document.querySelectorAll('input[type="date"]').forEach(input => {
+
+  input.min = localToday;
+
+});
+
+
+/* =====================================================
+   AVAILABILITY FORMS - DEMO ONLY
+===================================================== */
 
 function handleAvailability(form) {
 
@@ -1281,16 +1404,20 @@ function handleAvailability(form) {
 
 }
 
+
 handleAvailability(
   document.getElementById("availabilityFormDesktop")
 );
+
 
 handleAvailability(
   document.getElementById("availabilityFormMobile")
 );
 
 
-/* REVIEWS FORM - DEMO ONLY */
+/* =====================================================
+   REVIEWS FORM - DEMO ONLY
+===================================================== */
 
 document.getElementById("reviewForm")
 .addEventListener("submit", function(e) {
@@ -1304,8 +1431,11 @@ document.getElementById("reviewForm")
   const message = document.getElementById("reviewMessage");
 
   if (!rating) {
+
     message.textContent = "Please select a star rating.";
+
     return;
+
   }
 
   message.textContent =
@@ -1314,6 +1444,7 @@ document.getElementById("reviewForm")
 });
 
 </script>
+
 
 </body>
 </html>
