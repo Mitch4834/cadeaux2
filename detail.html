@@ -1,0 +1,820 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vendor Details | Fête & Cadeaux</title>
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --primary: #712A90;
+  --secondary: #F1E8F6;
+  --accent: #D6B77A;
+  --bg: #FAF7FC;
+  --text: #35213D;
+  --muted: #77717D;
+  --white: #fff;
+  --border: #eee7f1;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.container {
+  width: min(1120px, 92%);
+  margin: auto;
+}
+
+/* HEADER */
+
+header {
+  background: white;
+  border-bottom: 1px solid var(--border);
+  padding: 18px 0;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.logo {
+  font-size: 23px;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+nav {
+  display: flex;
+  gap: 25px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+nav a:hover {
+  color: var(--primary);
+}
+
+/* BREADCRUMB */
+
+.breadcrumb {
+  padding: 25px 0 5px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.breadcrumb a {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+/* MAIN LAYOUT */
+
+.main-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 25px;
+  align-items: start;
+  margin: 15px 0 60px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* SECTIONS */
+
+.section {
+  background: white;
+  padding: 28px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 18px rgba(53,33,61,.025);
+}
+
+.section h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 25px;
+  margin-bottom: 18px;
+}
+
+.section h3 {
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+
+.section p {
+  color: #5f5864;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.about-image {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin: 12px 0 18px;
+}
+
+.read-more {
+  color: var(--primary);
+  font-weight: 800;
+  font-size: 13px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  margin-top: 5px;
+}
+
+/* DETAILS */
+
+.details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+
+.detail-item {
+  padding: 15px 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.detail-label {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.detail-value {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* LOCATION */
+
+.location-address {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.location-icon {
+  font-size: 22px;
+  color: var(--primary);
+}
+
+.map-placeholder {
+  height: 220px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #eee;
+}
+
+.map-placeholder iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.directions {
+  display: inline-block;
+  margin-top: 15px;
+  background: var(--secondary);
+  color: var(--primary);
+  padding: 11px 18px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+/* AVAILABILITY */
+
+.availability-card {
+  background: white;
+  padding: 28px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 18px rgba(53,33,61,.025);
+}
+
+.availability-card h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 25px;
+  margin-bottom: 20px;
+}
+
+.availability-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.availability-card label {
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 5px;
+}
+
+.availability-card input,
+.availability-card select,
+.availability-card textarea {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid #e7dfea;
+  border-radius: 7px;
+  background: white;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--text);
+  outline: none;
+}
+
+.availability-card input:focus,
+.availability-card select:focus,
+.availability-card textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(113,42,144,.08);
+}
+
+.availability-card textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+.availability-card button {
+  width: 100%;
+  background: var(--primary);
+  color: white;
+  padding: 13px;
+  border: none;
+  border-radius: 8px;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.availability-card button:hover {
+  opacity: .9;
+}
+
+.availability-note {
+  font-size: 11px;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* REVIEWS */
+
+.review-summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.review-number {
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.stars {
+  color: #E3B44E;
+  font-size: 22px;
+  letter-spacing: 3px;
+}
+
+.review-form {
+  background: var(--bg);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.review-form h3 {
+  margin-bottom: 12px;
+}
+
+.rating-input {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  gap: 5px;
+  margin-bottom: 15px;
+}
+
+.rating-input input {
+  display: none;
+}
+
+.rating-input label {
+  cursor: pointer;
+  font-size: 27px;
+  color: #ccc;
+}
+
+.rating-input label:hover,
+.rating-input label:hover ~ label,
+.rating-input input:checked ~ label {
+  color: #E3B44E;
+}
+
+.review-form input,
+.review-form textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+}
+
+.review-form textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.primary-button {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 13px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.primary-button:hover {
+  opacity: .9;
+}
+
+/* FOOTER */
+
+footer {
+  background: #35213D;
+  color: white;
+  padding: 30px 0;
+  text-align: center;
+  font-size: 13px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width: 850px) {
+  .main-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media(max-width: 600px) {
+  nav {
+    display: none;
+  }
+
+  .section,
+  .availability-card {
+    padding: 20px;
+  }
+
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section h2,
+  .availability-card h2 {
+    font-size: 23px;
+  }
+
+  .about-image {
+    height: 210px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="container header-content">
+    <a href="listing.html" class="logo">Fête & Cadeaux</a>
+
+    <nav>
+      <a href="listing.html">Home</a>
+      <a href="listing.html">Vendors</a>
+      <a href="organisateur.html">Organize an Event</a>
+      <a href="#">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="breadcrumb">
+    <a href="listing.html">Home</a>
+    &nbsp; / &nbsp;
+    <a href="listing.html">Vendors</a>
+    &nbsp; / &nbsp;
+    Vendor Details
+  </div>
+
+  <main class="main-layout">
+
+    <div class="content">
+
+      <!-- ABOUT -->
+
+      <section class="section">
+        <h2>About</h2>
+
+        <h3>Get married in urban wine country!</h3>
+
+        <img
+          class="about-image"
+          src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=1200&q=85"
+          alt="Wedding venue"
+        >
+
+        <div id="aboutText">
+          <p>
+            City Winery is a premier wedding and event venue
+            located in the Strip District, near Downtown Pittsburgh.
+            A former produce terminal transformed into a contemporary,
+            flexible and full-service event space.
+          </p>
+
+          <p>
+            With its industrial atmosphere, beautiful architecture,
+            built-in stage, professional audiovisual equipment,
+            private bars and elegant lighting, this venue offers
+            a unique setting for weddings and celebrations.
+          </p>
+
+          <p>
+            The team works with each couple to customize their event.
+            On-site catering, custom menus, tables, chairs, dinnerware
+            and premium beverages are available.
+          </p>
+
+          <p>
+            City Winery can also host engagement parties, bridal
+            showers, rehearsal dinners, welcome parties, anniversaries
+            and other private celebrations.
+          </p>
+        </div>
+
+        <button class="read-more" id="readMore">
+          Read less ↑
+        </button>
+      </section>
+
+
+      <!-- DETAILS -->
+
+      <section class="section">
+        <h2>Details</h2>
+
+        <div class="details-grid">
+
+          <div class="detail-item">
+            <span class="detail-label">Price range</span>
+            <span class="detail-value">$4,000 to $25,000</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="detail-label">Business insurance</span>
+            <span class="detail-value">Yes</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="detail-label">Venue type</span>
+            <span class="detail-value">Indoor / Outdoor</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="detail-label">Guest capacity</span>
+            <span class="detail-value">25 - 200</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="detail-label">Banquet rooms</span>
+            <span class="detail-value">1 - 3</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="detail-label">Outside catering</span>
+            <span class="detail-value">No</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="detail-label">Guest rooms</span>
+            <span class="detail-value">1</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="detail-label">Seasonal availability</span>
+            <span class="detail-value">Year-round</span>
+          </div>
+
+        </div>
+      </section>
+
+
+      <!-- LOCATION -->
+
+      <section class="section">
+        <h2>Location</h2>
+
+        <div class="location-address">
+          <span class="location-icon">📍</span>
+          <div>
+            <strong>1627 Smallman Street</strong>
+            <p>Pittsburgh, PA 15222, USA</p>
+          </div>
+        </div>
+
+        <div class="map-placeholder">
+          <iframe
+            src="https://maps.google.com/maps?q=1627%20Smallman%20Street%2C%20Pittsburgh%2C%20PA%2015222&t=&z=15&ie=UTF8&iwloc=&output=embed"
+            loading="lazy"
+            allowfullscreen>
+          </iframe>
+        </div>
+
+        <a
+          class="directions"
+          href="https://www.google.com/maps/search/?api=1&query=1627+Smallman+Street+Pittsburgh+PA+15222"
+          target="_blank"
+          rel="noopener">
+          Get Directions →
+        </a>
+      </section>
+
+
+      <!-- REQUEST AVAILABILITY - AFTER LOCATION -->
+
+      <section class="availability-card">
+
+        <h2>Check Availability</h2>
+
+        <form id="availabilityForm">
+
+          <label for="visitorName">Your name *</label>
+          <input
+            type="text"
+            id="visitorName"
+            name="name"
+            placeholder="Your full name"
+            required
+          >
+
+          <label for="visitorEmail">Email *</label>
+          <input
+            type="email"
+            id="visitorEmail"
+            name="email"
+            placeholder="Your email address"
+            required
+          >
+
+          <label for="visitorPhone">Phone</label>
+          <input
+            type="tel"
+            id="visitorPhone"
+            name="phone"
+            placeholder="Your phone number"
+          >
+
+          <label for="eventDate">Event Date *</label>
+          <input
+            type="date"
+            id="eventDate"
+            name="eventDate"
+            required
+          >
+
+          <label for="eventType">Type of event *</label>
+          <select id="eventType" name="eventType" required>
+            <option value="">Select event type</option>
+            <option>Ceremony & Reception</option>
+            <option>Ceremony Only</option>
+            <option>Reception Only</option>
+            <option>Rehearsal Dinner</option>
+            <option>Bridal Shower</option>
+            <option>Bachelor Party</option>
+            <option>Bachelorette Party</option>
+            <option>Other</option>
+          </select>
+
+          <label for="guestCount">Number of Guests</label>
+          <input
+            type="number"
+            id="guestCount"
+            name="guests"
+            min="1"
+            placeholder="Estimated guests"
+          >
+
+          <label for="contactMethod">Best way to contact you?</label>
+          <select id="contactMethod" name="contactMethod">
+            <option value="Phone">Phone</option>
+            <option value="Email">Email</option>
+            <option value="Text">Text</option>
+          </select>
+
+          <label for="visitorMessage">Message</label>
+          <textarea
+            id="visitorMessage"
+            name="message"
+            placeholder="Tell us more about your event..."
+          ></textarea>
+
+          <button type="submit">
+            Request Availability
+          </button>
+
+          <p class="availability-note">
+            Your information will be sent to this vendor.
+          </p>
+
+          <p id="availabilityMessage"
+             style="font-size:12px;margin-top:8px;">
+          </p>
+
+        </form>
+      </section>
+
+
+      <!-- REVIEWS -->
+
+      <section class="section">
+        <h2>Reviews</h2>
+
+        <div class="review-summary">
+          <div class="review-number">—</div>
+          <div>
+            <div class="stars">☆☆☆☆☆</div>
+            <p>No reviews yet</p>
+          </div>
+        </div>
+
+        <p>
+          Worked with this vendor? Be the first to leave a review.
+        </p>
+
+        <form class="review-form" id="reviewForm">
+
+          <h3>Share your experience</h3>
+
+          <div class="rating-input">
+            <input type="radio" name="rating" id="star5" value="5">
+            <label for="star5">★</label>
+
+            <input type="radio" name="rating" id="star4" value="4">
+            <label for="star4">★</label>
+
+            <input type="radio" name="rating" id="star3" value="3">
+            <label for="star3">★</label>
+
+            <input type="radio" name="rating" id="star2" value="2">
+            <label for="star2">★</label>
+
+            <input type="radio" name="rating" id="star1" value="1">
+            <label for="star1">★</label>
+          </div>
+
+          <input
+            type="text"
+            id="reviewName"
+            placeholder="Your name"
+            required
+          >
+
+          <textarea
+            id="reviewComment"
+            placeholder="Write your review..."
+            required
+          ></textarea>
+
+          <button type="submit" class="primary-button">
+            Submit Review
+          </button>
+
+          <p id="reviewMessage" style="margin-top:12px;"></p>
+
+        </form>
+      </section>
+
+    </div>
+
+  </main>
+</div>
+
+
+<footer>
+  <div class="container">
+    © 2026 Fête & Cadeaux. All rights reserved.
+  </div>
+</footer>
+
+
+<script>
+
+/* ABOUT READ MORE */
+
+const aboutText = document.getElementById("aboutText");
+const readMore = document.getElementById("readMore");
+
+let expanded = true;
+
+readMore.addEventListener("click", function() {
+  expanded = !expanded;
+
+  aboutText.style.maxHeight = expanded ? "none" : "170px";
+  aboutText.style.overflow = expanded ? "visible" : "hidden";
+
+  readMore.textContent = expanded
+    ? "Read less ↑"
+    : "Read more ↓";
+});
+
+
+/* AVAILABILITY FORM - DEMO */
+
+document.getElementById("availabilityForm")
+.addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  document.getElementById("availabilityMessage").textContent =
+    "The form is ready. Connection to the vendor API is required to send this request.";
+});
+
+
+/* REVIEWS FORM - DEMO */
+
+document.getElementById("reviewForm")
+.addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const rating = document.querySelector(
+    'input[name="rating"]:checked'
+  );
+
+  const message = document.getElementById("reviewMessage");
+
+  if (!rating) {
+    message.textContent = "Please select a star rating.";
+    return;
+  }
+
+  message.textContent =
+    "Thank you! Saving reviews requires connecting the backend.";
+});
+
+
+/* PREVENT PAST EVENT DATES */
+
+const eventDateInput = document.getElementById("eventDate");
+
+const today = new Date();
+
+const localToday = new Date(
+  today.getTime() - today.getTimezoneOffset() * 60000
+).toISOString().split("T")[0];
+
+eventDateInput.min = localToday;
+
+</script>
+
+</body>
+</html>
