@@ -1084,7 +1084,7 @@ footer {
    CONFIGURATION API
 ===================================================== */
 
-const API_URL = "https://script.google.com/macros/s/AKfycbxI70pbGeUmyDeQIk5XChNg_pgiqqZAUCHZmg_oSKGxdUUAqMGJwhR0Pw5q9T2qgW1K/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbz5WiM_UhUo4m29wGsKAQP41y0LnWaPG-03G8ZnTBptSV6zhB2tPodrwcHD4rQdoFCt/exec";
 
 const params = new URLSearchParams(window.location.search);
 const providerId = params.get("id");
@@ -1222,7 +1222,7 @@ function displayProvider(provider) {
 
   /* GALERIE TEMPORAIRE */
 
-  initializeGallery(logo, name);
+  initializeGallery(provider.Images || [], name, logo);
 
 }
 
@@ -1267,39 +1267,68 @@ const galleryDots = document.getElementById("galleryDots");
 const galleryCounter = document.getElementById("galleryCounter");
 const galleryThumbnails = document.getElementById("galleryThumbnails");
 
-function initializeGallery(logo, name) {
+
+function initializeGallery(images, name, fallbackLogo) {
 
   if (!galleryTrack) return;
 
   galleryTrack.innerHTML = "";
 
-  const slide = document.createElement("div");
-  slide.className = "gallery-slide";
+  // Récupération des URL des images actives
+  let photos = (images || [])
+    .filter(image =>
+      image.URL_Image &&
+      String(image.Statut).trim() === "Actif"
+    )
+    .sort((a, b) => Number(a.Ordre) - Number(b.Ordre));
 
-  if (logo) {
+  // Compatibilité avec l'ancien champ Logo
+  if (photos.length === 0 && fallbackLogo) {
+    photos = [{
+      URL_Image: fallbackLogo,
+      Type_Image: "Logo"
+    }];
+  }
 
-    const img = document.createElement("img");
+  if (photos.length === 0) {
 
-    img.src = logo;
-    img.alt = name + " photo";
-    img.className = "provider-gallery-image";
-
-    slide.appendChild(img);
-
-  } else {
+    const slide = document.createElement("div");
+    slide.className = "gallery-slide";
 
     const placeholder = document.createElement("div");
 
     placeholder.textContent = "Provider photos coming soon";
+
     placeholder.style.cssText =
-      "width:100%;height:100%;display:flex;align-items:center;" +
-      "justify-content:center;background:#f3f3f3;color:#666;";
+      "width:100%;height:100%;display:flex;" +
+      "align-items:center;justify-content:center;" +
+      "background:#f3f3f3;color:#666;";
 
     slide.appendChild(placeholder);
+    galleryTrack.appendChild(slide);
+
+  } else {
+
+    photos.forEach((photo, index) => {
+
+      const slide = document.createElement("div");
+      slide.className = "gallery-slide";
+
+      const img = document.createElement("img");
+
+      img.src = photo.URL_Image;
+      img.alt = name + " - " +
+        (photo.Type_Image === "Logo" ? "Logo" : "Photo " + (index + 1));
+
+      img.className = "provider-gallery-image";
+      img.loading = index === 0 ? "eager" : "lazy";
+
+      slide.appendChild(img);
+      galleryTrack.appendChild(slide);
+
+    });
 
   }
-
-  galleryTrack.appendChild(slide);
 
   gallerySlides = Array.from(
     galleryTrack.querySelectorAll(".gallery-slide")
@@ -1308,8 +1337,18 @@ function initializeGallery(logo, name) {
   currentPhoto = 0;
 
   renderGalleryControls();
-
   updateGallery();
+
+  // Masquer les flèches s'il n'y a qu'une image
+  if (galleryPrev) {
+    galleryPrev.style.display =
+      photos.length > 1 ? "" : "none";
+  }
+
+  if (galleryNext) {
+    galleryNext.style.display =
+      photos.length > 1 ? "" : "none";
+  }
 
 }
 
